@@ -29,7 +29,7 @@ somePoints <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
                          4060164, 4117856, 4118207, 4062838),
                          id = c(1:8))
 
-pointsGeom <- geomPoints(anchor = somePoints)
+pointsGeom <- geomPoint(anchor = somePoints)
 polyGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8))) \%>\%
   geomPolygon()
 

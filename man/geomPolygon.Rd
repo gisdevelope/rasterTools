@@ -136,5 +136,6 @@ Tools to modify geometries: \code{\link{gRotate}},
   to other classes: \code{\link{gToSp}},  \code{gToSf},
   \code{\link{gToRaster}}, \code{\link{gFrom}}
 
-Other shapes: \code{\link{geomPoints}}
+Other shapes: \code{\link{geomPoint}},
+  \code{\link{geomRand}}
 }

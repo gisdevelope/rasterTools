@@ -23,7 +23,7 @@
 #' # ... or store it in your project path
 #' reference(outFile = "myBib.bib")
 #' }
-#' @importFrom utils bibentry person
+#' @importFrom utils bibentry person citation
 #' @export
 
 reference <- function(outFile, print = TRUE, style = "bibtex", ...){
