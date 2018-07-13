@@ -26,7 +26,6 @@ Imports: Rcpp (>= 0.12.12),
     gdalUtils,
     checkmate,
     foreign,
-    visNetwork,
     rmarkdown
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp

@@ -456,7 +456,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
 #'                          4060164, 4117856, 4118207, 4062838),
 #'                          id = c(1:8))
 #'
-#' pointsGeom <- geomPoints(anchor = somePoints)
+#' pointsGeom <- geomPoint(anchor = somePoints)
 #' polyGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8))) %>%
 #'   geomPolygon()
 #'
