@@ -25,6 +25,9 @@ test_that("output is sent to file", {
   
   reference(outFile = paste0(getwd(), "/myBib.bib"))
   expect_file_exists(paste0(getwd(), "/myBib.bib"), access = "rw")
+  
+  reference(outFile = "myBib.bib")
+  expect_file_exists("myBib.bib", access = "rw")
 })
 
 test_that("output is printed in the console", {
