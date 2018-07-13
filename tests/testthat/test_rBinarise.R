@@ -62,11 +62,13 @@ test_that("Error if arguments have wrong value", {
   expect_error(rBinarise(obj = "bla"))
   expect_error(rBinarise(obj = mat))
   expect_error(rBinarise(obj = input, thresh = "bla"))
+  expect_error(rBinarise(obj = input, thresh = 101))
   expect_error(rBinarise(obj = input, match = "bla"))
 })
 
 test_that("history is correct", {
   input <- rtData$continuous
+  cat <- rCategorise(input, n = 5)
 
   # test for thresh
   output <- rBinarise(obj = input, thresh = 30)
@@ -79,5 +81,11 @@ test_that("history is correct", {
   history <- output@history
   expect_list(history, len = 2)
   expect_equal(history[[2]], "the values have been binarised")
-
+  
+  # test when another modification preceeded
+  output <- rBinarise(obj = cat, thresh = 4)
+  history <- output@history
+  expect_list(history, len = 3)
+  expect_equal(history[[3]], "the values have been binarised")
+  
 })
