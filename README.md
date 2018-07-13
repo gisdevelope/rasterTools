@@ -1,8 +1,8 @@
-[![Travis-CI Build Status](https://travis-ci.org/EhrmannS/rastertools.svg?branch=master)](https://travis-ci.org/EhrmannS/rastertools)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EhrmannS/rastertools?branch=master&svg=true)](https://ci.appveyor.com/project/EhrmannS/rastertools)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/rastertools)](https://cran.r-project.org/package=rastertools)
-[![codecov](https://img.shields.io/codecov/c/github/EhrmannS/rastertools/master.svg)](https://codecov.io/github/EhrmannS/rastertools?branch=master)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/rastertools)](http://cran.rstudio.com/web/packages/rastertools/index.html)
+[![Travis-CI Build Status](https://travis-ci.org/EhrmannS/rasterTools.svg?branch=master)](https://travis-ci.org/EhrmannS/rasterTools)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EhrmannS/rasterTools?branch=master&svg=true)](https://ci.appveyor.com/project/EhrmannS/rasterTools)
+![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rasterTools)](https://cran.r-project.org/package=rasterTools)
+[![Coverage Status](https://img.shields.io/codecov/c/github/EhrmannS/rasterTools/master.svg)](https://codecov.io/github/EhrmannS/rasterTools?branch=master)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/rasterTools)](http://cran.rstudio.com/web/packages/rasterTools/index.html)
 
 # rasterTools <img src="docs/logo.png" align="right" height="200" />
 
