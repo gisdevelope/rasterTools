@@ -21,10 +21,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(magrittr)
-library(visNetwork)
-metrics_nodes <- read.csv(file = "./metrics_nodes.csv")
-metrics_edges <- read.csv(file = "./metrics_edges.csv")
 ```
 
 # Introduction
@@ -56,21 +52,7 @@ A second group of landscape metrics in `rasterTools` are the *derived metrics*, 
 ## The dependence structure of landscape metrics
 The following graph shows the relationship of all metrics that have been defined in `rasterTools` so far. Hovering over the metrics shows the equation (might take a while to load). Moreover, you can zoom in/out and grab the elements and drag them around!
 
-```{r, echo = FALSE, fig.width=7, out.width='100%'}
-visNetwork(nodes = metrics_nodes, edges = metrics_edges, height = "1000px") %>% 
-  visGroups(groupname = "landscape", color = "steelblue") %>%
-  visGroups(groupname = "classes", color = "#1e9c87") %>%
-  visGroups(groupname = "patches", color = "#bade26") %>%
-  visEdges(smooth = TRUE) %>% 
-  visGroups(groupname = "area_and_shape", color = "orange") %>% 
-  visOptions(highlightNearest = list(enabled = TRUE, 
-                                     algorithm = "hierarchical", 
-                                     hover = TRUE, 
-                                     degree = list(from = 2, to = 0)), 
-             selectedBy = list(variable = "calculate_per", multiple = TRUE)) %>% 
-  visHierarchicalLayout(direction = "LR") %>%
-  visPhysics(stabilization = FALSE)
-```
+-> put fgure of the landscape metric network here
 
 # Generic metrics
 

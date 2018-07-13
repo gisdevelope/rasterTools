@@ -10,7 +10,7 @@ test_that("output has class Spatial*", {
                            4060164, 4117856, 4118207, 4062838),
                            id = c(1:8))
 
-  pointsGeom <- geomPoints(anchor = input)
+  pointsGeom <- geomPoint(anchor = input)
   spPoints <- gToSp(geom = pointsGeom, crs = projs$laea)
   expect_class(spPoints, "SpatialPoints")
 
