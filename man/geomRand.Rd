@@ -4,7 +4,8 @@
 \alias{geomRand}
 \title{Create a geometry randomly}
 \usage{
-geomRand(type = "point", template = NULL, vertices = NULL, show = FALSE)
+geomRand(type = "point", template = NULL, vertices = 4, show = FALSE,
+  ...)
 }
 \arguments{
 \item{type}{[\code{character(1)}]\cr Either one of the three main feature
@@ -21,18 +22,23 @@ vertices already.}
 \item{show}{[\code{logical(1)}]\cr should the geometry be plotted
 (\code{TRUE}) or should it not be plotted (\code{FALSE}, default)? In case
 \code{template} is set, it is automatically \code{TRUE}.}
+
+\item{...}{[various]\cr graphical parameter, in case \code{show = TRUE}; see
+\code{\link{gpar}}.}
 }
 \description{
-This function creates, depending on the input parameters, a random geometry
+This function creates a random geometry
 }
 \examples{
 input <- matrix(nrow = 100, ncol = 100, data = 0)
 
 # create a random geometry with four vertices
-someGeom <- geomRand(type = "polygon", vertices = 4)
+set.seed(1)
+someGeom <- geomRand(type = "polygon", vertices = 5)
+visualise(geom = someGeom)
 
 # in case template is given, this serves as source for the window extent
-someGeom <- geomRand(template = input, vertices = 5)
+someGeom <- geomRand(template = input, show = TRUE)
 }
 \seealso{
 Other shapes: \code{\link{geomPoint}},

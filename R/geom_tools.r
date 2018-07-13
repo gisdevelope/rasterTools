@@ -344,11 +344,13 @@ gToGrob <- function(geom, theme = NULL, ...){
     geomGrob <- polygonGrob(x = coords$x,
                             y = coords$y,
                             id = coords$id,
-                            gp = gpar(col = theme$par$colour$geom,
-                                      fill = theme$par$fill$geom,
-                                      lty = theme$par$linetype$geom,
-                                      lwd = theme$par$linewidth$geom,
-                                      ...),
+                            gp = gpar(
+                              col = theme$par$colour$geom,
+                              fill = theme$par$fill$geom,
+                              lty = theme$par$linetype$geom,
+                              lwd = theme$par$linewidth$geom,
+                              ...
+                            ),
                             name = "aGrob")
 
   }
