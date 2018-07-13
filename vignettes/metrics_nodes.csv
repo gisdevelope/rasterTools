@@ -1,0 +1,18 @@
+id,label,group,calculate_per,shape,title,colour,level
+1,Landscape,landscape,landscape,ellipse,Landscape,,1
+2,Classes,classes,class,ellipse,Classes,,2
+3,Patches,patches,patch,ellipse,Patches,,2
+4,Perimeter,classes,class,box,Perimeter,,3
+5,Number,classes,class,box,Number,,3
+6,Area,classes,class,box,Area,,3
+7,Adjacency,patches,patch,box,Adjacency,,3
+8,Dissimilarity,classes,class,box,Dissimilarity,,3
+9,Area,landscape,landscape,box,Area,,3
+10,Perimeter,patches,patch,box,Perimeter,,3
+11,Number,patches,patch,box,Number,,3
+12,Area,patches,patch,box,Area,,3
+13,Values,patches,patch,box,Values,,3
+14,Distance map,patches,patch,box,Distance map,,3
+15,Edge Density,"landscape, patches","landscape, class, patch",text,"<img src=""http://latex.codecogs.com/gif.latex?\frac{P_*}{A_L} \cdot 10000"" border=""0""/>",,4
+16,Patch Density,"landscape, patches","landscape, class",text,"<img src=""http://latex.codecogs.com/gif.latex?\frac{N_P}{A_L} \cdot 10000"" border=""0""/>",,4
+17,Largest Patch Index,"landscape, patches",landscape,text,"<img src=""http://latex.codecogs.com/gif.latex?\frac{max(A_{PC})}{A_L} \cdot 100"" border=""0""/>",,4

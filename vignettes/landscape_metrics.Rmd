@@ -1,0 +1,1552 @@
+---
+title: "Landscape metrics"
+author: "Steffen Ehrmann"
+date: "`r Sys.Date()`"
+bibliography: rasterTools.bib
+output: 
+  rmarkdown::html_vignette:
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{Landscape metrics}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+library(visNetwork)
+metrics_nodes <- read.csv(file = "./metrics_nodes.csv")
+metrics_edges <- read.csv(file = "./metrics_edges.csv")
+```
+
+# Introduction
+
+This is a technical documentation of landscape metrics, both as defined in FRAGSTATS [@mcgarigal_fragstats_2015], where the majority of landscape metrics are collected, but also from several newer references, or those that have not been included in FRAGSTATS. It is currently still work in progress, feel free to participate!
+
+## Level of measurement
+Most landscape metrics can be measured at different levels/scales of the landscape. Landscapes are visualised in the form of maps and these are stored in a gridded format, a socalled raster, in most GIS software.
+
+  1. *Cell*: As any map constsist of "pixels", which are called cells in `rasterTools`, their values can be the basis for analysing what is depicted by the map.
+  2. *Patch*: An aggregation of (functionally or phenotypically) similar cell values that are all interconnected with each other. In the widely used *patch-matrix* model of landscapes, patches are regarded as islands in an ocean of other land cover types (the matrix). However, often the landscape is a mosaic of many different land cover types, and thus patches. Moreover, often gradients are prevailing (e.g. a gradual change from one land cover type to its neighbours). Thus often a clear distinction between patch and matrix is arbitrary and subjective rules have to be used to delimit patch from matrix.
+  3. *Class*: All patches of the same cell value. For instance in a land cover map, the land use type would be depicted in classes. However, classes can also be derived based on various spatial computations.
+  4. *Landscape*: The overall map.
+  
+## Generic versus derived metrics
+Essentially, landscape metrics are equations that relate different aspects or characteristics of the landscape in a certain way to eachother. If we break down landscape metrics in a systematic way, we find that there is a rather small set of relatively basic metrics at the core of all landscape metrics. In `rasterTools`, these are called *generic metrics* and they describe:
+
+1) the area of the landscape,
+2) the area, number and perimeter of all classes and dissimilarities between classes and
+3) the area, number and perimeter of all patches, a distance map focussed on each patch, an adjacency matrix and the values of all cells per patch.
+
+A second group of landscape metrics in `rasterTools` are the *derived metrics*, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the `measure()` function, where they are specified as named list. However, while each generic metric is a mere list, each derived metric is a list of lists. Each derived metric contains *terms* (other metrics) and an *equation*, in which the relation between the different terms is given.
+
+    genericMetric <- list(operator = "mMetric", scale = "patch")
+    derivedMetric <- list(term1 = list(operator = "mMetric1", scale = "class"),
+                          term2 = list(operator = "mMetric2", scale = "window"),
+                          equation = "term1 / term2 * 100")
+
+## The dependence structure of landscape metrics
+The following graph shows the relationship of all metrics that have been defined in `rasterTools` so far. Hovering over the metrics shows the equation (might take a while to load). Moreover, you can zoom in/out and grab the elements and drag them around!
+
+```{r, echo = FALSE, fig.width=7, out.width='100%'}
+visNetwork(nodes = metrics_nodes, edges = metrics_edges, height = "1000px") %>% 
+  visGroups(groupname = "landscape", color = "steelblue") %>%
+  visGroups(groupname = "classes", color = "#1e9c87") %>%
+  visGroups(groupname = "patches", color = "#bade26") %>%
+  visEdges(smooth = TRUE) %>% 
+  visGroups(groupname = "area_and_shape", color = "orange") %>% 
+  visOptions(highlightNearest = list(enabled = TRUE, 
+                                     algorithm = "hierarchical", 
+                                     hover = TRUE, 
+                                     degree = list(from = 2, to = 0)), 
+             selectedBy = list(variable = "calculate_per", multiple = TRUE)) %>% 
+  visHierarchicalLayout(direction = "LR") %>%
+  visPhysics(stabilization = FALSE)
+```
+
+# Generic metrics
+
+## Number {#mNumber}
+
+Description: Number of objects.
+
+Level of measurement: Patch, Class
+
+    mNumber(obj, scale = "patch", layer = NULL)
+
+Unit: $n$ per map
+
+Range: $0 ≤ x < \infty$
+
+Interpretation: 
+
+Limitations: Number of cells in the raster.
+
+Employed in the derived metrics: [Patch Density](#mDP)
+
+Reference: -
+
+  
+## Area {#mArea}
+
+Description: Area of objects. 
+
+Level of measurement: Patch, Class, Landscape
+
+    mArea(obj, scale = "patch", unit = "cells", layer = NULL)
+
+Unit: $m^2$
+
+Range: $0 ≤ x < \infty$
+
+Interpretation: The area covered by specific objcets can be a very basic measure of landscapes, for instance as 'habitat amount', *patch size effect*.
+
+Limitations: Spatial resolution and the number of cells of the raster.
+
+Employed in the derived metrics: [Edge Density](#mDE), [Patch Density](#mDP), [Largest Patch Index](#mLPI), [Perimeter-Area ratio](#mPAR), Shape Index, Fractal Dimension, [Class Proportion of the Landscape](#mCPA), Disjunct Cores Density, Core Area Proportion
+
+Reference: @turner_landscape_2001, @leitao_measuring_2006, @mcgarigal_fragstats_2015
+
+
+## Perimeter (Edge Length) {#mPerimeter}
+
+Description: The enclosing perimeter of objects. Amount and distribution of edges informs many landscape metrics with respect to the patch-matrix model of landscapes.
+
+Level of measurement: Patch, Class, Landscape
+
+    mPerimeter(obj, scale = "patch", unit = "cells", layer = NULL)
+
+Unit: $m$
+
+Range: $0 ≤ x < \infty$
+
+Interpretation:
+
+Limitations: Spatial resolution of the raster. Moreover, the perimeter in a raster map is typically larger than in the real world, where edges are typically not a sequence of corners.
+
+Employed in the derived metrics: [Edge Density](#mDE), [Perimeter-Area ratio](#mPAR), Shape Index, Fractal Dimension
+
+Reference: @turner_landscape_2001, @mcgarigal_fragstats_2015
+
+
+## Adjacency {#mAdjacency}
+
+Description: Not a metric itself, this is a table of the frequency with which different pairs of values appear side by side in the raster. Of interest are 'like adjacencies', adjacencies between cells with the same value, and general adjacencies between each value and all of the values. Adjacencies can be counted based on single count (only cells to the right and bottom of the focal cell) or double count (additionally also cells to the left and top of the focal cell).
+
+Level of measurement: 
+
+    mAdjacency(obj, type = "like", count = "double", layer = NULL)
+
+Unit: $n$
+
+Range: $0 ≤ x < \infty$
+
+Interpretation:
+
+Limitations: Spatial resolution of the raster.
+
+Employed in the derived metrics: [Percentage of Like Adjacencies](#mPLA)
+
+Reference: @mcgarigal_fragstats_2015
+
+
+## Value Distribution {#mValues}
+
+Description: 
+
+Level of measurement: 
+
+    mValues(...)
+
+Unit: 
+
+Range: 
+
+Interpretation:
+
+Limitations: -
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+## Metric distribution {#mMetrics}
+
+Description: Second-order statistic of metric variation. This comprises mean, area-weighted mean, median, range, standard deviation, coefficient of variation, minimum, maximum or quantiles.
+
+Level of measurement: Patch, Class, Landscape
+
+    mMetrics(...)
+
+Unit: depending on the measured metric
+
+Range: depending on the measured metric
+
+Interpretation: depending on the chosen statistic
+
+Limitations: depending on the measured metric
+
+Employed in the derived metrics: -
+
+Reference: @mcgarigal_fragstats_2015
+
+</br>
+
+# Derived metrics
+
+## Area and Edge
+### Class proportion of the Landscape {#mCPA}
+
+Description: Proportion of the landscape window occupied by classes.
+
+Level of measurement: Class
+
+Internal name: class proportional area (CPA)
+
+\begin{equation} 
+  CPA = \frac{A_C}{A_W} \cdot 100
+\end{equation}
+with $A_{C}$ = [Area](#mArea) of a class, $A_W$ = [Area](#mArea) of the window
+
+    mCPA <- list(a_c = list(operator = "mArea", scale = "class"),
+                 a_w = list(operator = "mArea", scale = "window"),
+                 equation = "a_c / a_w * 100")
+
+Unit: $\%$
+
+Range: $0 < CPA ≤ 100$
+
+Interpretation: CPA approaches 0 (100) when the respective class becomes increasingly rare (frequent).
+
+Limitations: 
+
+Employed in the derived metrics: -
+
+Reference: @mcgarigal_fragstats_2015
+
+
+### Largest Patch Index {#mLPI}
+
+Description: Proportion of the landscape window occupied by the largest patch.
+
+Level of measurement: Landscape
+
+Internal name: largest patch index (LPI)
+
+\begin{equation} 
+  LPI = \frac{max(A_{P})}{A_W} \cdot 100
+\end{equation}
+with $max(A_{P})$ = [Area](#mArea) of the largest patch, $A_W$ = [Area](#mArea) of the window
+
+    mLPI <- list(a_w = list(operator = "mArea", scale = "window"),
+                 a_p = list(operator = "mArea", scale = "patch"),
+                 equation = "max(a_p) / a_w * 100")
+    
+Unit: $\%$
+
+Range: $0 < LPI ≤ 100$
+
+Interpretation: LPI approaches 0 (100) when the largest patch is increasingly small (large). It is thus a measure of dominance.
+
+Limitations: 
+
+Employed in the derived metrics: -
+
+Comment: To derive the largest patch index at class scale from a categorial raster, i.e. the area covered by the largerst patch per class, first segregate the categorial raster per class and then use `mLPI` on the segregated elements. This is necessary, because determining patches from a categorial raster may be arbitrary, for instance when a forest patch consists of the classes deciduous and mixed forest.
+
+Reference: @mcgarigal_fragstats_2015
+
+
+### Radius of Gyration {#mRG}
+
+Description: Mean distance between each cell of a patch and its centroid.
+
+Level of measurement: 
+
+Internal name: radius of gyration (RG)
+
+  \begin{equation} 
+    RG = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+    
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Edge Density {#mDE}
+
+Description: Length of edges per hectare of the landscape window.
+
+Level of measurement: Patch, Class
+
+Internal name: density of edges (DE)
+
+\begin{equation} 
+  DE = \frac{P_{X}}{A_W} \cdot 10000
+\end{equation}
+with $P_{X}$ = [Perimeter](#mPerimeter) of a patch or class, $A_W$ = [Area](#mArea) of the window
+
+    mDE <- list(p_p = list(operator = "mPerimeter", scale = "patch"),
+                a_w = list(operator = "mArea", scale = "window"),
+                equation = "p_p / a_w * 10000")
+
+    mDEc <- list(p_c = list(operator = "mPerimeter", scale = "class"),
+                 a_w = list(operator = "mArea", scale = "window"),
+                 equation = "p_c / a_w * 10000")
+
+Unit: $m\,ha^{-1}$
+
+Range: $0 < DE ≤ \infty$
+
+Interpretation: Higher values indicate higher spatial heterogeneity and possible fragmentation of the focal habitat type.
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference:
+
+
+## Shape
+### Perimeter-Area ratio {#mPAR}
+
+Description: Ratio of the perimeter per area of each patch.
+
+Level of measurement: Patch, Class, Landscape
+
+Internal name: perimeter per area ratio (PAR)
+
+\begin{equation} 
+  PAR = \frac{P_P}{A_P} \cdot 10000
+\end{equation}
+with $P_P$ = [Perimeter](#mPerimeter) of a patch, $A_P$ = [Area](#mArea) of a patch
+
+    mPAR <- list(p_p = list(operator = "mPerimeter", scale = "patch"),
+                 a_p = list(operator = "mArea", scale = "patch"),
+                 equation = "p_p / a_p * 10000")
+
+Unit: $m\,ha^{-2}$
+
+Range: $0 < PAR ≤ \infty$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+## Core Area
+## Contrast
+## Aggregation: Dispersion 
+### Percentage of Like Adjacencies {#mPLA}
+
+Description: Percent of the adjacencies per class that are like adjacencies.
+
+Level of measurement: Class
+
+Internal name: percentage of like adjacencies (PLA)
+
+  \begin{equation} 
+    PLA = \frac{G_{ii}}{G_{ik}} \cdot 100
+  \end{equation}
+with $G_{ii}$ = [like Adjacencies](#mAdjacency) based on double count, $G_{ik}$ = all (incl. like) [Adjacencies](#mAdjacency) based on double count
+
+    mPLA <- list(g_ii = list(operator = "mAdjacency"),
+                 g_ik = list(operator = "mAdjacency", type = "pairedSum"),
+                 equation = "(g_ii / g_ik) * 100")
+
+Unit: $\%$
+
+Range: $0 < PLA ≤ 100$
+
+Interpretation: 
+
+Limitations: Lower values indicate higher disaggregation, where 0 means that each patch is a single cell. Hiher values indicate higher aggregation, where 100 means that the complete window is filled with this patch.
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+## Aggregation: Interspersion
+## Aggregation: Subdivision
+### Patch Density {#mDP}
+
+Description: Number of patches per hectare of the landscape window.
+
+Level of measurement: Class, Landscape
+
+Internal name: density of patches (DP)
+
+\begin{equation} 
+  DP = \frac{N_P}{A_W} \cdot 10000
+\end{equation}
+with $N_P$ = [Number](#mNumber) of patches, $A_W$ = [Area](#mArea) of the window
+
+    mDP <- list(n_p = list(operator = "mNumber", scale = "patch"),
+                a_w = list(operator = "mArea", scale = "window"),
+                equation = "n_p / a_w * 10000")
+
+Unit: $n\,ha^{-1}$
+
+Range: $0 < PD ≤ \infty$
+
+Interpretation: Higher values indicate higher spatial fragmentation of a particular class.
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: @leitao_measuring_2006
+
+
+## Aggregation: Isolation
+## Diversity
+## To complete and sort in
+### Aggregation Index {#mAI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Class Dominance {#mDOM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Clumpiness {#mCLUM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Cohesion Index {#mCOH}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Connectance {#mCONN}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Contiguity Index {#mCONTI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: contiguity index (CII)
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Contagion Index {#mCONTA}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Contrast Weighted Edge Density {#mWDE}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Core Area {#mAC}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: area of the core (AC)
+
+  \begin{equation} 
+    AC = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Core Area Proportion {#mPAC}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: proportion of core area (PCA)
+
+  \begin{equation} 
+    PCA = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Disjunct Cores Number {#mNDC}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: number of disjunct cores (NDC)
+
+  \begin{equation} 
+    NDC = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Disjunct Cores Density {#mDDC}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: density of disjunct cores (DDC)
+
+  \begin{equation} 
+    DDC = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Ecotone Area {#mAE}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: area of the ecotone (AE)
+
+  \begin{equation} 
+    AE = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Effective Mesh Size {#mEMS}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Edge Contrast Index {#mECI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: edge contrast index (ECI)
+
+  \begin{equation} 
+    ECI = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+
+### Fractal dimension {#mFD}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Interspersion and Juxtaposition Index {#mIJI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Landscape Division Index {#mLDI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Linearity Index {#mLI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Mean 5 Neighbour Distance {#mMND}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Mean Distribution Distance {#mMDD}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Modified Simpson Diversity {#mDSIMM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Modified Simpson Evenness {#mESIMM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Normalized Shape Index {#mNSI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Nearest Neighbour Distance {#mNND}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: nearest neighbour distance (NND)
+
+  \begin{equation} 
+    NND = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Net Product {#mNET}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Patch Richness {#mNP}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Patch Richness Density {#m}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Perimeter-Area Fractal Dimension {#mPAFD}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Proximity Index {#mPI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: proximity index (PI)
+
+  \begin{equation} 
+    PI = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Related Circumscribing Circle {#mRCC}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: related circumscribing circle (RCC)
+
+  \begin{equation} 
+    RCC = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Relative Patch Richness {#mRNP}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Shannon Diversity {#mDSHA}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Shannon Evenness {#mESHA}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Shape Index {#mSHAPE}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: shape index (SHAPE)
+
+  \begin{equation} 
+    SHI = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Similarity Index {#mSIMI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: similarity index (SIMI)
+
+  \begin{equation} 
+    SIMI = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Simpson Diversity {#mDSIM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Simpson Evenness {#mESIM}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Splitting Density {#mSD}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+### Splitting Index {#mSI}
+
+Description: 
+
+Level of measurement: 
+
+Internal name: 
+
+  \begin{equation} 
+    PLP = 
+  \end{equation}
+with $$ = , $$ = 
+
+    someRCode(...)
+
+Unit: $$
+
+Range: $$
+
+Interpretation: 
+
+Limitations: 
+
+Employed in the derived metrics: 
+
+Reference: 
+
+
+
+# References

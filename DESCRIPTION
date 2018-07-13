@@ -1,0 +1,38 @@
+Package: rasterTools
+Title: obtain and process earth observation data
+Version: 0.8.0
+Authors@R: person("Steffen", "Ehrmann", email = "steffen.science@funroll-loops.de",
+    role = c("aut", "cre"), 
+    comment = c(ORCID = "0000-0002-2958-0796"))
+Description: The rasterTools package provides the toolchain for a transparent 
+    and reproducible workflow to obtain and process spatial (earth observation)
+    data for an evidence based approach to landscape ecological questions.
+URL: https://github.com/EhrmannS/rastertools
+BugReports: https://github.com/EhrmannS/rastertools/issues
+Depends:
+    R (>= 2.10)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 0.12.12),
+    methods,
+    sp,
+    raster,
+    rgdal,
+    rgeos,
+    httr,
+    mmand,
+    grid,
+    gdalUtils,
+    checkmate,
+    foreign,
+    visNetwork,
+    rmarkdown
+RoxygenNote: 6.0.1
+LinkingTo: Rcpp
+VignetteBuilder: knitr
+Suggests: testthat,
+    magrittr,
+    covr,
+    knitr
+SystemRequirements: C++11

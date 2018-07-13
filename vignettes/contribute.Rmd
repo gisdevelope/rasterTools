@@ -1,0 +1,214 @@
+---
+title: "Best practices to contribute"
+author: "Steffen Ehrmann"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Best practices to contribute}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this document you can find an outline of the default design of the operators employed in the core-functions of `rasterTools` and other "best practices". It is recommended that you stick to the design which is given here, if you want to write a new operator that is readily compatible with `rasterTools`. I do my best to keep this document updated, but as the development of `rasterTools` and other packages progresses, one or the other thing here may be outdate, so don't be too frustrated if something does not work ad-hoc. If you want the operator you wrote to be part of `rasterTools`, create a pull-request and when everything is running smoothly, I may include you as author of that function, if you want that.
+
+- Many of the code-chunks of this documentation are written in so-called pseudocode, which is a placeholder or variable, which would be replaced in an actual function. Pseudocode elements are written in CAPITAL LETTERS and typically have a rather self-explanatory name.
+
+# The core functions
+## `generate()`
+
+## `obtain()`
+Each operator for the `obtain()`-function has at least the argument `mask` but most likely also other arguments to handle distinct subsets of the dataset, such as different years or products.
+
+    oDATASET <- function(mask, ARG){
+        
+        ARG_VALUES <- c(VALID, VALUES, OF, ARG)
+        target_crs <- sp::proj4string(mask)
+
+The arguments would typically reflect characteristics of the dataset, which could be seen as the distinctive for the subsets of this dataset. This is, for instance, the 'year' in case of the Corine land-cover dataset (a distinct map for each of the years 1990, 2000, 2006 and 2012) or the 'product' and 'layer' in case of a MODIS dataset. You can define as many of these arguments as needed.
+
+A code-chunk that checks for missing values in the required arguments is necessary. This chunk typically returns a brief message, in case one of the arguments is missing. Here, it is important that not a warning is returned, but in fact a value (i.e. a character vector). `obtain()` may be used with a large set of distinct samples, for each of which `oDATASET()` will be run and the output of each of which will be stored in a list. With a warning, but no return value, the length of the final list would not match the number of samples. In contrast, with an informative return value, such as "species X does not exist for location Y" (see `oEM()`), the output remains consistent.
+
+        if(missing(ARG) | !any(ARG %in% ARG_VALUES)){
+          return(c("'ARG' does not match any DATASET dataset or is undefined."))
+        } else {
+
+`ARG_VALUES` could be an index or an internally defined object, both of which would serve as sort of a look-up-table for valid values.
+
+Next, the projection of the spatial object should be checked and adapted as early as possible, to avoid accidently building on spatial objects with the wrong coordinate reference system. Controlling the projection is crucial, as problems with the projection of one out of many files may already lead to problems that are hard to trace back. 
+
+          if(target_crs != DATASET_CRS){
+            mask <- sp::spTransform(mask, DATASET_CRS)
+          }
+
+`DATASET_CRS` would be a character string of the dataset's coordinate reference system (crs). These strings and what they mean can be found for instance on the [http://proj4.org/](http://proj4.org/) website. A couple of these strings do already come with `rasterTools` and are saved with an intuitive name, such as LAEA (Lambert Azimuthal Equal Area) or LONGLAT (the typical projection employed in google maps, which is given in longitude/latitude). 
+
+Many datasets come as tiles and we need to identify from the mask, which tiles we need.
+
+          tiles <- as.logical(rgeos::gIntersects(tiles_DATASET, rgeos::gConvexHull(mask), byid = TRUE))
+          tiles_out <- tiles_DATASET[tiles,]
+          
+          ...
+
+The template for the tiles (`tiles_DATASET`) comes with `rasterTools`, if the dataset is supported. Alternatively (or even as an additional step), we iterate through the dataset units, for example the value captured in `ARG` or the tiles according to which the dataset is divided. We capture all units in one raster-stack.
+
+          DATASET_out <- raster::stack()
+          
+          for(j in seq_along(ARG)){
+            cat(paste0("extracting target DATASET from local directory.\n"))
+
+As some of the spatial operations may take up a large quantity of time, `rasterTools` is designed so that it always gives feedback about what it is doing at the moment. For that purpose the `message()` function is employed throughout in combination with `paste0()` (a slightly more efficient wrapper of `paste()` with `sep = ''` on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise.
+
+            tDATASET <- raster::raster(...)
+            sp::proj4string(tDATASET) <- DATASET_CRS
+            
+            message(paste0("  ... cropping DATASET to targeted study area\n"))
+            tDATASET <- raster::crop(tDATASET, mask, ...)
+
+Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. `tDATASET` is the target object that would be processed successively to load the subset of dataset (`...`). Often a dataset may not be saved with a coordinate reference system and in these cases, this needs to be assigned. In most cases you will want to crop the overall dataset to `mask` or load only parts of it into `R`. The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.
+
+You should make frequent use of the two helper functions `listPaths()` and `spLoad()`. If they don't exactly do what you want them to do, please file an issue at `rasterTools`s github page before you attempt to reinvent the wheel.
+
+As a final step of operations on the spatial data you should reproject the output. If a user wants to include various different datasets in one analysis, all the datasets should have the same projection. `rasterTools` assumes that this is the projection the initial `mask` had. Hence, `tDATASET` should be reprojected to this crs.
+
+            if(proj4string(mask) != target_crs){
+              cat(paste0("reprojecting tDATASET to '", strsplit(target_crs, " ")[[1]][1], "'\n"))
+              tDATASET <- projectRaster(tDATASET, crs = target_crs, ...)
+            }
+
+Then, the output is attached to the output raster-stack and sent back to `obtain()`.
+
+            DATASET_out <- raster::stack(DATASET_out, tDATASET)
+          }
+        }
+        toEnvironment(object = DATASET_out,
+                      name = paste0(tDATASET_out),
+                      envir = NULL)
+      }
+
+The function `toEnvironment()` handles storing the output and when `envir = NULL`, the output gets returned and thus assigned to the overall list that is put together by `obtain()`.
+
+## `modify()`
+Each operator that modifies a raster has at least the argument `obj`, which denotes the raster that shall be modified. Most computations in `rasterTools` are performed on matrix objects and thus the first thing is to define a matrix from the raster. Often, also the values of this raster are of interest and in that case you would assign them to a variable early on.
+
+    rMOD <- function(obj, ARG){
+      mat <- as.matrix(obj)
+      vals <- values(obj)
+      
+Next, a computation is carried out. In case the computation is based on a specifically formated raster, for example a binarised one, this should be tested and a respective error should be thrown. In most cases it is preferable to interrupt a computation that has not been strictly outlined over wasting time on deriving flawed results.
+
+      if(!isBinaryC(mat)){
+        stop("spatial object is not binary, please run 'rBinarise()' initially.")
+      }
+      temp <- ...
+
+As you have carried out the computations with a matrix, you have to transfer the matrix back to a `raster`. You would use the spatial information of `obj` to reconstruct the exact dimensions and coordinate reference system (CRS). In very rare cases the new raster's dimensions have changed and in this case also the extent and CRS must be adapted computationally.
+
+      out <- raster(temp)
+      extent(out) <- extent(obj)
+      sp::proj4string(out) <- sp::proj4string(obj)
+
+Each `raster` object has the slot `@history` and `rasterTools` takes advantage of that. This slot is recently not used by the raster package and hence you can fill it with information. `rasterTools` expects here a list of all the operations that have been carried out with the raster. So you would either specify here that the raster was just loaded from the memory, which is the default that needs to be assigned to any raster that has an unknown history (in the eyes of `rasterTools`, that is). Otherwise, extract the `@history` slot and concatenate an informative but concise sentence about what your algorithm has done to the raster.
+
+The `visualise()` function has been conceptualised so that it can print the history of a raster. This may be a rather helpful tool when putting together complex spatial operations or when reporting the procedure according to which a raster has been created. Moreover, to increase the awareness of the user with which raster one deals, you should also assign a `SHORT_NAME` to the raster. This will be printed as panel name by `visualise()`.
+
+      if(length(obj@history)==0){
+        history <- list(paste0("object loaded from memory"))
+      } else{
+        history <- obj@history
+      }
+      out@history <- c(history, list(paste0("THIS HAS BEEN DONE")))
+
+      names(out) <- paste0("SHORT_NAME")
+      
+Finally the raster would be returned.
+
+      return(out)
+    }
+
+
+## `measure()`
+
+# Other functions
+## `spLoad()`
+
+Also `spLoad()` is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function `spLoad()` contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective `load*` and `download*` functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into `R` can be handled by `spLoad()`, given the respective wrapper has been defined.
+
+### `load*`
+Each class should be able to take an argument `path`, the exact location of the file to load. Optionally, for instance when the file is saved in `shp`, the argument `layer`, declaring the layer to be loaded.
+
+One of the simplest classes for `spLoad()` is that for loading shape-files:
+
+    loadSHP <- function(path, layer){
+      rgdal::readOGR(dsn = path,
+                     layer = layer,
+                     verbose = FALSE)
+    }
+
+The simplest 'template' of this class would hence be:
+
+    loadFORMAT <- function(path, layer){
+      rgdal::readOGR(dsn = path,
+                     layer = layer,
+                     verbose = FALSE)
+    }
+
+Building on `rgdal::readOGR()` makes defining new classes for `spLoad()` a breeze. But you can of course also use other functions, if they should be more efficient, or if `readOGR()` doesn't support the format.
+
+It is important to note, that neither the classes to `spLoad()` nor `spLoad()` handle the coordinate reference system, this is carried out by `spCRS()`. The class simply loads what is found in `path` with `layer` and makes it available to `spLoad()`, which turns the information into the respective output format.
+
+### `download*`
+
+# Other recommendations
+
+## Be informative
+`rasterTools` intends to be as transparent as possible and this ensues that error messages or relevant warnings are easy to understand and appear whenever a problem occurs. This is where the checkmate package comes in, that `rasterTools` heavily utilizes. Thus many of the recommendations with regard to error management derive from their directives. Also, since several of the functions here can be quite time-consuming, a message that informs the user about the currently processing step can be helpful. This includes a progressbar, which indicates the progress of a iterative computation.
+
+For example, the `index()` function builds an index based on all the files that are found in a certain directory. This index can be useful when a project is meant to deal with a large number of files in some directory (for instance in "./myProject/aLargeNumberOfFiles/") that need to be accessed arbitrarily, i.e. not all of them at a time or only a subset according to the current conditions. Hence, it might not be required to load all the files into the global environment of R but instead it would be useful to provide a simple key, according to which the files can be loaded. Think, for example, about all the different products, tiles, temporal extents and layers of the MODIS dataset. The file-names of the respective files are a long and cumbersome combination of all these information and very timeconsuming to type in; sure, tab-completion is your friend, but with these files you still need tab through several "levels" of file specification, so to speak.
+
+Anyway, while `index()` is an example of functions that makes `rasterTools` more informative, it utilizes the `txtProgressBar` function in the following way:
+
+    FILES <- list.files(PATH)
+    pb <- txtProgressBar(min = 0, max = length(FILES), style = 3, char=">", width=getOption("width")-14)
+    for(i in seq_along(FILES)){
+    
+      # store the name and an abbreviation of each file to a data-frame
+      setTxtProgressBar(pb, i)
+      
+    }
+    close(pb)
+
+This informs the user about the progress of this function and should be helpful especially when many files need to be accessed and the whole procedure naturally takes a while. If your new function also goes through many files, it would be recommended that you employ the same specifications for the progress bar you may want to use.
+
+Moreover, if computations are employed that take a certain while, for instance loading a large raster into the global environment, or reprojecting a raster, it may be useful to inform the user also about these steps. This is frequently done in the `obtain()` operators. Here, the `message` function is used. This function has the advantage over `cat`, that it can be integrated with a translation framework that would provide the messages in the language `rasterTools` is expected to communicate with the user (not supported yet). Hence, it is recommended that you also use this function, so that your function seamlessly blends in with this framework.
+
+## Create a bibliography entry
+`rasterTools` has the `reference()` function, which helps the user to put together the correct bibliography when reporting the results in a publication. If your function is based on the work that has been defined by somebody else, it should report the respective reference. `R` comes with the `bibentry()` function, which lets you define the reference(s) of your function.
+
+    bib <- bibentry(bibtype = "",
+                  title = "",
+                  author = person(""),
+                  year = ,
+                  ... 
+    )
+    
+Then, your function should first check whether a bibliography already exists in the options of the current session. If this is not found, create it. If a bibliography object has already been created, it needs to be checked whether or not the recent reference is already included and if this is not the case, concatenate the reference.
+
+    if(is.null(getOption("bibliography"))){
+      options(bibliography = bib)
+    } else{
+      currentBib <- getOption("bibliography")
+      if(!bib%in%currentBib){
+        options(bibliography = c(currentBib, bib))
+      }
+    }
+    
+This will assure that the algorithm your function is based upon is properly included when it is used in a computation that should be published.
+
+## Merge tiles of a dataset after masking

@@ -1,0 +1,78 @@
+[![Travis-CI Build Status](https://travis-ci.org/EhrmannS/rastertools.svg?branch=master)](https://travis-ci.org/EhrmannS/rastertools)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EhrmannS/rastertools?branch=master&svg=true)](https://ci.appveyor.com/project/EhrmannS/rastertools)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/rastertools)](https://cran.r-project.org/package=rastertools)
+[![codecov](https://img.shields.io/codecov/c/github/EhrmannS/rastertools/master.svg)](https://codecov.io/github/EhrmannS/rastertools?branch=master)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/rastertools)](http://cran.rstudio.com/web/packages/rastertools/index.html)
+
+# rasterTools <img src="docs/logo.png" align="right" height="200" />
+
+***obtain and process earth observation data***
+
+The rasterTools package provides the toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions.
+
+## Getting started
+
+1) Install the stable version from CRAN(NOT AVAILABLE YET) or in the `R` console via:
+
+        install.packages('rasterTools')
+        
+2) Read a **brief introduction** to understand the philosophy of `rasterTools`:
+
+        ?`rasterTools-package`
+        
+3) Update the object `rtPaths`, which includes the directories where spatial files may be already stored on your hard-disc, or where they ought to be stored.
+
+        updatePaths(root = "/path/to/the/spatial/files/", project = "/path/to/your/project/")
+
+4) The vignettes explain in detail what [*algorithm* and *operator*](/vignettes/introduction.Rmd) means here and what the logic behind [landscape metrics](/vignettes/landscape_metrics.Rmd) is.
+
+## In a nutshell, `rasterTools` ...
+
+- is used to generate spatial patterns (such as neutral landscape models) or obtain information from gridded spatial datasets. It provides options for raster modification and quantification via landscape metrics.
+
+- is aimed at supporting the majority of the important and widely used spatial datasets.
+
+- makes operations based on [mathematical morphology](https://en.wikipedia.org/wiki/Mathematical_morphology) available for (automated) detection of landscape features.
+
+- provides a simplified and standardized workflow for processing spatial data to improve your publications with respect to reproducibility, comparability and transparency.
+
+- allows prototyping new methods and landscape metrics to explore patterns in landscapes (and other 2D lattices).
+
+
+## Contribute
+In case you have a suggestion for a feature or function you'd require, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
+
+## Planned for future versions
+- Support of the Sentinel (high prio), Landsat and Lidar datasets.
+
+- `geomCurve()` to create lines and curves (high prio); `geomVoronoi()` to create a pattern of voronoi polygons with a random or given point pattern as anchor
+
+- new functions to simulate neutral and process oriented landscape models (high prio).
+
+- Support of various "national forest inventory" datasets (Germany, France, Italy, Spain, yours?)
+
+- `rTilify()` to segregate a gidded dataset into another tiling, for instance to align datasets to each other or produce a hexagonal tiling of a rectangluarly tiled dataset.
+
+- in-R georeferencing.
+
+- more `Rcpp`.
+
+## Citation
+Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.8.0. https://github.com/EhrmannS/rastertools
+
+```
+@Manual{,
+  title = {rasterTools: obtain and process earth observation data},
+  author = {Steffen Ehrmann},
+  year = {2018},
+  note = {R package version 0.8.0},
+  url = {https://github.com/EhrmannS/rastertools},
+}
+```
+
+## Acknowledgements
+I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to finalise in a concentrated effort a large part of the functionality.
+
+Thanks are also due to Prof. Arne Pommerening who was a great source of inspiration for what `rasterTools` is now.
+
+Moreover, I owe thanks to people like Alex Zvoleff ([`gfcanalysis`](ttp://azvoleff.com/gfcanalysis)) and Jon Clayden ([`mmand`](https://github.com/jonclayden/mmand)), who inspired me with their uncompromising and creative code-work.

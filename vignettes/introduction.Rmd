@@ -1,0 +1,100 @@
+---
+title: "Introduction"
+author: "Steffen Ehrmann"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Terminology}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+# Definitions
+An *algorithm* in `rasterTools` is given as list of lists.
+
+    algo_name <- list(list(operator1,
+                      list(operator2)))
+                      
+They are a sequence of *operators*, i.e. functions and their respective arguments, which act together to carry out some sort of computation. They are scope specific, i.e. they are typically only called in their respective core function. Each operator represents a `do.call()` compliant definition (type `?do.call` into the console to learn about it).
+
+    do.call(what, args, quote = FALSE, envir = parent.frame())
+
+Which translates to
+
+    algo_name <- list(operator1 = list(what, args),
+                      operator2 = list(what, args))
+
+Its first elements `what = operator_name` would outline the functions comprised in this algorithm (such as `nlmHeightmap` or `oCLC`). Its second element can have any number of arguments required to put together the call (such as `fracdim = 2.3, seed = 4815162342` or `period = 2006`).
+
+    datasets <- list(list(operator = "oCLC", period = 2006),
+                     list(operator = "oGFC", period = c(2005:2007)))
+
+This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be to build a novel neutral landscape model, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple work-flow.
+
+## Generate spatial patterns
+To build a neutral landscape model, or possibly other spatial data patterns which are based on some sort of simulated process (and are therefore not neutral but perhaps 'virtual'), an algorithm may be:
+
+    anNLM <- list(list(operator = "bHeightmap", fracdim = 2.3))
+    
+and it would be called by:
+
+    myNLM <- generate(build = myNLM, dimensions = c(400, 500))
+
+The so created spatial dataset can either be utilized directly or could be put through a pipeline of modification algorithms (see below).
+
+## Obtain spatial datasets
+An algorithm with which one would obtain information from various spatial data sets could be:
+
+    myDatasets <- list(list(operator = "oCLC", period = 2006),
+                       list(operator = "oGFC", period = c(2005:2007)),
+                       list(operator = "oMODIS", product = "mod17a3", period = 2006,
+                            layer = 2))
+
+Most of the different spatial datasets are available in a specific file format or may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the `product` and `layer` need to be specified. Each of the required arguments can be found in the respective documentation, for instance with `?oMODIS`.
+
+This collection of datasets can be obtained by:
+
+    myData <- obtain(data = myDatasets, mask = anyMask)
+
+## Modify gridded objects
+A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:
+
+    get_patches <- list(list(operator = "rBinarise", thresh = 30),
+                        list(operator = "rPatches"))
+
+When using this algorithm in `modify()` while `sequential = TRUE` the binarised raster will be used to derive patches. The output of `rBinarise` will be passed to `rPatches`, which determines patches from the thresholded rasters values.
+
+However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:
+
+    cc_cats <- list(get_patches = list(operator = "rBinarise", thresh = 30),
+                    get_patches = list(operator = "rPatches"),
+                    get_categories = list(operator = "rCategorise", n = 5))
+
+In this case `sequential = TRUE` would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to `FALSE` in the call).
+
+The modifications would be carried out by:
+
+    myModifiedData <- modify(input = myData$gfc, by = get_patches, sequential = TRUE)
+
+## Measure gridded objects
+Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. A generic metric typically consists of just one function with its respective arguments:
+
+    patches_area <- list(operator = "mArea", scale = "patch")
+
+A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific name that would be referred to in a final element, called `equation`:
+
+    mPropArea <- list(a_w = list(operator = "mArea", scale = "window"),
+                      a_c = list(operator = "mArea", scale = "class"),
+                      equation = "a_c / a_w * 100")
+
+The most important generic metrics are already predefined and so are some of the derived metrics. By combining all of those and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+
+The measurement of the features in a raster would be carried out by:
+
+    propAreaForest <- measure(input = myModifiedData, with = mPropArea)

@@ -1,0 +1,88 @@
+authors:
+  Steffen Ehrmann:
+    href:  https://orcid.org/0000-0002-2958-0796
+title: lomm
+url: http://EhrmannS.github.io/rastertools
+template:
+  params:
+    bootswatch: lumen
+reference:
+  - title: core functions
+    desc: functions around which no way leads!
+    contents:
+      - '`generate`'
+      - '`obtain`'
+      - '`modify`'
+      - '`measure`'
+  - title: visualise
+    desc: function to visualise rasters in `rasterTools`
+    contents:
+      - '`visualise`'
+      - '`setTheme`'
+      - '`locate`'
+  - title: document
+    desc: take care of your duties
+    contents:
+      - '`reference`'
+  - title: spatial pattern models
+    desc: operators to generate spatial patterns (neutral landscape models, etc)
+    contents:
+      - '`nlmRandom`'
+      - '`nlmGradient`'
+      - '`nlmHeightmap`'
+  - title: datasets
+    desc: operators to obtain raster objects from spatial datasets
+    contents:
+      - '`oCLC`'
+      - '`oGFC`'
+      - '`oMODIS`'
+      - '`oEMMA`'
+  - title: modifications
+    desc: operators to modify raster objects
+    contents:
+      - starts_with("r")
+      - -starts_with("rad")
+      - -starts_with("reference")
+      - -starts_with("ro")
+  - title: measure
+    desc: operators to measure raster objects via generic (landscape) metrics
+    contents:
+      - '`mNumber`'
+      - '`mArea`'
+      - '`mPerimeter`'
+      - '`mAdjacency`'
+      - '`mValues`'
+  - title: helper functions
+    desc: functions that assist to keep the data flowing
+    contents:
+      - '`updatePaths`'
+      - starts_with("g")
+      - starts_with("get")
+      - -starts_with("setTheme")
+      - -starts_with("generate")
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Vignettes"
+      menu:
+      -  text: Terminology and Concepts
+         href: articles/terminology.html
+      -  text: Best practices to contribute
+         href: articles/contribute.html
+      -  text: Landscape metrics
+         href: articles/landscape_metrics.html
+    - icon: fa-file-code-o
+      text: "Glossary"
+      href: reference/index.html
+  right:
+    - icon: far fa-list-alt
+      text: "Use cases"
+      menu:
+      - text: coming soon
+    - icon: fa-newspaper-o
+      text: "News"
+      href: news/index.html
+    - icon: fa-github
+      href: https://github.com/EhrmannS/rastertools

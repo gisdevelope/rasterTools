@@ -1,0 +1,776 @@
+#' Visualise gridded objects and geometries
+#'
+#' @template gridded
+#' @template geom
+#' @template theme
+#' @param trace [\code{logical(1)}]\cr Print the gridded object's history (i.e.
+#'   the process according to which it has been created) (\code{TRUE}), or
+#'   simply plot the object (\code{FALSE}, default).
+#' @param new [\code{logical(1)}]\cr force a new plot.
+#' @param ... [various]\cr Graphical parameters to \code{geom}.
+#' @details To create a plot with your own style, design it with
+#'   \code{\link{setTheme}} and use it in \code{theme}.
+#' @return Returns invisibly an object of class \code{recordedplot}, see
+#'   \code{\link{recordPlot}} for details (and warnings).
+#' @examples
+#' input <- rtData$continuous
+#' binarised <- rBinarise(input, thresh = 40)
+#' visualise(gridded = rDistance(binarised), trace = TRUE)
+#'
+#' # visualise also RasterBrick/-Stack objects
+#' getDistances <- list(disEuc = list(operator = "rDistance"),
+#'                      disMht = list(operator = "rDistance",
+#'                                    method = "manhattan"),
+#'                      disChb = list(operator = "rDistance",
+#'                                    method = "chessboard"))
+#' distances <- modify(input = binarised, by = getDistances, merge = TRUE)
+#' distances <- raster::brick(binarised, distances)
+#' visualise(distances)
+#'
+#' # define a geometry
+#' coords <- data.frame(x = c(30, 60, 60, 40),
+#'                      y = c(40, 40, 60, 70),
+#'                      id = 1)
+#' extent <- data.frame(x = c(0, 80),
+#'                      y = c(0, 80))
+#' (aGeom <- geomPolygon(anchor = coords, extent = extent, col = "blue"))
+#'
+#' # if plotted on top of an existing plot, the relative coordinate values
+#' # will be used to construct the grob.
+#' visualise(geom = aGeom)
+#' visualise(geom = aGeom, new = TRUE)
+#'
+#' @importFrom checkmate testClass testList assertNames assertList assertLogical
+#'   testCharacter
+#' @importFrom grid grid.newpage pushViewport viewport grid.rect grid.raster
+#'   unit grid.draw grid.grill upViewport grid.text gpar convertX downViewport
+#' @importFrom grDevices colorRampPalette as.raster recordPlot
+#' @importFrom raster nlayers values as.matrix ncol nrow
+#' @export
+
+visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
+                      new = FALSE, ...){
+
+  # check arguments
+  isRaster <- testClass(gridded, "Raster")
+  isRasterStack <- testClass(gridded, "RasterStack")
+  isMatrix <- testClass(gridded, "matrix")
+  isList <- testClass(gridded, "list")
+  if(isList){
+    isRasterList <- testList(gridded, "RasterLayer")
+    isMatrixList <- testList(gridded, "matrix")
+    if(!isRasterList & !isMatrixList){
+      stop("please provide either a list of matrix or RasterLayer (not brick or stack) objects.")
+    }
+  }
+  existsGridded <- ifelse(c(isRaster | isMatrix | isList), TRUE, FALSE)
+  existsGeom <- testClass(geom, classes = "geom")
+  if(!existsGridded & !existsGeom){
+    stop("please provide either a gridded object or a geometry to plot.")
+  }
+  assertList(theme, len = 7, null.ok = TRUE)
+  if(is.null(theme)){
+    theme <- theme_rt
+  } else{
+    assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
+  }
+  assertLogical(trace)
+  assertLogical(new)
+
+  # check whether a plot is already open and whether it is valid
+  if(!is.null(dev.list()) & !new){
+    objViewports <- grid.ls(viewports = TRUE, grobs = FALSE, print = FALSE)
+    isOpenPlot <- ifelse(any(objViewports$name == "vpLomm"), TRUE, FALSE)
+
+    panelNames <- objViewports$name[objViewports$vpDepth == 2 & objViewports$name != "1"]
+    panelNames <- panelNames[!duplicated(panelNames)]
+  } else{
+    isOpenPlot <- FALSE
+  }
+
+  # turn gridded into a list of matrixes and extract meta-data
+  if(existsGridded){
+    if(isRaster){
+
+      plotLayers <- nlayers(gridded)
+      griddedNames <- names(gridded)
+      vals <- lapply(1:plotLayers, function(x){
+        sort(unique(as.vector(gridded[[x]]), na.rm = TRUE))
+      })
+      mat <- lapply(1:plotLayers, function(x){
+        temp <- as.matrix(gridded[[x]])
+        return(temp)
+      })
+      ext <- extent(gridded[[1]])
+      panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
+
+    } else if(isMatrix){
+
+      plotLayers <- 1
+      griddedNames <- "layer"
+      vals <- list(sort(unique(as.vector(gridded), na.rm = TRUE)))
+      mat <- gridded
+      panelExt <- c(xMin = 0, xMax = ncol(mat), yMin = 0, yMax = nrow(mat))
+      mat <- list(mat)
+
+    } else if(isList){
+
+      plotLayers <- length(gridded)
+      griddedNames <- NULL
+      vals <- gridded
+      mat <- gridded
+      for(i in 1:plotLayers){
+        temp <- mat[[i]]
+
+        if(isRasterList){
+
+          griddedNames <- c(griddedNames, names(temp))
+          vals[[i]] <- sort(unique(as.vector(temp), na.rm = TRUE))
+          ext <- extent(temp)
+          panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
+
+        } else if(isMatrixList){
+
+          griddedNames <- c(griddedNames, "layer")
+          vals[[i]] <- sort(unique(as.vector(temp), na.rm = TRUE))
+          mat[[i]] <- temp
+          panelExt <- c(xMin = 0, xMax = ncol(temp), yMin = 0, yMax = nrow(temp))
+
+        } else{
+          temp <- NULL
+        }
+      }
+
+    }
+  }
+
+  if(isOpenPlot){
+    if(existsGridded){
+      # if both are given, check whether their names are the same. If not, prepare
+      # to plot gridded
+      if(!all(panelNames == griddedNames)){
+        isOpenPlot <- FALSE
+        panelNames <- griddedNames
+      }
+    } else if(!existsGridded){
+      plotLayers <- length(panelNames)
+    }
+  } else{
+    if(existsGridded){
+      panelNames <- griddedNames
+    }
+  }
+
+  # if plot still valid, determine which elements are available
+  if(isOpenPlot){
+    isTitleInPlot <- !identical(grid.grep("title", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+    isLegendInPlot <- !identical(grid.grep("legend", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+    isYAxisInPlot <- !identical(grid.grep("yAxisTitle", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+    isXAxisInPlot <- !identical(grid.grep("xAxisTitle", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+    isRasterInPlot <- !identical(grid.grep("raster", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+    isGeomInPlot <-!identical(grid.grep("geom", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
+  } else{
+    isTitleInPlot <- FALSE
+    isLegendInPlot <- FALSE
+    isYAxisInPlot <- FALSE
+    isXAxisInPlot <- FALSE
+    isRasterInPlot <- FALSE
+    isGeomInPlot <-FALSE
+  }
+
+  if(isGeomInPlot & !isRasterInPlot){
+    theme$plot$legend <- FALSE
+  }
+
+  # turn 'geom' into a grob that can be plotted
+  if(existsGeom){
+
+    if(isOpenPlot){
+      # if a plot is already open, we want to get it's extent so that the
+      # relative coordinates of geom can be calculated correctly.s
+        extentGrobMeta <- grid.get(gPath("extentGrob"))
+        panelExt <- c(xMin = 0, xMax = as.numeric(extentGrobMeta$width),
+                      yMin = 0, yMax = as.numeric(extentGrobMeta$height))
+
+        d <- getOption("digits")
+        options(digits = 15)
+
+        xAxisMeta <- grid.get(gPath("xAxisTicks"))
+        yAxisMeta <- grid.get(gPath("yAxisTicks"))
+        xTickLabels <- as.numeric(xAxisMeta$label)
+        yTickLabels <- as.numeric(yAxisMeta$label)
+        geom@window <- data.frame(x = rep(c(min(xTickLabels), max(xTickLabels)), each = 2),
+                                  y = c(min(yTickLabels), max(yTickLabels), max(yTickLabels), min(yTickLabels)))
+
+        options(digits = d)
+    } else{
+      panelExt <- c(xMin = min(geom@window$x), xMax = max(geom@window$x),
+                    yMin = min(geom@window$y), yMax = max(geom@window$y))
+      plotLayers <- 1
+      panelNames <- geom@type
+    }
+
+    # scale it to relative, if it's not
+    if(geom@scale == "absolute"){
+      geom <- gScale(geom, to = "relative")
+    }
+
+    geomGrob <- gToGrob(geom = geom, theme = theme, ...)
+
+  }
+
+  # checkup concerning plot size
+  if(plotLayers > 30){
+    question <- readline(paste0("  -> this will produce ", plotLayers, " plots, do you wish to continue? [yes/no]: "))
+    question <- match.arg(question, c("yes", "no"))
+    if(question == "no"){
+      return(invisible(0))
+    }
+  }
+
+  # manage plot properties
+  ratio <- list(x = (panelExt[[2]] - panelExt[[1]])/(panelExt[[4]] - panelExt[[3]]),
+                y = (panelExt[[4]] - panelExt[[3]])/(panelExt[[2]] - panelExt[[1]]))
+  xBins <- theme$bins$xAxis
+  yBins <- theme$bins$yAxis
+  xBinSize <- (panelExt[[2]] - panelExt[[1]])/xBins
+  yBinSize <- (panelExt[[4]] - panelExt[[3]])/yBins
+  axisSteps <- list(x1 = seq(from = panelExt[[1]],
+                             to = panelExt[[2]],
+                             by = (panelExt[[2]] - panelExt[[1]])/xBins),
+                    x2 = seq(from = panelExt[[1]] + (xBinSize/2),
+                             to = panelExt[[2]],
+                             by = (panelExt[[2]] - panelExt[[1]])/xBins),
+                    y1 = seq(from = panelExt[[3]],
+                             to = panelExt[[4]],
+                             by = (panelExt[[4]] - panelExt[[3]])/yBins),
+                    y2 = seq(from = panelExt[[3]] + (yBinSize/2),
+                             to = panelExt[[4]],
+                             by = (panelExt[[4]] - panelExt[[3]])/yBins))
+  margin <- list(x = (panelExt[[2]]-panelExt[[1]])*theme$margin$xAxis,
+                 y = (panelExt[[4]]-panelExt[[3]])*theme$margin$yAxis)
+
+  # manage the colours
+  if(existsGridded){
+
+    theColours <- lapply(seq_along(vals), function(x){
+      tempVals <- vals[[x]]
+
+      if(length(gridded[[x]]@legend@colortable) > 0){
+        if(any(tempVals == 0)){
+          gridded[[x]]@legend@colortable[tempVals+1]
+        } else{
+          gridded[[x]]@legend@colortable[tempVals]
+        }
+      } else{
+        if(is.integer(tempVals)){
+          valsTemp <- c(tempVals[1]-1, tempVals)
+        } else{
+          valsTemp <- c(tempVals[1]-1, seq(tempVals[1], tempVals[[length(tempVals)]], length.out = length(tempVals)))
+        }
+        valCuts <- cut(tempVals, breaks = valsTemp, include.lowest = T)
+        colorRampPalette(colors = theme$scale$colours,
+                         bias = theme$scale$bias,
+                         space = theme$scale$space,
+                         interpolate = theme$scale$interpolate)(length(valCuts))[valCuts]
+        # colorRampPalette(colors = theme$scale$colours,
+        #                  bias = theme$scale$bias,
+        #                  space = theme$scale$space,
+        #                  interpolate = theme$scale$interpolate)(length(tempVals))
+      }
+
+    })
+
+    theValues <- lapply(seq_along(vals), function(x){
+      if(length(vals[[x]]) > theme$bins$legend-1){
+        quantile(vals[[x]], probs = seq(0, 1, length.out = theme$bins$legend), type = 1, names = FALSE)
+      } else{
+        vals[[x]]
+      }
+    })
+    tickLabels <- lapply(seq_along(vals), function(x){
+      round(theValues[[x]], 1)
+    })
+
+  } else if(isOpenPlot){
+    if(isLegendInPlot){
+      legendMeta <- grid.get(gPath("legendTicks"))
+      tickLabels <- as.numeric(legendMeta$label)
+    }
+  } else{
+    theme$plot$legend <- FALSE
+  }
+
+  # height and width of the plot elements
+  if(theme$plot$title){
+    titleH <- unit(theme$par$fontsize$title+6, units = "points")
+  } else{
+    titleH <- unit(0, "points")
+  }
+  if(theme$plot$legend){
+    legendW <- ceiling(convertX(unit(1, "strwidth", as.character(max(unlist(tickLabels)))) + unit(30, "points"), "points"))
+  } else{
+    legendW <- unit(0, "points")
+  }
+  if(theme$plot$yAxis){
+    yAxisTitleW <- unit(theme$par$fontsize$yAxisTitle+6, units = "points")
+    yAxisTicksW <- ceiling(convertX(unit(1, "strwidth", as.character(max(round(axisSteps$y1, theme$bins$yDigits)))), "points"))
+  } else{
+    yAxisTitleW <- unit(0, "points")
+    yAxisTicksW <- unit(0, "points")
+  }
+  if(theme$plot$xAxis){
+    xAxisTitleH <- unit(theme$par$fontsize$xAxisTitle+6, units = "points")
+    xAxisTicksH <- unit(theme$par$fontsize$xAxisTicks, units = "points")
+  } else{
+    xAxisTitleH <- unit(0, "points")
+    xAxisTicksH <- unit(0, "points")
+  }
+  xOffset <- ((as.numeric(yAxisTicksW) + as.numeric(yAxisTitleW)) - as.numeric(legendW))/2
+
+  # determine the number of columns and rows and the position of panels
+  if(plotLayers > 1){
+    ncol <- ceiling(sqrt(plotLayers))
+  } else{
+    ncol <- 1
+  }
+  nrow <- ceiling(plotLayers/ncol)
+  panelPosY <- rep(rev(seq(from = 1, to = nrow)), each = ncol)
+  panelPosX <- rep(seq(from = 1, to = ncol), times = nrow)
+
+  # create new plot and an overarching viewport
+  if(!isOpenPlot){
+    grid.newpage()
+    pushViewport(viewport(name = "vpLomm"))
+  }
+
+  # start plotting the different elements
+  for(i in 1:plotLayers){
+    plotName <- panelNames[i]
+
+    if(!isOpenPlot){
+
+      # the panel viewport
+      pushViewport(viewport(x = (panelPosX[i]/ncol)-(1/ncol/2),
+                            y = (panelPosY[i]/nrow)-(1/nrow/2),
+                            width = 1/ncol,
+                            height = 1/nrow,
+                            name = plotName))
+      grid.rect(width = convertX(unit(1, "npc"), "native"), gp = gpar(col = NA, fill = NA), name = "panelGrob")
+      grid.rect(height = theme$margin$yAxis, width = theme$margin$xAxis,
+                gp = gpar(fill = NA, col = NA), name = "marginGrob")
+      grid.rect(height = unit(panelExt[[4]] - panelExt[[3]], "points"),
+                width = unit(panelExt[[2]] - panelExt[[1]], "points"),
+                gp = gpar(fill = NA, col = NA), name = "extentGrob")
+
+      # determine dimensions for this plot
+      gridH <- unit(1, "grobheight", "panelGrob") - xAxisTitleH - xAxisTicksH - titleH
+      gridHr <- unit(1, "grobwidth", "panelGrob")*ratio$y - yAxisTitleW*ratio$y - yAxisTicksW*ratio$y - legendW*ratio$y
+      gridW <- unit(1, "grobwidth", "panelGrob") - yAxisTitleW - yAxisTicksW - legendW
+      gridWr <- unit(1, "grobheight", "panelGrob")*ratio$x - xAxisTitleH*ratio$x- xAxisTicksH*ratio$x - titleH*ratio$x
+
+      pushViewport(viewport(x = unit(0.5, "npc") + unit(xOffset, "points"),
+                            height = min(gridH, gridHr),
+                            width = min(gridW, gridWr),
+                            name = "plot"))
+
+      # the title viewport
+      if(theme$plot$title){
+        pushViewport(viewport(name = "title"))
+        grid.text(just = "top",
+                  y = unit(1, "npc") + titleH,
+                  label = plotName,
+                  gp = gpar(fontsize = theme$par$fontsize$title,
+                            col = theme$par$colour$title))
+        upViewport() # exit title
+      }
+
+      # the legend viewport
+      if(theme$plot$legend){
+
+        if(length(theValues[[i]]) < 2){
+          pushViewport(viewport(height = unit(1, "npc")*theme$legend$sizeRatio,
+                                yscale = c(1, length(vals[[i]])+0.1),
+                                name = "legend"))
+        } else{
+          pushViewport(viewport(height = unit(1, "npc")*theme$legend$sizeRatio,
+                                yscale = c(1, length(vals[[i]])+0.1),
+                                name = "legend"))
+        }
+
+        # order the legend
+        if(theme$legend$ascending){
+          theLegend <- matrix(data = rev(theColours[[i]]), ncol = 1, nrow = length(vals[[i]]))
+          valPos <- unit(which(vals[[i]] %in% theValues[[i]]), "native")
+        } else{
+          theLegend <- matrix(data = theColours[[i]], ncol = 1, nrow = length(vals[[i]]))
+          valPos <- rev(unit(which(vals[[i]] %in% theValues[[i]]), "native"))
+        }
+
+        grid.raster(x = unit(1, "npc") + unit(10, "points"),
+                    width = unit(10, "points"),
+                    height = unit(1, "npc"),
+                    just = "left",
+                    image = theLegend,
+                    name = "theLegend",
+                    interpolate = FALSE)
+        grid.rect(x = unit(1, "npc") + unit(10, "points"),
+                  just = "left",
+                  width = unit(1, "grobwidth", "theLegend"),
+                  gp = gpar(col = "black", fill = NA, alpha = 1, lwd = 0.2))
+        grid.text(label = tickLabels[[i]],
+                  x = unit(1, "npc") + unit(1, "grobwidth", "theLegend") + unit(20, "points"),
+                  y = valPos,
+                  just = c("left"),
+                  name = "legendTicks",
+                  gp = gpar(fontsize = theme$par$fontsize$legend,
+                            col = theme$par$colour$legend))
+
+
+        upViewport() # exit legend
+      }
+
+      # the yAxis viewport
+      if(theme$plot$yAxis){
+        pushViewport(viewport(name = "yAxisTitle"))
+        grid.text(just = "right",
+                  x = unit(0, "npc") - unit(2, "points") - yAxisTicksW,
+                  label = theme$labels$yAxis,
+                  rot = theme$par$rotation$yAxisTitle,
+                  gp = gpar(fontsize = theme$par$fontsize$yAxisTitle,
+                            col = theme$par$colour$yAxisTitle))
+        upViewport() # exit yAxisTitle
+      }
+
+      # the xAxis viewport
+      if(theme$plot$xAxis){
+        pushViewport(viewport(name = "xAxisTitle"))
+        grid.text(just = "bottom",
+                  y = unit(0, "npc") - unit(2, "points") - xAxisTitleH,
+                  label = theme$labels$xAxis,
+                  rot = theme$par$rotation$xAxisTitle,
+                  gp = gpar(fontsize = theme$par$fontsize$xAxisTitle,
+                            col = theme$par$colour$xAxisTitle))
+        upViewport() # exit xAxisTitle
+      }
+
+      # the grid viewport
+      pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                            yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                            name = "grid"))
+      grid.rect(gp = gpar(col = NA, fill = NA), name = "gridGrob")
+      # grid.rect(gp = gpar(col = "green", fill = NA))
+
+      if(theme$plot$grid){
+
+        # the grid and axes viewport
+        pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                              name = "majorGrid"))
+
+        if(theme$plot$xAxis){
+          grid.text(label = as.character(round(axisSteps$x1, theme$bins$xDigits)),
+                    just = "top",
+                    x = unit(axisSteps$x1, "native"),
+                    y = unit(-0.005, "npc"),
+                    rot = theme$par$rotation$xAxisTicks,
+                    name = "xAxisTicks",
+                    gp = gpar(fontsize = theme$par$fontsize$xAxisTicks,
+                              col = theme$par$colour$xAxisTicks))
+        }
+        if(theme$plot$yAxis){
+          grid.text(label = as.character(round(axisSteps$y1, theme$bins$yDigits)),
+                    just = "right",
+                    x = unit(-0.005, "npc"),
+                    y = unit(axisSteps$y1, "native"),
+                    rot = theme$par$rotation$yAxisTicks,
+                    name = "yAxisTicks",
+                    gp = gpar(fontsize = theme$par$fontsize$yAxisTicks,
+                              col = theme$par$colour$yAxisTicks))
+        }
+
+        grid.grill(h = unit(axisSteps$y1, "native"),
+                   v = unit(axisSteps$x1, "native"),
+                   gp = gpar(lwd = 0.2))
+        upViewport() # exit majorGrid
+
+        # plot the minor grid
+        if(theme$plot$minorGrid){
+          pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                                yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                                name = "minorGrid"))
+          grid.grill(h = unit(axisSteps$y2, "native"),
+                     v = unit(axisSteps$x2, "native"),
+                     gp = gpar(lwd = 0.1))
+          upViewport() # exit minorGrid
+        }
+      }
+
+      # the raster viewport
+      if(existsGridded){
+
+        toDraw <- subNumChrC(mat[[i]],
+                             replace = vals[[i]],
+                             with = theColours[[i]])
+
+        pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                              name = "raster"))
+        grid.raster(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                    height = unit(1, "npc") - unit(2*margin$y, "native"),
+                    image = toDraw,
+                    name = "theRaster",
+                    interpolate = FALSE)
+        upViewport() # exit raster
+      }
+
+      # the geom viewport
+      if(existsGeom){
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              name = "geom"))
+        grid.draw(geomGrob)
+        upViewport() # exit geom
+      }
+      upViewport(3) # exit grid and plot and 'plotName'
+    }
+
+    if(isOpenPlot & existsGeom){
+
+      # downViewport("vpLomm")
+      downViewport(plotName)
+      downViewport("plot")
+      # grid.rect(gp = gpar(col = "green", fill = NA))
+
+      if(!isGeomInPlot){
+        # this does not seem to shrink the viewport so that geoms are shown correctly.
+        pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                              name = "grid"))
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              name = "geom"))
+        # grid.rect(gp = gpar(col = NA, fill = NA), name = "gridGrob")
+      } else{
+        downViewport("grid")
+        downViewport("geom")
+      }
+
+      grid.draw(geomGrob)
+      upViewport(4)
+    }
+
+  }
+
+  if(!isOpenPlot){
+    upViewport()
+  } else if(isOpenPlot & existsGeom){
+    upViewport()
+  }
+
+  if(trace){
+    if(isRasterStack){
+      theHistory <- lapply(seq_along(names(gridded)), function(x){
+        temp <- unlist(gridded[[x]]@history)
+      })
+      if(!is.null(unlist(theHistory))){
+        histMsg <- lapply(seq_along(names(gridded)), function(x){
+          paste0("the layer '", names(gridded)[x], "' has the following history:\n -> ", paste0(theHistory[[x]], collapse = "\n -> "))
+        })
+        names(histMsg) <- names(gridded)
+        plotHistory <- TRUE
+      } else{
+        plotHistory <- FALSE
+      }
+    } else if(isRaster){
+      theHistory <- unlist(gridded@history)
+      if(!is.null(theHistory)){
+        histMsg <- paste0("this object has the following history:\n -> ", paste0(theHistory, collapse = "\n -> "))
+        plotHistory <- TRUE
+      } else{
+        plotHistory <- FALSE
+      }
+    }
+    if(plotHistory){
+      message(paste0(histMsg, collapse = "\n"))
+    } else{
+      message(paste0("this object has the following history:\n -> object loaded from memory"))
+    }
+  }
+
+  invisible(recordPlot(attach = "rasterTools"))
+}
+
+#' Create a new theme
+#'
+#' To see the default settings, type \code{str(theme_rt)}.
+#' @param from [\code{theme}]\cr the theme that serves as basis for
+#'   modifications, by default \code{theme_rt}.
+#' @param plot [\code{list(logical)}]\cr which elements (not) to plot:
+#'   \code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid} and
+#'   \code{minorGrid}.
+#' @param labels [\code{list(character)}]\cr the labels of: \code{xAxis} and
+#'   \code{yAxis}.
+#' @param bins [\code{list(integerish)}]\cr how many sections for: \code{yAxis},
+#'   \code{xAxis} and \code{legend} and how many \code{yDigits} and
+#'   \code{xDigits}.
+#' @param margin [\code{list(numeric)}]\cr the margin proportion for:
+#'   \code{yAxis} and \code{xAxis}.
+#' @param scale [\code{list(.)}]\cr at least two \code{colours}, a \code{bias},
+#'   the colour \code{space} and how to \code{interpolate} the values; see
+#'   arguments to \code{\link[grDevices]{colorRampPalette}}.
+#' @param legend [\code{list(.)}]\cr whether or not to \code{interpolate} the
+#'   legend, whehter or not to sort the legend values \code{ascending}, the
+#'   legend \code{position} and the \code{sizeRatio} of legend:grid.
+#' @param fontsize [\code{named integerish(.)}]\cr the fontsize of:
+#'   \code{title}, \code{y/xAxisTitle}, \code{y/xAxisTicks} and \code{legend}.
+#' @param colour [named \code{character(.)}]\cr the colour of: \code{title},
+#'   \code{y/xAxisTitle}, \code{y/xAxisTicks}, \code{legend} and \code{geom}.
+#' @param rotation [\code{named numeric(.)}]\cr the rotation of:
+#'   \code{y/xAxisTitle} and \code{y/xAxisTicks}
+#' @param fill [\code{character(.)}]\cr (only \code{geom}) colour for filling
+#'   geometries.
+#' @param linetype [\code{named character(.)}]\cr (only \code{geom}) line type;
+#'   see \code{\link[graphics]{par}}.
+#' @param linewidth [\code{named integerish(.)}]\cr (only \code{geom}) line
+#'   width; see \code{\link[graphics]{par}}.
+#' @param pointsize [\code{named integerish(.)}]\cr (only \code{geom}) the size
+#'   of point geometries; see \code{\link[grid]{grid.points}}.
+#' @param pointsymbol [\code{named integerish(.)}]\cr (only \code{geom}) point
+#'   symbol; see \code{\link[graphics]{points}}.
+#' @examples
+#' input <- rtData$continuous
+#' myTheme <- setTheme(theme_rt,
+#'                     plot = list(title = FALSE),
+#'                     scale = list(colours = terrain.colors(10), bias = 0.5),
+#'                     bins = list(yAxis = 4, xAxis = 5),
+#'                     fontsize = list(yAxisTitle = 10, xAxisTicks = 10),
+#'                     colour = list(yAxisTitle = "darkgrey", xAxisTitle = "#A9A9A9"),
+#'                     rotation = list(yAxisTitle = 0))
+#' visualise(input, theme = myTheme)
+#' @importFrom checkmate assertList assertLogical assertNames
+#' @export
+
+setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margin = NULL,
+                     scale = NULL, legend = NULL, fontsize = NULL, colour = NULL,
+                     rotation = NULL, fill = NULL, linetype = NULL, linewidth = NULL,
+                     pointsize = NULL, pointsymbol = NULL){
+
+  assertList(from, len = 7, null.ok = TRUE)
+  if(!is.null(from)){
+    assertNames(names(from), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
+  } else{
+    from <- theme_rt
+  }
+  out <- from
+  assertList(plot, any.missing = FALSE, types = c("logical"), null.ok = TRUE)
+  if(!is.null(plot)){
+    assertNames(names(plot), subset.of = c("title", "legend", "yAxis", "xAxis", "grid", "minorGrid"))
+    prvPlot <- from[which(names(from) == "plot")]$plot
+    matched <- names(prvPlot) %in% names(plot)
+    out$plot[matched] <- plot
+  }
+  assertList(labels, any.missing = FALSE, types = c("character"), null.ok = TRUE)
+  if(!is.null(labels)){
+    assertNames(names(labels), subset.of = c("yAxis", "xAxis"))
+    prvBins <- from[which(names(from) == "labels")]$labels
+    matched <- names(prvBins) %in% names(labels)
+    out$labels[matched] <- labels
+  }
+  assertList(bins, any.missing = FALSE, types = c("integerish"), null.ok = TRUE)
+  if(!is.null(bins)){
+    assertNames(names(bins), subset.of = c("yAxis", "xAxis", "legend", "yDigits", "xDigits"))
+    prvBins <- from[which(names(from) == "bins")]$bins
+    matched <- names(prvBins) %in% names(bins)
+    out$bins[matched] <- bins
+  }
+  assertList(margin, any.missing = FALSE, null.ok = TRUE)
+  if(!is.null(margin)){
+    assertNames(names(margin), subset.of = c("yAxis", "xAxis"))
+    assertNumeric(margin$yAxis, lower = 0, upper = 1)
+    assertNumeric(margin$xAxis, lower = 0, upper = 1)
+    prvBins <- from[which(names(from) == "margin")]$margin
+    matched <- names(prvBins) %in% names(margin)
+    out$margin[matched] <- margin
+  }
+  assertList(scale, any.missing = FALSE, null.ok = TRUE)
+  if(!is.null(scale)){
+    assertNames(names(scale), subset.of = c("colours", "bias", "space", "interpolate"))
+    assertCharacter(scale$colours, null.ok = TRUE)
+    assertNumeric(scale$bias, null.ok = TRUE)
+    assertCharacter(scale$space, null.ok = TRUE)
+    assertCharacter(scale$interpolate, null.ok = TRUE)
+    prvScale <- from[which(names(from) == "scale")]$scale
+    matched <- names(prvScale) %in% names(scale)
+    out$scale[matched] <- scale
+  }
+  assertList(legend, any.missing = FALSE, null.ok = TRUE)
+  if(!is.null(legend)){
+    assertNames(names(legend), subset.of = c("ascending", "position", "ratio"))
+    assertLogical(legend$ascending, null.ok = TRUE)
+    assertLogical(legend$interpolate, null.ok = TRUE)
+    assertCharacter(legend$position, null.ok = TRUE)
+    assertNumeric(legend$ratio, null.ok = TRUE)
+    prvScale <- from[which(names(from) == "legend")]$legend
+    matched <- names(prvScale) %in% names(legend)
+    out$legend[matched] <- legend
+  }
+  assertList(fontsize, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
+  if(!is.null(fontsize)){
+    assertNames(names(fontsize), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks"))
+    prvFontsize <- from$par[which(names(from$par) == "fontsize")]$fontsize
+    matched <- names(prvFontsize) %in% names(fontsize)
+    out$par$fontsize[matched] <- fontsize
+  }
+  assertList(colour, any.missing = FALSE, types = c("character"), null.ok = TRUE)
+  if(!is.null(colour)){
+    assertNames(names(colour), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks", "geom"))
+    prvColour <- from$par[which(names(from$par) == "colour")]$colour
+    matched <- names(prvColour) %in% names(colour)
+    out$par$colour[matched] <- colour
+  }
+  assertList(rotation, any.missing = FALSE, types = c("numeric"),null.ok = TRUE)
+  if(!is.null(rotation)){
+    assertNames(names(rotation), subset.of = c("yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks"))
+    prvPRotation <- from$par[which(names(from$par) == "rotation")]$rotation
+    matched <- names(prvPRotation) %in% names(rotation)
+    out$par$rotation[matched] <- rotation
+  }
+  assertList(pointsize, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
+  if(!is.null(pointsize)){
+    assertNames(names(pointsize), subset.of = c("geom"))
+    prvPointsize <- from$par[which(names(from$par) == "pointsize")]$pointsize
+    matched <- names(prvPointsize) %in% names(pointsize)
+    out$par$pointsize[matched] <- pointsize
+  }
+  assertList(fill, any.missing = FALSE, types = c("character"), null.ok = TRUE)
+  if(!is.null(fill)){
+    assertNames(names(fill), subset.of = c("geom"))
+    prvFill <- from$par[which(names(from$par) == "fill")]$fill
+    matched <- names(prvFill) %in% names(fill)
+    out$par$fill[matched] <- fill
+  }
+  assertList(linetype, any.missing = FALSE, types = c("character"), null.ok = TRUE)
+  if(!is.null(linetype)){
+    assertNames(names(linetype), subset.of = c("geom"))
+    prvLinetype <- from$par[which(names(from$par) == "linetype")]$linetype
+    matched <- names(prvLinetype) %in% names(linetype)
+    out$par$linetype[matched] <- linetype
+  }
+  assertList(linewidth, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
+  if(!is.null(linewidth)){
+    assertNames(names(linewidth), subset.of = c("geom"))
+    prvLinewidth <- from$par[which(names(from$par) == "linewidth")]$linewidth
+    matched <- names(prvLinewidth) %in% names(linewidth)
+    out$par$linewidth[matched] <- linewidth
+  }
+  assertList(pointsymbol, any.missing = FALSE, types = c("integerish"), null.ok = TRUE)
+  if(!is.null(pointsymbol)){
+    assertNames(names(pointsymbol), subset.of = c("geom"))
+    prvPointsymbol <- from$par[which(names(from$par) == "pointsymbol")]$pointsymbol
+    matched <- names(prvPointsymbol) %in% names(pointsymbol)
+    out$par$pointsymbol[matched] <- pointsymbol
+  }
+
+  return(out)
+}
