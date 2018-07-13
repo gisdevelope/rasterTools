@@ -32,7 +32,9 @@
 
 <meta property="og:title" content="Build a gradient landscape model — nlmGradient" />
 
-<meta property="og:description" content="A gradient can be understood in terms of the distance to an origin." />
+<meta property="og:description" content="A gradient can be understood in terms of the distance to an origin. With a
+straight line as origin, one might end up with a edge gradient, or, in case
+the line does not cross the the landscape, a planar gradient." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -145,7 +147,9 @@
 
     <div class="ref-description">
     
-    <p>A gradient can be understood in terms of the distance to an origin.</p>
+    <p>A gradient can be understood in terms of the distance to an origin. With a
+straight line as origin, one might end up with a edge gradient, or, in case
+the line does not cross the the landscape, a planar gradient.</p>
     
     </div>
 
@@ -186,8 +190,11 @@ which the object should be created.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>0</span>)
-
+    <pre class="examples"><div class='input'><span class='co'># create a point gradient based on an origin</span>
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='no'>origin</span> <span class='kw'>&lt;-</span> <span class='no'>mat</span>; <span class='no'>origin</span>[<span class='fl'>5000</span>] <span class='kw'>&lt;-</span> <span class='fl'>1</span>
+<span class='no'>myPointGradient</span> <span class='kw'>&lt;-</span> <span class='fu'>nlmGradient</span>(<span class='kw'>mat</span> <span class='kw'>=</span> <span class='no'>mat</span>, <span class='kw'>origin</span> <span class='kw'>=</span> <span class='no'>origin</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myPointGradient</span>)</div><div class='img'><img src='nlmGradient-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># create a geometry object</span>
 <span class='no'>coords</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>coords</span> <span class='kw'>=</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>, <span class='fl'>30</span>, <span class='fl'>30</span>, <span class='fl'>5</span>),
                                    <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>, <span class='fl'>5</span>, <span class='fl'>20</span>, <span class='fl'>20</span>)),

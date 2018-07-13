@@ -141,7 +141,7 @@ measure." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>rasterTools: obtain and process earth observation data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/rasT-package.R'><code>R/rasT-package.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/rasterTools-package.R'><code>R/rasterTools-package.R</code></a></small>
     <div class="hidden name"><code>rasterTools.Rd</code></div>
     </div>
 
@@ -160,17 +160,17 @@ measure." />
 functions that carry out a certain operation. Operators are combined to
 algorithms, which are then employed in the core functions to carry out a
 spatial computation (see Examples below).</p>
-<p>You might find <code>rasterTools</code> useful when you want to <code><a href='generate.html'>generate</a></code>
-spatial models, including neutral landscape models. Moreover, you can
-<code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets, such as MODIS, Landsat,
-Sentinel and other products and everything else that is derived therefrom.
-Once you have your spatial data in place, you can <code><a href='modify.html'>modify</a></code> them,
-which may be required to identify objects about which you want to inquire.
-You would then <code><a href='measure.html'>measure</a></code> the potentially modified data with the
-help of a modular system that allows you to use nearly all landscape metrics
-or even develop your own.</p>
+<p>You might find <code>rasterTools</code> useful when you want to
+<code><a href='generate.html'>generate</a></code> spatial models, including neutral landscape models.
+Moreover, you can <code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets, such as
+MODIS, Landsat, Sentinel and other products and everything else that is
+derived therefrom. Once you have your spatial data in place, you can
+<code><a href='modify.html'>modify</a></code> them, which may be required to identify objects about
+which you want to inquire. You would then <code><a href='measure.html'>measure</a></code> the
+potentially modified data with the help of a modular system that allows you
+to use nearly all landscape metrics or even develop your own.</p>
 <p>Various helper functions that create geometries and tools to work with these
-are included. Geometries (such as <code><a href='geomPoints.html'>geomPoints</a></code>, <code>geomCurve</code>
+are included. Geometries (such as <code><a href='geomPoint.html'>geomPoint</a></code>, <code>geomCurve</code>
 or <code><a href='geomPolygon.html'>geomPolygon</a></code>) can be created programmatically or
 interactively, can be modified (e.g. <code><a href='gRotate.html'>gRotate</a></code>) and transformed
 into sp, sf or raster objects. The transformed objects can be fed into other
@@ -178,14 +178,13 @@ workflows or might serve a purpose within <code>rasterTools</code>. For instance
 <code><a href='gToRaster.html'>gToRaster</a></code> is an important tool to create raster masks, binary
 objects where everything covered by 1 is to be selected/processed and
 everything covered by 0 is not.</p>
-<p><code>rasterTools</code> comes with a function to <code><a href='visualise.html'>visualise</a></code> gridded objects
-and geometries. Gridded objects can be either a <code>Raster*</code>, a
-<code>matrix</code> or a list of <code>RasterLayer</code> or <code>matrix</code> objects and
-hence everything that can be coerced to a matrix. Gridded objects with more
-than one layer are automatically presented in panels.</p>
-<p><code>rasterTools</code> has been conceptualised so that the core functions are modular.
-The core functions manage all the code-logic that is common for the task at
-hand. Code that manages, for instance, "loading the modis dataset" is
+<p><code>rasterTools</code> comes with a function to <code><a href='visualise.html'>visualise</a></code> gridded
+objects and geometries. Gridded objects can be either a <code>Raster*</code>, a
+<code>matrix</code> and hence everything that can be coerced to a matrix. Gridded
+objects with more than one layer are automatically presented in panels.</p>
+<p><code>rasterTools</code> has been conceptualised so that the core functions are
+modular. The core functions manage all the code-logic that is common for the
+task at hand. Code that manages, for instance, "loading the modis dataset" is
 outsourced to a separate function (the <code><a href='oMODIS.html'>oMODIS</a></code> operator). New
 operators to all the core functions and to <code><a href='loadData.html'>loadData</a></code> can hence
 be devised easily. If you want to contribute, please study the
