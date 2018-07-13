@@ -4,7 +4,7 @@
 \alias{reference}
 \title{List of references}
 \usage{
-reference(outFile, print = TRUE, style = "bibtex", ...)
+reference(outFile = NULL, print = TRUE, style = "bibtex", ...)
 }
 \arguments{
 \item{outFile}{[\code{character(1)}]\cr an optional file to which the
@@ -33,9 +33,6 @@ and R-packages
 # just return the list to the console ...
 reference(style = "latex")
 
-\dontrun{
-
 # ... or store it in your project path
 reference(outFile = "myBib.bib")
-}
 }
