@@ -9,6 +9,9 @@ test_that("output has class RasterLayer", {
   m[c(5:25), c(5:50)] <- 10
   mask <- raster::raster(m, xmn=0, xmx=60, ymn=0, ymx=56, crs=NA)
 
+  output <- rBlend(obj = input, overlay = m)
+  expect_class(output, "RasterLayer")
+  
   output <- rBlend(obj = input, overlay = mask)
   expect_class(output, "RasterLayer")
 

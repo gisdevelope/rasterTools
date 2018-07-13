@@ -4,9 +4,13 @@ context("rCentroid")
 
 test_that("output has class RasterLayer", {
   input <- rtData$continuous
-  patches <- rPatches(rBinarise(input, thresh = 30))
+  bin <- rBinarise(input, thresh = 30)
+  patches <- rPatches(bin)
 
   output <- rCentroid(obj = patches)
+  expect_class(output, "RasterLayer")
+  
+  output <- rCentroid(obj = bin)
   expect_class(output, "RasterLayer")
 })
 
@@ -51,9 +55,15 @@ test_that("Error if arguments have wrong value", {
 test_that("history is correct", {
   input <- rtData$continuous
   patches <- rPatches(rBinarise(input, thresh = 30))
-
+  
   output <- rCentroid(obj = patches)
   history <- output@history
   expect_list(history, len = 4)
   expect_equal(history[[4]], "the centroids of patches have been determined")
+  
+  patches@history <- list()
+  output <- rCentroid(obj = patches)
+  history <- output@history
+  expect_list(history, len = 2)
+  expect_equal(history[[2]], "the centroids of patches have been determined")
 })

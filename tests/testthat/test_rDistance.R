@@ -52,6 +52,7 @@ test_that("Error if arguments have wrong value", {
   binarised <- rBinarise(input, thresh = 40)
 
   expect_error(rDistance("bla"))
+  expect_error(rDistance(input))
   expect_error(rDistance(binarised, method = 2))
   expect_error(rDistance(binarised, method = "bla"))
 })
