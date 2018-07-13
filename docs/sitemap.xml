@@ -1,294 +1,294 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/index.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/index.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/catalog.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/catalog.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/depthList.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/depthList.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/doyToDate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/doyToDate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gFrom.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gFrom.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gGroup.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gGroup.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gRotate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gRotate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gScale.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gScale.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gToGrob.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gToGrob.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gToRaster.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gToRaster.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/gToSp.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gToSp.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/generate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/generate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/geom-class.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/geom-class.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/geomPoints.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/geomPoints.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/geomPolygon.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/geomPolygon.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/geomTiles.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/geomTiles.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getCRS.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getCRS.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getColumn.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getColumn.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getExtent.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getExtent.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getHistory.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getHistory.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getRow.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getRow.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getSubset.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getSubset.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getTable.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getTable.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/getWindow.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/getWindow.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/length-geom-method.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/length-geom-method.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/listArgs.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/listArgs.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/loadData.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/loadData.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/load_csv.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/load_csv.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/load_hdf.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/load_hdf.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/load_kml.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/load_kml.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/load_svg.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/load_svg.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/locate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/locate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mAdjacency.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mAdjacency.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mArea.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mArea.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mCPA.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mCPA.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mDE.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mDE.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mDEc.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mDEc.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mDP.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mDP.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mLPI.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mLPI.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mNumber.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mNumber.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mPAR.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mPAR.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mPLA.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mPLA.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mPerimeter.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mPerimeter.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/mValues.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/mValues.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/measure.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/measure.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/meta_emma.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/meta_emma.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/meta_modis.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/meta_modis.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/modify.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/modify.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/nlmGradient.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/nlmGradient.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/nlmHeightmap.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/nlmHeightmap.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/nlmRandom.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/nlmRandom.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/oCLC.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/oCLC.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/oEMMA.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/oEMMA.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/oGFC.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/oGFC.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/oMODIS.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/oMODIS.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/obtain.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/obtain.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/projs.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/projs.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rBinarise.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rBinarise.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rBlend.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rBlend.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rBounded.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rBounded.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rCategorise.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rCategorise.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rCentroid.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rCentroid.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rDilate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rDilate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rDistance.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rDistance.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rErode.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rErode.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rFillNA.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rFillNA.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rGreater.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rGreater.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rLess.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rLess.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rMask.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rMask.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rMatch.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rMatch.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rOffset.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rOffset.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rPatches.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rPatches.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rPermute.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rPermute.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rRange.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rRange.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rReduce.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rReduce.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rRescale.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rRescale.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rSegregate.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rSegregate.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rSkeletonise.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rSkeletonise.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rSubstitute.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rSubstitute.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rad.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rad.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rasterTools.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rasterTools.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/ref_modis.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/ref_modis.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/reference.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/reference.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rtData.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtData.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/rtPaths.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtPaths.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/scaleVals.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/scaleVals.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/setCRS.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/setCRS.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/setTheme.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/setTheme.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/show-geom-method.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/show-geom-method.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/theme_rt.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/theme_rt.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/toEnvironment.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/toEnvironment.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/updatePaths.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/updatePaths.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/reference/visualise.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/visualise.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/articles/contribute.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/articles/contribute.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/articles/introduction.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/articles/introduction.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/articles/landscape_metrics.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/articles/landscape_metrics.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rastertools/articles/recipes.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/articles/recipes.html</loc>
   </url>
 </urlset>

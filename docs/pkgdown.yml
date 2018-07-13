@@ -7,6 +7,6 @@ articles:
   landscape_metrics: landscape_metrics.html
   recipes: recipes.html
 urls:
-  reference: http://EhrmannS.github.io/rastertools/reference
-  article: http://EhrmannS.github.io/rastertools/articles
+  reference: http://EhrmannS.github.io/rasterTools/reference
+  article: http://EhrmannS.github.io/rasterTools/articles
 

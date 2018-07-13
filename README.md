@@ -12,9 +12,9 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 ## Getting started
 
-1) Install the stable version from CRAN(NOT AVAILABLE YET) or in the `R` console via:
+1) Install the development version from github via:
 
-        install.packages('rasterTools')
+        devtools::install_github('EhrmannS/rasterTools')
         
 2) Read a **brief introduction** to understand the philosophy of `rasterTools`:
 
