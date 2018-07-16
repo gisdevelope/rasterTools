@@ -92,7 +92,7 @@ scaleVals <- function(mat, range){
   # scale to range
   if(length(vals) != 1){
     out <- (mat - min(mat, na.rm = TRUE)) * (range[2] - range[1]) / (max(mat, na.rm = TRUE) - min(mat, na.rm = TRUE)) + range[1]
-    } else{
+  } else{
     message("'mat' did not contain at least two distinct values, hence I return the original matrix.")
     out <- mat
   }

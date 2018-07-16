@@ -9,7 +9,7 @@ test_that("output is valid geometry", {
   extent = data.frame(x = c(0, 80),
                       y = c(0, 80))
   aGeom <- geomPolygon(anchor = input, extent = extent)
-
+  
   groupedGeom <- gGroup(geom = aGeom, distance = 40)
   expect_class(groupedGeom, classes = "geom")
   
