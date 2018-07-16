@@ -1,3 +1,4 @@
+
 #' Obtain spatial datasets
 #'
 #' \code{obtain} helps to extract information from various spatial (gridded)
@@ -7,7 +8,6 @@
 #'   list iteself and includes the operator name and its arguments as
 #'   sub-elements; see Examples.
 #' @param mask spatial object which serves to mask the obtained.
-#' @template envir
 #' @details \code{obtain} expects an individual directory for each dataset,
 #'   where all the files of this particular dataset are located. \code{rasterTools}
 #'   provides a list of paths \code{getOption("rtPaths")}, which contains the
@@ -50,12 +50,10 @@
 #' @importFrom utils glob2rx read.csv setTxtProgressBar txtProgressBar write.csv
 #' @export
 
-obtain <- function(data, mask, envir = .GlobalEnv){
+obtain <- function(data, mask){
 
   assertList(data, types = "list", min.len = 1, any.missing = FALSE)
   assertNames(names(data[[1]]), must.include = "operator")
-
-  assertEnvironment(envir)
 
   if(missing(mask)){
     warning("full dataset extraction is so far only supported for national forest inventories.")
@@ -116,5 +114,5 @@ obtain <- function(data, mask, envir = .GlobalEnv){
   if(length(out) == 1){
     out <- out[[1]]
   }
-  toEnvironment(object = out, name = "new_spSet", envir = envir)
+  return(out)
 }

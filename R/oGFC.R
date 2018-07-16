@@ -247,9 +247,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     }
   }
 
-  toEnvironment(object = gfc_out,
-                name = paste0("gfc_out"),
-                envir = NULL)
+  return(gfc_out)
 
 }
 

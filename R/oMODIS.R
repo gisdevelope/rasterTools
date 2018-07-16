@@ -1,7 +1,6 @@
 #' Obtain MODIS data
 #'
-#' Obtain data from various MODIS
-#' \href{https://modis.gsfc.nasa.gov/}{datasets}
+#' Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}
 #' @param mask [\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
 #'   the extent is the area of interest.
 #' @param period [\code{integerish(.)}]\cr year of interest (YYYY), optionally
@@ -23,21 +22,25 @@
 #'   respectively.
 #'
 #'   Supported MODIS-products - in the sense that predefined meta-data are
-#'   available within this package -  are: \itemize{
-#'     \item{MOD09A1: Surface Reflectance, 8 day, 500 meter, February 2000 - present}
-#'     \item{MOD09Q1: Surface Reflectance, 8 day, 250 meter, February 2000 - present}
-#'     \item{MOD11A2: Land Surface Temperature/Emissivity, 8 day, 1000 meter, March 2000 - present}
-#'     \item{MOD13Q1: Vegetation Indices, 16 day, 250 meter, February 2000 - present}
-#'     \item{MOD13A1: Vegetation Indices, 16 day, 500 meter, February 2000 - present}
-#'     \item{MOD13A2: Vegetation Indices, 16 day, 1000 meter, February 2000 - present}
-#'     \item{MOD13A3: Vegetation Indices, monthly, 1000 meter, February 2000 - present}
-#'     \item{MOD14A2: Thermal Anomalies and Fire, 8 day, 1000 meter, February 2000 - present}
-#'     \item{MOD15A2H: Leaf Area Index/FPAR, 8 day, 500 meter, July 2002 - present}
-#'     \item{MOD17A2H: Gross Primary Productivity, 8 day, 500 meter, February 2000 - present}
-#'     \item{MOD17A3H: Net Primary Production, yearly, 500 meter, 2000 - present}
-#'     \item{MOD44W: Land-Water Mask, yearly, 250 meter, 2000 - 2015}
-#'   }
+#'   available within this package -  are: \itemize{ \item{MOD09A1: Surface
+#'   Reflectance, 8 day, 500 meter, February 2000 - present} \item{MOD09Q1:
+#'   Surface Reflectance, 8 day, 250 meter, February 2000 - present}
+#'   \item{MOD11A2: Land Surface Temperature/Emissivity, 8 day, 1000 meter,
+#'   March 2000 - present} \item{MOD13Q1: Vegetation Indices, 16 day, 250 meter,
+#'   February 2000 - present} \item{MOD13A1: Vegetation Indices, 16 day, 500
+#'   meter, February 2000 - present} \item{MOD13A2: Vegetation Indices, 16 day,
+#'   1000 meter, February 2000 - present} \item{MOD13A3: Vegetation Indices,
+#'   monthly, 1000 meter, February 2000 - present} \item{MOD14A2: Thermal
+#'   Anomalies and Fire, 8 day, 1000 meter, February 2000 - present}
+#'   \item{MOD15A2H: Leaf Area Index/FPAR, 8 day, 500 meter, July 2002 -
+#'   present} \item{MOD17A2H: Gross Primary Productivity, 8 day, 500 meter,
+#'   February 2000 - present} \item{MOD17A3H: Net Primary Production, yearly,
+#'   500 meter, 2000 - present} \item{MOD44W: Land-Water Mask, yearly, 250
+#'   meter, 2000 - 2015} }
 #'
+#'   Get additional information about the spatial background from
+#'   \href{https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS}{Marine
+#'   Geospatial Ecology Tools}
 #' @return A \code{RasterLayer} or \code{RasterStack} of MODIS data.
 #' @family obtain operators
 #' @examples
@@ -259,12 +262,10 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     }
   }
 
-  toEnvironment(object = modis_out,
-                name = paste0("modis_out"),
-                envir = NULL)
+  return(modis_out)
 }
 
-#' @describeIn oMODIS function to download data related to the MODIS dataset
+#' @describeIn oMODIS function to download data related to the MODIS products
 #' @param file [\code{character(1)}]\cr the name of the file to download.
 #' @template localPath
 #' @param getDates [\code{character(1)}]\cr the online path to the directory

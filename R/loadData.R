@@ -18,8 +18,6 @@
 #'   should be loaded.
 #' @param verbose [\code{logical(1)}]\cr should additional information be
 #'   printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?
-#' @param envir [\code{environment(1)}]\cr the environment to which the output
-#'   of this function should be saved.
 #' @details \code{importData} checks whether the required files are available in
 #'   \code{localPath}. If nothing is found there, it attempts to download the
 #'   files from \code{onlinePath}. \code{rasterTools} contains a predefined internal
@@ -50,7 +48,7 @@
 # updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial")
 
 loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NULL,
-                     verbose = FALSE, envir = .GlobalEnv){
+                     verbose = FALSE){
 
   if(!is.null(files)){
     filesIsChar <- testCharacter(files, any.missing = FALSE, min.len = 1)
@@ -73,7 +71,6 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
   assertDirectory(localPath, access = "rw")
   # asser (onlinePath)
   assertLogical(verbose, any.missing = FALSE, len = 1)
-  assertEnvironment(envir, null.ok = TRUE)
 
   testFiles <- function(files, path){
     filesInLocalPath <- list.files(path = path)
@@ -165,7 +162,7 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
     out <- out[[1]]
   }
 
-  toEnvironment(object = out, name = "loaded_obj", envir = envir)
+  return(out)
 }
 
 #' Load \code{csv} files

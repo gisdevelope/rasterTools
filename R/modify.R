@@ -19,7 +19,6 @@
 #'   default).
 #' @param keepInput [\code{logical(1)}]\cr should \code{input} be retained
 #'   (\code{TRUE}) or should it be discarded (\code{FALSE}, default)?
-#' @template envir
 #' @details Operators can be called several successive times with modified
 #'   arguments. The following operators are recently defined...
 #'
@@ -97,7 +96,7 @@
 #' @export
 
 modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
-                   keepInput = FALSE, envir = .GlobalEnv){
+                   keepInput = FALSE){
 
   # check arguments
   isRaster <- testClass(input, "Raster")
@@ -114,7 +113,6 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
   assertLogical(sequential)
   assertLogical(merge)
   assertLogical(keepInput)
-  assertEnvironment(envir)
 
   if(missing(by)){
     stop("please specify an algorithm by which to modify the spatial object.")
@@ -247,6 +245,6 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
     out <- stack(out)
   }
 
-  toEnvironment(object = out, name = "new_obj_mod", envir = envir)
+  return(out)
 }
 

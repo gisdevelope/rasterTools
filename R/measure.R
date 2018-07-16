@@ -12,7 +12,6 @@
 #' @param simplify [\code{logical(1)}]\cr should only the scale of the first
 #'   term and the result be returned (\code{TRUE}, default), or should the the
 #'   result of all terms be returned \code{FALSE}?
-#' @template envir
 #' @details A landscape metric can be generic or derived. In the first case the
 #'   metric is a list that includes the \code{operator} name and its arguments.
 #'   In the latter case the metric is a named list of generic metrics (socalled
@@ -52,7 +51,7 @@
 #' # derive 'Disjunct Cores Density', which is a rather complex metric
 #' @export
 
-measure <- function(input, with, simplify = TRUE, envir = .GlobalEnv){
+measure <- function(input, with, simplify = TRUE){
 
   # check arguments
   isRaster <- testClass(input, "Raster")
@@ -65,7 +64,6 @@ measure <- function(input, with, simplify = TRUE, envir = .GlobalEnv){
     assertList(input, "RasterLayer")
   }
   assertCharacter(with, any.missing = FALSE, min.len = 1)
-  assertEnvironment(envir)
 
   if(!isList){
     input <- list(input)
@@ -154,5 +152,6 @@ measure <- function(input, with, simplify = TRUE, envir = .GlobalEnv){
   if(length(out) == 1){
     out <- out[[1]]
   }
-  toEnvironment(object = out, name = "new_metrics", envir = envir)
+ 
+  return(out)
 }

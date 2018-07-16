@@ -157,9 +157,7 @@ oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
     }
   }
 
-  toEnvironment(object = emma,
-                name = paste0("emma_", species),
-                envir = NULL)
+  return(emma)
 
 }
 

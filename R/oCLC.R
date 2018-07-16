@@ -109,8 +109,6 @@ oCLC <- function(mask = NULL, years = NULL){
     }
   }
 
-  toEnvironment(object = clc_out,
-                name = paste0("clc_out"),
-                envir = NULL)
+  return(clc_out)
 
 }

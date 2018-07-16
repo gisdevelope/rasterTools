@@ -18,7 +18,6 @@
 #' @param silent [\code{logical(1)}]\cr should all messages but errors be
 #'   suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
 #'   default)?
-#' @template envir
 #' @details Often data-files come with complicated names, characterising in
 #'   large detail the content. For a quick workflow, this is often a hindrance
 #'   and not required, because a shorter yet systematic name can also
@@ -77,14 +76,13 @@
 #' @export
 
 catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FALSE,
-                    inclType = FALSE, silent = FALSE, envir = .GlobalEnv){
+                    inclType = FALSE, silent = FALSE){
   
   assertDirectory(path, access = "r")
   assertFunction(abbreviateBy, args = c("x"), nargs = 1)
   assertCharacter(type, min.chars = 3, ignore.case = TRUE, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   assertLogical(recursive)
   assertLogical(inclType)
-  assertEnvironment(envir)
   if(!is.null(type)){
     files <- list.files(path, pattern = paste0("[.]", type, "$"), recursive = recursive)
     if(!inclType){
@@ -138,5 +136,5 @@ catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FA
 
   }
 
-  toEnvironment(object = df, name = "myCatalog", envir = envir)
+  return(df)
 }
