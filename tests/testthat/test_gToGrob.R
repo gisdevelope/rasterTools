@@ -7,15 +7,21 @@ test_that("output is valid grob", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
                        id = 1)
-  extent <- data.frame(x = c(0, 80),
+  window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
-  aGeom <- geomPolygon(anchor = coords, extent = extent, col = "blue")
+  aPolyGeom <- geomPolygon(anchor = coords, window = window, col = "blue")
+  aPolyGrob <- gToGrob(geom = aPolyGeom)
 
-  aGrob <- gToGrob(geom = aGeom)
+  expect_list(aPolyGrob)
+  expect_names(names(aPolyGrob), permutation.of = c("x", "y", "id", "id.lengths", "name", "gp", "vp"))
+  expect_class(aPolyGrob, classes = c("polygon", "grob"))
 
-  expect_list(aGrob)
-  expect_names(names(aGrob), permutation.of = c("x", "y", "id", "id.lengths", "name", "gp", "vp"))
-  expect_class(aGrob, classes = c("polygon", "grob"))
+  aPointGeom <- geomPoint(anchor = coords, window = window, col = "blue")
+  aPointGrob <- gToGrob(geom = aPointGeom)
+  
+  expect_list(aPointGrob)
+  expect_names(names(aPointGrob), permutation.of = c("x", "y", "pch", "size", "name", "gp", "vp"))
+  expect_class(aPointGrob, classes = c("points", "grob"))
 })
 
 test_that("Error if arguments have wrong value", {
@@ -27,7 +33,7 @@ test_that("Error if arguments have wrong value", {
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aGeom <- geomPolygon(anchor = coords, extent = extent, col = "blue")
-
+  
   expect_error(gToGrob(geom = notAGeom))
   expect_error(gToGrob(geom = aGeom, theme = "bla"))
 })

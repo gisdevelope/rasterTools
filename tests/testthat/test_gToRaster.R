@@ -19,13 +19,18 @@ test_that("output has class RasterLayer", {
   expect_class(aRaster, "RasterLayer")
 })
 
-test_that("output has coordinate reference system if set", {
+test_that("output has proper coordinate reference system", {
   input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,
                             4060164, 4117856, 4118207, 4062838),
                       id = c(1, 1, 2, 2, 2, 2, 1, 1))
   aGeom <- geomPolygon(anchor = input)
+  aRaster <- gToRaster(geom = aGeom, crs = projs$laea, res = c(1000, 1000))
+  expect_equal(aRaster@crs@projargs, projs$laea)
+  
+  aGeom <- geomPolygon(anchor = input)
+  aGeom <- setCRS(x = aGeom, crs = projs$laea)
   aRaster <- gToRaster(geom = aGeom, crs = projs$laea, res = c(1000, 1000))
   expect_equal(aRaster@crs@projargs, projs$laea)
 })
@@ -37,10 +42,10 @@ test_that("output is correct resolution", {
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aGeom <- geomPolygon(anchor = coords, extent = extent)
-
+  
   aRaster <- gToRaster(geom = aGeom)
   expect_equal(res(aRaster), c(1, 1))
-
+  
   input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,

@@ -12,7 +12,7 @@ test_that("output is valid geometry", {
 
   groupedGeom <- gGroup(geom = aGeom, distance = 40)
   expect_class(groupedGeom, classes = "geom")
-
+  
   groupedGeom <- gGroup(geom = aGeom, index = c(1, 1, 1, 1, 2, 2, 2, 2))
   expect_class(groupedGeom, classes = "geom")
 
@@ -27,13 +27,13 @@ test_that("output has different values (id) than input", {
   extent = data.frame(x = c(0, 80),
                       y = c(0, 80))
   aGeom <- geomPolygon(anchor = input, extent = extent)
-
+  
   groupedGeom <- gGroup(geom = aGeom, distance = 40)
   expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
-
+  
   groupedGeom <- gGroup(geom = aGeom, index = c(1, 1, 1, 1, 2, 2, 2, 2))
   expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
-
+  
   groupedGeom <- gGroup(geom = aGeom, clusters = 2)
   expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
 })

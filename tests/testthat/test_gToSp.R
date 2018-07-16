@@ -35,7 +35,7 @@ test_that("output has correct length", {
   expect_equal(length(spPolygon), 2)
 })
 
-test_that("output has coordinate reference system if set", {
+test_that("output has proper coordinate reference system", {
   input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,
@@ -44,6 +44,13 @@ test_that("output has coordinate reference system if set", {
   polyGeom <- geomPolygon(anchor = input, show = FALSE)
   spPolygon <- gToSp(geom = polyGeom, crs = projs$laea)
   expect_equal(spPolygon@proj4string@projargs, projs$laea)
+  
+  spPolygon <- gToSp(geom = polyGeom)
+  expect_equal(spPolygon@proj4string@projargs, as.character(NA))
+  
+  polyGeom <- setCRS(x = polyGeom, crs = projs$laea)
+  spPolygon <- gToSp(geom = polyGeom, crs = projs$longlat)
+  expect_equal(spPolygon@proj4string@projargs, projs$longlat)
 })
 
 test_that("Error if arguments have wrong value", {
