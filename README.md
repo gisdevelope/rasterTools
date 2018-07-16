@@ -31,11 +31,12 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png"  width="100%" />
 
-4) Update the object `rtPaths` that contains all paths to spatial datasets so that `rasterTools` knows where your spatial files may already be stored, or where they ought to be stored.
+4) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
+
+5) Update the object `rtPaths` that contains all paths to spatial datasets so that `rasterTools` knows where your spatial files may already be stored, or where they ought to be stored.
 
         updatePaths(root = "/path/to/the/spatial/files/", project = "/path/to/your/project/")
 
-5) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
 
 ## In a nutshell, `rasterTools` ...
 
