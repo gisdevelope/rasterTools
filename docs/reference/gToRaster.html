@@ -34,6 +34,8 @@
 
 <meta property="og:description" content="An object of class RasterLayer is the raster-package representation of
 a geom." />
+
+<meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -82,13 +84,13 @@ a geom." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction.html">Terminology and Concepts</a>
-    </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
+      <a href="../articles/introduction.html">Intro and Examples</a>
     </li>
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
+    </li>
+    <li>
+      <a href="../articles/contribute.html">Best practices to contribute</a>
     </li>
   </ul>
 </li>
@@ -188,7 +190,7 @@ object.</p></td>
                      <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>window</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>),
                      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>))
-<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
+<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>)
 
 <span class='no'>aRaster</span> <span class='kw'>&lt;-</span> <span class='fu'>gToRaster</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>aRaster</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"deeppink"</span>)</div><div class='img'><img src='gToRaster-1.png' alt='' width='700' height='433' /></div><div class='input'>

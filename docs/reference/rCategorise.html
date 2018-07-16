@@ -33,6 +33,8 @@
 <meta property="og:title" content="Assign categories to the values in a raster — rCategorise" />
 
 <meta property="og:description" content="Assign categories to the values in a raster" />
+
+<meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -81,13 +83,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction.html">Terminology and Concepts</a>
-    </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
+      <a href="../articles/introduction.html">Intro and Examples</a>
     </li>
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
+    </li>
+    <li>
+      <a href="../articles/contribute.html">Best practices to contribute</a>
     </li>
   </ul>
 </li>
@@ -177,8 +179,7 @@ be delimited.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Using <code>n</code> will determine <code>breaks</code> based on the value-range
-  of <code>obj</code> so that the values are assigned to n+1 categories. Hence,
-  both minimum and maximum value will have their own category.</p>
+  of <code>obj</code> so that the values are assigned to n categories.</p>
 <p>Assigning <code>breaks</code> is mostly usefull when values are to be non-linear,
   such as <code>log(min:max)*max/log(max)</code>, but could also be <code>seq(min,
   max, length.out = 21)</code>, which corresponds to <code>n = 20</code>.</p>

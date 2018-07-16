@@ -34,6 +34,8 @@
 
 <meta property="og:description" content="The distance map of a binarised raster contains the distance of each
 background cell to the nearest foreground cell." />
+
+<meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -82,13 +84,13 @@ background cell to the nearest foreground cell." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction.html">Terminology and Concepts</a>
-    </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
+      <a href="../articles/introduction.html">Intro and Examples</a>
     </li>
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
+    </li>
+    <li>
+      <a href="../articles/contribute.html">Best practices to contribute</a>
     </li>
   </ul>
 </li>
@@ -205,7 +207,7 @@ Either <code>"euclidean"</code> (default), <code>"manhatten"</code> or
 
 <span class='no'>distances</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>binarised</span>, <span class='no'>disEuc</span>, <span class='no'>disMan</span>, <span class='no'>disChb</span>)
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>distances</span>)</div><div class='img'><img src='rDistance-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># calculate distance of edge to patch interior</span>
+<span class='co'># calculate distance from edge to patch interior</span>
 <span class='no'>inverted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rPermute.html'>rPermute</a></span>(<span class='no'>binarised</span>)
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rDistance</span>(<span class='no'>inverted</span>))</div><div class='img'><img src='rDistance-2.png' alt='' width='700' height='433' /></div></pre>
   </div>

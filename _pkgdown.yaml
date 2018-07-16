@@ -69,12 +69,12 @@ navbar:
       href: index.html
     - text: "Vignettes"
       menu:
-      -  text: Terminology and Concepts
+      -  text: Intro and Examples
          href: articles/introduction.html
-      -  text: Best practices to contribute
-         href: articles/contribute.html
       -  text: Landscape metrics
          href: articles/landscape_metrics.html
+      -  text: Best practices to contribute
+         href: articles/contribute.html
     - icon: fa-file-code-o
       text: "Glossary"
       href: reference/index.html
