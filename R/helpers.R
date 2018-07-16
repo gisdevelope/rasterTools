@@ -109,34 +109,3 @@ rad <- function(degree){
   assertNumeric(degree)
   (degree * pi)/180
 }
-
-#' Object management
-#'
-#' Helper function to many functions of this package that standardises the way
-#' objects are stored in environments.
-#' @param object [any]\cr the object to save in \code{envir}.
-#' @param name [\code{character(1)}]\cr define the name under which
-#'   \code{object} should be saved in \code{envir}.
-#' @param envir [\code{environment}]\cr the environment, which has to be created
-#'   before calling here, in which \code{object} should be saved.
-#' @return In case this functions is called with no value or \code{NULL} in
-#'   \code{envir}, it will merely return \code{object}, otherwise it will check
-#'   if \code{envir} exists and save the object there.
-#' @export
-
-toEnvironment <- function(object, name = NULL, envir = NULL){
-
-  if(missing(object)) stop("\n\nplease give an 'object' that should be handled.")
-
-  if(!is.character(name)){
-    name <- as.character(listArgs()$object)
-  }
-
-  if(is.null(envir)){
-    return(object)
-  } else if(is.environment(envir)){
-    assign(name, object, envir = envir)
-  } else{
-    stop(paste0("\n\n '", envir, "' does not exist as an environment, please see ?new.env to create it."))
-  }
-}
