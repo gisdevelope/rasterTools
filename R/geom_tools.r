@@ -344,11 +344,13 @@ gToGrob <- function(geom, theme = NULL, ...){
     geomGrob <- polygonGrob(x = coords$x,
                             y = coords$y,
                             id = coords$id,
-                            gp = gpar(col = theme$par$colour$geom,
-                                      fill = theme$par$fill$geom,
-                                      lty = theme$par$linetype$geom,
-                                      lwd = theme$par$linewidth$geom,
-                                      ...),
+                            gp = gpar(
+                              col = theme$par$colour$geom,
+                              fill = theme$par$fill$geom,
+                              lty = theme$par$linetype$geom,
+                              lwd = theme$par$linewidth$geom,
+                              ...
+                            ),
                             name = "aGrob")
 
   }
@@ -456,7 +458,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
 #'                          4060164, 4117856, 4118207, 4062838),
 #'                          id = c(1:8))
 #'
-#' pointsGeom <- geomPoints(anchor = somePoints)
+#' pointsGeom <- geomPoint(anchor = somePoints)
 #' polyGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8))) %>%
 #'   geomPolygon()
 #'

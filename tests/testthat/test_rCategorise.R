@@ -46,8 +46,13 @@ test_that("Error if arguments have wrong value", {
 
 test_that("history is correct", {
   input <- rtData$continuous
+  greater <- rGreater(input, thresh = 40)
 
   output <- rCategorise(obj = input, n = 5)
   history <- output@history
   expect_list(history, types = "character", len = 2)
+  
+  output <- rCategorise(obj = greater, n = 5)
+  history <- output@history
+  expect_list(history, types = "character", len = 3)
 })

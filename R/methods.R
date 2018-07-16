@@ -83,6 +83,16 @@ setMethod(f = "getExtent",
                        y = c(ext@ymin, ext@ymax))
           })
 
+#' @describeIn getExtent get the bounding box of a \code{matrix} object
+#' @export
+
+setMethod(f = "getExtent",
+          signature = "matrix",
+          definition = function(x){
+            data.frame(x = c(0, ncol(x)),
+                       y = c(0, nrow(x)))
+          })
+
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
 #' @export
 

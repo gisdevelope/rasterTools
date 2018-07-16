@@ -10,6 +10,10 @@ test_that("output has class RasterLayer", {
   expect_class(output, "RasterLayer")
 })
 
+test_that("dilate also non-binary input", {
+  
+})
+
 test_that("output is named", {
   input <- rtData$continuous
   binarised <- rBinarise(input, thresh = 30)
@@ -54,4 +58,10 @@ test_that("history is correct", {
   history <- output@history
   expect_list(history, len = 3)
   expect_equal(history[[3]], "the raster has been morphologically dilated")
+  
+  binarised@history <- list()
+  output <- rDilate(obj = binarised)
+  history <- output@history
+  expect_list(history, len = 2)
+  expect_equal(history[[2]], "the raster has been morphologically dilated")
 })

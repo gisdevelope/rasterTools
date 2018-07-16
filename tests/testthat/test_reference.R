@@ -19,3 +19,19 @@ test_that("an algorithm that shall produce bib output changes the bibentry", {
   output <- reference(print = FALSE)
   expect_list(output, len = 3, any.missing = FALSE)
 })
+
+test_that("output is sent to file", {
+  options(bibliography = NULL)
+  
+  reference(outFile = paste0(getwd(), "/myBib.bib"))
+  expect_file_exists(paste0(getwd(), "/myBib.bib"), access = "rw")
+  
+  reference(outFile = "myBib.bib")
+  expect_file_exists("myBib.bib", access = "rw")
+})
+
+test_that("output is printed in the console", {
+  options(bibliography = NULL)
+  
+  expect_vector(capture_output_lines(reference()), len = 15, any.missing = FALSE)
+})

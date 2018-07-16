@@ -20,7 +20,9 @@ special cases thereof or \code{"random"}, to select one by chance.}
 which the object should be created.}
 }
 \description{
-A gradient can be understood in terms of the distance to an origin.
+A gradient can be understood in terms of the distance to an origin. With a
+straight line as origin, one might end up with a edge gradient, or, in case
+the line does not cross the the landscape, a planar gradient.
 }
 \details{
 If this function is used in conjunction with \code{\link{generate}},
@@ -31,7 +33,11 @@ In case \code{origin} is not given, \code{nlmGradient} constructs
   \code{params} and then provides a distance matrix as gradient.
 }
 \examples{
+# create a point gradient based on an origin
 mat <- matrix(nrow = 100, ncol = 100, data = 0)
+origin <- mat; origin[5000] <- 1
+myPointGradient <- nlmGradient(mat = mat, origin = origin)
+visualise(gridded = myPointGradient)
 
 # create a geometry object
 coords <- list(coords = data.frame(x = c(5, 30, 30, 5),

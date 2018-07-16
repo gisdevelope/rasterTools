@@ -1,5 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.travis\.yml$
-^appveyor\.yml$
+^.travis\.yml$
+^_pkgdown\.yaml
 ^codecov\.yml$
+^appveyor\.yml$
+^_config\.yml
+
+index\.Rmd$
+^docs$
+^misc$
+ToDo.txt$

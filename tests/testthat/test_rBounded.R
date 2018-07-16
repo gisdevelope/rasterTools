@@ -30,14 +30,20 @@ test_that("Error if arguments have wrong value", {
 
   expect_error(rBounded(obj = mat, range = c(40, 60)))
   expect_error(rBounded(obj = input))
+  expect_error(rBounded(obj = input, range = c(40, 101)))
   expect_error(rBounded(obj = "bla", range = c(40, 60)))
   expect_error(rBounded(obj = input, range = "bla"))
 })
 
 test_that("history is correct", {
   input <- rtData$continuous
-
+  cat <- rCategorise(input, n = 5)
+  
   output <- rBounded(obj = input, range = c(40, 60))
   history <- output@history
   expect_list(history, types = "character", len = 2)
+  
+  output <- rBounded(obj = cat, range = c(2, 4))
+  history <- output@history
+  expect_list(history, types = "character", len = 3)
 })

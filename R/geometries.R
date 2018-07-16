@@ -1,6 +1,8 @@
 #' Create a point geometry
 #'
-#' @template anchor
+#' @param anchor [\code{data.frame(1)}]\cr Object to derive the \code{geom}
+#'   from. It must include column names \code{x}, \code{y} and optinal variables
+#'   such as \code{id}; see Examples.
 #' @template window
 #' @template template
 #' @param vertices [\code{integer(1)}]\cr number of vertices.
@@ -21,14 +23,14 @@
 #'                          5326537, 5027609, 5281527, 5189955), Y = c(3977612,
 #'                          4060164, 3997230, 4117856, 4028167, 3971119, 4118207,
 #'                          4062838))
-#' (pointsGeom <- geomPoints(anchor = somePoints))
+#' (pointsGeom <- geomPoint(anchor = somePoints))
 #'
 #' \dontrun{
 #'
 #' input <- rtData$continuous
 #'
 #' # create points interactively
-#' myPoints <- geomPoints(template = input, vertices = 5, show = TRUE, col = "deeppink")
+#' myPoints <- geomPoint(template = input, vertices = 5, show = TRUE, col = "deeppink")
 #' anExtent <- geomRectangle(myPoints, show = TRUE, col = "green")
 #' }
 #' @importFrom checkmate testDataFrame assertNames testNull assert testClass
@@ -36,12 +38,13 @@
 #' @importFrom methods new
 #' @export
 
-geomPoints <- function(anchor = NULL, window = NULL, template = NULL,
-                       vertices = NULL, show = FALSE, ...){
+geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
+                      vertices = NULL, show = FALSE, ...){
 
   # check arguments
-  anchorIsDF <- testDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
-  if(anchorIsDF){
+  anchorExists <- !testNull(anchor)
+  if(anchorExists){
+    assertDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
     colnames(anchor) <- tolower(colnames(anchor))
     assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "id"))
   }
@@ -50,13 +53,8 @@ geomPoints <- function(anchor = NULL, window = NULL, template = NULL,
     assertDataFrame(window, types = "numeric", any.missing = FALSE, ncols = 2, null.ok = TRUE)
     colnames(window) <- tolower(colnames(window))
     assertNames(names(window), must.include = c("x", "y"))
-  }
-  existsExtent <- testDataFrame(window, types = "numeric", any.missing = FALSE, ncols = 2)
-  if(existsExtent){
-    colnames(window) <- tolower(colnames(window))
-    assertNames(names(window), must.include = c("x", "y"))
   } else{
-    if(anchorIsDF){
+    if(anchorExists){
       window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
                            y = c(min(anchor$y), max(anchor$y)))
     }
@@ -68,11 +66,11 @@ geomPoints <- function(anchor = NULL, window = NULL, template = NULL,
       testClass(template, "matrix")
     )
   }
-  if(!anchorIsDF & !existsTemplate){
+  if(!anchorExists & !existsTemplate){
     stop("please provide either 'anchor' or 'template'.")
   }
   assertLogical(show)
-  if(!anchorIsDF){
+  if(!anchorExists){
     assertIntegerish(vertices, min.len = 1, any.missing = FALSE)
   } else{
     assertIntegerish(vertices, min.len = 1, any.missing = FALSE, null.ok = TRUE)
@@ -95,7 +93,7 @@ geomPoints <- function(anchor = NULL, window = NULL, template = NULL,
   }
 
   # if anchor does not exists, make it
-  if(!anchorIsDF){
+  if(!anchorExists){
     message("please click the ", vertices, " vertices.")
     coords <- locate(gridded = template, samples = vertices, panel = tempName, silent = TRUE, show = FALSE)
     window <- data.frame(x = c(0, dims[2]),
@@ -582,6 +580,89 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
                          regular = TRUE,
                          show = FALSE)
 
+  if(show){
+    visualise(geom = theGeom, ...)
+  }
+
+  invisible(theGeom)
+}
+
+#' Create a geometry randomly
+#'
+#' This function creates a random geometry
+#' @param type [\code{character(1)}]\cr Either one of the three main feature
+#'   types \code{"point"}, \code{"line"} or \code{"polygon"}, or more
+#'   specifically one of their subtypes, e.g. \code{"hexagon"}.
+#' @template template
+#' @param vertices [\code{integersh(1)}]\cr the number of vertices the geometry
+#'   should have; only meaningful if \code{type} does not indicate the number of
+#'   vertices already.
+#' @param show [\code{logical(1)}]\cr should the geometry be plotted
+#'   (\code{TRUE}) or should it not be plotted (\code{FALSE}, default)? In case
+#'   \code{template} is set, it is automatically \code{TRUE}.
+#' @param ... [various]\cr graphical parameter, in case \code{show = TRUE}; see
+#'   \code{\link{gpar}}.
+#' @family shapes
+#' @examples
+#' input <- matrix(nrow = 100, ncol = 100, data = 0)
+#'
+#' # create a random geometry with four vertices
+#' set.seed(1)
+#' someGeom <- geomRand(type = "polygon", vertices = 5)
+#' visualise(geom = someGeom)
+#'
+#' # in case template is given, this serves as source for the window extent
+#' someGeom <- geomRand(template = input, show = TRUE)
+#' @export
+
+geomRand <- function(type = "point", template = NULL, vertices = 4, 
+                     show = FALSE, ...){
+  
+  assertSubset(type, choices = c("point", "line", "rectangle", "square", "polygon", "spline", "ellipse", "circle", "triangle", "hexagon"))
+  existsTemplate <- !testNull(template)
+  if(existsTemplate){
+    isRaster <- testClass(template, "RasterLayer")
+    isMatrix <- testClass(template, "matrix")
+    if(!isRaster & !isMatrix){
+      stop("please provide either a RasterLayer or a matrix as 'template'.")
+    }
+  }
+  assertIntegerish(vertices, any.missing = FALSE, len = 1)
+  assertLogical(show)
+
+  if(type %in% "point"){
+    outType  <- type
+    anchor <- data.frame(x = runif(vertices),
+                         y = runif(vertices),
+                         id = 1:vertices)
+  # } else if(type %in% c("line", "spline")){
+  #   outType <- "line"
+  } else{
+    outType <- "polygon"
+    anchor <- data.frame(x = runif(vertices),
+                         y = runif(vertices),
+                         id = 1)
+  }
+
+  if(existsTemplate){
+    window <- getExtent(template)
+  } else{
+    window <- data.frame(x = c(0, 1),
+                         y = c(0, 1))
+  }
+  
+  theGeom <- new(Class = "geom",
+                 type = outType,
+                 table = anchor,
+                 window = window,
+                 scale = "relative",
+                 crs = as.character(NA),
+                 history = list(paste0("geometry was created randomly")))
+  
+  if(existsTemplate){
+    theGeom <- gScale(theGeom, to = "absolute")
+  }
+  
   if(show){
     visualise(geom = theGeom, ...)
   }

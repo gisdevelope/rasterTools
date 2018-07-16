@@ -18,19 +18,17 @@
 #' # just return the list to the console ...
 #' reference(style = "latex")
 #'
-#' \dontrun{
-#'
 #' # ... or store it in your project path
 #' reference(outFile = "myBib.bib")
-#' }
-#' @importFrom utils bibentry person
+#' @importFrom utils bibentry person citation
 #' @export
 
-reference <- function(outFile, print = TRUE, style = "bibtex", ...){
+reference <- function(outFile = NULL, print = TRUE, style = "bibtex", ...){
 
-  if(!missing(outFile)){
+  outFileExists <- testCharacter(outFile, len = 1, any.missing = FALSE)
+  if(outFileExists){
     if(length(strsplit(outFile, "/")[[1]]) == 1){
-      outFile <- paste0(rtPaths$project, outFile)
+      outFile <- paste0(getwd(), outFile)
     }
   }
 
@@ -54,7 +52,7 @@ reference <- function(outFile, print = TRUE, style = "bibtex", ...){
     }
   }
 
-  if(!missing(outFile)){
+  if(!is.null(outFile)){
     writeLines(text = format(bib, style, ...), con = outFile)
   } else{
     if(print){

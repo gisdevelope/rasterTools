@@ -1,6 +1,8 @@
 #' Build a gradient landscape model
 #'
-#' A gradient can be understood in terms of the distance to an origin.
+#' A gradient can be understood in terms of the distance to an origin. With a
+#' straight line as origin, one might end up with a edge gradient, or, in case
+#' the line does not cross the the landscape, a planar gradient.
 #' @template mat
 #' @param origin [\code{RasterLayer} | \code{matrix}]\cr a binary object that
 #'   serves as origin of the gradient; overrides the other arguments, if given.
@@ -12,7 +14,11 @@
 #'   internally a binary origin from what is specified in \code{type} and
 #'   \code{params} and then provides a distance matrix as gradient.
 #' @examples
+#' # create a point gradient based on an origin
 #' mat <- matrix(nrow = 100, ncol = 100, data = 0)
+#' origin <- mat; origin[5000] <- 1
+#' myPointGradient <- nlmGradient(mat = mat, origin = origin)
+#' visualise(gridded = myPointGradient)
 #'
 #' # create a geometry object
 #' coords <- list(coords = data.frame(x = c(5, 30, 30, 5),
@@ -32,12 +38,13 @@
 nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
 
   assertMatrix(mat)
-  isRaster <- testClass(origin, "RasterLayer")
-  isMatrix <- testClass(origin, "matrix")
   assertCharacter(type, any.missing = FALSE, len = 1)
-  types <- c("planar", "point", "line", "rectangle", "square", "polygon"
-              #, "spline", "ellipse", "circle", "triangle", "hexagon"
-  )
+  existsOrigin <- !is.null(origin)
+  if(existsOrigin){
+    isRaster <- testClass(origin, "RasterLayer")
+    isMatrix <- testClass(origin, "matrix")
+  }
+  types <- c("planar", "point", "line", "rectangle", "square", "polygon", "spline", "ellipse", "circle", "triangle", "hexagon")
   if(type == "random"){
     type <- sample(types, 1)
   } else{
@@ -45,8 +52,27 @@ nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
   }
   assertList(params, names = "named", null.ok = TRUE)
 
-  if(is.null(origin)){
-    # theMask <- gSketch(template = mat, type = type, params = params)
+  if(!existsOrigin){
+    if(type == "planar"){
+      # create a linear line geom and make a gradient orthogonal to that and starting somewhere outside the window
+      
+    } else{
+      if(type == "polygon"){
+        if(is.null(params)){
+          verts <- readline("please specify how many vertices the polygon shall have: ")
+          verts <- assertIntegerish(as.integer(verts))
+        }
+      }
+      if(is.null(params)){
+        # if()
+        # theGeom <- geomRand(type = type, template = mat, vertices = verts)
+        # theMask <- gToRaster(theGeom)
+      } else{
+        
+      }
+      
+      
+    }
   } else{
     if(isRaster){
       origin <- as.matrix(origin)

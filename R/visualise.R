@@ -6,7 +6,7 @@
 #' @param trace [\code{logical(1)}]\cr Print the gridded object's history (i.e.
 #'   the process according to which it has been created) (\code{TRUE}), or
 #'   simply plot the object (\code{FALSE}, default).
-#' @param new [\code{logical(1)}]\cr force a new plot.
+#' @param new [\code{logical(1)}]\cr force a new plot (\code{TRUE}, default).
 #' @param ... [various]\cr Graphical parameters to \code{geom}.
 #' @details To create a plot with your own style, design it with
 #'   \code{\link{setTheme}} and use it in \code{theme}.
@@ -49,21 +49,13 @@
 #' @export
 
 visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
-                      new = FALSE, ...){
+                      new = TRUE, ...){
 
   # check arguments
   isRaster <- testClass(gridded, "Raster")
-  isRasterStack <- testClass(gridded, "RasterStack")
+  isRasterStackBrick <- testClass(gridded, "RasterStackBrick")
   isMatrix <- testClass(gridded, "matrix")
-  isList <- testClass(gridded, "list")
-  if(isList){
-    isRasterList <- testList(gridded, "RasterLayer")
-    isMatrixList <- testList(gridded, "matrix")
-    if(!isRasterList & !isMatrixList){
-      stop("please provide either a list of matrix or RasterLayer (not brick or stack) objects.")
-    }
-  }
-  existsGridded <- ifelse(c(isRaster | isMatrix | isList), TRUE, FALSE)
+  existsGridded <- ifelse(c(isRaster | isMatrix), TRUE, FALSE)
   existsGeom <- testClass(geom, classes = "geom")
   if(!existsGridded & !existsGeom){
     stop("please provide either a gridded object or a geometry to plot.")
@@ -103,6 +95,9 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       })
       ext <- extent(gridded[[1]])
       panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
+      hasColourTable <- lapply(1:plotLayers, function(x){
+        ifelse(length(gridded[[x]]@legend@colortable) > 0, TRUE, FALSE)
+      })
 
     } else if(isMatrix){
 
@@ -112,35 +107,8 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       mat <- gridded
       panelExt <- c(xMin = 0, xMax = ncol(mat), yMin = 0, yMax = nrow(mat))
       mat <- list(mat)
-
-    } else if(isList){
-
-      plotLayers <- length(gridded)
-      griddedNames <- NULL
-      vals <- gridded
-      mat <- gridded
-      for(i in 1:plotLayers){
-        temp <- mat[[i]]
-
-        if(isRasterList){
-
-          griddedNames <- c(griddedNames, names(temp))
-          vals[[i]] <- sort(unique(as.vector(temp), na.rm = TRUE))
-          ext <- extent(temp)
-          panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
-
-        } else if(isMatrixList){
-
-          griddedNames <- c(griddedNames, "layer")
-          vals[[i]] <- sort(unique(as.vector(temp), na.rm = TRUE))
-          mat[[i]] <- temp
-          panelExt <- c(xMin = 0, xMax = ncol(temp), yMin = 0, yMax = nrow(temp))
-
-        } else{
-          temp <- NULL
-        }
-      }
-
+      hasColourTable <- FALSE
+      
     }
   }
 
@@ -215,7 +183,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       geom <- gScale(geom, to = "relative")
     }
 
-    geomGrob <- gToGrob(geom = geom, theme = theme, ...)
+    geomGrob <- gToGrob(geom = geom, theme = theme)
 
   }
 
@@ -256,7 +224,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
     theColours <- lapply(seq_along(vals), function(x){
       tempVals <- vals[[x]]
 
-      if(length(gridded[[x]]@legend@colortable) > 0){
+      if(hasColourTable[[x]]){
         if(any(tempVals == 0)){
           gridded[[x]]@legend@colortable[tempVals+1]
         } else{
@@ -273,10 +241,6 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
                          bias = theme$scale$bias,
                          space = theme$scale$space,
                          interpolate = theme$scale$interpolate)(length(valCuts))[valCuts]
-        # colorRampPalette(colors = theme$scale$colours,
-        #                  bias = theme$scale$bias,
-        #                  space = theme$scale$space,
-        #                  interpolate = theme$scale$interpolate)(length(tempVals))
       }
 
     })
@@ -569,7 +533,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
   }
 
   if(trace){
-    if(isRasterStack){
+    if(isRasterStackBrick){
       theHistory <- lapply(seq_along(names(gridded)), function(x){
         temp <- unlist(gridded[[x]]@history)
       })

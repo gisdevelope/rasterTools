@@ -5,11 +5,10 @@
 \title{Visualise gridded objects and geometries}
 \usage{
 visualise(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
-  new = FALSE, ...)
+  new = TRUE, ...)
 }
 \arguments{
-\item{gridded}{[\code{Raster*} | \code{matrix} | \code{list(RasterLayer |
-matrix)}]\cr Gridded object.}
+\item{gridded}{[\code{Raster*} | \code{matrix}]\cr Gridded object.}
 
 \item{geom}{[\code{geom}]\cr Object of class \code{\link{geom}}.}
 
@@ -20,7 +19,7 @@ matrix)}]\cr Gridded object.}
 the process according to which it has been created) (\code{TRUE}), or
 simply plot the object (\code{FALSE}, default).}
 
-\item{new}{[\code{logical(1)}]\cr force a new plot.}
+\item{new}{[\code{logical(1)}]\cr force a new plot (\code{TRUE}, default).}
 
 \item{...}{[various]\cr Graphical parameters to \code{geom}.}
 }
