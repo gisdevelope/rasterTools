@@ -78,7 +78,7 @@
 
 catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FALSE,
                     inclType = FALSE, silent = FALSE, envir = .GlobalEnv){
-
+  
   assertDirectory(path, access = "r")
   assertFunction(abbreviateBy, args = c("x"), nargs = 1)
   assertCharacter(type, min.chars = 3, ignore.case = TRUE, any.missing = FALSE, max.len = 1, null.ok = TRUE)
@@ -94,19 +94,19 @@ catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FA
     files <- list.files(path, recursive = recursive)
   }
   df <- NULL
-
+  
   # in case recursive is activated, strip of the path and work only with the
   # actual file names for abbreviations.
   if(length(files) == 0){
-    warning(paste0("I did not find any suitable files in '", path, "'."), call. = FALSE)
+    stop(paste0("I did not find any suitable files in '", path, "'."), call. = FALSE)
   } else{
-
+    
     if(recursive){
       split_files <- strsplit(files, split = "/")
       file_names <- unlist(lapply(
         seq_along(files), function(i){
           theFile <- strsplit(files[i], split = "/")[[1]]
-          theFile <- theFile[nrow(theFile)]
+          theFile <- theFile[length(theFile)]
         }
       ))
     } else{
