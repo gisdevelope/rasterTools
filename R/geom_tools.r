@@ -31,7 +31,7 @@
 #' @export
 
 gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
-
+  
   assertClass(geom, classes = "geom")
   assertIntegerish(index, min.len = 1, any.missing = FALSE, null.ok = TRUE)
   assertNumeric(distance, finite = TRUE, null.ok = TRUE)
@@ -44,10 +44,10 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
   } else{
     source_crs <- as.character(NA)
   }
-
+  
   coords <- geom@table
   toGroup <- coords[c("x", "y")]
-
+  
   if(!is.null(index)){
     newId <- rep(index, length.out = dim(toGroup)[1])
   }
@@ -60,9 +60,9 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
     temp <- kmeans(toGroup, centers = clusters, ...)
     newId <- temp$cluster
   }
-
+  
   temp <- cbind(toGroup, id = newId)
-
+  
   out <- new(Class = "geom",
              type = geom@type,
              table = temp,
@@ -70,7 +70,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
              scale = geom@scale,
              crs = as.character(source_crs),
              history = list(paste0("geometry values were regrouped")))
-
+  
   return(out)
 }
 
@@ -110,7 +110,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
 #' @export
 
 gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
-
+  
   assertClass(geom, classes = "geom")
   angleIsList <- testList(angle, types = "numeric", any.missing = FALSE)
   angleIsNumeric <- testNumeric(angle, any.missing = FALSE, lower = -360, upper = 360, len = 1)
@@ -130,7 +130,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   } else{
     source_crs <- as.character(NA)
   }
-
+  
   coords <- geom@table
   ids <- unique(coords$id)
   if(existsID){
@@ -138,43 +138,43 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   } else{
     doRotate <- rep(TRUE, length(ids))
   }
-
+  
   if(length(angle) != length(ids)){
     angle <- rep(angle, length.out = length(ids))
   }
   if(length(about) != length(ids)){
     about <- rep(about, length.out = length(ids))
   }
-
+  
   digits <- getOption("digits")
-
+  
   # out <- geom
   temp <- NULL
   for(i in seq_along(ids)){
     tempCoords <- coords[coords$id == ids[i],]
-
+    
     if(doRotate[i]){
       tempAngle <- angle[[i]]
       tempAbout <- about[[i]]
       xVals <- tempCoords$x
       yVals <- tempCoords$y
-
+      
       if(!all(tempAbout == c(0, 0))){
         offset <- c(0, 0) - tempAbout
         xVals <- xVals + offset[1]
         yVals <- yVals + offset[2]
       }
-
+      
       tempCoords$x <- round(xVals * cos(rad(tempAngle)) - yVals * sin(rad(tempAngle)), digits)
       tempCoords$y <- round(xVals * sin(rad(tempAngle)) + yVals * cos(rad(tempAngle)), digits)
-
+      
       if(!all(tempAbout == c(0, 0))){
         tempCoords$x <- tempCoords$x - offset[1]
         tempCoords$y <- tempCoords$y - offset[2]
       }
     }
     temp <- rbind(temp, tempCoords)
-
+    
   }
   out <- new(Class = "geom",
              type = geom@type,
@@ -183,7 +183,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
              scale = geom@scale,
              crs = as.character(source_crs),
              history = list(paste0("geometry was rotated")))
-
+  
   return(out)
 }
 
@@ -217,7 +217,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
 #' @export
 
 gScale <- function(geom, range = NULL, to = "relative"){
-
+  
   assertClass(geom, classes = "geom")
   existsRange <- testTRUE(!is.null(range))
   if(existsRange){
@@ -234,10 +234,10 @@ gScale <- function(geom, range = NULL, to = "relative"){
   } else{
     source_crs <- as.character(NA)
   }
-
+  
   coords <- geom@table
   window <- geom@window
-
+  
   out <- NULL
   for(i in 1:max(coords$id)){
     if(to == "relative"){
@@ -260,7 +260,7 @@ gScale <- function(geom, range = NULL, to = "relative"){
       minY <- 0
       maxY <- 1
     }
-
+    
     temp <- coords[coords$id == i,]
     for(j in seq_along(temp$x)){
       temp$x[j] <- (temp$x[j] - minX) * (rangeX[2] - rangeX[1]) / (maxX - minX) + rangeX[1]
@@ -270,7 +270,7 @@ gScale <- function(geom, range = NULL, to = "relative"){
     }
     out <- rbind(out, temp)
   }
-
+  
   if(existsRange){
     window <- as.data.frame(range)
     to <- "absolute"
@@ -282,8 +282,8 @@ gScale <- function(geom, range = NULL, to = "relative"){
              scale = to,
              crs = as.character(source_crs),
              history = list(paste0("geometry values were scaled to '", to, "'")))
-
-    return(out)
+  
+  return(out)
 }
 
 #' Transform geometry to grob
@@ -312,7 +312,7 @@ gScale <- function(geom, range = NULL, to = "relative"){
 #' @export
 
 gToGrob <- function(geom, theme = NULL, ...){
-
+  
   assertClass(geom, classes = "geom")
   assertList(theme, len = 7, null.ok = TRUE)
   if(is.null(theme)){
@@ -320,12 +320,12 @@ gToGrob <- function(geom, theme = NULL, ...){
   } else{
     assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
   }
-
+  
   featureType <- geom@type
   coords <- geom@table
-
+  
   if(featureType %in% c("point")){
-
+    
     geomGrob <- pointsGrob(x = coords$x,
                            y = coords$y,
                            pch = theme$par$pointsymbol$geom,
@@ -336,11 +336,11 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      lwd = theme$par$linewidth$geom,
                                      ...),
                            name = "aGrob")
-
-  # } else if(featureType == "line"){
-
+    
+    # } else if(featureType == "line"){
+    
   } else if(featureType %in% c("polygon")){
-
+    
     geomGrob <- polygonGrob(x = coords$x,
                             y = coords$y,
                             id = coords$id,
@@ -352,7 +352,7 @@ gToGrob <- function(geom, theme = NULL, ...){
                               ...
                             ),
                             name = "aGrob")
-
+    
   }
   return(geomGrob)
 }
@@ -388,7 +388,7 @@ gToGrob <- function(geom, theme = NULL, ...){
 #' @export
 
 gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
-
+  
   assertClass(geom, classes = "geom")
   assertLogical(negative)
   assertNumeric(res, len = 2, finite = TRUE)
@@ -403,13 +403,13 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   } else{
     source_crs <- as.character(NA)
   }
-
+  
   theWindow <- getWindow(geom)
   extCols <- round(c(min(theWindow$x), max(theWindow$x))/res[1])
   outCols <- round(max(extCols) - min(extCols))
   extRows <- round(c(min(theWindow$y), max(theWindow$y))/res[2])
   outRows <- round(max(extRows) - min(extRows))
-
+  
   temp <- matrix(data = 0, ncol = outCols, nrow = outRows)
   coords <- geom@table[c("x", "y")]
   coords[,1] <- round(coords[,1]/res[1])
@@ -434,7 +434,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   if(is.na(source_crs)){
     proj4string(out) <- target_crs
   } else{
-    out <- spTransform(out, target_crs)
+    out <- projectRaster(from = out, crs = target_crs)
   }
 
   return(out)
