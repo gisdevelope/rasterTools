@@ -1,10 +1,17 @@
 ---
-title: "Introduction"
+title: "rasterTools"
 author: "Steffen Ehrmann"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+bibliography: rasterTools.bib
+output: 
+  rmarkdown::html_vignette:
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab
+link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{Terminology}
+  %\VignetteIndexEntry{rasterTools}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,13 +22,19 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-# Definitions
-An *algorithm* in `rasterTools` is given as list of lists.
+
+# Introduction
+
+You might find `rasterTools` useful when your work depends in one way or the other on gridded earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
+
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present another workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the type of work. In `rasterTools` the four functions `generate()`, `obtain()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+
+Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. An algorithm in `rasterTools` is given as list of lists.
 
     algo_name <- list(list(operator1,
                       list(operator2)))
                       
-They are a sequence of *operators*, i.e. functions and their respective arguments, which act together to carry out some sort of computation. They are scope specific, i.e. they are typically only called in their respective core function. Each operator represents a `do.call()` compliant definition (type `?do.call` into the console to learn about it).
+Operators are scope specific, i.e. they are typically only called in their respective core function. Each operator represents a `do.call()` compliant definition (type `?do.call` into the console to learn about it).
 
     do.call(what, args, quote = FALSE, envir = parent.frame())
 
@@ -30,12 +43,12 @@ Which translates to
     algo_name <- list(operator1 = list(what, args),
                       operator2 = list(what, args))
 
-Its first elements `what = operator_name` would outline the functions comprised in this algorithm (such as `nlmHeightmap` or `oCLC`). Its second element can have any number of arguments required to put together the call (such as `fracdim = 2.3, seed = 4815162342` or `period = 2006`).
+Its first element `what = operator_name` would outline the functions comprised in this algorithm (such as `"oMODIS"` or `"oCLC"`). Its second element can have any number of arguments required to put together the call (such as `product = "MOD17A3", layer = 2, period = c(2012, 2014)` or simply `period = 2006`).
 
     datasets <- list(list(operator = "oCLC", period = 2006),
                      list(operator = "oGFC", period = c(2005:2007)))
 
-This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be to build a novel neutral landscape model, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple work-flow.
+This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be a dataset that is not yet supported by `rasterTools`, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple work-flow.
 
 ## Generate spatial patterns
 To build a neutral landscape model, or possibly other spatial data patterns which are based on some sort of simulated process (and are therefore not neutral but perhaps 'virtual'), an algorithm may be:
@@ -98,3 +111,13 @@ The most important generic metrics are already predefined and so are some of the
 The measurement of the features in a raster would be carried out by:
 
     propAreaForest <- measure(input = myModifiedData, with = mPropArea)
+
+
+# Acknowledgements
+I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the [FunBo Project](https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo), which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.
+
+Thanks are also due to Prof. Arne Pommerening who was a great source of inspiration for what `rasterTools` is now.
+
+Moreover, I owe thanks to people like Alex Zvoleff ([`gfcanalysis`](http://azvoleff.com/gfcanalysis)) and Jon Clayden ([`mmand`](https://github.com/jonclayden/mmand)), who inspired me with their uncompromising and creative code-work.
+
+# References

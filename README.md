@@ -75,4 +75,4 @@ I am grateful for financial support from the PROFOUND Cost-action, which gave me
 
 Thanks are also due to Prof. Arne Pommerening who was a great source of inspiration for what `rasterTools` is now.
 
-Moreover, I owe thanks to people like Alex Zvoleff ([`gfcanalysis`](ttp://azvoleff.com/gfcanalysis)) and Jon Clayden ([`mmand`](https://github.com/jonclayden/mmand)), who inspired me with their uncompromising and creative code-work.
+Moreover, I owe thanks to people like Alex Zvoleff ([`gfcanalysis`](http://azvoleff.com/gfcanalysis)) and Jon Clayden ([`mmand`](https://github.com/jonclayden/mmand)), who inspired me with their uncompromising and creative code-work.
