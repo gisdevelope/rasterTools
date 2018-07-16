@@ -23,10 +23,9 @@
 #' cat <- rtData$categorial
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
-#' # adjacencies in conjunction with 'measure'
-#' mAdj <- list(operator = "mAdjacency")
-#' (adjacencies <- measure(input = cat, with = "mAdj"))
-#'
+#' # couble count like adjacencies
+#' mAdjacency(obj = cat)
+#' 
 #' # paired adjacencies
 #' mAdjacency(obj = cat, type = "paired")
 #'
@@ -76,7 +75,6 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 
   }
 
-
   return(result)
 }
 
@@ -103,10 +101,6 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the area ...
-#' # ... in conjunction with 'measure'
-#' mAc <- list(operator = "mArea", scale = "class")
-#' (areas <- measure(input = cat, with = "mAc"))
-#'
 #' # ... per landuse type
 #' mArea(obj = cat, scale = "class")
 #'
@@ -118,7 +112,7 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 #' rBinarise(obj = cat, match = c(41, 44, 47)) %>%
 #'   mArea(scale = "patch", layer = "values_binarised")
 #'
-#' # ... from a binary raster
+#' # ... from a binary raster, patches are automatically determined
 #' mArea(obj = bin, scale = "patch")
 #' mArea(obj = bin, scale = "class")
 #'
@@ -233,10 +227,6 @@ mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the number ...
-#' # ... in conjunction with 'measure'
-#' mNp <- list(operator = "mNumber", scale = "patch")
-#' measure(input = cat, with = "mNp")
-#'
 #' # ... per landuse type
 #' mNumber(obj = cat, scale = "class")
 #'
@@ -351,10 +341,6 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the perimeter ...
-#' # ... in conjunction with 'measure'
-#' mPc <- list(operator = "mPerimeter", scale = "class")
-#' measure(input = cat, with = "mPc")
-#'
 #' # ... per landuse type
 #' mPerimeter(obj = cat, scale = "class")
 #'
@@ -366,7 +352,7 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
 #' rBinarise(obj = cat, match = c(41, 44, 47)) %>%
 #'   mPerimeter(scale = "patch", layer = "values_binarised")
 #'
-#' # ... from a binary raster
+#' # ... from a binary raster, patches are automatically determined
 #' mPerimeter(obj = bin, scale = "patch")
 #' mPerimeter(obj = bin, scale = "class")
 #'
@@ -481,12 +467,7 @@ mPerimeter <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 #'   and then use \code{groupBby} to 'mask' the cells, so to speak.
 #' @family generic metrics
 #' @examples
-#' cat <- rtData$categorial
-#' con <- rtData$continuous
-#' bin <- rBinarise(con, thresh = 40)
-#' patches <- rPatches(bin)
-#'
-#' input <- raster::stack(con, patches)
+#' # work in progress
 #' @importFrom checkmate assertClass assertCharacter
 #' @importFrom stats weighted.mean quantile
 #' @export

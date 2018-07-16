@@ -248,17 +248,17 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 #' # the vertices are plottet relative to the window
 #' aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3,
 #'                          regular = TRUE, col = "darkorange", show = TRUE)
-#' (geomHexagon(anchor = coords, col = "green", show = TRUE))
+#' (geomHexagon(anchor = coords, col = "green", show = TRUE, new = FALSE))
 #'
 #' # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 #' grid::grid.newpage()
 #' aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-#' anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE)
+#' anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE, new = FALSE)
 #'
 #' # geoms with more than one element are treated element-wise
 #' aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))
 #' visualise(geom = aGeom, new = TRUE)
-#' itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE)
+#' itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE, new = FALSE)
 #'
 #' \dontrun{
 #'
@@ -505,7 +505,7 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
 
 #' @describeIn geomPolygon wrapper of geomPolygon where \code{vertices = 2},
 #'   \code{regular = FALSE} and the two complementing corners are derived from
-#'   the two given corners.
+#'   the two given opposing corners.
 #' @export
 
 geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
@@ -685,9 +685,6 @@ geomRand <- function(type = "point", template = NULL, vertices = 4,
 #'   returned (\code{TRUE}) or should the tiling be returned (\code{FALSE},
 #'   default)?
 #' @return An invisible \code{geom}.
-#' @details https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS
-#'
-#'   origin is in the lower left corner
 #' @examples
 #' # create grid for GFC data
 #' gfcWindow <- data.frame(x = c(-180, 180),
@@ -695,9 +692,9 @@ geomRand <- function(type = "point", template = NULL, vertices = 4,
 #' tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), crs = projs$longlat)
 #'
 #' # create grid for MODIS data
-#' modWindow <- data.frame(x = c(-20015109.354, 21127059.874),
-#'                         y = c(-10007554.677, 11119505.197))
-#' tiles_modis <- geomTiles(window = modWindow, cells = c(37, 19), crs = projs$sinu)
+#' modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
+#'                         y = c(-10007554.677, 10007554.677))
+#' tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18), crs = projs$sinu)
 #'
 #' # create grid for the sentinel data
 #' #sntWindow <- data.frame(x = c(),

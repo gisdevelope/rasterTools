@@ -230,8 +230,7 @@ rBounded <- function(obj, range = NULL, background = NULL){
 #' @return A \code{RasterLayer} of the same dimension as \code{obj}, in which
 #'   the cells have the category number into which their values fall.
 #' @details Using \code{n} will determine \code{breaks} based on the value-range
-#'   of \code{obj} so that the values are assigned to n+1 categories. Hence,
-#'   both minimum and maximum value will have their own category.
+#'   of \code{obj} so that the values are assigned to n categories.
 #'
 #'   Assigning \code{breaks} is mostly usefull when values are to be non-linear,
 #'   such as \code{log(min:max)*max/log(max)}, but could also be \code{seq(min,
@@ -458,7 +457,7 @@ rDilate <- function(obj, kernel = NULL){
 #' distances <- raster::stack(binarised, disEuc, disMan, disChb)
 #' visualise(distances)
 #'
-#' # calculate distance of edge to patch interior
+#' # calculate distance from edge to patch interior
 #' inverted <- rPermute(binarised)
 #' visualise(rDistance(inverted))
 #' @importFrom checkmate assertClass assertIntegerish

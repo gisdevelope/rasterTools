@@ -183,7 +183,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       geom <- gScale(geom, to = "relative")
     }
 
-    geomGrob <- gToGrob(geom = geom, theme = theme)
+    geomGrob <- gToGrob(geom = geom, theme = theme, ...)
 
   }
 

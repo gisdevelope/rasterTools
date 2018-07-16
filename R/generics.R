@@ -40,7 +40,7 @@ setGeneric(name = "getCRS",
              standardGeneric("getCRS")
            })
 
-#' Get rows (generic)
+#' Get elements or rows (generic)
 #'
 #' This function is equivalent to the \code{[} function on the
 #' \code{@table} slot of a geom and extracts rows from this table.
@@ -70,8 +70,8 @@ setGeneric(name = "getColumn",
 
 #' Get subset (generic)
 #'
-#' Similar to \code{\link{getElement}}, \code{getSubset} returns the subsetted
-#' \code{geom} and not only the elements.
+#' Similar to \code{\link{getRow}}, \code{getSubset} returns the subsetted
+#' \code{geom} and not only the selected rows.
 #' @param x [\code{geom}]\cr object to \code{subset}.
 #' @param subset [\code{integerish(.)} | \code{logical(.)}]\cr elements or rows
 #'   to keep.
