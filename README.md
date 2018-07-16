@@ -20,11 +20,21 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
         ?`rasterTools-package`
         
-3) Update the object `rtPaths`, which includes the directories where spatial files may be already stored on your hard-disc, or where they ought to be stored.
+3) Determine, for instance, forest patches in a raster with continuous integer values:
+
+        get_patches <- list(list(operator = "rBinarise", thresh = 30),
+                            list(operator = "rPatches"))
+        myInput <- rtData$continuous
+        myPatches <- modify(input = myInput, by = get_patches, sequential = TRUE)
+        visualise(raster::stack(myInput, myPatches))
+
+<img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png"  width="100%" />
+
+4) Update the object `rtPaths` that contains all paths to spatial datasets so that `rasterTools` knows where your spatial files may already be stored, or where they ought to be stored.
 
         updatePaths(root = "/path/to/the/spatial/files/", project = "/path/to/your/project/")
 
-4) The vignettes explain in detail what [*algorithm* and *operator*](/vignettes/introduction.Rmd) means here and what the logic behind [landscape metrics](/vignettes/landscape_metrics.Rmd) is.
+5) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
 
 ## In a nutshell, `rasterTools` ...
 

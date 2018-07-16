@@ -92,6 +92,7 @@ NumericMatrix countAdjacenciesC(NumericMatrix &mat, bool countDouble) {
   int posFocal, posRight, posLeft, posTop, posBottom;
   values = sort_unique(mat);
   elements = values.size();
+  // Rcout << values << std::endl;
   NumericMatrix out(elements, elements);
 
   for(int y = 0; y < mRows; y++){

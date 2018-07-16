@@ -166,13 +166,13 @@ when none of the vertices are connected to other vertices,</p></li>
 <li><p><code>"line"</code>, when vertices with the same id are connected according to
 their order without the line closing in itself and</p></li>
 <li><p><code>"polygon"</code>
-according to the same definition, except that the lines closes in itself.</p></li>
-</ul><p>Moreover, a <code>geom</code> does not have the slot <em>extent</em>, which
+according to the same definition, except that the line closes in itself.</p></li>
+</ul><p>Moreover, a <code>geom</code> does NOT have the slot <em>extent</em>, which
 characterises the minimum and maximum value of the vertex coordinates and
-which is thus derived from the vertices, but instead has a a <em>reference
-window</em>, which is sort of a second extent that may be bigger than
-<code>extent</code> and which determines the relative position of the vertices when
-plotting.</p>
+which is thus derived "on the fly" from the vertices. Instead it has a
+<em>reference window</em>, which is sort of a second extent that may be bigger
+than <code>extent</code> and which determines the relative position of the vertices
+when plotting.</p>
     
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
@@ -180,9 +180,8 @@ plotting.</p>
     <dl class='dl-horizontal'>
 <dt><code>type</code></dt><dd><p>[<code>character(1)</code>]<br /> the type of feature, recently either
 <code>"point"</code>, <code>"line"</code> or <code>"polygon"</code>.</p></dd>
-    <dt><code>table</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> the <code>x</code> and <code>y</code>
-coordinates of the vertex and additional columns of properties, such as the
-<code>id</code>.</p></dd>
+    <dt><code>table</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> the <code>x</code> and <code>y</code> coordinates
+of the vertex and additional columns of properties, such as the <code>id</code>.</p></dd>
     <dt><code>window</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> the minimum and maximum value in x and
 y dimension of the reference window in which the <code>geom</code> dwells.</p></dd>
     <dt><code>scale</code></dt><dd><p>[<code>character(1)</code>]<br /> whether the vertex coordinates are
@@ -198,10 +197,10 @@ notation.</p></dd>
     <p>So far the following methods have been defined:</p><ul>
 <li><p>Getters: <br /> <code>length</code>, <code>subset</code>, <code>show</code>,
   <code><a href='getWindow.html'>getWindow</a></code>, <code><a href='getExtent.html'>getExtent</a></code>, <code><a href='getCRS.html'>getCRS</a></code>,
-  <code><a href='getTable.html'>getTable</a></code>, <code><a href='getRow.html'>getRow</a></code>,
-  <code><a href='getColumn.html'>getColumn</a></code>, <code><a href='getSubset.html'>getSubset</a></code>,
-  <code><a href='getHistory.html'>getHistory</a></code>,</p></li>
-<li><p>Setters: <br /> <code><a href='setCRS.html'>setCRS</a></code></p></li>
+  <code><a href='getTable.html'>getTable</a></code>, <code><a href='getRow.html'>getRow</a></code>, <code><a href='getColumn.html'>getColumn</a></code>,
+  <code><a href='getSubset.html'>getSubset</a></code>, <code><a href='getHistory.html'>getHistory</a></code>,</p></li>
+<li><p>Setters: <br />
+  <code><a href='setCRS.html'>setCRS</a></code></p></li>
 </ul>
     
 

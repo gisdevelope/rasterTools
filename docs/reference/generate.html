@@ -32,10 +32,8 @@
 
 <meta property="og:title" content="Generate spatial (gridded) patterns — generate" />
 
-<meta property="og:description" content="Spatial pattern models, such as neutral landscape models (NLMs), are useful
-to generate distinct spatial patterns. Ideally, the resulting spatial
-patterns are strictly controlable. They help studying ecological processes
-or spatial statistics in general." />
+<meta property="og:description" content="This function is still largely work in process and very experimental (but
+will be more awesome than experiences of a similar kind!)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -148,14 +146,12 @@ or spatial statistics in general." />
 
     <div class="ref-description">
     
-    <p>Spatial pattern models, such as neutral landscape models (NLMs), are useful
-to generate distinct spatial patterns. Ideally, the resulting spatial
-patterns are strictly controlable. They help studying ecological processes
-or spatial statistics in general.</p>
+    <p>This function is still largely work in process and very experimental (but
+will be more awesome than experiences of a similar kind!)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>generate</span>(<span class='no'>model</span>, <span class='no'>dimensions</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>generate</span>(<span class='no'>model</span>, <span class='no'>dimensions</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,16 +167,15 @@ name and its arguments as sub-elements; see Examples.</p></td>
       <td><p>number of columns and rows the landscape model ought to
 have.</p></td>
     </tr>
-    <tr>
-      <th>envir</th>
-      <td><p>the environment to which the output of this function should be
-saved.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Many spatial pattern models (SPMs) have been suggested and neutral
+    <p>Spatial pattern models, such as neutral landscape models (NLMs), are useful
+to generate distinct spatial patterns. Ideally, the resulting spatial
+patterns are strictly controlable. They help studying ecological processes or
+spatial statistics in general.</p>
+<p>Many spatial pattern models (SPMs) have been suggested and neutral
   landscape models (NLMs) probably constitute the most common use-case.
   However, often they are merely treated as "habitat models", where only the
   presence of habitat is simulated. Various SPMs that depict "artificial
@@ -188,17 +183,23 @@ saved.</p></td>
   the influence of geological, atmospheric and ecological dynamics are also
   of interest. Available are here ...</p>
 <p>... neutral landscape models:</p><ul>
-<li><p><code><a href='nlmGradient.html'>nlmGradient</a></code>: Neutral landscape model based on a gradient.</p></li>
-<li><p><code><a href='nlmRandom.html'>nlmRandom</a></code>: Randomly assembled neutral landscape model.</p></li>
+<li><p><code><a href='nlmGradient.html'>nlmGradient</a></code>:
+  Neutral landscape model based on a gradient.</p></li>
+<li><p><code><a href='nlmRandom.html'>nlmRandom</a></code>:
+  Randomly assembled neutral landscape model.</p></li>
 <li><p><code><a href='nlmHeightmap.html'>nlmHeightmap</a></code>: Neutral landscape model based on a heightmap.</p></li>
 </ul>
     <p>... other (spatial) pattern models:</p><ul>
-<li><p><code>pmNoise</code>: Patterns based on different kinds of noise.</p></li>
+<li><p><code>pmNoise</code>:
+  Patterns based on different kinds of noise.</p></li>
 </ul>
     <p>... ecological processes models:</p><ul>
-<li><p><code>epmSucces</code>: Let objects in the spatial model success.</p></li>
-<li><p><code>epmDiversify</code>: Let objects in the spatial model diversify.</p></li>
-<li><p><code>epmPerforate</code>: Create gaps (e.g. clearcuts) into objects of the spatial model.</p></li>
+<li><p><code>epmSucces</code>: Let
+  objects in the spatial model success.</p></li>
+<li><p><code>epmDiversify</code>: Let
+  objects in the spatial model diversify.</p></li>
+<li><p><code>epmPerforate</code>: Create
+  gaps (e.g. clearcuts) into objects of the spatial model.</p></li>
 <li><p><code>epmFragment</code>: Create fragmentation in the spatial model.</p></li>
 <li><p><code>epmConnect</code>: Create connecting elements in the spatial model.</p></li>
 </ul>

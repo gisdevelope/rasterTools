@@ -111,9 +111,10 @@
     
     
 
+<!-- <i class="fas fa-chess-board"></i> **rasterTools** <img src="logo.png" align="right" height="200" /> -->
 <div id="rastertools" class="section level2">
 <h2 class="hasAnchor">
-<a href="#rastertools" class="anchor"></a><i class="fas fa-chess-board"></i> <strong>rasterTools</strong> <img src="logo.png" align="right" height="200">
+<a href="#rastertools" class="anchor"></a><strong>rasterTools</strong>
 </h2>
 <p><strong><em>obtain and process earth observation data</em></strong></p>
 <p>The rasterTools package provides the toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions.</p>
@@ -132,10 +133,21 @@
 <pre><code><a href="reference/rasterTools.html">?`rasterTools-package`</a></code></pre>
 </li>
 <li>
-<p>Update the object <code>rtPaths</code>, which includes the directories where spatial files may be already stored on your hard-disc, or where they ought to be stored.</p>
+<p>Determine, for instance, forest patches in a raster with continuous integer values:</p>
+<pre><code>get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
+                    list(operator = "rPatches"))
+myInput &lt;- rtData$continuous
+myPatches &lt;- modify(input = myInput, by = get_patches, sequential = TRUE)
+visualise(raster::stack(myInput, myPatches))</code></pre>
+</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png" width="100%"></p>
+<ol start="4" style="list-style-type: decimal">
+<li>
+<p>Update the object <code>rtPaths</code> that contains all paths to spatial datasets so that <code>rasterTools</code> knows where your spatial files may already be stored, or where they ought to be stored.</p>
 <pre><code><a href="reference/updatePaths.html">updatePaths(root = "/path/to/the/spatial/files/", project = "/path/to/your/project/")</a></code></pre>
 </li>
-<li><p>The vignettes explain in detail what <a href="articles/introduction.html"><em>algorithm</em> and <em>operator</em></a> means here and what the logic behind <a href="articles/landscape_metrics.html">landscape metrics</a> is.</p></li>
+<li><p>The vignettes given an in detail <a href="articles/introduction.html">Introduction</a> and explain what the logic behind <a href="articles/landscape_metrics.html">landscape metrics</a> is.</p></li>
 </ol>
 <hr>
 </div>
@@ -189,7 +201,7 @@
 <a href="#acknowledgements" class="anchor"></a>Acknowledgements</h2>
 <p>I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the <a href="https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo">FunBo Project</a>, which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.</p>
 <p>Thanks are due to Prof. Arne Pommerening who was a great source of inspiration for what <code>rasterTools</code> is now.</p>
-<p>Moreover, I owe thanks to people like Alex Zvoleff (<a href="ttp://azvoleff.com/gfcanalysis"><code>gfcanalysis</code></a>) and Jon Clayden (<a href="https://github.com/jonclayden/mmand"><code>mmand</code></a>), who inspired me with their uncompromising and creative code-work.</p>
+<p>Moreover, I owe thanks to people like Alex Zvoleff (<a href="http://azvoleff.com/gfcanalysis"><code>gfcanalysis</code></a>) and Jon Clayden (<a href="https://github.com/jonclayden/mmand"><code>mmand</code></a>), who inspired me with their uncompromising and creative code-work.</p>
 </div>
   </div>
 

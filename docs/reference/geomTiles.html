@@ -188,11 +188,6 @@ default)?</p></td>
 
     <p>An invisible <code>geom</code>.</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS</p>
-<p>origin is in the lower left corner</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># create grid for GFC data</span>
@@ -201,9 +196,9 @@ default)?</p></td>
 <span class='no'>tiles_gfc</span> <span class='kw'>&lt;-</span> <span class='fu'>geomTiles</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>gfcWindow</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>36</span>, <span class='fl'>14</span>), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>longlat</span>)
 
 <span class='co'># create grid for MODIS data</span>
-<span class='no'>modWindow</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>20015109.354</span>, <span class='fl'>21127059.874</span>),
-                        <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>10007554.677</span>, <span class='fl'>11119505.197</span>))
-<span class='no'>tiles_modis</span> <span class='kw'>&lt;-</span> <span class='fu'>geomTiles</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>modWindow</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>37</span>, <span class='fl'>19</span>), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>sinu</span>)
+<span class='no'>modWindow</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>20015109.354</span>, <span class='fl'>20015109.354</span>),
+                        <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>10007554.677</span>, <span class='fl'>10007554.677</span>))
+<span class='no'>tiles_modis</span> <span class='kw'>&lt;-</span> <span class='fu'>geomTiles</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>modWindow</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>36</span>, <span class='fl'>18</span>), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>sinu</span>)
 
 <span class='co'># create grid for the sentinel data</span>
 <span class='co'>#sntWindow &lt;- data.frame(x = c(),</span>
@@ -216,8 +211,6 @@ default)?</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

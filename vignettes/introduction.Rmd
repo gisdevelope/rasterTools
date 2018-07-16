@@ -21,20 +21,21 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(rasterTools)
 ```
 
 # Introduction
 
 You might find `rasterTools` useful when your work depends in one way or the other on gridded earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
 
-`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present another workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the type of work. In `rasterTools` the four functions `generate()`, `obtain()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `generate()`, `obtain()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
 
-Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. An algorithm in `rasterTools` is given as list of lists.
+Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in `rasterTools` is given as list of lists.
 
-    algo_name <- list(list(operator1,
-                      list(operator2)))
+    algo_name <- list(list(operator1),
+                      list(operator2))
                       
-Operators are scope specific, i.e. they are typically only called in their respective core function. Each operator represents a `do.call()` compliant definition (type `?do.call` into the console to learn about it).
+Each operator represents a `do.call()` compliant definition (type `?do.call` into the console to learn about it).
 
     do.call(what, args, quote = FALSE, envir = parent.frame())
 
@@ -43,74 +44,127 @@ Which translates to
     algo_name <- list(operator1 = list(what, args),
                       operator2 = list(what, args))
 
-Its first element `what = operator_name` would outline the functions comprised in this algorithm (such as `"oMODIS"` or `"oCLC"`). Its second element can have any number of arguments required to put together the call (such as `product = "MOD17A3", layer = 2, period = c(2012, 2014)` or simply `period = 2006`).
+Its first element `what = operator_name` would outline the name of the function utilized in this operator (such as `"oMODIS"` or `"oCLC"`). Its second element (`args`) can have any number of arguments required to put together the call (such as `product = "MOD17A3", layer = 2, period = c(2012, 2014)` or simply `period = 2006`).
 
     datasets <- list(list(operator = "oCLC", period = 2006),
                      list(operator = "oGFC", period = c(2005:2007)))
 
-This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be a dataset that is not yet supported by `rasterTools`, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple work-flow.
+This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be a dataset that is not yet supported by `rasterTools`, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple workflow.
+
+## A new (spatial) class: `geom`
+`rasterTools` comes with its own (spatial) S4 class. This class is radically simplified (even in comparison to `sf`) and thus consists only of the feature classes `point`, `line` and `polygon`. It does, however, come with many functions that create specific types of lines or polygons, for instance `geomHexagon()`, which creates exclusively hexagonal polygon geometries.
+
+These geometries are deliberately per default not *spatial* in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a *coordinate reference system*. We learn a lot about them by simply creating and plotting one:
+
+```{r}
+coords <- data.frame(x = c(40, 70, 70, 50),
+                     y = c(40, 40, 60, 70),
+                     id = 1)
+window <- data.frame(x = c(0, 80),
+                     y = c(0, 80))
+(aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE))
+```
+
+The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. To be compatible with the other existing spatial classes in R (namely `sp` and `sf`), it has the classic extent slot, that behaves exactly as with any other spatial class in R. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and the other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` funciton. The foreign methods have been defined for the sake of internal consistency and simplification.
+
+Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to other spatial classes have been programmed (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
+
+
+# Example workflow
+In the following you will find an example for each of the core functions. Let's start by loading the package
+
+```{r}
+library(raster)
+library(rasterTools)
+```
+
+`rasterTools` may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via `updatePaths(root = "/path/to/the/spatial/files")`.
+
 
 ## Generate spatial patterns
-To build a neutral landscape model, or possibly other spatial data patterns which are based on some sort of simulated process (and are therefore not neutral but perhaps 'virtual'), an algorithm may be:
-
-    anNLM <- list(list(operator = "bHeightmap", fracdim = 2.3))
-    
-and it would be called by:
-
-    myNLM <- generate(build = myNLM, dimensions = c(400, 500))
-
-The so created spatial dataset can either be utilized directly or could be put through a pipeline of modification algorithms (see below).
+*Coming soon*
 
 ## Obtain spatial datasets
 An algorithm with which one would obtain information from various spatial data sets could be:
 
-    myDatasets <- list(list(operator = "oCLC", period = 2006),
-                       list(operator = "oGFC", period = c(2005:2007)),
-                       list(operator = "oMODIS", product = "mod17a3", period = 2006,
-                            layer = 2))
+```{r}
+myDatasets <- list(list(operator = "oCLC", period = 2006),
+                   list(operator = "oGFC", period = c(2005:2007)),
+                   list(operator = "oMODIS", product = "mod17a3", period = 2006,
+                        layer = 2))
+```
 
-Most of the different spatial datasets are available in a specific file format or may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the `product` and `layer` need to be specified. Each of the required arguments can be found in the respective documentation, for instance with `?oMODIS`.
+Most of the different spatial datasets are available in a specific file format and may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the `product` and `layer` need to be specified. Each of the required arguments can be found in the respective documentation, for instance with `?oMODIS`.
 
-This collection of datasets can be obtained by:
+Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask (of the class `geom`) to outline this area of interest:
 
-    myData <- obtain(data = myDatasets, mask = anyMask)
+```{r}
+library(magrittr)
+myMask <- loadData(files = "aWindow.csv",
+                    localPath = system.file("csv", package="rasterTools")) %>%
+   geomRectangle() %>%
+   setCRS(crs = projs$laea)
+```
+
+The collection of datasets for the area of our interest can be obtained by the following code:
+
+```{r eval=FALSE}
+myData <- obtain(data = myDatasets, mask = myMask)
+```
+
+(output here not shown as it may download the datasets, if you do not have them yet)
 
 ## Modify gridded objects
 A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:
 
-    get_patches <- list(list(operator = "rBinarise", thresh = 30),
-                        list(operator = "rPatches"))
+```{r}
+get_patches <- list(list(operator = "rBinarise", thresh = 30),
+                    list(operator = "rPatches"))
+```
 
 When using this algorithm in `modify()` while `sequential = TRUE` the binarised raster will be used to derive patches. The output of `rBinarise` will be passed to `rPatches`, which determines patches from the thresholded rasters values.
 
 However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:
 
-    cc_cats <- list(get_patches = list(operator = "rBinarise", thresh = 30),
-                    get_patches = list(operator = "rPatches"),
-                    get_categories = list(operator = "rCategorise", n = 5))
+```{r}
+cc_cats <- list(get_patches = list(operator = "rBinarise", thresh = 30),
+                get_patches = list(operator = "rPatches"),
+                get_categories = list(operator = "rCategorise", n = 5))
+```
 
 In this case `sequential = TRUE` would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to `FALSE` in the call).
 
 The modifications would be carried out by:
 
-    myModifiedData <- modify(input = myData$gfc, by = get_patches, sequential = TRUE)
+```{r, fig.width=7, out.width='100%'}
+myInput <- rtData$continuous
+myPatches <- modify(input = myInput, by = get_patches, sequential = TRUE)
+visualise(raster::stack(myInput, myPatches))
+```
+
 
 ## Measure gridded objects
-Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. A generic metric typically consists of just one function with its respective arguments:
+Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
 
-    patches_area <- list(operator = "mArea", scale = "patch")
+```{r}
+patches_area <- list(operator = "mArea", scale = "patch")
+```
 
-A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific name that would be referred to in a final element, called `equation`:
+A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific term name that would be referred to in a final element, called `equation`, for example as shown here with the *Class proportional area*:
 
-    mPropArea <- list(a_w = list(operator = "mArea", scale = "window"),
-                      a_c = list(operator = "mArea", scale = "class"),
-                      equation = "a_c / a_w * 100")
+```{r}
+mCPA <- list(a_w = list(operator = "mArea", scale = "window"),
+             a_c = list(operator = "mArea", scale = "class"),
+             equation = "a_c / a_w * 100")
+```
 
-The most important generic metrics are already predefined and so are some of the derived metrics. By combining all of those and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+The generic metrics are already predefined (`mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()`) and so are some of the derived metrics (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). By combining the generic metrics and potentially also the derived metrics and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
-The measurement of the features in a raster would be carried out by:
+Finally, the measurement of patch area and class proportional area, in a raster where patches have been determined, would be carried out by:
 
-    propAreaForest <- measure(input = myModifiedData, with = mPropArea)
+```{r}
+measure(input = myPatches, with = c("patches_area", "mCPA"))
+```
 
 
 # Acknowledgements

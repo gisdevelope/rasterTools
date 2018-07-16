@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction • rasterTools</title>
+<title>rasterTools • rasterTools</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Introduction">
+<script src="../pkgdown.js"></script><meta property="og:title" content="rasterTools">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -105,7 +105,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Introduction</h1>
+      <h1>rasterTools</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
             <h4 class="date">2018-07-16</h4>
@@ -117,70 +117,196 @@
 
     
     
-<div id="definitions" class="section level1">
+<div id="introduction" class="section level1">
 <h1 class="hasAnchor">
-<a href="#definitions" class="anchor"></a>Definitions</h1>
-<p>An <em>algorithm</em> in <code>rasterTools</code> is given as list of lists.</p>
-<pre><code>algo_name &lt;- list(list(operator1,
-                  list(operator2)))
+<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>You might find <code>rasterTools</code> useful when your work depends in one way or the other on gridded earth observation data <span class="citation">(Bush et al. <a href="#ref-bush_connecting_2017">2017</a>)</span>. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.</p>
+<p><code>rasterTools</code> does NOT intend to replace <code>raster</code> <span class="citation">(Hijmans <a href="#ref-hijmans_raster_2017">2017</a>)</span> but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into <em>operators</em> (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In <code>rasterTools</code> the four functions <code><a href="../reference/generate.html">generate()</a></code>, <code><a href="../reference/obtain.html">obtain()</a></code>, <code><a href="../reference/modify.html">modify()</a></code> and <code><a href="../reference/measure.html">measure()</a></code> represent the major tasks of spatial operations. <code>rasterTools</code> has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, “loading the MODIS dataset” is oursourced to a seperate function (the <code><a href="../reference/oMODIS.html">oMODIS()</a></code> operator). New operators to all the core functions and to <code><a href="../reference/loadData.html">loadData()</a></code> can hence be devised easily.</p>
+<p>Several operators are combined to <em>algorithms</em> to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in <code>rasterTools</code> is given as list of lists.</p>
+<pre><code>algo_name &lt;- list(list(operator1),
+                  list(operator2))
                   </code></pre>
-<p>They are a sequence of <em>operators</em>, i.e. functions and their respective arguments, which act together to carry out some sort of computation. They are scope specific, i.e. they are typically only called in their respective core function. Each operator represents a <code>do.call()</code> compliant definition (type <code>?do.call</code> into the console to learn about it).</p>
+<p>Each operator represents a <code>do.call()</code> compliant definition (type <code>?do.call</code> into the console to learn about it).</p>
 <pre><code>do.call(what, args, quote = FALSE, envir = parent.frame())</code></pre>
 <p>Which translates to</p>
 <pre><code>algo_name &lt;- list(operator1 = list(what, args),
                   operator2 = list(what, args))</code></pre>
-<p>Its first elements <code>what = operator_name</code> would outline the functions comprised in this algorithm (such as <code>nlmHeightmap</code> or <code>oCLC</code>). Its second element can have any number of arguments required to put together the call (such as <code>fracdim = 2.3, seed = 4815162342</code> or <code>period = 2006</code>).</p>
+<p>Its first element <code>what = operator_name</code> would outline the name of the function utilized in this operator (such as <code>"oMODIS"</code> or <code>"oCLC"</code>). Its second element (<code>args</code>) can have any number of arguments required to put together the call (such as <code>product = "MOD17A3", layer = 2, period = c(2012, 2014)</code> or simply <code>period = 2006</code>).</p>
 <pre><code>datasets &lt;- list(list(operator = "oCLC", period = 2006),
                  list(operator = "oGFC", period = c(2005:2007)))</code></pre>
-<p>This modularity is one of the strong sides of <code>rasterTools</code>. It allows the user to write their own operator to be used in the respective core-function. An example would be to build a novel neutral landscape model, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple work-flow.</p>
+<p>This modularity is one of the strong sides of <code>rasterTools</code>. It allows the user to write their own operator to be used in the respective core-function. An example would be a dataset that is not yet supported by <code>rasterTools</code>, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple workflow.</p>
+<div id="a-new-spatial-class-geom" class="section level2">
+<h2 class="hasAnchor">
+<a href="#a-new-spatial-class-geom" class="anchor"></a>A new (spatial) class: <code>geom</code>
+</h2>
+<p><code>rasterTools</code> comes with its own (spatial) S4 class. This class is radically simplified (even in comparison to <code>sf</code>) and thus consists only of the feature classes <code>point</code>, <code>line</code> and <code>polygon</code>. It does, however, come with many functions that create specific types of lines or polygons, for instance <code><a href="../reference/geomPolygon.html">geomHexagon()</a></code>, which creates exclusively hexagonal polygon geometries.</p>
+<p>These geometries are deliberately per default not <em>spatial</em> in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a <em>coordinate reference system</em>. We learn a lot about them by simply creating and plotting one:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
+                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
+                     <span class="dt">id =</span> <span class="dv">1</span>)
+window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),
+                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))
+(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<pre><code>#&gt; class        : geom
+#&gt; feature type : polygon
+#&gt; features     : 1  (4 vertices)
+#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
+#&gt; extent       : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale        : absolute
+#&gt; coord. ref.  : NA
+#&gt; variables    : 1  (id)</code></pre>
+<p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. To be compatible with the other existing spatial classes in R (namely <code>sp</code> and <code>sf</code>), it has the classic extent slot, that behaves exactly as with any other spatial class in R. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and the other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> funciton. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
+<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
+</div>
+</div>
+<div id="example-workflow" class="section level1">
+<h1 class="hasAnchor">
+<a href="#example-workflow" class="anchor"></a>Example workflow</h1>
+<p>In the following you will find an example for each of the core functions. Let’s start by loading the package</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
+<span class="co">#&gt; Loading required package: sp</span>
+<span class="kw">library</span>(rasterTools)</code></pre></div>
+<p><code>rasterTools</code> may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via <code><a href="../reference/updatePaths.html">updatePaths(root = "/path/to/the/spatial/files")</a></code>.</p>
 <div id="generate-spatial-patterns" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-spatial-patterns" class="anchor"></a>Generate spatial patterns</h2>
-<p>To build a neutral landscape model, or possibly other spatial data patterns which are based on some sort of simulated process (and are therefore not neutral but perhaps ‘virtual’), an algorithm may be:</p>
-<pre><code>anNLM &lt;- list(list(operator = "bHeightmap", fracdim = 2.3))</code></pre>
-<p>and it would be called by:</p>
-<pre><code>myNLM &lt;- generate(build = myNLM, dimensions = c(400, 500))</code></pre>
-<p>The so created spatial dataset can either be utilized directly or could be put through a pipeline of modification algorithms (see below).</p>
+<p><em>Coming soon</em></p>
 </div>
 <div id="obtain-spatial-datasets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#obtain-spatial-datasets" class="anchor"></a>Obtain spatial datasets</h2>
 <p>An algorithm with which one would obtain information from various spatial data sets could be:</p>
-<pre><code>myDatasets &lt;- list(list(operator = "oCLC", period = 2006),
-                   list(operator = "oGFC", period = c(2005:2007)),
-                   list(operator = "oMODIS", product = "mod17a3", period = 2006,
-                        layer = 2))</code></pre>
-<p>Most of the different spatial datasets are available in a specific file format or may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the <code>product</code> and <code>layer</code> need to be specified. Each of the required arguments can be found in the respective documentation, for instance with <code><a href="../reference/oMODIS.html">?oMODIS</a></code>.</p>
-<p>This collection of datasets can be obtained by:</p>
-<pre><code>myData &lt;- obtain(data = myDatasets, mask = anyMask)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myDatasets &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oCLC"</span>, <span class="dt">period =</span> <span class="dv">2006</span>),
+                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oGFC"</span>, <span class="dt">period =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2007</span>)),
+                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oMODIS"</span>, <span class="dt">product =</span> <span class="st">"mod17a3"</span>, <span class="dt">period =</span> <span class="dv">2006</span>,
+                        <span class="dt">layer =</span> <span class="dv">2</span>))</code></pre></div>
+<p>Most of the different spatial datasets are available in a specific file format and may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the <code>product</code> and <code>layer</code> need to be specified. Each of the required arguments can be found in the respective documentation, for instance with <code><a href="../reference/oMODIS.html">?oMODIS</a></code>.</p>
+<p>Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask (of the class <code>geom</code>) to outline this area of interest:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'magrittr'</span>
+<span class="co">#&gt; The following object is masked from 'package:raster':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     extract</span>
+myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> <span class="st">"aWindow.csv"</span>,
+                    <span class="dt">localPath =</span> <span class="kw">system.file</span>(<span class="st">"csv"</span>, <span class="dt">package=</span><span class="st">"rasterTools"</span>)) <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>() <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">crs =</span> projs<span class="op">$</span>laea)</code></pre></div>
+<p>The collection of datasets for the area of our interest can be obtained by (output here not shown as ir may download the datasets, if you do not have them yet):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</code></pre></div>
 </div>
 <div id="modify-gridded-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#modify-gridded-objects" class="anchor"></a>Modify gridded objects</h2>
 <p>A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:</p>
-<pre><code>get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
-                    list(operator = "rPatches"))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
+                    <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</code></pre></div>
 <p>When using this algorithm in <code><a href="../reference/modify.html">modify()</a></code> while <code>sequential = TRUE</code> the binarised raster will be used to derive patches. The output of <code>rBinarise</code> will be passed to <code>rPatches</code>, which determines patches from the thresholded rasters values.</p>
 <p>However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:</p>
-<pre><code>cc_cats &lt;- list(get_patches = list(operator = "rBinarise", thresh = 30),
-                get_patches = list(operator = "rPatches"),
-                get_categories = list(operator = "rCategorise", n = 5))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cc_cats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
+                <span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                <span class="dt">get_categories =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCategorise"</span>, <span class="dt">n =</span> <span class="dv">5</span>))</code></pre></div>
 <p>In this case <code>sequential = TRUE</code> would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to <code>FALSE</code> in the call).</p>
 <p>The modifications would be carried out by:</p>
-<pre><code>myModifiedData &lt;- modify(input = myData$gfc, by = get_patches, sequential = TRUE)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>continuous
+myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> myInput, <span class="dt">by =</span> get_patches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 <div id="measure-gridded-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#measure-gridded-objects" class="anchor"></a>Measure gridded objects</h2>
-<p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. A generic metric typically consists of just one function with its respective arguments:</p>
-<pre><code>patches_area &lt;- list(operator = "mArea", scale = "patch")</code></pre>
-<p>A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific name that would be referred to in a final element, called <code>equation</code>:</p>
-<pre><code>mPropArea &lt;- list(a_w = list(operator = "mArea", scale = "window"),
-                  a_c = list(operator = "mArea", scale = "class"),
-                  equation = "a_c / a_w * 100")</code></pre>
-<p>The most important generic metrics are already predefined and so are some of the derived metrics. By combining all of those and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
-<p>The measurement of the features in a raster would be carried out by:</p>
-<pre><code>propAreaForest &lt;- measure(input = myModifiedData, with = mPropArea)</code></pre>
+<p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">patches_area &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>)</code></pre></div>
+<p>A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific term name that would be referred to in a final element, called <code>equation</code>, for example as shown here with the <em>Class proportional area</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mCPA &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
+             <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
+             <span class="dt">equation =</span> <span class="st">"a_c / a_w * 100"</span>)</code></pre></div>
+<p>The generic metrics are already predefined (<code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code>) and so are some of the derived metrics (and with increasing version numbers more of them, for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code>). By combining the generic metrics and potentially also the derived metrics and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
+<p>Finally, the measurement of patch area and class proportional area, in a raster where patches have been determined, would be carried out by:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myPatches, <span class="dt">with =</span> <span class="kw">c</span>(<span class="st">"patches_area"</span>, <span class="st">"mCPA"</span>))
+<span class="co">#&gt; $patches_area</span>
+<span class="co">#&gt;    class patch result</span>
+<span class="co">#&gt; 1      1     1     98</span>
+<span class="co">#&gt; 2      2     1     38</span>
+<span class="co">#&gt; 3      3     1     42</span>
+<span class="co">#&gt; 4      4     1    235</span>
+<span class="co">#&gt; 5      5     1      1</span>
+<span class="co">#&gt; 6      6     1     13</span>
+<span class="co">#&gt; 7      7     1      2</span>
+<span class="co">#&gt; 8      8     1     26</span>
+<span class="co">#&gt; 9      9     1      1</span>
+<span class="co">#&gt; 10    10     1     11</span>
+<span class="co">#&gt; 11    11     1      1</span>
+<span class="co">#&gt; 12    12     1    415</span>
+<span class="co">#&gt; 13    13     1     32</span>
+<span class="co">#&gt; 14    14     1     26</span>
+<span class="co">#&gt; 15    15     1      1</span>
+<span class="co">#&gt; 16    16     1      1</span>
+<span class="co">#&gt; 17    17     1      1</span>
+<span class="co">#&gt; 18    18     1      5</span>
+<span class="co">#&gt; 19    19     1      1</span>
+<span class="co">#&gt; 20    20     1      1</span>
+<span class="co">#&gt; 21    21     1      1</span>
+<span class="co">#&gt; 22    22     1      1</span>
+<span class="co">#&gt; 23    23     1      1</span>
+<span class="co">#&gt; 24    24     1      1</span>
+<span class="co">#&gt; 25    25     1      7</span>
+<span class="co">#&gt; 26    26     1      2</span>
+<span class="co">#&gt; 27    27     1    532</span>
+<span class="co">#&gt; 28    28     1      1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mCPA</span>
+<span class="co">#&gt;    class  mCPA</span>
+<span class="co">#&gt; 1      0 55.45</span>
+<span class="co">#&gt; 2      1  2.92</span>
+<span class="co">#&gt; 3      2  1.13</span>
+<span class="co">#&gt; 4      3  1.25</span>
+<span class="co">#&gt; 5      4  6.99</span>
+<span class="co">#&gt; 6      5  0.03</span>
+<span class="co">#&gt; 7      6  0.39</span>
+<span class="co">#&gt; 8      7  0.06</span>
+<span class="co">#&gt; 9      8  0.77</span>
+<span class="co">#&gt; 10     9  0.03</span>
+<span class="co">#&gt; 11    10  0.33</span>
+<span class="co">#&gt; 12    11  0.03</span>
+<span class="co">#&gt; 13    12 12.35</span>
+<span class="co">#&gt; 14    13  0.95</span>
+<span class="co">#&gt; 15    14  0.77</span>
+<span class="co">#&gt; 16    15  0.03</span>
+<span class="co">#&gt; 17    16  0.03</span>
+<span class="co">#&gt; 18    17  0.03</span>
+<span class="co">#&gt; 19    18  0.15</span>
+<span class="co">#&gt; 20    19  0.03</span>
+<span class="co">#&gt; 21    20  0.03</span>
+<span class="co">#&gt; 22    21  0.03</span>
+<span class="co">#&gt; 23    22  0.03</span>
+<span class="co">#&gt; 24    23  0.03</span>
+<span class="co">#&gt; 25    24  0.03</span>
+<span class="co">#&gt; 26    25  0.21</span>
+<span class="co">#&gt; 27    26  0.06</span>
+<span class="co">#&gt; 28    27 15.83</span>
+<span class="co">#&gt; 29    28  0.03</span></code></pre></div>
+</div>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1 class="hasAnchor">
+<a href="#acknowledgements" class="anchor"></a>Acknowledgements</h1>
+<p>I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the <a href="https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo">FunBo Project</a>, which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.</p>
+<p>Thanks are also due to Prof. Arne Pommerening who was a great source of inspiration for what <code>rasterTools</code> is now.</p>
+<p>Moreover, I owe thanks to people like Alex Zvoleff (<a href="http://azvoleff.com/gfcanalysis"><code>gfcanalysis</code></a>) and Jon Clayden (<a href="https://github.com/jonclayden/mmand"><code>mmand</code></a>), who inspired me with their uncompromising and creative code-work.</p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
+<div id="refs" class="references">
+<div id="ref-bush_connecting_2017">
+<p>Bush, Alex, Rahel Sollmann, Andreas Wilting, Kristine Bohmann, Beth Cole, Heiko Balzter, Christopher Martius, et al. 2017. “Connecting Earth Observation to High-Throughput Biodiversity Data.” <em>Nature Ecology &amp; Evolution</em> 1 (7): 0176. doi:<a href="https://doi.org/10.1038/s41559-017-0176">10.1038/s41559-017-0176</a>.</p>
+</div>
+<div id="ref-hijmans_raster_2017">
+<p>Hijmans, Robert J. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster" class="uri">https://CRAN.R-project.org/package=raster</a>.</p>
+</div>
 </div>
 </div>
   </div>
@@ -191,13 +317,20 @@
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li>
-<a href="#definitions">Definitions</a><ul class="nav nav-pills nav-stacked">
+<a href="#introduction">Introduction</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#a-new-spatial-class-geom">A new (spatial) class: <code>geom</code></a></li>
+      </ul>
+</li>
+      <li>
+<a href="#example-workflow">Example workflow</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#generate-spatial-patterns">Generate spatial patterns</a></li>
       <li><a href="#obtain-spatial-datasets">Obtain spatial datasets</a></li>
       <li><a href="#modify-gridded-objects">Modify gridded objects</a></li>
       <li><a href="#measure-gridded-objects">Measure gridded objects</a></li>
       </ul>
 </li>
+      <li><a href="#acknowledgements">Acknowledgements</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>
