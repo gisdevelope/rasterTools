@@ -4,7 +4,7 @@
 \alias{obtain}
 \title{Obtain spatial datasets}
 \usage{
-obtain(data, mask, envir = .GlobalEnv)
+obtain(data, mask)
 }
 \arguments{
 \item{data}{[\code{list(.)}]\cr list of \code{operators}, in which the
@@ -13,9 +13,6 @@ list iteself and includes the operator name and its arguments as
 sub-elements; see Examples.}
 
 \item{mask}{spatial object which serves to mask the obtained.}
-
-\item{envir}{[\code{environment}]\cr environment, to which the output of this function should be
-saved.}
 }
 \value{
 Depends on the method called, but it is always organised in lists.

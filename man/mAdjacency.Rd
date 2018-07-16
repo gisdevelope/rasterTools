@@ -39,9 +39,8 @@ In case \code{type = "like"}, only the diagonal of the adjacency
 cat <- rtData$categorial
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
-# adjacencies in conjunction with 'measure'
-mAdj <- list(operator = "mAdjacency")
-(adjacencies <- measure(input = cat, with = "mAdj"))
+# couble count like adjacencies
+mAdjacency(obj = cat)
 
 # paired adjacencies
 mAdjacency(obj = cat, type = "paired")

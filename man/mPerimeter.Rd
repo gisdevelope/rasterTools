@@ -35,10 +35,6 @@ cat <- rtData$categorial
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the perimeter ...
-# ... in conjunction with 'measure'
-mPc <- list(operator = "mPerimeter", scale = "class")
-measure(input = cat, with = "mPc")
-
 # ... per landuse type
 mPerimeter(obj = cat, scale = "class")
 
@@ -50,7 +46,7 @@ require(magrittr)
 rBinarise(obj = cat, match = c(41, 44, 47)) \%>\%
   mPerimeter(scale = "patch", layer = "values_binarised")
 
-# ... from a binary raster
+# ... from a binary raster, patches are automatically determined
 mPerimeter(obj = bin, scale = "patch")
 mPerimeter(obj = bin, scale = "class")
 

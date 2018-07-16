@@ -5,7 +5,7 @@
 \alias{getRow}
 \alias{getRow,geom,numeric-method}
 \alias{getRow,geom,logical-method}
-\title{Get rows (generic)}
+\title{Get elements or rows (generic)}
 \usage{
 getRow(x, row, ...)
 

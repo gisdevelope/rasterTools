@@ -83,7 +83,7 @@ applied.
 
 \item \code{geomRectangle}: wrapper of geomPolygon where \code{vertices = 2},
 \code{regular = FALSE} and the two complementing corners are derived from
-the two given corners.
+the two given opposing corners.
 
 \item \code{geomHexagon}: wrapper of geomPolygon where \code{vertices = 6} and
 \code{regular = TRUE}.
@@ -102,17 +102,17 @@ window <- data.frame(x = c(0, 80),
 # the vertices are plottet relative to the window
 aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3,
                          regular = TRUE, col = "darkorange", show = TRUE)
-(geomHexagon(anchor = coords, col = "green", show = TRUE))
+(geomHexagon(anchor = coords, col = "green", show = TRUE, new = FALSE))
 
 # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 grid::grid.newpage()
 aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE)
+anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE, new = FALSE)
 
 # geoms with more than one element are treated element-wise
 aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))
 visualise(geom = aGeom, new = TRUE)
-itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE)
+itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE, new = FALSE)
 
 \dontrun{
 

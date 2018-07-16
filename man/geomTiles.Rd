@@ -31,11 +31,6 @@ An invisible \code{geom}.
 \description{
 Create a regular tiling geometry
 }
-\details{
-https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS
-
-  origin is in the lower left corner
-}
 \examples{
 # create grid for GFC data
 gfcWindow <- data.frame(x = c(-180, 180),
@@ -43,9 +38,9 @@ gfcWindow <- data.frame(x = c(-180, 180),
 tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), crs = projs$longlat)
 
 # create grid for MODIS data
-modWindow <- data.frame(x = c(-20015109.354, 21127059.874),
-                        y = c(-10007554.677, 11119505.197))
-tiles_modis <- geomTiles(window = modWindow, cells = c(37, 19), crs = projs$sinu)
+modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
+                        y = c(-10007554.677, 10007554.677))
+tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18), crs = projs$sinu)
 
 # create grid for the sentinel data
 #sntWindow <- data.frame(x = c(),

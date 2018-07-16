@@ -49,8 +49,7 @@ where product files are stored.}
 A \code{RasterLayer} or \code{RasterStack} of MODIS data.
 }
 \description{
-Obtain data from various MODIS
-\href{https://modis.gsfc.nasa.gov/}{datasets}
+Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}
 }
 \details{
 The period can either be given as a single value if only one year is
@@ -59,24 +58,29 @@ The period can either be given as a single value if only one year is
   respectively.
 
   Supported MODIS-products - in the sense that predefined meta-data are
-  available within this package -  are: \itemize{
-    \item{MOD09A1: Surface Reflectance, 8 day, 500 meter, February 2000 - present}
-    \item{MOD09Q1: Surface Reflectance, 8 day, 250 meter, February 2000 - present}
-    \item{MOD11A2: Land Surface Temperature/Emissivity, 8 day, 1000 meter, March 2000 - present}
-    \item{MOD13Q1: Vegetation Indices, 16 day, 250 meter, February 2000 - present}
-    \item{MOD13A1: Vegetation Indices, 16 day, 500 meter, February 2000 - present}
-    \item{MOD13A2: Vegetation Indices, 16 day, 1000 meter, February 2000 - present}
-    \item{MOD13A3: Vegetation Indices, monthly, 1000 meter, February 2000 - present}
-    \item{MOD14A2: Thermal Anomalies and Fire, 8 day, 1000 meter, February 2000 - present}
-    \item{MOD15A2H: Leaf Area Index/FPAR, 8 day, 500 meter, July 2002 - present}
-    \item{MOD17A2H: Gross Primary Productivity, 8 day, 500 meter, February 2000 - present}
-    \item{MOD17A3H: Net Primary Production, yearly, 500 meter, 2000 - present}
-    \item{MOD44W: Land-Water Mask, yearly, 250 meter, 2000 - 2015}
-  }
+  available within this package -  are: \itemize{ \item{MOD09A1: Surface
+  Reflectance, 8 day, 500 meter, February 2000 - present} \item{MOD09Q1:
+  Surface Reflectance, 8 day, 250 meter, February 2000 - present}
+  \item{MOD11A2: Land Surface Temperature/Emissivity, 8 day, 1000 meter,
+  March 2000 - present} \item{MOD13Q1: Vegetation Indices, 16 day, 250 meter,
+  February 2000 - present} \item{MOD13A1: Vegetation Indices, 16 day, 500
+  meter, February 2000 - present} \item{MOD13A2: Vegetation Indices, 16 day,
+  1000 meter, February 2000 - present} \item{MOD13A3: Vegetation Indices,
+  monthly, 1000 meter, February 2000 - present} \item{MOD14A2: Thermal
+  Anomalies and Fire, 8 day, 1000 meter, February 2000 - present}
+  \item{MOD15A2H: Leaf Area Index/FPAR, 8 day, 500 meter, July 2002 -
+  present} \item{MOD17A2H: Gross Primary Productivity, 8 day, 500 meter,
+  February 2000 - present} \item{MOD17A3H: Net Primary Production, yearly,
+  500 meter, 2000 - present} \item{MOD44W: Land-Water Mask, yearly, 250
+  meter, 2000 - 2015} }
+
+  Get additional information about the spatial background from
+  \href{https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS}{Marine
+  Geospatial Ecology Tools}
 }
 \section{Functions}{
 \itemize{
-\item \code{downloadMODIS}: function to download data related to the MODIS dataset
+\item \code{downloadMODIS}: function to download data related to the MODIS products
 }}
 
 \examples{

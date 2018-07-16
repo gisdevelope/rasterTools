@@ -4,7 +4,7 @@
 \alias{generate}
 \title{Generate spatial (gridded) patterns}
 \usage{
-generate(model, dimensions, envir = NULL)
+generate(model, dimensions)
 }
 \arguments{
 \item{model}{list of \code{operators}, in which the spatial patterns are
@@ -13,17 +13,17 @@ name and its arguments as sub-elements; see Examples.}
 
 \item{dimensions}{number of columns and rows the landscape model ought to
 have.}
-
-\item{envir}{the environment to which the output of this function should be
-saved.}
 }
 \description{
-Spatial pattern models, such as neutral landscape models (NLMs), are useful
-to generate distinct spatial patterns. Ideally, the resulting spatial
-patterns are strictly controlable. They help studying ecological processes
-or spatial statistics in general.
+This function is still largely work in process and very experimental (but
+will be more awesome than experiences of a similar kind!)
 }
 \details{
+Spatial pattern models, such as neutral landscape models (NLMs), are useful
+to generate distinct spatial patterns. Ideally, the resulting spatial
+patterns are strictly controlable. They help studying ecological processes or
+spatial statistics in general.
+
 Many spatial pattern models (SPMs) have been suggested and neutral
   landscape models (NLMs) probably constitute the most common use-case.
   However, often they are merely treated as "habitat models", where only the
@@ -32,26 +32,20 @@ Many spatial pattern models (SPMs) have been suggested and neutral
   the influence of geological, atmospheric and ecological dynamics are also
   of interest. Available are here ...
 
-  ... neutral landscape models:
-  \itemize{
-    \item \code{\link{nlmGradient}}: Neutral landscape model based on a gradient.
-    \item \code{\link{nlmRandom}}: Randomly assembled neutral landscape model.
-    \item \code{\link{nlmHeightmap}}: Neutral landscape model based on a heightmap.
-  }
+  ... neutral landscape models: \itemize{ \item \code{\link{nlmGradient}}:
+  Neutral landscape model based on a gradient. \item \code{\link{nlmRandom}}:
+  Randomly assembled neutral landscape model. \item
+  \code{\link{nlmHeightmap}}: Neutral landscape model based on a heightmap. }
 
-  ... other (spatial) pattern models:
-  \itemize{
-    \item \code{pmNoise}: Patterns based on different kinds of noise.
-  }
+  ... other (spatial) pattern models: \itemize{ \item \code{pmNoise}:
+  Patterns based on different kinds of noise. }
 
-  ... ecological processes models:
-  \itemize{
-    \item \code{epmSucces}: Let objects in the spatial model success.
-    \item \code{epmDiversify}: Let objects in the spatial model diversify.
-    \item \code{epmPerforate}: Create gaps (e.g. clearcuts) into objects of the spatial model.
-    \item \code{epmFragment}: Create fragmentation in the spatial model.
-    \item \code{epmConnect}: Create connecting elements in the spatial model.
-  }
+  ... ecological processes models: \itemize{ \item \code{epmSucces}: Let
+  objects in the spatial model success. \item \code{epmDiversify}: Let
+  objects in the spatial model diversify. \item \code{epmPerforate}: Create
+  gaps (e.g. clearcuts) into objects of the spatial model. \item
+  \code{epmFragment}: Create fragmentation in the spatial model. \item
+  \code{epmConnect}: Create connecting elements in the spatial model. }
 
   Combine these landscape models with spatial patterns (link to vignette
   here) and operators of \code{\link{modify}} to come up with a larger set of

@@ -38,7 +38,7 @@ disChb <- rDistance(binarised, method = "chessboard")
 distances <- raster::stack(binarised, disEuc, disMan, disChb)
 visualise(distances)
 
-# calculate distance of edge to patch interior
+# calculate distance from edge to patch interior
 inverted <- rPermute(binarised)
 visualise(rDistance(inverted))
 }

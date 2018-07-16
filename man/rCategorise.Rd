@@ -23,8 +23,7 @@ Assign categories to the values in a raster
 }
 \details{
 Using \code{n} will determine \code{breaks} based on the value-range
-  of \code{obj} so that the values are assigned to n+1 categories. Hence,
-  both minimum and maximum value will have their own category.
+  of \code{obj} so that the values are assigned to n categories.
 
   Assigning \code{breaks} is mostly usefull when values are to be non-linear,
   such as \code{log(min:max)*max/log(max)}, but could also be \code{seq(min,

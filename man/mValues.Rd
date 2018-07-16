@@ -35,12 +35,7 @@ You can give a raster stack with at least two layers as \code{obj}
   and then use \code{groupBby} to 'mask' the cells, so to speak.
 }
 \examples{
-cat <- rtData$categorial
-con <- rtData$continuous
-bin <- rBinarise(con, thresh = 40)
-patches <- rPatches(bin)
-
-input <- raster::stack(con, patches)
+# work in progress
 }
 \seealso{
 Other generic metrics: \code{\link{mAdjacency}},

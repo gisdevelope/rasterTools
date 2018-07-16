@@ -5,7 +5,7 @@
 \title{Modify gridded objects}
 \usage{
 modify(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
-  keepInput = FALSE, envir = .GlobalEnv)
+  keepInput = FALSE)
 }
 \arguments{
 \item{input}{[\code{RasterLayer(1)} | \code{list(.)} thereof]\cr an object or
@@ -28,9 +28,6 @@ default).}
 
 \item{keepInput}{[\code{logical(1)}]\cr should \code{input} be retained
 (\code{TRUE}) or should it be discarded (\code{FALSE}, default)?}
-
-\item{envir}{[\code{environment}]\cr environment, to which the output of this function should be
-saved.}
 }
 \value{
 A list of \code{RasterLayer}s or a \code{RasterStack} of modified

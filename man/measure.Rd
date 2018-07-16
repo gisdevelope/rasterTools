@@ -4,7 +4,7 @@
 \alias{measure}
 \title{Measure gridded objects}
 \usage{
-measure(input, with, simplify = TRUE, envir = .GlobalEnv)
+measure(input, with, simplify = TRUE)
 }
 \arguments{
 \item{input}{[\code{RasterLayer(1)} | \code{list(.)} thereof]\cr an object or
@@ -17,9 +17,6 @@ but can also be assembled "by hand".}
 \item{simplify}{[\code{logical(1)}]\cr should only the scale of the first
 term and the result be returned (\code{TRUE}, default), or should the the
 result of all terms be returned \code{FALSE}?}
-
-\item{envir}{[\code{environment}]\cr environment, to which the output of this function should be
-saved.}
 }
 \value{
 depending on the employed metric, but typically a \code{data.frame}.

@@ -5,7 +5,7 @@
 \title{Build a look-up-table (catalog)}
 \usage{
 catalog(path = ".", abbreviateBy = NULL, type = NULL, recursive = FALSE,
-  inclType = FALSE, silent = FALSE, envir = .GlobalEnv)
+  inclType = FALSE, silent = FALSE)
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the path to a folder that contains files
@@ -28,9 +28,6 @@ included without extension (\code{FALSE}, default)?}
 \item{silent}{[\code{logical(1)}]\cr should all messages but errors be
 suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
 default)?}
-
-\item{envir}{[\code{environment}]\cr environment, to which the output of this function should be
-saved.}
 }
 \value{
 A \code{data.frame} with a column of original names and of the

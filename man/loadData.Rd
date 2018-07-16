@@ -5,7 +5,7 @@
 \title{Import spatial datasets}
 \usage{
 loadData(files = NULL, dataset = NULL, layer = NULL, localPath = NULL,
-  verbose = FALSE, envir = .GlobalEnv)
+  verbose = FALSE)
 }
 \arguments{
 \item{files}{[\code{character(1)} | \code{list(.)}]\cr the file, as it is
@@ -29,9 +29,6 @@ supposed to be stored (i.e. on your harddisc).}
 
 \item{verbose}{[\code{logical(1)}]\cr should additional information be
 printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?}
-
-\item{envir}{[\code{environment(1)}]\cr the environment to which the output
-of this function should be saved.}
 }
 \value{
 a (list of) file(s). If there are several files of type

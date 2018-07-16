@@ -29,10 +29,6 @@ cat <- rtData$categorial
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the number ...
-# ... in conjunction with 'measure'
-mNp <- list(operator = "mNumber", scale = "patch")
-measure(input = cat, with = "mNp")
-
 # ... per landuse type
 mNumber(obj = cat, scale = "class")
 
