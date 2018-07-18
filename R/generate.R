@@ -1,32 +1,30 @@
-#' Generate spatial (gridded) patterns
+#' Generate (neutral) spatial patterns
 #'
-#' This function is still largely work in process and very experimental (but
-#' will be more awesome than experiences of a similar kind!)
+#' This function is still largely work in process and very experimental!
 #'
-#' Spatial pattern models, such as neutral landscape models (NLMs), are useful
-#' to generate distinct spatial patterns. Ideally, the resulting spatial
-#' patterns are strictly controlable. They help studying ecological processes or
-#' spatial statistics in general.
-#' @param model list of \code{operators}, in which the spatial patterns are
-#'   specified. Each \code{operator} is a list iteself and includes the operator
-#'   name and its arguments as sub-elements; see Examples.
+#' Spatial pattern models (SPMs), such as neutral landscape models (NLMs), are
+#' useful to study an ecological response to a set of simulated spatial
+#' patterns. Ideally, the resulting spatial patterns are strictly controlable
+#' and in many situations they ought to be neutral (i.e. not influenced by any
+#' process or bias). Here the term SPM is used because not all functions result
+#' in neutral patterns.
+#' @param model list of \code{operators}, in which the spatial pattern models
+#'   are specified. Each \code{operator} is a list iteself and includes the
+#'   operator name and its arguments as sub-elements; see Examples.
 #' @param dimensions number of columns and rows the landscape model ought to
 #'   have.
-#' @details Many spatial pattern models (SPMs) have been suggested and neutral
-#'   landscape models (NLMs) probably constitute the most common use-case.
-#'   However, often they are merely treated as "habitat models", where only the
-#'   presence of habitat is simulated. Various SPMs that depict "artificial
-#'   patterns or processes" introduced by human disturbance or SPMs that depict
-#'   the influence of geological, atmospheric and ecological dynamics are also
-#'   of interest. Available are here ...
+#' @details Many spatial pattern models have been suggested and NLMs probably
+#'   constitute the most common use-case. However, often they are merely treated
+#'   as "habitat models", where only the presence or abundance of habitat is
+#'   simulated. Yet, "artificial patterns or processes" introduced by human
+#'   disturbance and the influence of geological, atmospheric and ecological
+#'   dynamics are also of interest. We try to cover these cases with ...
 #'
-#'   ... neutral landscape models: \itemize{ \item \code{\link{nlmGradient}}:
-#'   Neutral landscape model based on a gradient. \item \code{\link{nlmRandom}}:
-#'   Randomly assembled neutral landscape model. \item
-#'   \code{\link{nlmHeightmap}}: Neutral landscape model based on a heightmap. }
-#'
-#'   ... other (spatial) pattern models: \itemize{ \item \code{pmNoise}:
-#'   Patterns based on different kinds of noise. }
+#'   ... spatial pattern models: \itemize{ \item \code{\link{spmGradient}}:
+#'   Generate a (neutral) gradient pattern. \item \code{\link{spmRandom}}:
+#'   Generate a random pattern. \item \code{\link{spmHeightmap}}: Generate a
+#'   heightmap. \item \code{spmNoise}: Generate patterns based on different
+#'   kinds of noise.}
 #'
 #'   ... ecological processes models: \itemize{ \item \code{epmSucces}: Let
 #'   objects in the spatial model success. \item \code{epmDiversify}: Let
@@ -35,9 +33,9 @@
 #'   \code{epmFragment}: Create fragmentation in the spatial model. \item
 #'   \code{epmConnect}: Create connecting elements in the spatial model. }
 #'
-#'   Combine these landscape models with spatial patterns (link to vignette
-#'   here) and operators of \code{\link{modify}} to come up with a larger set of
-#'   \code{spatial models} (link to vignette here).
+#'   Additionally you can use functions in other packages as operators, if they
+#'   produce a 2D-lattice of spatial patterns; see for instance
+#'   \href{https://github.com/ropensci/NLMR}{NLMR}.
 #'
 #' @examples
 #' \dontrun{

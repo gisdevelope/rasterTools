@@ -37,13 +37,13 @@ objects where everything covered by 1 is to be selected/processed and
 everything covered by 0 is not.
 
 \code{rasterTools} comes with a function to \code{\link{visualise}} gridded
-objects and geometries. Gridded objects can be either a \code{Raster*}, a
+objects and geometries. Gridded objects can be either a \code{Raster*} or a
 \code{matrix} and hence everything that can be coerced to a matrix. Gridded
 objects with more than one layer are automatically presented in panels.
 
 \code{rasterTools} has been conceptualised so that the core functions are
 modular. The core functions manage all the code-logic that is common for the
-task at hand. Code that manages, for instance, "loading the modis dataset" is
+task at hand. Code that manages, for instance, "loading the MODIS dataset" is
 outsourced to a separate function (the \code{\link{oMODIS}} operator). New
 operators to all the core functions and to \code{\link{loadData}} can hence
 be devised easily. If you want to contribute, please study the
