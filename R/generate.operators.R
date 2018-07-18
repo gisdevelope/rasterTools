@@ -1,41 +1,54 @@
-#' Build a gradient landscape model
+#' Generate a (neutral) gradient pattern
 #'
 #' A gradient can be understood in terms of the distance to an origin. With a
 #' straight line as origin, one might end up with a edge gradient, or, in case
-#' the line does not cross the the landscape, a planar gradient.
+#' the line does not cross the the plot window, a planar gradient. Beware that
+#' in case you provide an origin or a strict set of parameters (\code{...}), the
+#' spatial pattern may not be neutral anymore!
 #' @template mat
 #' @param origin [\code{RasterLayer} | \code{matrix}]\cr a binary object that
 #'   serves as origin of the gradient; overrides the other arguments, if given.
-#' @param type [\code{¢haracter(1)}]\cr the type of the gradient model. Either
+#' @param type [\code{character(1)}]\cr the type of the gradient model. Either
 #'   \code{"planar"} (default), \code{"point"}, \code{"line"}, \code{"polygon"},
 #'   special cases thereof or \code{"random"}, to select one by chance.
-#' @template params
+#' @param ... parameters to create the origin.
 #' @details In case \code{origin} is not given, \code{nlmGradient} constructs
 #'   internally a binary origin from what is specified in \code{type} and
-#'   \code{params} and then provides a distance matrix as gradient.
+#'   \code{params} and then provides a distance matrix that has been scaled
+#'   between 0 and 1 as gradient. Each geometry requires at least the number of
+#'   vertices and their coordinates. In case the required arguments are not
+#'   specified in \code{params = list(...)}, they will be set randomly.
 #' @examples
 #' # create a point gradient based on an origin
 #' mat <- matrix(nrow = 100, ncol = 100, data = 0)
 #' origin <- mat; origin[5000] <- 1
-#' myPointGradient <- nlmGradient(mat = mat, origin = origin)
+#' myPointGradient <- spmGradient(mat = mat, origin = origin)
 #' visualise(gridded = myPointGradient)
 #'
 #' # create a geometry object
-#' coords <- list(coords = data.frame(x = c(5, 30, 30, 5),
-#'                                    y = c(5, 5, 20, 20)),
-#'                extent = data.frame(x = c(0, 100),
-#'                                    y = c(0, 50)))
+#' #coords <- data.frame(x = c(0.4, 0.45, 0.7, 0.5),
+#' #                     y = c(0.4, 0.4, 0.6, 0.7),
+#' #                     id = 1)
+#' #window <- data.frame(x = c(0, 1),
+#' #                     y = c(0, 1))
+#' #aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 #'
-#' # create gradient from a polygon mask with the respective params
-#' #myNLM <- nlmGradient(mat = mat, type = "polygon",
-#'  #                    params = list(anchor = coords, show = FALSE))
-#' #visualise(myNLM)
+#' # create gradient from the parameters of a geom
+#' #NLMPolyGrad <- spmGradient(mat = mat, type = "polygon")
+#'
+#' # create a gradient from a random point pattern
+#' #NLMPointGrad <- spmGradient(mat = mat, type = "point")
+#'
+#' # create a completely random gradient
+#' #RandGrad <- spmGradient(mat = mat, type = "random")
+#'
+#' #visualise(gridded = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
 #' @importFrom checkmate assertMatrix testClass assertCharacter assertSubset
 #'   assertList
 #' @importFrom raster raster as.matrix
 #' @export
 
-nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
+spmGradient <- function(mat, origin = NULL, type = "planar", ...){
 
   assertMatrix(mat)
   assertCharacter(type, any.missing = FALSE, len = 1)
@@ -50,27 +63,29 @@ nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
   } else{
     assertSubset(type, choices = types)
   }
-  assertList(params, names = "named", null.ok = TRUE)
-
+  
+  theArgs <- listArgs()
+  newArgs <- theArgs[!names(theArgs) %in% c("mat", "origin", "type")]
+  if(length(newArgs) == 0){
+    makeRandom <- TRUE
+  } else{
+    assertNames(newArgs, subset.of = c("anchor", "vertices"))
+    makeRandom <- FALSE
+  }
+  
   if(!existsOrigin){
-    if(type == "planar"){
-      # create a linear line geom and make a gradient orthogonal to that and starting somewhere outside the window
-      
+    
+    if(makeRandom){
+      theGeom <- geomRand(type = type, template = mat)
+      theMask <- as.matrix(gToRaster(theGeom))
     } else{
-      if(type == "polygon"){
-        if(is.null(params)){
-          verts <- readline("please specify how many vertices the polygon shall have: ")
-          verts <- assertIntegerish(as.integer(verts))
-        }
-      }
-      if(is.null(params)){
-        # if()
-        # theGeom <- geomRand(type = type, template = mat, vertices = verts)
-        # theMask <- gToRaster(theGeom)
+      
+      if(type == "planar"){
+        # planar gradient is a gradient where a linear line through the plot window is layed and moved orthogonally until it touches the plot boundary in only one value        
       } else{
+
         
       }
-      
       
     }
   } else{
@@ -126,13 +141,17 @@ nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
   return(out)
 }
 
-#' Build a random landscape model
+bla <- function(x, y, ...){
+  args <- listArgs()
+  args
+}
+
+
+#' Generate a neutral random pattern
 #'
 #' Random values can be applied to different patterns within the landscape
 #' model.
-#' @param mat a matrix in which the landscape model is built. If
-#'   \code{nlmRandom} is used in conjunction with \code{\link{generate}},
-#'   \code{mat} cannot be specified, because \code{generate} assigns it.
+#' @template mat
 #' @param pattern the pattern to which random values are assigned, either
 #'   \code{"cell"}, \code{"rectangle"}, \code{"circle"}, \code{"voronoi"} or
 #'   \code{"cluster"}; see Details.
@@ -146,8 +165,9 @@ nlmGradient <- function(mat, origin = NULL, type = "planar", params = NULL){
 #'   Martínez-Millán, J. (2000) Landscape patterns simulation with a modified
 #'   random clusters method. Landscape Ecology 15, 661–678.
 #' @importFrom raster raster
+#' @export
 
-nlmRandom <- function(mat, pattern, seed){
+spmRandom <- function(mat, pattern, seed){
 
   # https://en.wikipedia.org/wiki/Centroidal_Voronoi_tessellation
 
@@ -191,83 +211,132 @@ nlmRandom <- function(mat, pattern, seed){
 
 }
 
-#' Build a landscape model based on a heightmap
+#' Generate a heightmap
 #'
-#' A heightmap is the two-dimensional representation of a three-dimensional
-#' surface, where the value of the heightmap represents the height in the
-#' three-dimensional surface (like a digitial elevation model).
-#' @param mat bla
-#' @param type the model used to create the heightmap. Possible options are
-#'   \code{diamondSquare} (default), ...
-#' @param fracdim bla
+#' A heightmap is the two dimensional representation of a three dimensional
+#' surface, where the value of the cells represents the height in the three
+#' dimensional surface (a simulated digitial elevation model).
+#' @template mat
+#' @param hurst [\code{numeric(1)}]\cr the Hurst exponent (fBm) or its
+#'   equivalent, the roughness factor (DSa). Bounded between 0 and 1.
+#' @param type [\code{character(1)}]\cr the model according to which the pattern
+#'   is generated, either \code{"diamondSquare"} (default), \code{"brownian"} or
+#'   \code{"gaussian"}.
+#' @param startDev bla (for now)
 #' @param seed bla
+#' @details \describe{ \item{Diamond Square algorithm}{The algorithm was
+#'   originally proposed by Fournier et al. (1982), but has been enhanced since
+#'   then. It assigns values to an empty array (one or two dimensional).
+#'   \emph{"The algorithm recursively subdivides the interval and generates a
+#'   scalar value at the midpoint which is proportional to the current standard
+#'   deviation times the scale or "roughness" factor (h). [...] h is equivalent
+#'   to the Hurst exponent (see fractional brownian motion) and can take values
+#'   between 0 and 1."} (Fournier et al, 1982). \cr\cr The implementation here
+#'   computes values that are at the boundary of the two dimensional array as
+#'   average from its three only neighbours and not from the one dimensional
+#'   version of the algorithm (Frouier et al., 1982).}
+#'   \item{Fractional brownian motion}{} \item{Gaussian random field}{} }
+#' @references Fournier A, Fussell D, Carpenter L. Computer rendering of
+#'   stochastic models. Communications of the ACM. 1982;25:371–384
+#'
+#'   Palmer MW. The coexistence of species in fractal landscapes. The American
+#'   Naturalist. 1992;139:375–397
+#'
+#'   Travis JMJ, Dytham C. A method for simulating patterns of habitat
+#'   availability at static and dynamic range margins. Oikos. 2004;104:410–416
+#'
+#' @examples
+#' mat <- matrix(nrow = 100, ncol = 100, data = 0)
+#' myHeightmap <- spmHeightmap(mat = mat, hurst = 0.4, seed = 13531)
+#' visualise(myHeightmap)
+#'
+#' @importFrom checkmate assertMatrix assertCharacter assertNumeric assertIntegerish
 #' @importFrom raster raster
+#' @export
 
-nlmHeightmap <- function(mat, type, fracdim, seed){
+spmHeightmap <- function(mat, hurst = NULL, type = "diamondSquare", startDev = 1,
+                         seed = NULL){
 
   # https://en.wikipedia.org/wiki/Brownian_surface
   # https://en.wikipedia.org/wiki/Random_walk
+  
+  assertMatrix(mat)
+  assertCharacter(type, any.missing = FALSE, len = 1)
+  assertNumeric(hurst, any.missing = FALSE, len = 1, lower = 0, upper = 1)
+  assertIntegerish(seed, any.missing = FALSE, len = 1, null.ok = TRUE)
 
-  if(missing(fracdim)) stop("please specify the fractal dimension for which you would like to create a heightmap.")
-
-  # manage the seed here.
-  if(!missing(seed)){
-    if(length(seed)>1){
-      cornerSeed <- rep_len(seed, 4)
+  if(type == "diamondSquare"){
+    # manage the seed here.
+    if(!is.null(seed)){
+      if(length(seed) > 1){
+        cornerSeed <- rep_len(seed, 4)
+      } else{
+        set.seed(seed)
+        cornerSeed <- runif(4)
+      }
     } else{
-      set.seed(seed)
       cornerSeed <- runif(4)
     }
-  } else{
-    cornerSeed <- runif(4)
+    
+    # manage the initial array
+    mat_dim <- max(dim(mat))
+    level <- ceiling(log(mat_dim)/log(2)) 
+    ext <- 2**level + 1
+    targetMat <- matrix(data = 0, nrow = ext, ncol = ext)
+    stepSize <- 2**(level:1)
+
+    targetMat[1, 1] <- cornerSeed[1]
+    targetMat[1, ext] <- cornerSeed[2]
+    targetMat[ext, 1] <- cornerSeed[3]
+    targetMat[ext, ext] <- cornerSeed[4]
+    
+    # this algorithm still needs a proper handling of the standard deviation.
+    # The way it is now is not how it's supposed to be. (see link in cpp file)
+    mat_out <- diamondSquareC(mat = targetMat, stepSize = stepSize, roughness = hurst, startDev = startDev)
+
+    bib <- bibentry(bibtype = "Article",
+                    author = c(person(given = "A", family = "Fournier"),
+                               person(given = "D", family = "Fussell"),
+                               person(given = "L", family = "Carpenter")),
+                    title = "Computer rendering of stochastic models",
+                    pages = "371-384",
+                    year = 1982,
+                    journal = "Communications of the ACM",
+                    volume = 25,
+                    issue = 6
+    )
+    
+  } else if(type == "brownian"){
+    
+    bib <- bibentry(bibtype = "Article",
+                    author = c(person(given = "J M J", family = "Travis"),
+                               person(given = "C", family = "Dytham")),
+                    title = "A method for simulating patterns of habitat availability at static and dynamic range margins",
+                    pages = "410-416",
+                    year = 2004,
+                    journal = "Oikos",
+                    volume = 104,
+                    issue = 2
+                    )
+    
+  } else if(type == "gaussian"){
+    
   }
-
-  # manage the initial array
-  mat_dim <- max(dim(mat)) # the algorithm works only for squares, hence we need the larges dimension.
-  level <- ceiling(log(mat_dim)/log(2)) # ceiling to find the power which leads to a raster larger than what has been defined in 'dimensions'
-  ext <- (2**level)+1
-  mat_out <- matrix(data = 0, nrow = ext, ncol = ext)
-
-  mat_out[1, 1] <- cornerSeed[1]
-  mat_out[1, ext] <- cornerSeed[2]
-  mat_out[ext, 1] <- cornerSeed[3]
-  mat_out[ext, ext] <- cornerSeed[4]
-
-  for(i in seq_len(level)){
-
-    distance <- 1 # this probably doesn't make sense, but atm in here to silence the NOTES of R CMD CHECK
-    cells <- (ext-1)/2**(i-1)
-    steps <- floor(ext/distance)
-    points <- seq.int(from = 1, by = cells, length.out = steps)
-
-    magnitude <- 32/2**(i-1) # why 32 here? where does the fractal dimension come in?
-
-    mat_out <- diamondC(mat = mat_out, where = points, distance = cells, noise = magnitude)
-    mat_out <- squareC(mat = mat_out, where = points, distance = cells, noise = magnitude)
-
-  }
-  # raster::plot(:raster(mat_out, xmn = 0, xmx = ext, ymn = 0, ymx = ext))
-
-  # cut 'out' to 'mat_dim' in a random spot, this could be goverened by an argument such as subset = c("random", c(x-center, y-center))
-
+  
+  mat_out <- scaleVals(mat_out, c(0, 1))
   obj <- raster(mat_out, xmn = 0, xmx = ext, ymn = 0, ymx = ext)
 
   # # manage the bibliography entry (diamong-square algo or other)
-  # bib <- bibentry(bibtype = "",
-  #                 title = "",
-  #                 author = person(""),
-  #                 year = ,
-  # )
-  #
-  # if(is.null(getOption("bibliography"))){
-  #   options(bibliography = bib)
-  # } else{
-  #   currentBib <- getOption("bibliography")
-  #   if(!bib%in%currentBib){
-  #     options(bibliography = c(currentBib, bib))
-  #   }
-  # }
+  if(is.null(getOption("bibliography"))){
+    options(bibliography = bib)
+  } else{
+    currentBib <- getOption("bibliography")
+    if(!bib%in%currentBib){
+      options(bibliography = c(currentBib, bib))
+    }
+  }
 
+  names(obj) <- paste0("heightmap_", type)
   return(obj)
 
 }
@@ -278,4 +347,3 @@ nlmHeightmap <- function(mat, type, fracdim, seed){
 # Schwab, Dimitri, Martin Schlather, and Jürgen Potthoff. "A general class of mosaic random fields." arXiv preprint arXiv:1709.01441 (2017). Baddeley, Adrian, Ege Rubak, and Rolf Turner. Spatial point patterns: methodology and applications with R. CRC Press, 2015.
 # Gaucherel, C. (2008) Neutral models for polygonal landscapes with linear networks. Ecological Modelling, 219, 39 - 48.
 #
-
