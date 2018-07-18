@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate spatial (gridded) patterns — generate • rasterTools</title>
+<title>Generate (neutral) spatial patterns — generate • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Generate spatial (gridded) patterns — generate" />
+<meta property="og:title" content="Generate (neutral) spatial patterns — generate" />
 
-<meta property="og:description" content="This function is still largely work in process and very experimental (but
-will be more awesome than experiences of a similar kind!)" />
+<meta property="og:description" content="This function is still largely work in process and very experimental!" />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -141,15 +140,14 @@ will be more awesome than experiences of a similar kind!)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate spatial (gridded) patterns</h1>
+    <h1>Generate (neutral) spatial patterns</h1>
     <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/generate.R'><code>R/generate.R</code></a></small>
     <div class="hidden name"><code>generate.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function is still largely work in process and very experimental (but
-will be more awesome than experiences of a similar kind!)</p>
+    <p>This function is still largely work in process and very experimental!</p>
     
     </div>
 
@@ -160,9 +158,9 @@ will be more awesome than experiences of a similar kind!)</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>list of <code>operators</code>, in which the spatial patterns are
-specified. Each <code>operator</code> is a list iteself and includes the operator
-name and its arguments as sub-elements; see Examples.</p></td>
+      <td><p>list of <code>operators</code>, in which the spatial pattern models
+are specified. Each <code>operator</code> is a list iteself and includes the
+operator name and its arguments as sub-elements; see Examples.</p></td>
     </tr>
     <tr>
       <th>dimensions</th>
@@ -173,27 +171,27 @@ have.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Spatial pattern models, such as neutral landscape models (NLMs), are useful
-to generate distinct spatial patterns. Ideally, the resulting spatial
-patterns are strictly controlable. They help studying ecological processes or
-spatial statistics in general.</p>
-<p>Many spatial pattern models (SPMs) have been suggested and neutral
-  landscape models (NLMs) probably constitute the most common use-case.
-  However, often they are merely treated as "habitat models", where only the
-  presence of habitat is simulated. Various SPMs that depict "artificial
-  patterns or processes" introduced by human disturbance or SPMs that depict
-  the influence of geological, atmospheric and ecological dynamics are also
-  of interest. Available are here ...</p>
-<p>... neutral landscape models:</p><ul>
-<li><p><code><a href='nlmGradient.html'>nlmGradient</a></code>:
-  Neutral landscape model based on a gradient.</p></li>
-<li><p><code><a href='nlmRandom.html'>nlmRandom</a></code>:
-  Randomly assembled neutral landscape model.</p></li>
-<li><p><code><a href='nlmHeightmap.html'>nlmHeightmap</a></code>: Neutral landscape model based on a heightmap.</p></li>
-</ul>
-    <p>... other (spatial) pattern models:</p><ul>
-<li><p><code>pmNoise</code>:
-  Patterns based on different kinds of noise.</p></li>
+    <p>Spatial pattern models (SPMs), such as neutral landscape models (NLMs), are
+useful to study an ecological response to a set of simulated spatial
+patterns. Ideally, the resulting spatial patterns are strictly controlable
+and in many situations they ought to be neutral (i.e. not influenced by any
+process or bias). Here the term SPM is used because not all functions result
+in neutral patterns.</p>
+<p>Many spatial pattern models have been suggested and NLMs probably
+  constitute the most common use-case. However, often they are merely treated
+  as "habitat models", where only the presence or abundance of habitat is
+  simulated. Yet, "artificial patterns or processes" introduced by human
+  disturbance and the influence of geological, atmospheric and ecological
+  dynamics are also of interest. We try to cover these cases with ...</p>
+<p>... spatial pattern models:</p><ul>
+<li><p><code><a href='spmGradient.html'>spmGradient</a></code>:
+  Generate a (neutral) gradient pattern.</p></li>
+<li><p><code><a href='spmRandom.html'>spmRandom</a></code>:
+  Generate a random pattern.</p></li>
+<li><p><code><a href='spmHeightmap.html'>spmHeightmap</a></code>: Generate a
+  heightmap.</p></li>
+<li><p><code>spmNoise</code>: Generate patterns based on different
+  kinds of noise.</p></li>
 </ul>
     <p>... ecological processes models:</p><ul>
 <li><p><code>epmSucces</code>: Let
@@ -205,16 +203,16 @@ spatial statistics in general.</p>
 <li><p><code>epmFragment</code>: Create fragmentation in the spatial model.</p></li>
 <li><p><code>epmConnect</code>: Create connecting elements in the spatial model.</p></li>
 </ul>
-    <p>Combine these landscape models with spatial patterns (link to vignette
-  here) and operators of <code><a href='modify.html'>modify</a></code> to come up with a larger set of
-  <code>spatial models</code> (link to vignette here).</p>
+    <p>Additionally you can use functions in other packages as operators, if they
+  produce a 2D-lattice of spatial patterns; see for instance
+  <a href='https://github.com/ropensci/NLMR'>NLMR</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='co'>## neutral landscape models</span>
-<span class='no'>nlm</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"nlmRandom"</span>, <span class='kw'>seed</span> <span class='kw'>=</span> ),
-            <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"nlmHeightmap"</span>, <span class='kw'>fracdim</span> <span class='kw'>=</span> <span class='fl'>2.3</span>,
+<span class='no'>nlm</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"spmRandom"</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>12769</span>),
+            <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"spmHeightmap"</span>, <span class='kw'>hurst</span> <span class='kw'>=</span> <span class='fl'>0.4</span>,
                  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>12769</span>))
 
 <span class='no'>myLandscape</span> <span class='kw'>&lt;-</span> <span class='fu'>generate</span>(<span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>nlm</span>, <span class='kw'>dimensions</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>300</span>, <span class='fl'>300</span>), <span class='kw'>to_env</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)

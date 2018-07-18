@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>rasterTools: obtain and process earth observation data — rasterTools • rasterTools</title>
+<title>Generate a neutral random pattern — spmRandom • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,11 +30,10 @@
 
 
 
-<meta property="og:title" content="rasterTools: obtain and process earth observation data — rasterTools" />
+<meta property="og:title" content="Generate a neutral random pattern — spmRandom" />
 
-<meta property="og:description" content="The rasterTools package is based on the four core-functions
-generate, obtain, modify and
-measure." />
+<meta property="og:description" content="Random values can be applied to different patterns within the landscape
+model." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -142,89 +141,71 @@ measure." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>rasterTools: obtain and process earth observation data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/rasterTools-package.R'><code>R/rasterTools-package.R</code></a></small>
-    <div class="hidden name"><code>rasterTools.Rd</code></div>
+    <h1>Generate a neutral random pattern</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/generate.operators.R'><code>R/generate.operators.R</code></a></small>
+    <div class="hidden name"><code>spmRandom.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The <code>rasterTools</code> package is based on the four core-functions
-<code><a href='generate.html'>generate</a></code>, <code><a href='obtain.html'>obtain</a></code>, <code><a href='modify.html'>modify</a></code> and
-<code><a href='measure.html'>measure</a></code>.</p>
+    <p>Random values can be applied to different patterns within the landscape
+model.</p>
     
     </div>
 
-        
+    <pre class="usage"><span class='fu'>spmRandom</span>(<span class='no'>mat</span>, <span class='no'>pattern</span>, <span class='no'>seed</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>mat</th>
+      <td><p>[<code>matrix</code>]<br /> object to which the spatial pattern is added.</p></td>
+    </tr>
+    <tr>
+      <th>pattern</th>
+      <td><p>the pattern to which random values are assigned, either
+<code>"cell"</code>, <code>"rectangle"</code>, <code>"circle"</code>, <code>"voronoi"</code> or
+<code>"cluster"</code>; see Details.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>specify a seed for the random creation of numbers.</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The workflow of each of these functions comprises specific operators,
-functions that carry out a certain operation. Operators are combined to
-algorithms, which are then employed in the core functions to carry out a
-spatial computation (see Examples below).</p>
-<p>You might find <code>rasterTools</code> useful when you want to
-<code><a href='generate.html'>generate</a></code> spatial models, including neutral landscape models.
-Moreover, you can <code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets, such as
-MODIS, Landsat, Sentinel and other products and everything else that is
-derived therefrom. Once you have your spatial data in place, you can
-<code><a href='modify.html'>modify</a></code> them, which may be required to identify objects about
-which you want to inquire. You would then <code><a href='measure.html'>measure</a></code> the
-potentially modified data with the help of a modular system that allows you
-to use nearly all landscape metrics or even develop your own.</p>
-<p>Various helper functions that create geometries and tools to work with these
-are included. Geometries (such as <code><a href='geomPoint.html'>geomPoint</a></code>, <code>geomCurve</code>
-or <code><a href='geomPolygon.html'>geomPolygon</a></code>) can be created programmatically or
-interactively, can be modified (e.g. <code><a href='gRotate.html'>gRotate</a></code>) and transformed
-into sp, sf or raster objects. The transformed objects can be fed into other
-workflows or might serve a purpose within <code>rasterTools</code>. For instance,
-<code><a href='gToRaster.html'>gToRaster</a></code> is an important tool to create raster masks, binary
-objects where everything covered by 1 is to be selected/processed and
-everything covered by 0 is not.</p>
-<p><code>rasterTools</code> comes with a function to <code><a href='visualise.html'>visualise</a></code> gridded
-objects and geometries. Gridded objects can be either a <code>Raster*</code> or a
-<code>matrix</code> and hence everything that can be coerced to a matrix. Gridded
-objects with more than one layer are automatically presented in panels.</p>
-<p><code>rasterTools</code> has been conceptualised so that the core functions are
-modular. The core functions manage all the code-logic that is common for the
-task at hand. Code that manages, for instance, "loading the MODIS dataset" is
-outsourced to a separate function (the <code><a href='oMODIS.html'>oMODIS</a></code> operator). New
-operators to all the core functions and to <code><a href='loadData.html'>loadData</a></code> can hence
-be devised easily. If you want to contribute, please study the
-<a href='https://ehrmanns.github.io/rastertools/articles/contribute.html'>Contribution
-Guidelines</a> or create an issue on
-<a href='https://github.com/EhrmannS/rastertools/issues'>github</a>.</p>
+    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
+  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
+<ul>
+<li><p>For <code>base = "cell"</code>, each cell of the resulting
+  LM is assigned a random value.</p></li>
+<li><p>For <code>base = "rectangle"</code>,</p></li>
+<li><p>For <code>base = "circle"</code>,</p></li>
+<li><p>For <code>base = "voronoi"</code>, Gaucherel
+  (2008)</p></li>
+<li><p>For <code>base = "cluster"</code>, Saura &amp; Martínez-Millán (2000)</p></li>
+</ul>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Gaucherel, C. (2008) Neutral models for polygonal landscapes with
+  linear networks. Ecological Modelling, 219, 39 - 48. Saura, S.,
+  Martínez-Millán, J. (2000) Landscape patterns simulation with a modified
+  random clusters method. Landscape Ecology 15, 661–678.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"># NOT RUN {
-require(magrittr)
-
-# define an algorithm
-myDatasets <- list(list(operator = "oGFC", years = 2006)),
-                   list(operator = "oCLC", years = 2006),
-                   list(operator = "oMODIS", product = "mod17a3",
-                        period = 2006, layer = 2))
-
-# load a mask from some file,
-# myMask <- loadData(files = "myLocations2.csv",
-#                    localPath = rtPaths$project) %>%
-#    gGroup(distance = 10000) %>%
-#    geomPolygon() %>%
-#    gToSp(crs = LAEA)
-
-# grab the data
-myData <- obtain(data = myDatasets, mask = myMask)
-# }
-</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+
+      <li><a href="#references">References</a></li>
+          </ul>
 
   </div>
 </div>

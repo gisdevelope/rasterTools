@@ -27,9 +27,9 @@ reference:
   - title: spatial pattern models
     desc: operators to generate spatial patterns (neutral landscape models, etc)
     contents:
-      - '`nlmRandom`'
-      - '`nlmGradient`'
-      - '`nlmHeightmap`'
+      - '`spmRandom`'
+      - '`spmGradient`'
+      - '`spmHeightmap`'
   - title: datasets
     desc: operators to obtain raster objects from spatial datasets
     contents:

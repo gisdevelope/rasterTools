@@ -151,7 +151,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>geomRand</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"point"</span>, <span class='kw'>template</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>vertices</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>geomRand</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"point"</span>, <span class='kw'>template</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>vertices</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -172,7 +172,9 @@ that serves as template to sketch the geometry.</p></td>
       <th>vertices</th>
       <td><p>[<code>integersh(1)</code>]<br /> the number of vertices the geometry
 should have; only meaningful if <code>type</code> does not indicate the number of
-vertices already.</p></td>
+vertices already. If left at <code>NULL</code> the minimum number of vertices for
+the <code>geom</code> type, i.e. 1 for <code>point</code>, 2 for <code>line</code> and 3 for
+<code>polygon</code></p></td>
     </tr>
     <tr>
       <th>show</th>

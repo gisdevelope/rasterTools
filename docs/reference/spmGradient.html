@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>rasterTools: obtain and process earth observation data — rasterTools • rasterTools</title>
+<title>Generate a (neutral) gradient pattern — spmGradient • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,11 +30,13 @@
 
 
 
-<meta property="og:title" content="rasterTools: obtain and process earth observation data — rasterTools" />
+<meta property="og:title" content="Generate a (neutral) gradient pattern — spmGradient" />
 
-<meta property="og:description" content="The rasterTools package is based on the four core-functions
-generate, obtain, modify and
-measure." />
+<meta property="og:description" content="A gradient can be understood in terms of the distance to an origin. With a
+straight line as origin, one might end up with a edge gradient, or, in case
+the line does not cross the the plot window, a planar gradient. Beware that
+in case you provide an origin or a strict set of parameters (...), the
+spatial pattern may not be neutral anymore!" />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -142,84 +144,89 @@ measure." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>rasterTools: obtain and process earth observation data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/rasterTools-package.R'><code>R/rasterTools-package.R</code></a></small>
-    <div class="hidden name"><code>rasterTools.Rd</code></div>
+    <h1>Generate a (neutral) gradient pattern</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/generate.operators.R'><code>R/generate.operators.R</code></a></small>
+    <div class="hidden name"><code>spmGradient.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The <code>rasterTools</code> package is based on the four core-functions
-<code><a href='generate.html'>generate</a></code>, <code><a href='obtain.html'>obtain</a></code>, <code><a href='modify.html'>modify</a></code> and
-<code><a href='measure.html'>measure</a></code>.</p>
+    <p>A gradient can be understood in terms of the distance to an origin. With a
+straight line as origin, one might end up with a edge gradient, or, in case
+the line does not cross the the plot window, a planar gradient. Beware that
+in case you provide an origin or a strict set of parameters (<code>...</code>), the
+spatial pattern may not be neutral anymore!</p>
     
     </div>
 
-        
+    <pre class="usage"><span class='fu'>spmGradient</span>(<span class='no'>mat</span>, <span class='kw'>origin</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"planar"</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>mat</th>
+      <td><p>[<code>matrix</code>]<br /> object to which the spatial pattern is added.</p></td>
+    </tr>
+    <tr>
+      <th>origin</th>
+      <td><p>[<code>RasterLayer</code> | <code>matrix</code>]<br /> a binary object that
+serves as origin of the gradient; overrides the other arguments, if given.</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>[<code>character(1)</code>]<br /> the type of the gradient model. Either
+<code>"planar"</code> (default), <code>"point"</code>, <code>"line"</code>, <code>"polygon"</code>,
+special cases thereof or <code>"random"</code>, to select one by chance.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>parameters to create the origin.</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The workflow of each of these functions comprises specific operators,
-functions that carry out a certain operation. Operators are combined to
-algorithms, which are then employed in the core functions to carry out a
-spatial computation (see Examples below).</p>
-<p>You might find <code>rasterTools</code> useful when you want to
-<code><a href='generate.html'>generate</a></code> spatial models, including neutral landscape models.
-Moreover, you can <code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets, such as
-MODIS, Landsat, Sentinel and other products and everything else that is
-derived therefrom. Once you have your spatial data in place, you can
-<code><a href='modify.html'>modify</a></code> them, which may be required to identify objects about
-which you want to inquire. You would then <code><a href='measure.html'>measure</a></code> the
-potentially modified data with the help of a modular system that allows you
-to use nearly all landscape metrics or even develop your own.</p>
-<p>Various helper functions that create geometries and tools to work with these
-are included. Geometries (such as <code><a href='geomPoint.html'>geomPoint</a></code>, <code>geomCurve</code>
-or <code><a href='geomPolygon.html'>geomPolygon</a></code>) can be created programmatically or
-interactively, can be modified (e.g. <code><a href='gRotate.html'>gRotate</a></code>) and transformed
-into sp, sf or raster objects. The transformed objects can be fed into other
-workflows or might serve a purpose within <code>rasterTools</code>. For instance,
-<code><a href='gToRaster.html'>gToRaster</a></code> is an important tool to create raster masks, binary
-objects where everything covered by 1 is to be selected/processed and
-everything covered by 0 is not.</p>
-<p><code>rasterTools</code> comes with a function to <code><a href='visualise.html'>visualise</a></code> gridded
-objects and geometries. Gridded objects can be either a <code>Raster*</code> or a
-<code>matrix</code> and hence everything that can be coerced to a matrix. Gridded
-objects with more than one layer are automatically presented in panels.</p>
-<p><code>rasterTools</code> has been conceptualised so that the core functions are
-modular. The core functions manage all the code-logic that is common for the
-task at hand. Code that manages, for instance, "loading the MODIS dataset" is
-outsourced to a separate function (the <code><a href='oMODIS.html'>oMODIS</a></code> operator). New
-operators to all the core functions and to <code><a href='loadData.html'>loadData</a></code> can hence
-be devised easily. If you want to contribute, please study the
-<a href='https://ehrmanns.github.io/rastertools/articles/contribute.html'>Contribution
-Guidelines</a> or create an issue on
-<a href='https://github.com/EhrmannS/rastertools/issues'>github</a>.</p>
+    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
+  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
+<p>In case <code>origin</code> is not given, <code>nlmGradient</code> constructs
+  internally a binary origin from what is specified in <code>type</code> and
+  <code>params</code> and then provides a distance matrix that has been scaled
+  between 0 and 1 as gradient. Each geometry requires at least the number of
+  vertices and their coordinates. In case the required arguments are not
+  specified in <code>params = list(...)</code>, they will be set randomly.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"># NOT RUN {
-require(magrittr)
+    <pre class="examples"><div class='input'><span class='co'># create a point gradient based on an origin</span>
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='no'>origin</span> <span class='kw'>&lt;-</span> <span class='no'>mat</span>; <span class='no'>origin</span>[<span class='fl'>5000</span>] <span class='kw'>&lt;-</span> <span class='fl'>1</span>
+<span class='no'>myPointGradient</span> <span class='kw'>&lt;-</span> <span class='fu'>spmGradient</span>(<span class='kw'>mat</span> <span class='kw'>=</span> <span class='no'>mat</span>, <span class='kw'>origin</span> <span class='kw'>=</span> <span class='no'>origin</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myPointGradient</span>)</div><div class='img'><img src='spmGradient-1.png' alt='' width='700' height='433' /></div><div class='input'>
+# create a geometry object
+#coords <- data.frame(x = c(0.4, 0.45, 0.7, 0.5),
+#                     y = c(0.4, 0.4, 0.6, 0.7),
+#                     id = 1)
+#window <- data.frame(x = c(0, 1),
+#                     y = c(0, 1))
+#aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 
-# define an algorithm
-myDatasets <- list(list(operator = "oGFC", years = 2006)),
-                   list(operator = "oCLC", years = 2006),
-                   list(operator = "oMODIS", product = "mod17a3",
-                        period = 2006, layer = 2))
+# create gradient from the parameters of a geom
+#NLMPolyGrad <- spmGradient(mat = mat, type = "polygon")
 
-# load a mask from some file,
-# myMask <- loadData(files = "myLocations2.csv",
-#                    localPath = rtPaths$project) %>%
-#    gGroup(distance = 10000) %>%
-#    geomPolygon() %>%
-#    gToSp(crs = LAEA)
+# create a gradient from a random point pattern
+#NLMPointGrad <- spmGradient(mat = mat, type = "point")
 
-# grab the data
-myData <- obtain(data = myDatasets, mask = myMask)
-# }
-</pre>
+# create a completely random gradient
+#RandGrad <- spmGradient(mat = mat, type = "random")
+
+#visualise(gridded = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
       

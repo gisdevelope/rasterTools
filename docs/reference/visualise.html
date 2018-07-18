@@ -217,19 +217,19 @@ simply plot the object (<code>FALSE</code>, default).</p></td>
 <span class='no'>coords</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>30</span>, <span class='fl'>60</span>, <span class='fl'>60</span>, <span class='fl'>40</span>),
                      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>40</span>, <span class='fl'>40</span>, <span class='fl'>60</span>, <span class='fl'>70</span>),
                      <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='no'>extent</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>),
+<span class='no'>window</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>),
                      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>))
-(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>extent</span> <span class='kw'>=</span> <span class='no'>extent</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>))</div><div class='output co'>#&gt; class        : geom
+(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>))</div><div class='output co'>#&gt; class        : geom
 #&gt; feature type : polygon
 #&gt; features     : 1  (4 vertices)
-#&gt; window       : 30, 60, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
 #&gt; extent       : 30, 60, 40, 70  (xmin, xmax, ymin, ymax)
 #&gt; scale        : absolute
 #&gt; coord. ref.  : NA
 #&gt; variables    : 1  (id)</div><div class='input'>
 <span class='co'># if plotted on top of an existing plot, the relative coordinate values</span>
 <span class='co'># will be used to construct the grob.</span>
-<span class='fu'>visualise</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)</div><div class='img'><img src='visualise-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualise</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='visualise-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>visualise</span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)</div><div class='img'><img src='visualise-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualise</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='visualise-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
