@@ -2,14 +2,12 @@
 % Please edit documentation in R/generate.operators.R
 \name{spmRandom}
 \alias{spmRandom}
-\title{Generate a random pattern}
+\title{Generate a neutral random pattern}
 \usage{
 spmRandom(mat, pattern, seed)
 }
 \arguments{
-\item{mat}{a matrix in which the landscape model is built. If
-\code{nlmRandom} is used in conjunction with \code{\link{generate}},
-\code{mat} cannot be specified, because \code{generate} assigns it.}
+\item{mat}{[\code{matrix}]\cr object to which the spatial pattern is added.}
 
 \item{pattern}{the pattern to which random values are assigned, either
 \code{"cell"}, \code{"rectangle"}, \code{"circle"}, \code{"voronoi"} or
@@ -22,6 +20,9 @@ Random values can be applied to different patterns within the landscape
 model.
 }
 \details{
+If this function is used in conjunction with \code{\link{generate}},
+  \code{mat} cannot be specified, because \code{generate} assigns it.
+
 \itemize{ \item For \code{base = "cell"}, each cell of the resulting
   LM is assigned a random value. \item For \code{base = "rectangle"}, \item
   For \code{base = "circle"}, \item For \code{base = "voronoi"}, Gaucherel

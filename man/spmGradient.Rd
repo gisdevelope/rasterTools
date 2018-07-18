@@ -12,12 +12,11 @@ spmGradient(mat, origin = NULL, type = "planar", ...)
 \item{origin}{[\code{RasterLayer} | \code{matrix}]\cr a binary object that
 serves as origin of the gradient; overrides the other arguments, if given.}
 
-\item{type}{[\code{¢haracter(1)}]\cr the type of the gradient model. Either
+\item{type}{[\code{character(1)}]\cr the type of the gradient model. Either
 \code{"planar"} (default), \code{"point"}, \code{"line"}, \code{"polygon"},
 special cases thereof or \code{"random"}, to select one by chance.}
 
-\item{params}{[\code{named list(.)}]\cr geometry-specific parameters with
-which the object should be created.}
+\item{...}{parameters to create the origin.}
 }
 \description{
 A gradient can be understood in terms of the distance to an origin. With a
@@ -45,21 +44,21 @@ myPointGradient <- spmGradient(mat = mat, origin = origin)
 visualise(gridded = myPointGradient)
 
 # create a geometry object
-coords <- data.frame(x = c(0.4, 0.45, 0.7, 0.5),
-                     y = c(0.4, 0.4, 0.6, 0.7),
-                     id = 1)
-window <- data.frame(x = c(0, 1),
-                     y = c(0, 1))
-aGeom <- geomPolygon(anchor = coords, window = window, show = T)
+#coords <- data.frame(x = c(0.4, 0.45, 0.7, 0.5),
+#                     y = c(0.4, 0.4, 0.6, 0.7),
+#                     id = 1)
+#window <- data.frame(x = c(0, 1),
+#                     y = c(0, 1))
+#aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 
 # create gradient from the parameters of a geom
-NLMPolyGrad <- spmGradient(mat = mat, type = "polygon")
+#NLMPolyGrad <- spmGradient(mat = mat, type = "polygon")
 
 # create a gradient from a random point pattern
-NLMPointGrad <- spmGradient(mat = mat, type = "point")
+#NLMPointGrad <- spmGradient(mat = mat, type = "point")
 
 # create a completely random gradient
-RandGrad <- spmGradient(mat = mat, type = "random")
+#RandGrad <- spmGradient(mat = mat, type = "random")
 
-visualise(gridded = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
+#visualise(gridded = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
 }

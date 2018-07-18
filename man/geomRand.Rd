@@ -4,7 +4,7 @@
 \alias{geomRand}
 \title{Create a geometry randomly}
 \usage{
-geomRand(type = "point", template = NULL, vertices = 4, show = FALSE,
+geomRand(type = "point", template = NULL, vertices = NULL, show = FALSE,
   ...)
 }
 \arguments{
@@ -17,7 +17,9 @@ that serves as template to sketch the geometry.}
 
 \item{vertices}{[\code{integersh(1)}]\cr the number of vertices the geometry
 should have; only meaningful if \code{type} does not indicate the number of
-vertices already.}
+vertices already. If left at \code{NULL} the minimum number of vertices for
+the \code{geom} type, i.e. 1 for \code{point}, 2 for \code{line} and 3 for
+\code{polygon}}
 
 \item{show}{[\code{logical(1)}]\cr should the geometry be plotted
 (\code{TRUE}) or should it not be plotted (\code{FALSE}, default)? In case
