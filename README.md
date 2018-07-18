@@ -33,10 +33,6 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 4) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
 
-5) Update the object `rtPaths` that contains all paths to spatial datasets so that `rasterTools` knows where your spatial files may already be stored, or where they ought to be stored.
-
-        updatePaths(root = "/path/to/the/spatial/files/", project = "/path/to/your/project/")
-
 
 ## In a nutshell, `rasterTools` ...
 
@@ -67,7 +63,7 @@ In case you have a suggestion for a feature or function you'd require, please fi
 
 - in-R georeferencing.
 
-- more `Rcpp`.
+- more `Rcpp` and parallelisation.
 
 ## Citation
 Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.8.0. https://github.com/EhrmannS/rastertools
