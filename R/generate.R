@@ -41,8 +41,8 @@
 #' \dontrun{
 #'
 #' ## neutral landscape models
-#' nlm <- list(list(operator = "nlmRandom", seed = ),
-#'             list(operator = "nlmHeightmap", fracdim = 2.3,
+#' nlm <- list(list(operator = "spmRandom", seed = 12769),
+#'             list(operator = "spmHeightmap", hurst = 0.4,
 #'                  seed = 12769))
 #'
 #' myLandscape <- generate(model = nlm, dimensions = c(300, 300), to_env = TRUE)

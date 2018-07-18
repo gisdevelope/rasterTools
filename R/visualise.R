@@ -31,13 +31,13 @@
 #' coords <- data.frame(x = c(30, 60, 60, 40),
 #'                      y = c(40, 40, 60, 70),
 #'                      id = 1)
-#' extent <- data.frame(x = c(0, 80),
+#' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
-#' (aGeom <- geomPolygon(anchor = coords, extent = extent, col = "blue"))
+#' (aGeom <- geomPolygon(anchor = coords, window = window, col = "blue"))
 #'
 #' # if plotted on top of an existing plot, the relative coordinate values
 #' # will be used to construct the grob.
-#' visualise(geom = aGeom)
+#' visualise(gridded = input, geom = aGeom)
 #' visualise(geom = aGeom, new = TRUE)
 #'
 #' @importFrom checkmate testClass testList assertNames assertList assertLogical

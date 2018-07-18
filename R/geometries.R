@@ -596,7 +596,9 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
 #' @template template
 #' @param vertices [\code{integersh(1)}]\cr the number of vertices the geometry
 #'   should have; only meaningful if \code{type} does not indicate the number of
-#'   vertices already.
+#'   vertices already. If left at \code{NULL} the minimum number of vertices for
+#'   the \code{geom} type, i.e. 1 for \code{point}, 2 for \code{line} and 3 for
+#'   \code{polygon}
 #' @param show [\code{logical(1)}]\cr should the geometry be plotted
 #'   (\code{TRUE}) or should it not be plotted (\code{FALSE}, default)? In case
 #'   \code{template} is set, it is automatically \code{TRUE}.
@@ -615,7 +617,7 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
 #' someGeom <- geomRand(template = input, show = TRUE)
 #' @export
 
-geomRand <- function(type = "point", template = NULL, vertices = 4, 
+geomRand <- function(type = "point", template = NULL, vertices = NULL, 
                      show = FALSE, ...){
   
   assertSubset(type, choices = c("point", "line", "rectangle", "square", "polygon", "spline", "ellipse", "circle", "triangle", "hexagon"))
@@ -627,17 +629,27 @@ geomRand <- function(type = "point", template = NULL, vertices = 4,
       stop("please provide either a RasterLayer or a matrix as 'template'.")
     }
   }
-  assertIntegerish(vertices, any.missing = FALSE, len = 1)
+  assertIntegerish(vertices, any.missing = FALSE, len = 1, null.ok = TRUE)
   assertLogical(show)
 
   if(type %in% "point"){
+    if(is.null(vertices)){
+      vertices <- 1
+    }
     outType  <- type
     anchor <- data.frame(x = runif(vertices),
                          y = runif(vertices),
                          id = 1:vertices)
   # } else if(type %in% c("line", "spline")){
+  #   if(is.null(vertices)){
+  #     vertices <- 2
+  #   }
   #   outType <- "line"
+  #   
   } else{
+    if(is.null(vertices)){
+      vertices <- 3
+    }    
     outType <- "polygon"
     anchor <- data.frame(x = runif(vertices),
                          y = runif(vertices),
