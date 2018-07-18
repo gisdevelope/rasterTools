@@ -63,42 +63,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// makeNoiseC
-double makeNoiseC(float d);
-RcppExport SEXP _rasterTools_makeNoiseC(SEXP dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< float >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(makeNoiseC(d));
-    return rcpp_result_gen;
-END_RCPP
-}
-// diamondC
-NumericMatrix diamondC(NumericMatrix mat, NumericVector where, int distance, float noise);
-RcppExport SEXP _rasterTools_diamondC(SEXP matSEXP, SEXP whereSEXP, SEXP distanceSEXP, SEXP noiseSEXP) {
+// diamondSquareC
+NumericMatrix diamondSquareC(NumericMatrix mat, NumericVector stepSize, double roughness, double startDev);
+RcppExport SEXP _rasterTools_diamondSquareC(SEXP matSEXP, SEXP stepSizeSEXP, SEXP roughnessSEXP, SEXP startDevSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type where(whereSEXP);
-    Rcpp::traits::input_parameter< int >::type distance(distanceSEXP);
-    Rcpp::traits::input_parameter< float >::type noise(noiseSEXP);
-    rcpp_result_gen = Rcpp::wrap(diamondC(mat, where, distance, noise));
-    return rcpp_result_gen;
-END_RCPP
-}
-// squareC
-NumericMatrix squareC(NumericMatrix mat, NumericVector where, int distance, float noise);
-RcppExport SEXP _rasterTools_squareC(SEXP matSEXP, SEXP whereSEXP, SEXP distanceSEXP, SEXP noiseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type where(whereSEXP);
-    Rcpp::traits::input_parameter< int >::type distance(distanceSEXP);
-    Rcpp::traits::input_parameter< float >::type noise(noiseSEXP);
-    rcpp_result_gen = Rcpp::wrap(squareC(mat, where, distance, noise));
+    Rcpp::traits::input_parameter< NumericVector >::type stepSize(stepSizeSEXP);
+    Rcpp::traits::input_parameter< double >::type roughness(roughnessSEXP);
+    Rcpp::traits::input_parameter< double >::type startDev(startDevSEXP);
+    rcpp_result_gen = Rcpp::wrap(diamondSquareC(mat, stepSize, roughness, startDev));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -200,9 +175,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rasterTools_countCellsC", (DL_FUNC) &_rasterTools_countCellsC, 1},
     {"_rasterTools_countEdgesC", (DL_FUNC) &_rasterTools_countEdgesC, 1},
     {"_rasterTools_countAdjacenciesC", (DL_FUNC) &_rasterTools_countAdjacenciesC, 2},
-    {"_rasterTools_makeNoiseC", (DL_FUNC) &_rasterTools_makeNoiseC, 1},
-    {"_rasterTools_diamondC", (DL_FUNC) &_rasterTools_diamondC, 4},
-    {"_rasterTools_squareC", (DL_FUNC) &_rasterTools_squareC, 4},
+    {"_rasterTools_diamondSquareC", (DL_FUNC) &_rasterTools_diamondSquareC, 4},
     {"_rasterTools_isBinaryC", (DL_FUNC) &_rasterTools_isBinaryC, 1},
     {"_rasterTools_meijsterDistanceC", (DL_FUNC) &_rasterTools_meijsterDistanceC, 2},
     {"_rasterTools_morphC", (DL_FUNC) &_rasterTools_morphC, 7},

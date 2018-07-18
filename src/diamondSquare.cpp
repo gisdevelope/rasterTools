@@ -1,79 +1,74 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// I chose to use fracdim (fractal dimension) instead of the hurst exponent
-// here, because fractal dimension is easier to imagine (at least for me). Since
-// the fractal dimension D = 3 - H, H can easily be replaced by D. fracdim is then
-// restricted to be a value between 2 and 3. 2 means that the resulting
-// heightmap tends towards a plane, while a value of 3 lets the heightmap tend
-// towrads maximum randomness.
-//
-// Travis JMJ, Dytham C. A method for simulating patterns of habitat
-// availability at static and dynamic range margins. Oikos. 2004;410–416.
-//
-// 'range' can be used to set the standard deviation of the random values. This
-// has been demonstrated in Palmer MW. The coexistence of species in fractal
-// landscapes. The American Naturalist. 1992;139:375–397.
-//
-// modified after: https://pastebin.com/bgha3zqA
+// https://stackoverflow.com/questions/8596125/is-there-a-name-for-this-sampling-algorithm-used-in-minicraft
+// http://www.paulboxley.com/blog/2011/03/terrain-generation-mark-one
 
 // [[Rcpp::export]]
-double makeNoiseC(float d) {
-  return (d * (10000 - rand() % (2 * 10000) )) / 10000; // why 10000 here?
-}
+NumericMatrix diamondSquareC(NumericMatrix mat, NumericVector stepSize, double roughness, double startDev){
 
-// [[Rcpp::export]]
-NumericMatrix diamondC(NumericMatrix mat, NumericVector where, int distance, float noise){
+  const int n = stepSize.size();
 
-  const int n = where.size();
-  int half = distance / 2;
+  // the algo is recursive, so we go here through each of its steps
+  for(int z = 0; z < n; ++z){
+    int halfStep = stepSize[z]/2;
+    int aStep = stepSize[z];
+    int steps = stepSize[0]/stepSize[z];
 
-  for(int x = 0; x < n; ++x) {
-    for(int y = 0; y < n; ++y) {
-      int px = where[x]-1;
-      int py = where[y]-1;
-      float p = mat(py, px);
-      float b = mat(py, px+distance);
-      float r = mat(py+distance, px);
-      float br = mat(py+distance, px+distance);
-
-      mat(py+half, px+half) = (p + b + r + br) / 4 + makeNoiseC(noise);
-
+    // diamond step
+    // In this step the point in the center of a square is computed. This is 
+    // always a cell that exists and we can calculate the simple mean of the 
+    // corner values plus deviation.
+    // a     b
+    // 
+    //    X
+    // 
+    // c     d
+    for(int x = 0; x < stepSize[0]; x += aStep){
+      for(int y = 0; y < stepSize[0]; y += aStep){
+        float a = mat(y, x);
+        float b = mat(y, x + aStep);
+        float c = mat(y + aStep, x);
+        float d = mat(y + aStep, x + aStep);
+        NumericVector diam = (a + b + c + d)/4 + rnorm(1, 0, startDev);
+        mat(y + halfStep, x + halfStep) = diam[0];
+      }
     }
-  }
+    
+    // square step
+    // In this step we calculate two points in the center of a diamond. The 
+    // base cell (a) is the same as in the previous step. e and f can be outsde 
+    // of the array. In these cases we need to assign them a value manually. 
+    // Here this is the average of the other three values with which e or f 
+    // would be averaged otherwise. Hence, the new value of e and f is 
+    // determined by their three respective neighbours only.
+    //       e
+    // 
+    //    a  X  b
+    //  
+    // f  X  d     
+    // 
+    //    c     
+    // 
+    //       
+    for(int x = 0; x < stepSize[0]; x += aStep){
+      for(int y = 0; y < stepSize[0]; y += aStep){
+        float a = mat(y, x);
+        float b = mat(y, x + aStep);
+        float c = mat(y + aStep, x);
+        
+        float d = mat(y + halfStep, x + halfStep);
+        float e = y - halfStep < 0 ? (a + b + d)/3 : mat(y - halfStep, x + halfStep);
+        float f = x - halfStep < 0 ? (a + c + d)/3 : mat(y + halfStep, x - halfStep);
 
-  return mat;
-}
-
-
-// [[Rcpp::export]]
-NumericMatrix squareC(NumericMatrix mat, NumericVector where, int distance, float noise){
-
-  const int n = where.size();
-  int nrow = mat.nrow(), ncol = mat.ncol();
-  int half = distance / 2;
-
-  for(int x = 0; x < n; ++x){
-    for(int y = 0; y < n; ++y){
-      int px = where[x]-1;
-      int py = where[y]-1;
-      float p = mat(py+distance, px+distance);
-      float b = mat(py, px+distance);
-      float r = mat(py+distance, px);
-      float br = mat(py, px);
-      float hbr = mat(py+half, px+half);
-
-      float ro = px-half < 0 ? 0.0 : mat(py+half, px-half);
-      float bo = py-half < 0 ? 0.0 : mat(py-half, px+half);
-      float lo = px+half+distance > ncol-1 ? 0.0 : mat(py+half, px+half+distance);
-      float to = py+half+distance > nrow-1 ? 0.0 : mat(py+half+distance, px+half);
-
-      mat(py, px+half) = (b + br + hbr + bo) / 4 + makeNoiseC(noise);
-      mat(py+distance, px+half) = (p + r + hbr + to) / 4 + makeNoiseC(noise);
-      mat(py+half, px) = (r + br + hbr + ro) / 4 + makeNoiseC(noise);
-      mat(py+half, px+distance) = (p + b + hbr + lo) / 4 + makeNoiseC(noise);
-
+        NumericVector square1 = (a + b + d + e)/4 + rnorm(1, 0, startDev);
+        NumericVector square2 = (a + c + d + f)/4 + rnorm(1, 0, startDev);
+        mat(y, x + halfStep) = square1[0];
+        mat(y + halfStep, x) = square2[0];
+      }
     }
+    startDev = startDev/2;
+    
   }
 
   return mat;

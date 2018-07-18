@@ -21,16 +21,8 @@ countAdjacenciesC <- function(mat, countDouble) {
     .Call('_rasterTools_countAdjacenciesC', PACKAGE = 'rasterTools', mat, countDouble)
 }
 
-makeNoiseC <- function(d) {
-    .Call('_rasterTools_makeNoiseC', PACKAGE = 'rasterTools', d)
-}
-
-diamondC <- function(mat, where, distance, noise) {
-    .Call('_rasterTools_diamondC', PACKAGE = 'rasterTools', mat, where, distance, noise)
-}
-
-squareC <- function(mat, where, distance, noise) {
-    .Call('_rasterTools_squareC', PACKAGE = 'rasterTools', mat, where, distance, noise)
+diamondSquareC <- function(mat, stepSize, roughness, startDev) {
+    .Call('_rasterTools_diamondSquareC', PACKAGE = 'rasterTools', mat, stepSize, roughness, startDev)
 }
 
 isBinaryC <- function(mat) {
