@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Obtain spatial datasets — obtain" />
 
-<meta property="og:description" content="obtain helps to extract information from various spatial (gridded)
-datasets both from local and online resources." />
+<meta property="og:description" content="obtain calls the operators of an algorithm to extract information from
+various spatial (gridded) datasets both from local and online resources." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -148,8 +148,8 @@ datasets both from local and online resources." />
 
     <div class="ref-description">
     
-    <p><code>obtain</code> helps to extract information from various spatial (gridded)
-datasets both from local and online resources.</p>
+    <p><code>obtain</code> calls the operators of an algorithm to extract information from
+various spatial (gridded) datasets both from local and online resources.</p>
     
     </div>
 
@@ -160,14 +160,14 @@ datasets both from local and online resources.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>[<code>list(.)</code>]<br /> list of <code>operators</code>, in which the
-functions to load spatial datasets are specified. Each <code>operator</code> is a
-list iteself and includes the operator name and its arguments as
-sub-elements; see Examples.</p></td>
+      <td><p>[<code>list(.)</code>]<br /> algorithm in which the operators to load
+spatial datasets are specified. Each <code>operator</code> is a list iteself and
+includes the operator name and its arguments as sub-elements; see Examples.</p></td>
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>spatial object which serves to mask the obtained.</p></td>
+      <td><p>[<code>geom</code> | <code>SpatialPolygon*</code>]<br /> spatial object of which
+the extent is the area of interest.</p></td>
     </tr>
     </table>
     
@@ -184,15 +184,15 @@ sub-elements; see Examples.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>obtain</code> expects an individual directory for each dataset,
-  where all the files of this particular dataset are located. <code>rasterTools</code>
-  provides a list of paths <code>getOption("rtPaths")</code>, which contains the
-  directories and urls of the local and online resources, respectively. In
-  case the dataset files are not available locally and if a url is available,
-  an attempt to download the files is undertaken. That means typically you do
-  not have to use the dataset specific <code>download*</code> functions manually,
-  they are documented nevertheless for those who are interested. In case an
-  error occurs, it might be necessary to specify new paths in
-  <code>rtPaths</code> (see <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
+  where all the files of this particular dataset are located.
+  <code>rasterTools</code> provides a list of paths <code>getOption("rtPaths")</code>,
+  which contains the directories and urls of the local and online resources,
+  respectively. In case the dataset files are not available locally and if a
+  url is available, an attempt to download the files is undertaken. That
+  means typically you do not have to use the dataset specific
+  <code>download*</code> functions manually, they are documented nevertheless for
+  those who are interested. In case an error occurs, it might be necessary to
+  specify new paths in <code>rtPaths</code> (see <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
 <p>Recently supported datasets are:</p><ul>
 <li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine
   Land Cover data</p></li>
@@ -201,7 +201,6 @@ sub-elements; see Examples.</p></td>
 <li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest
   Change dataset</p></li>
 <li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS products</p></li>
-<li><p><code>oSENTINEL</code>:</p></li>
 </ul>
     
 
@@ -209,7 +208,13 @@ sub-elements; see Examples.</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 
-<span class='co'># load and outline masks from file with locations</span>
+<span class='co'># specify the datasets from which you want to get data</span>
+<span class='no'>myDatasets</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oCLC"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2006</span>),
+                   <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oGFC"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2005</span>:<span class='fl'>2007</span>)),
+                   <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oMODIS"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"mod17a3"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2006</span>,
+                        <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>2</span>))
+
+<span class='co'># load and outline masks from a file with locations</span>
 <span class='no'>myLocations</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"locations.csv"</span>,
                         <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>))
 <span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>myLocations</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='fl'>10000</span>) <span class='kw'>%&gt;%</span>

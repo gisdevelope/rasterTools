@@ -109,7 +109,7 @@
       <h1>Landscape metrics</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-07-18</h4>
+            <h4 class="date">2018-07-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rastertools/blob/master/vignettes/landscape_metrics.Rmd"><code>vignettes/landscape_metrics.Rmd</code></a></small>
       <div class="hidden name"><code>landscape_metrics.Rmd</code></div>
@@ -146,17 +146,24 @@
 <li>the area, number and perimeter of all classes and dissimilarities between classes and</li>
 <li>the area, number and perimeter of all patches, a distance map focussed on each patch, an adjacency matrix and the values of all cells per patch.</li>
 </ol>
-<p>A second group of landscape metrics in <code>rasterTools</code> are the <em>derived metrics</em>, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the <code><a href="../reference/measure.html">measure()</a></code> function, where they are specified as named list. However, while each generic metric is a mere list, each derived metric is a list of lists. Each derived metric contains <em>terms</em> (other metrics) and an <em>equation</em>, in which the relation between the different terms is given.</p>
-<pre><code>genericMetric &lt;- list(operator = "mMetric", scale = "patch")
-derivedMetric &lt;- list(term1 = list(operator = "mMetric1", scale = "class"),
-                      term2 = list(operator = "mMetric2", scale = "window"),
-                      equation = "term1 / term2 * 100")</code></pre>
+<p>A second group of landscape metrics in <code>rasterTools</code> are the <em>derived metrics</em>, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the <code><a href="../reference/measure.html">measure()</a></code> function, where they are specified as named list. Each derived metric contains <em>terms</em> (generic metrics) and an <em>equation</em>, in which the relation between the different terms is given.</p>
+<pre><code>list(myMetric = list(operator = "mMetric", scale = "patch"))  # generic metric
+list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
+     term2 = list(operator = "mMetric2", scale = "window"),
+     myMetric = "term1 / term2 * 100")
+     </code></pre>
+<p>An algorithm to be used in <code><a href="../reference/measure.html">measure()</a></code> can also contain several derived metrics, which makes sense when several derived metrics depend on a very similar set of generi metrics:</p>
+<pre><code>myMetrics &lt;- list(a_c = list(operator = "mArea", scale = "class"),
+                  a_w = list(operator = "mArea", scale = "window"),
+                  a_p = list(operator = "mArea", scale = "patch"),
+                  mCPA = "a_c / a_w * 100",
+                  mLPI = "max(a_p) / a_w * 100")</code></pre>
 </div>
 <div id="the-dependence-structure-of-landscape-metrics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-dependence-structure-of-landscape-metrics" class="anchor"></a>The dependence structure of landscape metrics</h2>
-<p>The following graph shows the relationship of all metrics that have been defined in <code>rasterTools</code> so far. Hovering over the metrics shows the equation (might take a while to load). Moreover, you can zoom in/out and grab the elements and drag them around!</p>
-<p>-&gt; put fgure of the landscape metric network here</p>
+<p>The following graph shows the relationship of all metrics defined in <span class="citation">(McGarigal <a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>. This is followed by a section outlining details about the generic metrics and a list of the derived metrics.</p>
+<p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%"></p>
 </div>
 </div>
 <div id="generic-metrics" class="section level1">
@@ -258,9 +265,9 @@ derivedMetric &lt;- list(term1 = list(operator = "mMetric1", scale = "class"),
   CPA = \frac{A_C}{A_W} \cdot 100
 \end{equation}\]</span>
 <p>with <span class="math inline">\(A_{C}\)</span> = <a href="#mArea">Area</a> of a class, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>mCPA &lt;- list(a_c = list(operator = "mArea", scale = "class"),
-             a_w = list(operator = "mArea", scale = "window"),
-             equation = "a_c / a_w * 100")</code></pre>
+<pre><code>list(a_c = list(operator = "mArea", scale = "class"),
+     a_w = list(operator = "mArea", scale = "window"),
+     mCPA = "a_c / a_w * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; CPA ≤ 100\)</span></p>
 <p>Interpretation: CPA approaches 0 (100) when the respective class becomes increasingly rare (frequent).</p>
@@ -278,9 +285,9 @@ derivedMetric &lt;- list(term1 = list(operator = "mMetric1", scale = "class"),
   LPI = \frac{max(A_{P})}{A_W} \cdot 100
 \end{equation}\]</span>
 <p>with <span class="math inline">\(max(A_{P})\)</span> = <a href="#mArea">Area</a> of the largest patch, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>mLPI &lt;- list(a_w = list(operator = "mArea", scale = "window"),
-             a_p = list(operator = "mArea", scale = "patch"),
-             equation = "max(a_p) / a_w * 100")</code></pre>
+<pre><code>list(a_w = list(operator = "mArea", scale = "window"),
+     a_p = list(operator = "mArea", scale = "patch"),
+     mLPI = "max(a_p) / a_w * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; LPI ≤ 100\)</span></p>
 <p>Interpretation: LPI approaches 0 (100) when the largest patch is increasingly small (large). It is thus a measure of dominance.</p>
@@ -317,13 +324,13 @@ derivedMetric &lt;- list(term1 = list(operator = "mMetric1", scale = "class"),
   DE = \frac{P_{X}}{A_W} \cdot 10000
 \end{equation}\]</span>
 <p>with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>mDE &lt;- list(p_p = list(operator = "mPerimeter", scale = "patch"),
-            a_w = list(operator = "mArea", scale = "window"),
-            equation = "p_p / a_w * 10000")
+<pre><code>list(p_p = list(operator = "mPerimeter", scale = "patch"),
+     a_w = list(operator = "mArea", scale = "window"),
+     mDE = "p_p / a_w * 10000")
 
-mDEc &lt;- list(p_c = list(operator = "mPerimeter", scale = "class"),
-             a_w = list(operator = "mArea", scale = "window"),
-             equation = "p_c / a_w * 10000")</code></pre>
+list(p_c = list(operator = "mPerimeter", scale = "class"),
+     a_w = list(operator = "mArea", scale = "window"),
+     mDEc = "p_c / a_w * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(m\,ha^{-1}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; DE ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial heterogeneity and possible fragmentation of the focal habitat type.</p>
@@ -345,9 +352,9 @@ mDEc &lt;- list(p_c = list(operator = "mPerimeter", scale = "class"),
   PAR = \frac{P_P}{A_P} \cdot 10000
 \end{equation}\]</span>
 <p>with <span class="math inline">\(P_P\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch, <span class="math inline">\(A_P\)</span> = <a href="#mArea">Area</a> of a patch</p>
-<pre><code>mPAR &lt;- list(p_p = list(operator = "mPerimeter", scale = "patch"),
-             a_p = list(operator = "mArea", scale = "patch"),
-             equation = "p_p / a_p * 10000")</code></pre>
+<pre><code>list(p_p = list(operator = "mPerimeter", scale = "patch"),
+     a_p = list(operator = "mArea", scale = "patch"),
+     mPAR = "p_p / a_p * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(m\,ha^{-2}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PAR ≤ \infty\)</span></p>
 <p>Interpretation:</p>
@@ -377,9 +384,9 @@ mDEc &lt;- list(p_c = list(operator = "mPerimeter", scale = "class"),
     PLA = \frac{G_{ii}}{G_{ik}} \cdot 100
   \end{equation}\]</span>
 <p>with <span class="math inline">\(G_{ii}\)</span> = <a href="#mAdjacency">like Adjacencies</a> based on double count, <span class="math inline">\(G_{ik}\)</span> = all (incl. like) <a href="#mAdjacency">Adjacencies</a> based on double count</p>
-<pre><code>mPLA &lt;- list(g_ii = list(operator = "mAdjacency"),
-             g_ik = list(operator = "mAdjacency", type = "pairedSum"),
-             equation = "(g_ii / g_ik) * 100")</code></pre>
+<pre><code>list(g_ii = list(operator = "mAdjacency"),
+     g_ik = list(operator = "mAdjacency", type = "pairedSum"),
+     mPLA = "(g_ii / g_ik) * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PLA ≤ 100\)</span></p>
 <p>Interpretation:</p>
@@ -405,9 +412,9 @@ mDEc &lt;- list(p_c = list(operator = "mPerimeter", scale = "class"),
   DP = \frac{N_P}{A_W} \cdot 10000
 \end{equation}\]</span>
 <p>with <span class="math inline">\(N_P\)</span> = <a href="#mNumber">Number</a> of patches, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>mDP &lt;- list(n_p = list(operator = "mNumber", scale = "patch"),
-            a_w = list(operator = "mArea", scale = "window"),
-            equation = "n_p / a_w * 10000")</code></pre>
+<pre><code>list(n_p = list(operator = "mNumber", scale = "patch"),
+     a_w = list(operator = "mArea", scale = "window"),
+     mDP = "n_p / a_w * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(n\,ha^{-1}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PD ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial fragmentation of a particular class.</p>

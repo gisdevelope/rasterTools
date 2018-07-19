@@ -42,17 +42,25 @@ Essentially, landscape metrics are equations that relate different aspects or ch
 2) the area, number and perimeter of all classes and dissimilarities between classes and
 3) the area, number and perimeter of all patches, a distance map focussed on each patch, an adjacency matrix and the values of all cells per patch.
 
-A second group of landscape metrics in `rasterTools` are the *derived metrics*, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the `measure()` function, where they are specified as named list. However, while each generic metric is a mere list, each derived metric is a list of lists. Each derived metric contains *terms* (other metrics) and an *equation*, in which the relation between the different terms is given.
+A second group of landscape metrics in `rasterTools` are the *derived metrics*, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the `measure()` function, where they are specified as named list. Each derived metric contains *terms* (generic metrics) and an *equation*, in which the relation between the different terms is given.
 
-    genericMetric <- list(operator = "mMetric", scale = "patch")
-    derivedMetric <- list(term1 = list(operator = "mMetric1", scale = "class"),
-                          term2 = list(operator = "mMetric2", scale = "window"),
-                          equation = "term1 / term2 * 100")
+    list(myMetric = list(operator = "mMetric", scale = "patch"))  # generic metric
+    list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
+         term2 = list(operator = "mMetric2", scale = "window"),
+         myMetric = "term1 / term2 * 100")
+         
+An algorithm to be used in `measure()` can also contain several derived metrics, which makes sense when several derived metrics depend on a very similar set of generi metrics:
+
+    myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
+                      a_w = list(operator = "mArea", scale = "window"),
+                      a_p = list(operator = "mArea", scale = "patch"),
+                      mCPA = "a_c / a_w * 100",
+                      mLPI = "max(a_p) / a_w * 100")
 
 ## The dependence structure of landscape metrics
-The following graph shows the relationship of all metrics that have been defined in `rasterTools` so far. Hovering over the metrics shows the equation (might take a while to load). Moreover, you can zoom in/out and grab the elements and drag them around!
+The following graph shows the relationship of all metrics defined in [@mcgarigal_fragstats_2015]. This is followed by a section outlining details about the generic metrics and a list of the derived metrics.
 
--> put fgure of the landscape metric network here
+<img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%" />
 
 # Generic metrics
 
@@ -199,9 +207,9 @@ Internal name: class proportional area (CPA)
 \end{equation}
 with $A_{C}$ = [Area](#mArea) of a class, $A_W$ = [Area](#mArea) of the window
 
-    mCPA <- list(a_c = list(operator = "mArea", scale = "class"),
-                 a_w = list(operator = "mArea", scale = "window"),
-                 equation = "a_c / a_w * 100")
+    list(a_c = list(operator = "mArea", scale = "class"),
+         a_w = list(operator = "mArea", scale = "window"),
+         mCPA = "a_c / a_w * 100")
 
 Unit: $\%$
 
@@ -229,9 +237,9 @@ Internal name: largest patch index (LPI)
 \end{equation}
 with $max(A_{P})$ = [Area](#mArea) of the largest patch, $A_W$ = [Area](#mArea) of the window
 
-    mLPI <- list(a_w = list(operator = "mArea", scale = "window"),
-                 a_p = list(operator = "mArea", scale = "patch"),
-                 equation = "max(a_p) / a_w * 100")
+    list(a_w = list(operator = "mArea", scale = "window"),
+         a_p = list(operator = "mArea", scale = "patch"),
+         mLPI = "max(a_p) / a_w * 100")
     
 Unit: $\%$
 
@@ -289,13 +297,13 @@ Internal name: density of edges (DE)
 \end{equation}
 with $P_{X}$ = [Perimeter](#mPerimeter) of a patch or class, $A_W$ = [Area](#mArea) of the window
 
-    mDE <- list(p_p = list(operator = "mPerimeter", scale = "patch"),
-                a_w = list(operator = "mArea", scale = "window"),
-                equation = "p_p / a_w * 10000")
+    list(p_p = list(operator = "mPerimeter", scale = "patch"),
+         a_w = list(operator = "mArea", scale = "window"),
+         mDE = "p_p / a_w * 10000")
 
-    mDEc <- list(p_c = list(operator = "mPerimeter", scale = "class"),
-                 a_w = list(operator = "mArea", scale = "window"),
-                 equation = "p_c / a_w * 10000")
+    list(p_c = list(operator = "mPerimeter", scale = "class"),
+         a_w = list(operator = "mArea", scale = "window"),
+         mDEc = "p_c / a_w * 10000")
 
 Unit: $m\,ha^{-1}$
 
@@ -324,9 +332,9 @@ Internal name: perimeter per area ratio (PAR)
 \end{equation}
 with $P_P$ = [Perimeter](#mPerimeter) of a patch, $A_P$ = [Area](#mArea) of a patch
 
-    mPAR <- list(p_p = list(operator = "mPerimeter", scale = "patch"),
-                 a_p = list(operator = "mArea", scale = "patch"),
-                 equation = "p_p / a_p * 10000")
+    list(p_p = list(operator = "mPerimeter", scale = "patch"),
+         a_p = list(operator = "mArea", scale = "patch"),
+         mPAR = "p_p / a_p * 10000")
 
 Unit: $m\,ha^{-2}$
 
@@ -357,9 +365,9 @@ Internal name: percentage of like adjacencies (PLA)
   \end{equation}
 with $G_{ii}$ = [like Adjacencies](#mAdjacency) based on double count, $G_{ik}$ = all (incl. like) [Adjacencies](#mAdjacency) based on double count
 
-    mPLA <- list(g_ii = list(operator = "mAdjacency"),
-                 g_ik = list(operator = "mAdjacency", type = "pairedSum"),
-                 equation = "(g_ii / g_ik) * 100")
+    list(g_ii = list(operator = "mAdjacency"),
+         g_ik = list(operator = "mAdjacency", type = "pairedSum"),
+         mPLA = "(g_ii / g_ik) * 100")
 
 Unit: $\%$
 
@@ -389,9 +397,9 @@ Internal name: density of patches (DP)
 \end{equation}
 with $N_P$ = [Number](#mNumber) of patches, $A_W$ = [Area](#mArea) of the window
 
-    mDP <- list(n_p = list(operator = "mNumber", scale = "patch"),
-                a_w = list(operator = "mArea", scale = "window"),
-                equation = "n_p / a_w * 10000")
+    list(n_p = list(operator = "mNumber", scale = "patch"),
+         a_w = list(operator = "mArea", scale = "window"),
+         mDP = "n_p / a_w * 10000")
 
 Unit: $n\,ha^{-1}$
 

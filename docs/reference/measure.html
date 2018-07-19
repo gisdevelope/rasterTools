@@ -32,10 +32,8 @@
 
 <meta property="og:title" content="Measure gridded objects — measure" />
 
-<meta property="og:description" content="Landscape metrics typically quantify spatial patterns of 2D lattices, such as
-maps of landscapes, artificial (spatial) patterns or even photographs. See
-vignette(&quot;landscape_metrics&quot;, package = &quot;rasterTools&quot;) for details on how
-landscape metrics are treated in rasterTools." />
+<meta property="og:description" content="measure calls the operators of an algorithm to measure spatial
+patterns." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -150,10 +148,8 @@ landscape metrics are treated in rasterTools." />
 
     <div class="ref-description">
     
-    <p>Landscape metrics typically quantify spatial patterns of 2D lattices, such as
-maps of landscapes, artificial (spatial) patterns or even photographs. See
-<code><a href='../articles/landscape_metrics.html'>vignette("landscape_metrics", package = "rasterTools")</a></code> for details on how
-landscape metrics are treated in <code>rasterTools</code>.</p>
+    <p><code>measure</code> calls the operators of an algorithm to measure spatial
+patterns.</p>
     
     </div>
 
@@ -171,7 +167,10 @@ but can also be assembled "by hand".</p></td>
     </tr>
     <tr>
       <th>with</th>
-      <td><p>[<code>character(.)</code>]<br /> The landscape metric names.</p></td>
+      <td><p>[<code>character(.)</code>]<br /> algorithm in which the operators
+(landscape metrics) to measure spatial patterns are specified. Each
+<code>operator</code> is a list iteself and includes the operator name and its
+arguments as sub-elements; see Examples.</p></td>
     </tr>
     <tr>
       <th>simplify</th>
@@ -187,7 +186,11 @@ result of all terms be returned <code>FALSE</code>?</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A landscape metric can be generic or derived. In the first case the
+    <p>Landscape metrics typically quantify spatial patterns of 2D lattices, such as
+maps of landscapes, artificial (spatial) patterns or even photographs. See
+<code><a href='../articles/landscape_metrics.html'>vignette("landscape_metrics", package = "rasterTools")</a></code> for details on
+how landscape metrics are treated in <code>rasterTools</code>.</p>
+<p>A landscape metric can be generic or derived. In the first case the
   metric is a list that includes the <code>operator</code> name and its arguments.
   In the latter case the metric is a named list of generic metrics (socalled
   terms) and an equation, which determines the term's relationship.</p>
@@ -197,7 +200,7 @@ result of all terms be returned <code>FALSE</code>?</p></td>
 <li><p><code><a href='mNumber.html'>mNumber</a></code>: Count the number of objects in a raster.</p></li>
 <li><p><code><a href='mPerimeter.html'>mPerimeter</a></code>: Calculate the length of the boundary of objects
   in a raster.</p></li>
-<li><p><code><a href='mValues.html'>mValues</a></code>: Summarise the values of objects
+<li><p><code>mValues</code>: Summarise the values of objects
   in a raster.</p></li>
 </ul>
     
