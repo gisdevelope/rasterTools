@@ -19,15 +19,14 @@ special cases thereof or \code{"random"}, to select one by chance.}
 \item{...}{parameters to create the origin.}
 }
 \description{
+This is largely still work in progress.
+}
+\details{
 A gradient can be understood in terms of the distance to an origin. With a
 straight line as origin, one might end up with a edge gradient, or, in case
 the line does not cross the the plot window, a planar gradient. Beware that
 in case you provide an origin or a strict set of parameters (\code{...}), the
 spatial pattern may not be neutral anymore!
-}
-\details{
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
 
 In case \code{origin} is not given, \code{nlmGradient} constructs
   internally a binary origin from what is specified in \code{type} and
@@ -35,6 +34,9 @@ In case \code{origin} is not given, \code{nlmGradient} constructs
   between 0 and 1 as gradient. Each geometry requires at least the number of
   vertices and their coordinates. In case the required arguments are not
   specified in \code{params = list(...)}, they will be set randomly.
+
+If this function is used in conjunction with \code{\link{generate}},
+  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \examples{
 # create a point gradient based on an origin

@@ -7,12 +7,12 @@
 obtain(data, mask)
 }
 \arguments{
-\item{data}{[\code{list(.)}]\cr list of \code{operators}, in which the
-functions to load spatial datasets are specified. Each \code{operator} is a
-list iteself and includes the operator name and its arguments as
-sub-elements; see Examples.}
+\item{data}{[\code{list(.)}]\cr algorithm in which the operators to load
+spatial datasets are specified. Each \code{operator} is a list iteself and
+includes the operator name and its arguments as sub-elements; see Examples.}
 
-\item{mask}{spatial object which serves to mask the obtained.}
+\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
+the extent is the area of interest.}
 }
 \value{
 Depends on the method called, but it is always organised in lists.
@@ -24,32 +24,37 @@ Depends on the method called, but it is always organised in lists.
   \code{SpatialPointsDataFrame}.
 }
 \description{
-\code{obtain} helps to extract information from various spatial (gridded)
-datasets both from local and online resources.
+\code{obtain} calls the operators of an algorithm to extract information from
+various spatial (gridded) datasets both from local and online resources.
 }
 \details{
 \code{obtain} expects an individual directory for each dataset,
-  where all the files of this particular dataset are located. \code{rasterTools}
-  provides a list of paths \code{getOption("rtPaths")}, which contains the
-  directories and urls of the local and online resources, respectively. In
-  case the dataset files are not available locally and if a url is available,
-  an attempt to download the files is undertaken. That means typically you do
-  not have to use the dataset specific \code{download*} functions manually,
-  they are documented nevertheless for those who are interested. In case an
-  error occurs, it might be necessary to specify new paths in
-  \code{rtPaths} (see \code{\link{updatePaths}}).
+  where all the files of this particular dataset are located.
+  \code{rasterTools} provides a list of paths \code{getOption("rtPaths")},
+  which contains the directories and urls of the local and online resources,
+  respectively. In case the dataset files are not available locally and if a
+  url is available, an attempt to download the files is undertaken. That
+  means typically you do not have to use the dataset specific
+  \code{download*} functions manually, they are documented nevertheless for
+  those who are interested. In case an error occurs, it might be necessary to
+  specify new paths in \code{rtPaths} (see \code{\link{updatePaths}}).
 
   Recently supported datasets are: \itemize{ \item \code{\link{oCLC}}: Corine
   Land Cover data \item \code{\link{oEMMA}}: Occurence data of the
   \emph{Atlas of European Mammals} \item \code{\link{oGFC}}: Global Forest
-  Change dataset \item \code{\link{oMODIS}}: MODIS products \item
-  \code{oSENTINEL}: }
+  Change dataset \item \code{\link{oMODIS}}: MODIS products}
 }
 \examples{
 \dontrun{
 require(magrittr)
 
-# load and outline masks from file with locations
+# specify the datasets from which you want to get data
+myDatasets <- list(list(operator = "oCLC", period = 2006),
+                   list(operator = "oGFC", period = c(2005:2007)),
+                   list(operator = "oMODIS", product = "mod17a3", period = 2006,
+                        layer = 2))
+
+# load and outline masks from a file with locations
 myLocations <- loadData(files = "locations.csv",
                         localPath = system.file("csv", package="rasterTools"))
 myMask <- gGroup(geom = myLocations, distance = 10000) \%>\%

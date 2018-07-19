@@ -1,14 +1,20 @@
 #' Measure gridded objects
 #'
+#' \code{measure} calls the operators of an algorithm to measure spatial
+#' patterns.
+#'
 #' Landscape metrics typically quantify spatial patterns of 2D lattices, such as
 #' maps of landscapes, artificial (spatial) patterns or even photographs. See
-#' \code{vignette("landscape_metrics", package = "rasterTools")} for details on how
-#' landscape metrics are treated in \code{rasterTools}.
+#' \code{vignette("landscape_metrics", package = "rasterTools")} for details on
+#' how landscape metrics are treated in \code{rasterTools}.
 #' @param input [\code{RasterLayer(1)} | \code{list(.)} thereof]\cr an object or
 #'   a named list of objects, which should be measured. Typically retrieved via
 #'   \code{\link{obtain}}, and potentially processed with \code{\link{modify}},
 #'   but can also be assembled "by hand".
-#' @param with [\code{character(.)}]\cr The landscape metric names.
+#' @param with [\code{character(.)}]\cr algorithm in which the operators
+#'   (landscape metrics) to measure spatial patterns are specified. Each
+#'   \code{operator} is a list iteself and includes the operator name and its
+#'   arguments as sub-elements; see Examples.
 #' @param simplify [\code{logical(1)}]\cr should only the scale of the first
 #'   term and the result be returned (\code{TRUE}, default), or should the the
 #'   result of all terms be returned \code{FALSE}?
@@ -22,7 +28,7 @@
 #'   \code{\link{mArea}}: Calculate the area of objects in a raster. \item
 #'   \code{\link{mNumber}}: Count the number of objects in a raster. \item
 #'   \code{\link{mPerimeter}}: Calculate the length of the boundary of objects
-#'   in a raster. \item \code{\link{mValues}}: Summarise the values of objects
+#'   in a raster. \item \code{mValues}: Summarise the values of objects
 #'   in a raster. }
 #' @return depending on the employed metric, but typically a \code{data.frame}.
 #' @examples

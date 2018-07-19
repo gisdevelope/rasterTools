@@ -12,7 +12,7 @@ downloadEMMA(file = NULL, localPath = NULL, getGrids = NULL,
 }
 \arguments{
 \item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest}
+the extent is the area of interest.}
 
 \item{species}{[\code{character(.)}]\cr name(s) of species to get occurrence
 for. Can be abbreviated if a \code{\link{catalog}} is provided.}

@@ -7,15 +7,18 @@
 generate(model, dimensions)
 }
 \arguments{
-\item{model}{list of \code{operators}, in which the spatial pattern models
-are specified. Each \code{operator} is a list iteself and includes the
-operator name and its arguments as sub-elements; see Examples.}
+\item{model}{[\code{list(.)}]\cr algorithm in which the operators to generate
+spatial pattern models are specified. Each \code{operator} is a list
+iteself and includes the operator name and its arguments as sub-elements;
+see Examples.}
 
-\item{dimensions}{number of columns and rows the landscape model ought to
-have.}
+\item{dimensions}{[\code{integerish(2)}]\cr number of columns and rows the
+landscape model ought to have.}
 }
 \description{
 This function is still largely work in process and very experimental!
+\code{generate} calls the operators of an algorithm to generate spatial
+patterns.
 }
 \details{
 Spatial pattern models (SPMs), such as neutral landscape models (NLMs), are

@@ -1,5 +1,7 @@
 #' Generate a (neutral) gradient pattern
-#'
+#' 
+#' This is largely still work in progress.
+#' 
 #' A gradient can be understood in terms of the distance to an origin. With a
 #' straight line as origin, one might end up with a edge gradient, or, in case
 #' the line does not cross the the plot window, a planar gradient. Beware that
@@ -149,6 +151,8 @@ bla <- function(x, y, ...){
 
 #' Generate a neutral random pattern
 #'
+#' This is largely still work in progress.
+#' 
 #' Random values can be applied to different patterns within the landscape
 #' model.
 #' @template mat
@@ -213,6 +217,8 @@ spmRandom <- function(mat, pattern, seed){
 
 #' Generate a heightmap
 #'
+#' This is largely still work in progress.
+#' 
 #' A heightmap is the two dimensional representation of a three dimensional
 #' surface, where the value of the cells represents the height in the three
 #' dimensional surface (a simulated digitial elevation model).
@@ -234,7 +240,7 @@ spmRandom <- function(mat, pattern, seed){
 #'   between 0 and 1."} (Fournier et al, 1982). \cr\cr The implementation here
 #'   computes values that are at the boundary of the two dimensional array as
 #'   average from its three only neighbours and not from the one dimensional
-#'   version of the algorithm (Frouier et al., 1982).}
+#'   version of the algorithm (Fournier et al., 1982).}
 #'   \item{Fractional brownian motion}{} \item{Gaussian random field}{} }
 #' @references Fournier A, Fussell D, Carpenter L. Computer rendering of
 #'   stochastic models. Communications of the ACM. 1982;25:371–384
