@@ -32,7 +32,9 @@
 
 <meta property="og:title" content="Modify gridded objects — modify" />
 
-<meta property="og:description" content="modify calls the operators of an algorithm to modify spatial patterns." />
+<meta property="og:description" content="Typical GIS operations modify gridded objects according to a given process.
+This can serve to identify certain objects or to prepare the quantitative
+assessment of the spatial object in question." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -147,7 +149,9 @@
 
     <div class="ref-description">
     
-    <p><code>modify</code> calls the operators of an algorithm to modify spatial patterns.</p>
+    <p>Typical GIS operations modify gridded objects according to a given process.
+This can serve to identify certain objects or to prepare the quantitative
+assessment of the spatial object in question.</p>
     
     </div>
 
@@ -166,12 +170,12 @@ a named list of objects, which should be modified. Typically retrieved via
     <tr>
       <th>by</th>
       <td><p>[<code>list(.)</code>]<br /> algorithm in which the operators to modify
-input are specified. Each <code>operator</code> is a list iteself and
+<code>input</code> are specified. Each <code>operator</code> is a list iteself and
 includes the operator name and its arguments as sub-elements; see Examples.</p></td>
     </tr>
     <tr>
       <th>sequential</th>
-      <td><p>[<code>lgical(1)</code>]<br /> should the defined operators be
+      <td><p>[<code>logical(1)</code>]<br /> should the defined operators be
 carried out based on the output of the previous operator (<code>TRUE</code>), or
 separately based on the original input (<code>FALSE</code>, default); see
 Details.</p></td>
@@ -197,10 +201,7 @@ default).</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Typical GIS operations modify gridded objects according to a given process.
-This can serve to identify certain objects or to prepare the quantitative
-assessment of the spatial object in question.</p>
-<p>Operators can be called several successive times with modified
+    <p>Operators can be called several successive times with modified
   arguments. The following operators are recently defined...</p>
 <p>... to select a subset of cells:</p><ul>
 <li><p><code><a href='rBounded.html'>rBounded</a></code>:

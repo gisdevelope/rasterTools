@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Measure gridded objects — measure" />
 
-<meta property="og:description" content="measure calls the operators of an algorithm to measure spatial
-patterns." />
+<meta property="og:description" content="Landscape metrics typically quantify spatial patterns of 2D lattices, such as
+maps of landscapes, artificial (spatial) patterns or even photographs." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -148,8 +148,8 @@ patterns." />
 
     <div class="ref-description">
     
-    <p><code>measure</code> calls the operators of an algorithm to measure spatial
-patterns.</p>
+    <p>Landscape metrics typically quantify spatial patterns of 2D lattices, such as
+maps of landscapes, artificial (spatial) patterns or even photographs.</p>
     
     </div>
 
@@ -168,15 +168,15 @@ but can also be assembled "by hand".</p></td>
     <tr>
       <th>with</th>
       <td><p>[<code>character(.)</code>]<br /> algorithm in which the operators
-(landscape metrics) to measure spatial patterns are specified. Each
-<code>operator</code> is a list iteself and includes the operator name and its
-arguments as sub-elements; see Examples.</p></td>
+(landscape metrics) to measure spatial patterns are specified; see
+Examples.</p></td>
     </tr>
     <tr>
       <th>simplify</th>
-      <td><p>[<code>logical(1)</code>]<br /> should only the scale of the first
-term and the result be returned (<code>TRUE</code>, default), or should the the
-result of all terms be returned <code>FALSE</code>?</p></td>
+      <td><p>[<code>logical(1)</code>]<br /> should a "nice looking" output be
+created, where the resulting values are associated to the correct ids
+(<code>TRUE</code>, default), or should the raw values be returned
+(<code>FALSE</code>)?</p></td>
     </tr>
     </table>
     
@@ -186,22 +186,21 @@ result of all terms be returned <code>FALSE</code>?</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Landscape metrics typically quantify spatial patterns of 2D lattices, such as
-maps of landscapes, artificial (spatial) patterns or even photographs. See
-<code><a href='../articles/landscape_metrics.html'>vignette("landscape_metrics", package = "rasterTools")</a></code> for details on
-how landscape metrics are treated in <code>rasterTools</code>.</p>
-<p>A landscape metric can be generic or derived. In the first case the
+    <p>A landscape metric can be generic or derived. In the first case the
   metric is a list that includes the <code>operator</code> name and its arguments.
-  In the latter case the metric is a named list of generic metrics (socalled
-  terms) and an equation, which determines the term's relationship.</p>
+  In the latter case these generic metrics are considered as <em>terms</em>,
+  while the derived metric is given as its mathematical equation, where the
+  terms are related to each other. You can find the equations for landscape
+  metrics in the vignette with <code><a href='../articles/landscape_metrics.html'>vignette("landscape_metrics", package =
+  "rasterTools")</a></code></p>
 <p>The following operators for generic metrics are defined:</p><ul>
 <li><p><code><a href='mAdjacency.html'>mAdjacency</a></code>: Determine the adjacency matrix of a raster.</p></li>
 <li><p><code><a href='mArea.html'>mArea</a></code>: Calculate the area of objects in a raster.</p></li>
 <li><p><code><a href='mNumber.html'>mNumber</a></code>: Count the number of objects in a raster.</p></li>
 <li><p><code><a href='mPerimeter.html'>mPerimeter</a></code>: Calculate the length of the boundary of objects
   in a raster.</p></li>
-<li><p><code>mValues</code>: Summarise the values of objects
-  in a raster.</p></li>
+<li><p><code>mValues</code>: Summarise the values of objects in a
+  raster.</p></li>
 </ul>
     
 
@@ -210,87 +209,115 @@ how landscape metrics are treated in <code>rasterTools</code>.</p>
 
 <span class='co'># calculate generic metrics 'area per class' and 'area per window', 'obj' does</span>
 <span class='co'># not need to be specified per operator in the algorithm, as 'measure' assigns it.</span>
-<span class='no'>mAc</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)
-<span class='no'>mAw</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"window"</span>)
-(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mAc"</span>, <span class='st'>"mAw"</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in get(with[j]): object 'mAc' not found</span></div><div class='input'>
-<span class='co'># calculate derived metrics 'largest patch index' and</span>
-<span class='co'># 'class proportional area'</span>
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>input</span>)</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mLPI"</span>, <span class='st'>"mCPA"</span>), <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; $mLPI
-#&gt;    window  a_w class patch a_p result
-#&gt; 1       1 3360     1     1  37   8.81
-#&gt; 2       1 3360    11     1 104   8.81
-#&gt; 3       1 3360    21     1 209   8.81
-#&gt; 4       1 3360    21     2  72   8.81
-#&gt; 5       1 3360    24     1 296   8.81
-#&gt; 6       1 3360    24     2 173   8.81
-#&gt; 7       1 3360    24     3  38   8.81
-#&gt; 8       1 3360    27     1 293   8.81
-#&gt; 9       1 3360    27     2 173   8.81
-#&gt; 10      1 3360    31     1 259   8.81
-#&gt; 11      1 3360    31     2 108   8.81
-#&gt; 12      1 3360    31     3  40   8.81
-#&gt; 13      1 3360    41     1  41   8.81
-#&gt; 14      1 3360    41     2  59   8.81
-#&gt; 15      1 3360    41     3  82   8.81
-#&gt; 16      1 3360    41     4  16   8.81
-#&gt; 17      1 3360    41     5  48   8.81
-#&gt; 18      1 3360    41     6   2   8.81
-#&gt; 19      1 3360    41     7   1   8.81
-#&gt; 20      1 3360    41     8  18   8.81
-#&gt; 21      1 3360    41     9   1   8.81
-#&gt; 22      1 3360    41    10   1   8.81
-#&gt; 23      1 3360    41    11 136   8.81
-#&gt; 24      1 3360    41    12  62   8.81
-#&gt; 25      1 3360    41    13  94   8.81
-#&gt; 26      1 3360    44     1  38   8.81
-#&gt; 27      1 3360    44     2  16   8.81
-#&gt; 28      1 3360    44     3   1   8.81
-#&gt; 29      1 3360    44     4  96   8.81
-#&gt; 30      1 3360    44     5   1   8.81
-#&gt; 31      1 3360    44     6   2   8.81
-#&gt; 32      1 3360    44     7   5   8.81
-#&gt; 33      1 3360    44     8 163   8.81
-#&gt; 34      1 3360    44     9  99   8.81
-#&gt; 35      1 3360    44    10   2   8.81
-#&gt; 36      1 3360    44    11  12   8.81
-#&gt; 37      1 3360    44    12   2   8.81
-#&gt; 38      1 3360    44    13  10   8.81
-#&gt; 39      1 3360    44    14   6   8.81
-#&gt; 40      1 3360    47     1 124   8.81
-#&gt; 41      1 3360    47     2   2   8.81
-#&gt; 42      1 3360    47     3 136   8.81
-#&gt; 43      1 3360    47     4  27   8.81
-#&gt; 44      1 3360    47     5   1   8.81
-#&gt; 45      1 3360    47     6   1   8.81
-#&gt; 46      1 3360    47     7   1   8.81
-#&gt; 47      1 3360    47     8   1   8.81
-#&gt; 48      1 3360    47     9   1   8.81
-#&gt; 49      1 3360    47    10   1   8.81
-#&gt; 50      1 3360    47    11   1   8.81
-#&gt; 51      1 3360    47    12   7   8.81
-#&gt; 52      1 3360    47    13 241   8.81
+<span class='no'>myMetrics</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>a_c</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>),
+                  <span class='kw'>a_w</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"window"</span>))
+(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; $a_c
+#&gt;   class result
+#&gt; 1     1     37
+#&gt; 2    11    104
+#&gt; 3    21    281
+#&gt; 4    24    507
+#&gt; 5    27    466
+#&gt; 6    31    407
+#&gt; 7    41    561
+#&gt; 8    44    453
+#&gt; 9    47    544
 #&gt; 
-#&gt; $mCPA
-#&gt;   class a_c window  a_w result
-#&gt; 1     1  37      1 3360   1.10
-#&gt; 2    11 104      1 3360   3.10
-#&gt; 3    21 281      1 3360   8.36
-#&gt; 4    24 507      1 3360  15.09
-#&gt; 5    27 466      1 3360  13.87
-#&gt; 6    31 407      1 3360  12.11
-#&gt; 7    41 561      1 3360  16.70
-#&gt; 8    44 453      1 3360  13.48
-#&gt; 9    47 544      1 3360  16.19
+#&gt; $a_w
+#&gt;   window result
+#&gt; 1      1   3360
 #&gt; </div><div class='input'>
-<span class='co'># when a categorial raster is the basis to derive patches, there may be a</span>
-<span class='co'># number of patches that may in fact not be distinct patches, so one has to</span>
-<span class='co'># be carefull in interpreting these results. Instead, consider:</span>
-<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>substituted</span>)</div><div class='img'><img src='measure-2.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mLPI"</span>, <span class='st'>"mCPA"</span>)))</div><div class='output co'>#&gt; $mLPI
-#&gt;   window  mLPI
-#&gt; 1      1 15.71
+<span class='co'># calculate 'class proportional area' and 'larges patch index'</span>
+<span class='co'># 1) define the terms (generic metrics) that are needed to compute the metrics</span>
+<span class='co'># 2) define the equations that are used based on these terms</span>
+<span class='no'>myMetrics</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>a_p</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>),
+                  <span class='kw'>a_c</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>),
+                  <span class='kw'>a_w</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"window"</span>),
+                  <span class='kw'>mCPA</span> <span class='kw'>=</span> <span class='st'>"a_c / a_w * 100"</span>,
+                  <span class='kw'>mLPI</span> <span class='kw'>=</span> <span class='st'>"max(a_p) / a_w * 100"</span>)
+(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>, <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; $a_p
+#&gt;    class patch result
+#&gt; 1      1     1     37
+#&gt; 2     11     1    104
+#&gt; 3     21     1    209
+#&gt; 4     21     2     72
+#&gt; 5     24     1    296
+#&gt; 6     24     2    173
+#&gt; 7     24     3     38
+#&gt; 8     27     1    293
+#&gt; 9     27     2    173
+#&gt; 10    31     1    259
+#&gt; 11    31     2    108
+#&gt; 12    31     3     40
+#&gt; 13    41     1     41
+#&gt; 14    41     2     59
+#&gt; 15    41     3     82
+#&gt; 16    41     4     16
+#&gt; 17    41     5     48
+#&gt; 18    41     6      2
+#&gt; 19    41     7      1
+#&gt; 20    41     8     18
+#&gt; 21    41     9      1
+#&gt; 22    41    10      1
+#&gt; 23    41    11    136
+#&gt; 24    41    12     62
+#&gt; 25    41    13     94
+#&gt; 26    44     1     38
+#&gt; 27    44     2     16
+#&gt; 28    44     3      1
+#&gt; 29    44     4     96
+#&gt; 30    44     5      1
+#&gt; 31    44     6      2
+#&gt; 32    44     7      5
+#&gt; 33    44     8    163
+#&gt; 34    44     9     99
+#&gt; 35    44    10      2
+#&gt; 36    44    11     12
+#&gt; 37    44    12      2
+#&gt; 38    44    13     10
+#&gt; 39    44    14      6
+#&gt; 40    47     1    124
+#&gt; 41    47     2      2
+#&gt; 42    47     3    136
+#&gt; 43    47     4     27
+#&gt; 44    47     5      1
+#&gt; 45    47     6      1
+#&gt; 46    47     7      1
+#&gt; 47    47     8      1
+#&gt; 48    47     9      1
+#&gt; 49    47    10      1
+#&gt; 50    47    11      1
+#&gt; 51    47    12      7
+#&gt; 52    47    13    241
+#&gt; 
+#&gt; $a_c
+#&gt;   class result
+#&gt; 1     1     37
+#&gt; 2    11    104
+#&gt; 3    21    281
+#&gt; 4    24    507
+#&gt; 5    27    466
+#&gt; 6    31    407
+#&gt; 7    41    561
+#&gt; 8    44    453
+#&gt; 9    47    544
+#&gt; 
+#&gt; $a_w
+#&gt;   window result
+#&gt; 1      1   3360
 #&gt; 
 #&gt; $mCPA
+#&gt; [1]  1.10  3.10  8.36 15.09 13.87 12.11 16.70 13.48 16.19
+#&gt; 
+#&gt; $mLPI
+#&gt; [1] 8.81
+#&gt; </div><div class='input'>
+<span class='co'># however, in the above example patches are derived per class, which might</span>
+<span class='co'># not make sense ecologically, or be at best arbitrary. Instead we might</span>
+<span class='co'># want to treat all forest, irrespective of deciduous or coniferous as one</span>
+<span class='co'># patch.</span>
+<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))<span class='co'>#'</span></div><div class='output co'>#&gt; [[1]]
 #&gt;   class  mCPA
 #&gt; 1     1  1.10
 #&gt; 2    11  3.10
@@ -299,8 +326,11 @@ how landscape metrics are treated in <code>rasterTools</code>.</p>
 #&gt; 5    27 13.87
 #&gt; 6    31 12.11
 #&gt; 7    40 46.37
+#&gt; 
+#&gt; [[2]]
+#&gt;   window  mLPI
+#&gt; 1      1 15.71
 #&gt; </div><div class='input'>
-
 # set of spatial operations that enables more complex metrics
 # derive 'Disjunct Cores Density', which is a rather complex metric
 </div></pre>

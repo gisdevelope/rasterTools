@@ -75,7 +75,6 @@ measure <- function(input, with, simplify = TRUE){
     assertList(input, "RasterLayer")
   }
   assertList(with, types = c("list", "character"), min.len = 1, any.missing = FALSE)
-  assertNamed(with)
   assertLogical(simplify)
   
   if(!isList){
