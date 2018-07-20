@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 This is a technical documentation of landscape metrics, both as defined in FRAGSTATS [@mcgarigal_fragstats_2015], where the majority of landscape metrics are collected, but also from several newer references, or those that have not been included in FRAGSTATS. It is currently still work in progress, feel free to participate!
 
 ## Level of measurement
-Most landscape metrics can be measured at different levels/scales of the landscape. Landscapes are visualised in the form of maps and these are stored in a gridded format, a socalled raster, in most GIS software.
+Many landscape metrics can be measured at different levels/scales of the landscape. Landscapes are visualised in the form of maps and these are stored in a gridded format, a socalled raster, in most GIS software.
 
   1. *Cell*: As any map constsist of "pixels", which are called cells in `rasterTools`, their values can be the basis for analysing what is depicted by the map.
   2. *Patch*: An aggregation of (functionally or phenotypically) similar cell values that are all interconnected with each other. In the widely used *patch-matrix* model of landscapes, patches are regarded as islands in an ocean of other land cover types (the matrix). However, often the landscape is a mosaic of many different land cover types, and thus patches. Moreover, often gradients are prevailing (e.g. a gradual change from one land cover type to its neighbours). Thus often a clear distinction between patch and matrix is arbitrary and subjective rules have to be used to delimit patch from matrix.
