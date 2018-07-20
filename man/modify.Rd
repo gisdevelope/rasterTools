@@ -34,13 +34,11 @@ A list of \code{RasterLayer}s or a \code{RasterStack} of modified
   operators.
 }
 \description{
-\code{modify} calls the operators of an algorithm to modify spatial patterns.
-}
-\details{
 Typical GIS operations modify gridded objects according to a given process.
 This can serve to identify certain objects or to prepare the quantitative
 assessment of the spatial object in question.
-
+}
+\details{
 Operators can be called several successive times with modified
   arguments. The following operators are recently defined...
 

@@ -1,8 +1,7 @@
-
 #' Obtain spatial datasets
 #'
-#' \code{obtain} calls the operators of an algorithm to extract information from
-#' various spatial (gridded) datasets both from local and online resources.
+#' Extract information from various spatial (gridded) datasets both from local
+#' and online resources.
 #' @param data [\code{list(.)}]\cr algorithm in which the operators to load
 #'   spatial datasets are specified. Each \code{operator} is a list iteself and
 #'   includes the operator name and its arguments as sub-elements; see Examples.
@@ -32,7 +31,7 @@
 #' @examples
 #' \dontrun{
 #' require(magrittr)
-#' 
+#'
 #' # specify the datasets from which you want to get data
 #' myDatasets <- list(list(operator = "oCLC", period = 2006),
 #'                    list(operator = "oGFC", period = c(2005:2007)),

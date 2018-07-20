@@ -1,8 +1,6 @@
 #' Generate (neutral) spatial patterns
 #'
 #' This function is still largely work in process and very experimental!
-#' \code{generate} calls the operators of an algorithm to generate spatial
-#' patterns.
 #'
 #' Spatial pattern models (SPMs), such as neutral landscape models (NLMs), are
 #' useful to study an ecological response to a set of simulated spatial

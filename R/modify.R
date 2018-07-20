@@ -1,7 +1,5 @@
 #' Modify gridded objects
 #'
-#' \code{modify} calls the operators of an algorithm to modify spatial patterns.
-#'
 #' Typical GIS operations modify gridded objects according to a given process.
 #' This can serve to identify certain objects or to prepare the quantitative
 #' assessment of the spatial object in question.
@@ -114,10 +112,6 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
   assertLogical(sequential)
   assertLogical(merge)
   assertLogical(keepInput)
-
-  if(missing(by)){
-    stop("please specify an algorithm by which to modify the spatial object.")
-  }
 
   # check which input we are dealing with and adapt if needs be
   if(isList){

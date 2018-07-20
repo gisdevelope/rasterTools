@@ -24,8 +24,8 @@ Depends on the method called, but it is always organised in lists.
   \code{SpatialPointsDataFrame}.
 }
 \description{
-\code{obtain} calls the operators of an algorithm to extract information from
-various spatial (gridded) datasets both from local and online resources.
+Extract information from various spatial (gridded) datasets both from local
+and online resources.
 }
 \details{
 \code{obtain} expects an individual directory for each dataset,
