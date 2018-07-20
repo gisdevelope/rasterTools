@@ -143,16 +143,17 @@
 <p>Essentially, landscape metrics are equations that relate different aspects or characteristics of the landscape in a certain way to eachother. If we break down landscape metrics in a systematic way, we find that there is a rather small set of relatively basic metrics at the core of all landscape metrics. In <code>rasterTools</code>, these are called <em>generic metrics</em> and they describe:</p>
 <ol style="list-style-type: decimal">
 <li>the area of the landscape,</li>
-<li>the area, number and perimeter of all classes and dissimilarities between classes and</li>
-<li>the area, number and perimeter of all patches, a distance map focussed on each patch, an adjacency matrix and the values of all cells per patch.</li>
+<li>the area, number and perimeter of classes and dissimilarities between classes,</li>
+<li>the area, number and perimeter of patches and distance maps focussed on each patch and</li>
+<li>the adjacency matrix and the values of cells.</li>
 </ol>
-<p>A second group of landscape metrics in <code>rasterTools</code> are the <em>derived metrics</em>, which are a combination of several generic and potentially other derived metrics. Landscape metrics are employed in the <code><a href="../reference/measure.html">measure()</a></code> function, where they are specified as named list. Each derived metric contains <em>terms</em> (generic metrics) and an <em>equation</em>, in which the relation between the different terms is given.</p>
+<p>A second group of landscape metrics, which are called <em>derived metrics</em> in <code>rasterTools</code>, are are a combination of several generic and potentially other derived metrics. Landscape metrics are computed in the <code><a href="../reference/measure.html">measure()</a></code> function, where they are specified as named list. Each derived metric contains <em>terms</em> (generic metrics) and an <em>equation</em>, in which the relation between the different terms is given.</p>
 <pre><code>list(myMetric = list(operator = "mMetric", scale = "patch"))  # generic metric
 list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
      term2 = list(operator = "mMetric2", scale = "window"),
      myMetric = "term1 / term2 * 100")
      </code></pre>
-<p>An algorithm to be used in <code><a href="../reference/measure.html">measure()</a></code> can also contain several derived metrics, which makes sense when several derived metrics depend on a very similar set of generi metrics:</p>
+<p>An algorithm to be used in <code><a href="../reference/measure.html">measure()</a></code> can also contain several derived metrics, which makes sense when several derived metrics depend on a similar set of generic metrics:</p>
 <pre><code>myMetrics &lt;- list(a_c = list(operator = "mArea", scale = "class"),
                   a_w = list(operator = "mArea", scale = "window"),
                   a_p = list(operator = "mArea", scale = "patch"),
@@ -162,7 +163,7 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <div id="the-dependence-structure-of-landscape-metrics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-dependence-structure-of-landscape-metrics" class="anchor"></a>The dependence structure of landscape metrics</h2>
-<p>The following graph shows the relationship of all metrics defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>. This is followed by a section outlining details about the generic metrics and a list of the derived metrics.</p>
+<p>The following graph shows the relationship of all metrics defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>. This is followed by a section outlining details about the generic metrics and a list containing details and the equations of derived metrics.</p>
 <p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%"></p>
 </div>
 </div>
@@ -386,7 +387,7 @@ list(p_c = list(operator = "mPerimeter", scale = "class"),
 <p>with <span class="math inline">\(G_{ii}\)</span> = <a href="#mAdjacency">like Adjacencies</a> based on double count, <span class="math inline">\(G_{ik}\)</span> = all (incl. like) <a href="#mAdjacency">Adjacencies</a> based on double count</p>
 <pre><code>list(g_ii = list(operator = "mAdjacency"),
      g_ik = list(operator = "mAdjacency", type = "pairedSum"),
-     mPLA = "(g_ii / g_ik) * 100")</code></pre>
+     mPLA = "(g_ii / g_ik * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PLA ≤ 100\)</span></p>
 <p>Interpretation:</p>
