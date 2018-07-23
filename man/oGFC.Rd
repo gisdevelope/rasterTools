@@ -89,6 +89,5 @@ Hansen, M.C., Potapov, P.V., Moore, R., Hancher, M., Turubanova,
 }
 \seealso{
 Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEMMA}}, \code{\link{oMODIS}},
-  \code{\link{oSENTINEL}}
+  \code{\link{oEMMA}}, \code{\link{oMODIS}}
 }
