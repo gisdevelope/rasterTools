@@ -16,7 +16,7 @@ year (DDD)(see Details).}
 the its name.}
 
 \item{index}{look-up-table of abbreviations with which tile names match
-(built with \code{\link{index}}).}
+(built with \code{index}).}
 
 \item{path}{exact path to the directory where the dataset files are located.}
 }
