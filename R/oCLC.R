@@ -94,7 +94,7 @@ oCLC <- function(mask = NULL, years = NULL){
 
   # manage the bibliography entry
   bib <- bibentry(bibtype = "Manual",
-                  title = "CORINE land cover. Technical guide",
+                  title = "{CORINE} land cover. {Technical} guide",
                   author = person("European commission"),
                   year = 1994,
                   ogranization = "OPOCE",
