@@ -54,7 +54,7 @@
 #' # patch.
 #' substituted <- rSubstitute(input, old = c(41:47), new = 40)
 #' visualise(raster::stack(input, substituted))
-#' (measure(input = substituted, with = myMetrics))#'
+#' (measure(input = substituted, with = myMetrics))
 #'
 #' # set of spatial operations that enables more complex metrics
 #' # derive 'Disjunct Cores Density', which is a rather complex metric
