@@ -82,5 +82,3 @@ Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. 
 I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the [FunBo Project](https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo), which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.
 
 Thanks are also due to Prof. Arne Pommerening who was a great source of inspiration for what `rasterTools` is now.
-
-Moreover, I owe thanks to people like Alex Zvoleff ([`gfcanalysis`](http://azvoleff.com/gfcanalysis)) and Jon Clayden ([`mmand`](https://github.com/jonclayden/mmand)), who inspired me with their uncompromising and creative code-work.
