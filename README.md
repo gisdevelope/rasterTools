@@ -31,7 +31,7 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png"  width="100%" />
 
-4) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
+4) The vignettes given an in detail [Introduction](https://ehrmanns.github.io/rasterTools/articles/introduction.html) and explain what the logic behind [landscape metrics](https://ehrmanns.github.io/rasterTools/articles/landscape_metrics.html) is.
 
 
 ## In a nutshell, `rasterTools` ...
