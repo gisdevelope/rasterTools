@@ -12,56 +12,65 @@ a named list of objects, which should be measured. Typically retrieved via
 \code{\link{obtain}}, and potentially processed with \code{\link{modify}},
 but can also be assembled "by hand".}
 
-\item{with}{[\code{character(.)}]\cr The landscape metric names.}
+\item{with}{[\code{character(.)}]\cr algorithm in which the operators
+(landscape metrics) to measure spatial patterns are specified; see
+Examples.}
 
-\item{simplify}{[\code{logical(1)}]\cr should only the scale of the first
-term and the result be returned (\code{TRUE}, default), or should the the
-result of all terms be returned \code{FALSE}?}
+\item{simplify}{[\code{logical(1)}]\cr should a "nice looking" output be
+created, where the resulting values are associated to the correct ids
+(\code{TRUE}, default), or should the raw values be returned
+(\code{FALSE})?}
 }
 \value{
 depending on the employed metric, but typically a \code{data.frame}.
 }
 \description{
 Landscape metrics typically quantify spatial patterns of 2D lattices, such as
-maps of landscapes, artificial (spatial) patterns or even photographs. See
-\code{vignette("landscape_metrics", package = "rasterTools")} for details on how
-landscape metrics are treated in \code{rasterTools}.
+maps of landscapes, artificial (spatial) patterns or even photographs.
 }
 \details{
 A landscape metric can be generic or derived. In the first case the
   metric is a list that includes the \code{operator} name and its arguments.
-  In the latter case the metric is a named list of generic metrics (socalled
-  terms) and an equation, which determines the term's relationship.
+  In the latter case these generic metrics are considered as \emph{terms},
+  while the derived metric is given as its mathematical equation, where the
+  terms are related to each other. You can find the equations for landscape
+  metrics in the vignette with \code{vignette("landscape_metrics", package =
+  "rasterTools")}
 
   The following operators for generic metrics are defined: \itemize{ \item
   \code{\link{mAdjacency}}: Determine the adjacency matrix of a raster. \item
   \code{\link{mArea}}: Calculate the area of objects in a raster. \item
   \code{\link{mNumber}}: Count the number of objects in a raster. \item
   \code{\link{mPerimeter}}: Calculate the length of the boundary of objects
-  in a raster. \item \code{\link{mValues}}: Summarise the values of objects
-  in a raster. }
+  in a raster. \item \code{mValues}: Summarise the values of objects in a
+  raster. }
 }
 \examples{
 input <- rtData$categorial
 
 # calculate generic metrics 'area per class' and 'area per window', 'obj' does
 # not need to be specified per operator in the algorithm, as 'measure' assigns it.
-mAc <- list(operator = "mArea", scale = "class")
-mAw <- list(operator = "mArea", scale = "window")
-(measure(input = input, with = c("mAc", "mAw")))
+myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
+                  a_w = list(operator = "mArea", scale = "window"))
+(measure(input = input, with = myMetrics))
 
-# calculate derived metrics 'largest patch index' and
-# 'class proportional area'
-visualise(input)
-(measure(input = input, with = c("mLPI", "mCPA"), simplify = FALSE))
+# calculate 'class proportional area' and 'larges patch index'
+# 1) define the terms (generic metrics) that are needed to compute the metrics
+# 2) define the equations that are used based on these terms
+myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
+                  a_c = list(operator = "mArea", scale = "class"),
+                  a_w = list(operator = "mArea", scale = "window"),
+                  mCPA = "a_c / a_w * 100",
+                  mLPI = "max(a_p) / a_w * 100")
+(measure(input = input, with = myMetrics, simplify = FALSE))
 
-# when a categorial raster is the basis to derive patches, there may be a
-# number of patches that may in fact not be distinct patches, so one has to
-# be carefull in interpreting these results. Instead, consider:
+# however, in the above example patches are derived per class, which might
+# not make sense ecologically, or be at best arbitrary. Instead we might
+# want to treat all forest, irrespective of deciduous or coniferous as one
+# patch.
 substituted <- rSubstitute(input, old = c(41:47), new = 40)
-visualise(substituted)
-(measure(input = substituted, with = c("mLPI", "mCPA")))
-
+visualise(raster::stack(input, substituted))
+(measure(input = substituted, with = myMetrics))
 
 # set of spatial operations that enables more complex metrics
 # derive 'Disjunct Cores Density', which is a rather complex metric

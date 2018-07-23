@@ -3,8 +3,7 @@
 #' Obtain occurence data of mammals in Europe of the first EMMA
 #' \href{https://www.european-mammals.org/}{dataset}
 #'
-#' @param mask [\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-#'   the extent is the area of interest
+#' @template mask
 #' @param species [\code{character(.)}]\cr name(s) of species to get occurrence
 #'   for. Can be abbreviated if a \code{\link{catalog}} is provided.
 #' @param version [\code{integerish(1)}]\cr The version of the \emph{Atlas of

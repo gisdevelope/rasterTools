@@ -32,9 +32,7 @@
 
 <meta property="og:title" content="Generate a heightmap — spmHeightmap" />
 
-<meta property="og:description" content="A heightmap is the two dimensional representation of a three dimensional
-surface, where the value of the cells represents the height in the three
-dimensional surface (a simulated digitial elevation model)." />
+<meta property="og:description" content="This is largely still work in progress." />
 
 <meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -149,9 +147,7 @@ dimensional surface (a simulated digitial elevation model)." />
 
     <div class="ref-description">
     
-    <p>A heightmap is the two dimensional representation of a three dimensional
-surface, where the value of the cells represents the height in the three
-dimensional surface (a simulated digitial elevation model).</p>
+    <p>This is largely still work in progress.</p>
     
     </div>
 
@@ -188,8 +184,9 @@ is generated, either <code>"diamondSquare"</code> (default), <code>"brownian"</c
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
-  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
+    <p>A heightmap is the two dimensional representation of a three dimensional
+surface, where the value of the cells represents the height in the three
+dimensional surface (a simulated digitial elevation model).</p>
 <dl class='dl-horizontal'>
 <dt>Diamond Square algorithm</dt><dd><p>The algorithm was
   originally proposed by Fournier et al. (1982), but has been enhanced since
@@ -201,8 +198,10 @@ is generated, either <code>"diamondSquare"</code> (default), <code>"brownian"</c
   between 0 and 1."</em> (Fournier et al, 1982). <br /><br /> The implementation here
   computes values that are at the boundary of the two dimensional array as
   average from its three only neighbours and not from the one dimensional
-  version of the algorithm (Frouier et al., 1982).</p></dd>
+  version of the algorithm (Fournier et al., 1982).</p></dd>
   <dt>Fractional brownian motion</dt><dd><p></p></dd> <dt>Gaussian random field</dt><dd><p></p></dd> </dl>
+    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
+  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

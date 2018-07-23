@@ -11,7 +11,7 @@ downloadGFC(file = NULL, localPath = NULL)
 }
 \arguments{
 \item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest}
+the extent is the area of interest.}
 
 \item{years}{[\code{integerish(.)}]\cr year(s) for which GFC data should be
 extracted; see Details.}
@@ -89,5 +89,6 @@ Hansen, M.C., Potapov, P.V., Moore, R., Hancher, M., Turubanova,
 }
 \seealso{
 Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEMMA}}, \code{\link{oMODIS}}
+  \code{\link{oEMMA}}, \code{\link{oMODIS}},
+  \code{\link{oSENTINEL}}
 }

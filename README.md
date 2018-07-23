@@ -4,7 +4,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/EhrmannS/rasterTools/master.svg)](https://codecov.io/github/EhrmannS/rasterTools?branch=master)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/rasterTools)](http://cran.rstudio.com/web/packages/rasterTools/index.html)
 
-# rasterTools <img src="docs/logo.png" align="right" height="200" />
+# rasterTools
 
 ***obtain and process earth observation data***
 

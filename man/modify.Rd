@@ -12,12 +12,11 @@ modify(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
 a named list of objects, which should be modified. Typically retrieved via
 \code{\link{obtain}}, but can also be assembled "by hand".}
 
-\item{by}{[\code{list(.)}]\cr list of \code{operators}, in which the raster
-modification functions are specified. Each \code{operator} is a list
-iteself and includes the operator name and its arguments as sub-elements;
-see Examples.}
+\item{by}{[\code{list(.)}]\cr algorithm in which the operators to modify
+\code{input} are specified. Each \code{operator} is a list iteself and
+includes the operator name and its arguments as sub-elements; see Examples.}
 
-\item{sequential}{[\code{lgical(1)}]\cr should the defined operators be
+\item{sequential}{[\code{logical(1)}]\cr should the defined operators be
 carried out based on the output of the previous operator (\code{TRUE}), or
 separately based on the original input (\code{FALSE}, default); see
 Details.}

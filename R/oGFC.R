@@ -4,8 +4,7 @@
 #' \href{https://earthenginepartners.appspot.com/science-2013-global-forest}{dataset}
 #' (\href{https://doi.org/10.1126/science.1244693}{paper})
 #'
-#' @param mask [\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-#'   the extent is the area of interest
+#' @template mask
 #' @param years [\code{integerish(.)}]\cr year(s) for which GFC data should be
 #'   extracted; see Details.
 #' @param keepRaw [\code{logical(1)}]\cr should the raw data be retained

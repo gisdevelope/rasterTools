@@ -147,23 +147,36 @@ visualise(raster::stack(myInput, myPatches))
 Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
 
 ```{r}
-patches_area <- list(operator = "mArea", scale = "patch")
+myInput <- rtData$categorial
+myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
+                  a_w = list(operator = "mArea", scale = "window"))
+measure(input = myInput, with = myMetrics)
 ```
 
-A derived metric is any combination of generic and derived metrics. Each metric to be combined in a derived metric needs to be assigned to a specific term name that would be referred to in a final element, called `equation`, for example as shown here with the *Class proportional area*:
+The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the window area (*a_c / a_w * 100*). 
 
 ```{r}
-mCPA <- list(a_w = list(operator = "mArea", scale = "window"),
-             a_c = list(operator = "mArea", scale = "class"),
-             equation = "a_c / a_w * 100")
+myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
+                 a_c = list(operator = "mArea", scale = "class"),
+                 mCPA = "a_c / a_w * 100")
 ```
 
-The generic metrics are already predefined (`mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()`) and so are some of the derived metrics (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). By combining the generic metrics and potentially also the derived metrics and by applying the respective mathematical formulae all other known landscape metrics can be reproduced. It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+Several derived metrics can be defined in one algorithm, given the required terms are also defined
+
+```{r}
+myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
+                  a_c = list(operator = "mArea", scale = "class"),
+                  a_w = list(operator = "mArea", scale = "window"),
+                  mCPA = "a_c / a_w * 100",
+                  mLPI = "max(a_p) / a_w * 100")
+```
+
+The generic metrics are already predefined (`mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()`). Equations for the derived metrics are defined in the  [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
 Finally, the measurement of patch area and class proportional area, in a raster where patches have been determined, would be carried out by:
 
 ```{r}
-measure(input = myPatches, with = c("patches_area", "mCPA"))
+measure(input = myInput, with = myMetrics)
 ```
 
 

@@ -169,14 +169,13 @@ a named list of objects, which should be modified. Typically retrieved via
     </tr>
     <tr>
       <th>by</th>
-      <td><p>[<code>list(.)</code>]<br /> list of <code>operators</code>, in which the raster
-modification functions are specified. Each <code>operator</code> is a list
-iteself and includes the operator name and its arguments as sub-elements;
-see Examples.</p></td>
+      <td><p>[<code>list(.)</code>]<br /> algorithm in which the operators to modify
+<code>input</code> are specified. Each <code>operator</code> is a list iteself and
+includes the operator name and its arguments as sub-elements; see Examples.</p></td>
     </tr>
     <tr>
       <th>sequential</th>
-      <td><p>[<code>lgical(1)</code>]<br /> should the defined operators be
+      <td><p>[<code>logical(1)</code>]<br /> should the defined operators be
 carried out based on the output of the previous operator (<code>TRUE</code>), or
 separately based on the original input (<code>FALSE</code>, default); see
 Details.</p></td>

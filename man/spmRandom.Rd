@@ -16,17 +16,19 @@ spmRandom(mat, pattern, seed)
 \item{seed}{specify a seed for the random creation of numbers.}
 }
 \description{
-Random values can be applied to different patterns within the landscape
-model.
+This is largely still work in progress.
 }
 \details{
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
+Random values can be applied to different patterns within the landscape
+model.
 
 \itemize{ \item For \code{base = "cell"}, each cell of the resulting
   LM is assigned a random value. \item For \code{base = "rectangle"}, \item
   For \code{base = "circle"}, \item For \code{base = "voronoi"}, Gaucherel
   (2008) \item For \code{base = "cluster"}, Saura & Martínez-Millán (2000) }
+
+If this function is used in conjunction with \code{\link{generate}},
+  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \references{
 Gaucherel, C. (2008) Neutral models for polygonal landscapes with

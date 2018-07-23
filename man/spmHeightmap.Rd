@@ -22,13 +22,12 @@ is generated, either \code{"diamondSquare"} (default), \code{"brownian"} or
 \item{seed}{bla}
 }
 \description{
+This is largely still work in progress.
+}
+\details{
 A heightmap is the two dimensional representation of a three dimensional
 surface, where the value of the cells represents the height in the three
 dimensional surface (a simulated digitial elevation model).
-}
-\details{
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
 
 \describe{ \item{Diamond Square algorithm}{The algorithm was
   originally proposed by Fournier et al. (1982), but has been enhanced since
@@ -40,8 +39,11 @@ If this function is used in conjunction with \code{\link{generate}},
   between 0 and 1."} (Fournier et al, 1982). \cr\cr The implementation here
   computes values that are at the boundary of the two dimensional array as
   average from its three only neighbours and not from the one dimensional
-  version of the algorithm (Frouier et al., 1982).}
+  version of the algorithm (Fournier et al., 1982).}
   \item{Fractional brownian motion}{} \item{Gaussian random field}{} }
+
+If this function is used in conjunction with \code{\link{generate}},
+  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \examples{
 mat <- matrix(nrow = 100, ncol = 100, data = 0)
