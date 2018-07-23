@@ -35,7 +35,7 @@ dimensional surface (a simulated digitial elevation model).
   \emph{"The algorithm recursively subdivides the interval and generates a
   scalar value at the midpoint which is proportional to the current standard
   deviation times the scale or "roughness" factor (h). [...] h is equivalent
-  to the Hurst exponent (see fractional brownian motion) and can take values
+  to the Hurst exponent [see fractional brownian motion] and can take values
   between 0 and 1."} (Fournier et al, 1982). \cr\cr The implementation here
   computes values that are at the boundary of the two dimensional array as
   average from its three only neighbours and not from the one dimensional

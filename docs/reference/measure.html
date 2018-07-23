@@ -34,8 +34,6 @@
 
 <meta property="og:description" content="Landscape metrics typically quantify spatial patterns of 2D lattices, such as
 maps of landscapes, artificial (spatial) patterns or even photographs." />
-
-<meta property="og:image" content="http://EhrmannS.github.io/rasterTools/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -317,7 +315,7 @@ created, where the resulting values are associated to the correct ids
 <span class='co'># want to treat all forest, irrespective of deciduous or coniferous as one</span>
 <span class='co'># patch.</span>
 <span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))<span class='co'>#'</span></div><div class='output co'>#&gt; [[1]]
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt;   class  mCPA
 #&gt; 1     1  1.10
 #&gt; 2    11  3.10
