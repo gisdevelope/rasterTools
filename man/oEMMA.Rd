@@ -96,5 +96,6 @@ Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
 }
 \seealso{
 Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oGFC}}, \code{\link{oMODIS}}
+  \code{\link{oGFC}}, \code{\link{oMODIS}},
+  \code{\link{oSENTINEL}}
 }
