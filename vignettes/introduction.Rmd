@@ -28,7 +28,7 @@ library(rasterTools)
 
 You might find `rasterTools` useful when your work depends in one way or the other on gridded earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
 
-`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `generate()`, `obtain()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
 
 Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in `rasterTools` is given as list of lists.
 
@@ -171,9 +171,9 @@ myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   mLPI = "max(a_p) / a_w * 100")
 ```
 
-The generic metrics are already predefined (`mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()`). Equations for the derived metrics are defined in the  [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are predefined. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
-Finally, the measurement of patch area and class proportional area, in a raster where patches have been determined, would be carried out by:
+Finally, the measurement of the *class proportional area* and the *largest patch index*, in a raster where patches have been determined, would be carried out by:
 
 ```{r}
 measure(input = myInput, with = myMetrics)

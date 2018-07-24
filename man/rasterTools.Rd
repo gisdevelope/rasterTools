@@ -7,20 +7,22 @@
 \title{rasterTools: obtain and process earth observation data}
 \description{
 The \code{rasterTools} package is based on the four core-functions
-\code{\link{generate}}, \code{\link{obtain}}, \code{\link{modify}} and
+\code{\link{obtain}}, \code{\link{generate}}, \code{\link{modify}} and
 \code{\link{measure}}.
 }
 \details{
-The workflow of each of these functions comprises specific operators,
-functions that carry out a certain operation. Operators are combined to
-algorithms, which are then employed in the core functions to carry out a
-spatial computation (see Examples below).
+In each of the core functions you provide an \emph{algorithm} based on which
+the specific task at hand shall be carried out. An algorithm is a list of
+scope specific functions and their arguments (\emph{operators}) that carry
+out a specific (spatial) computation (see Examples below). These algorithms
+are an easy to share and transparent "recipe" of a certain (sequence of)
+spatial operation.
 
 You might find \code{rasterTools} useful when you want to
-\code{\link{generate}} spatial models, including neutral landscape models.
-Moreover, you can \code{\link{obtain}} spatial (gridded) datasets, such as
-MODIS, Landsat, Sentinel and other products and everything else that is
-derived therefrom. Once you have your spatial data in place, you can
+\code{\link{obtain}} spatial (gridded) datasets from the Landsat or Sentinel
+Missions, such as MODIS, GFC and many other ready to use datasets. Moreover,
+you can \code{\link{generate}} spatial models, including neutral landscape
+models. Once you have your spatial data in place, you can
 \code{\link{modify}} them, which may be required to identify objects about
 which you want to inquire. You would then \code{\link{measure}} the
 potentially modified data with the help of a modular system that allows you

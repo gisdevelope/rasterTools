@@ -132,8 +132,24 @@
 <p>Read a <strong>brief introduction</strong> to understand the philosophy of <code>rasterTools</code>:</p>
 <pre><code><a href="reference/rasterTools.html">?`rasterTools-package`</a></code></pre>
 </li>
+<li><p>The vignettes given an in detail <a href="articles/introduction.html">Introduction</a> and explain what the logic behind <a href="articles/landscape_metrics.html">landscape metrics</a> is.</p></li>
+</ol>
+<hr>
+</div>
+<div id="example-workflow" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-workflow" class="anchor"></a>Example workflow</h2>
+<ol style="list-style-type: decimal">
 <li>
-<p>Determine, for instance, forest patches in a raster with continuous integer values:</p>
+<p>(Down)load a range of gridded datasets:</p>
+<pre><code>myDatasets &lt;- list(list(operator = "oGFC", years = 2006)),
+                   list(operator = "oMODIS", product = "mod17a3",
+                        period = 2006, layer = 2),
+                   ...)
+myData &lt;- obtain(data = myDatasets, mask = aMask)</code></pre>
+</li>
+<li>
+<p>Determine forest patches in a raster with continuous integer values:</p>
 <pre><code>get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
                     list(operator = "rPatches"))
 myInput &lt;- rtData$continuous
@@ -142,21 +158,16 @@ visualise(raster::stack(myInput, myPatches))</code></pre>
 </li>
 </ol>
 <p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png" width="100%"></p>
-<ol start="4" style="list-style-type: decimal">
-<li>The vignettes given an in detail <a href="articles/introduction.html">Introduction</a> and explain what the logic behind <a href="articles/landscape_metrics.html">landscape metrics</a> is.</li>
+<ol start="3" style="list-style-type: decimal">
+<li>
+<p>Compute the <em>Class proportional area</em> in a raster with categorial values:</p>
+<pre><code>myInput &lt;- rtData$categorial
+myMetric &lt;- list(a_w = list(operator = "mArea", scale = "window"),
+                 a_c = list(operator = "mArea", scale = "class"),
+                 mCPA = "a_c / a_w * 100")
+measure(input = myInput, with = myMetrics)</code></pre>
+</li>
 </ol>
-<hr>
-</div>
-<div id="in-a-nutshell-rastertools" class="section level2">
-<h2 class="hasAnchor">
-<a href="#in-a-nutshell-rastertools" class="anchor"></a>In a nutshell, <code>rasterTools</code> …</h2>
-<ul>
-<li><p>is used to generate spatial patterns (such as neutral landscape models) or obtain information from gridded spatial datasets. It provides options for raster modification and quantification via landscape metrics.</p></li>
-<li><p>is aimed at supporting the majority of the important and widely used spatial datasets.</p></li>
-<li><p>makes operations based on <a href="https://en.wikipedia.org/wiki/Mathematical_morphology">mathematical morphology</a> available for (automated) detection of landscape features.</p></li>
-<li><p>provides a simplified and standardized workflow for processing spatial data to improve your publications with respect to reproducibility, comparability and transparency.</p></li>
-<li><p>allows prototyping new methods and landscape metrics to explore patterns in landscapes (and other 2D lattices).</p></li>
-</ul>
 <hr>
 </div>
 <div id="contribute" class="section level2">

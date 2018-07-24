@@ -33,7 +33,7 @@
 <meta property="og:title" content="rasterTools: obtain and process earth observation data — rasterTools" />
 
 <meta property="og:description" content="The rasterTools package is based on the four core-functions
-generate, obtain, modify and
+obtain, generate, modify and
 measure." />
 <meta name="twitter:card" content="summary" />
 
@@ -148,7 +148,7 @@ measure." />
     <div class="ref-description">
     
     <p>The <code>rasterTools</code> package is based on the four core-functions
-<code><a href='generate.html'>generate</a></code>, <code><a href='obtain.html'>obtain</a></code>, <code><a href='modify.html'>modify</a></code> and
+<code><a href='obtain.html'>obtain</a></code>, <code><a href='generate.html'>generate</a></code>, <code><a href='modify.html'>modify</a></code> and
 <code><a href='measure.html'>measure</a></code>.</p>
     
     </div>
@@ -156,15 +156,17 @@ measure." />
         
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The workflow of each of these functions comprises specific operators,
-functions that carry out a certain operation. Operators are combined to
-algorithms, which are then employed in the core functions to carry out a
-spatial computation (see Examples below).</p>
+    <p>In each of the core functions you provide an <em>algorithm</em> based on which
+the specific task at hand shall be carried out. An algorithm is a list of
+scope specific functions and their arguments (<em>operators</em>) that carry
+out a specific (spatial) computation (see Examples below). These algorithms
+are an easy to share and transparent "recipe" of a certain (sequence of)
+spatial operation.</p>
 <p>You might find <code>rasterTools</code> useful when you want to
-<code><a href='generate.html'>generate</a></code> spatial models, including neutral landscape models.
-Moreover, you can <code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets, such as
-MODIS, Landsat, Sentinel and other products and everything else that is
-derived therefrom. Once you have your spatial data in place, you can
+<code><a href='obtain.html'>obtain</a></code> spatial (gridded) datasets from the Landsat or Sentinel
+Missions, such as MODIS, GFC and many other ready to use datasets. Moreover,
+you can <code><a href='generate.html'>generate</a></code> spatial models, including neutral landscape
+models. Once you have your spatial data in place, you can
 <code><a href='modify.html'>modify</a></code> them, which may be required to identify objects about
 which you want to inquire. You would then <code><a href='measure.html'>measure</a></code> the
 potentially modified data with the help of a modular system that allows you

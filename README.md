@@ -21,7 +21,19 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
         ?`rasterTools-package`
         
-3) Determine, for instance, forest patches in a raster with continuous integer values:
+3) The vignettes given an in detail [Introduction](https://ehrmanns.github.io/rasterTools/articles/introduction.html) and explain what the logic behind [landscape metrics](https://ehrmanns.github.io/rasterTools/articles/landscape_metrics.html) is.
+
+## Example workflow
+
+1) (Down)load a range of gridded datasets:
+
+        myDatasets <- list(list(operator = "oGFC", years = 2006)),
+                           list(operator = "oMODIS", product = "mod17a3",
+                                period = 2006, layer = 2),
+                           ...)
+        myData <- obtain(data = myDatasets, mask = aMask)
+                           
+2) Determine forest patches in a raster with continuous integer values:
 
         get_patches <- list(list(operator = "rBinarise", thresh = 30),
                             list(operator = "rPatches"))
@@ -31,24 +43,17 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png"  width="100%" />
 
-4) The vignettes given an in detail [Introduction](https://ehrmanns.github.io/rasterTools/articles/introduction.html) and explain what the logic behind [landscape metrics](https://ehrmanns.github.io/rasterTools/articles/landscape_metrics.html) is.
+3) Compute the *Class proportional area* in a raster with categorial values:
 
-
-## In a nutshell, `rasterTools` ...
-
-- is used to generate spatial patterns (such as neutral landscape models) or obtain information from gridded spatial datasets. It provides options for raster modification and quantification via landscape metrics.
-
-- is aimed at supporting the majority of the important and widely used spatial datasets.
-
-- makes operations based on [mathematical morphology](https://en.wikipedia.org/wiki/Mathematical_morphology) available for (automated) detection of landscape features.
-
-- provides a simplified and standardized workflow for processing spatial data to improve your publications with respect to reproducibility, comparability and transparency.
-
-- allows prototyping new methods and landscape metrics to explore patterns in landscapes (and other 2D lattices).
+        myInput <- rtData$categorial
+        myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
+                         a_c = list(operator = "mArea", scale = "class"),
+                         mCPA = "a_c / a_w * 100")
+        measure(input = myInput, with = myMetrics)
 
 
 ## Contribute
-In case you have a suggestion for a feature or function you'd require, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
+In case you have a suggestion for a feature or function you think is missing, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
 
 ## Planned for future versions
 - Support of the Sentinel (high prio), Landsat and Lidar datasets.
