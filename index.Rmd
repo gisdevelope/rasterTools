@@ -30,8 +30,7 @@ Getting Started
 
 1) Install the development version from github via:
 
-        devtools::install_github('EhrmannS/rasterTools')
-        library(rasterTools)
+        devtools::install_github("EhrmannS/rasterTools")
 
 2) Read a **brief introduction** to understand the philosophy of `rasterTools`:
 
@@ -39,7 +38,6 @@ Getting Started
 
 3) The vignettes given an in detail [Introduction](articles/introduction.html) and explain what the logic behind [landscape metrics](articles/landscape_metrics.html) is.
 
-       
 ___________________________________________
 
 
