@@ -16,6 +16,7 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 1) Install the development version from github via:
 
         devtools::install_github('EhrmannS/rasterTools')
+        library(rasterTools)
         
 2) Read a **brief introduction** to understand the philosophy of `rasterTools`:
 
