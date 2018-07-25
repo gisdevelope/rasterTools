@@ -7,18 +7,21 @@
 
   if(!file.exists(pathFile)){
     rtPaths <- list(root = NA,
-                      project = NA,
-                      clc = list(local = NA,
-                                 online = "missing"),
-                      emma = list(local = NA,
-                                  online = "https://www.european-mammals.org/php/rendermap.php?latname=",
-                                  gridLinks = "http://www.helsinki.fi/~rlampine/gmap/gridfilelinks.kml"),
-                      gfc = list(local = NA,
-                                 online = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
-                      modis = list(local = NA,
-                                   online = "https://e4ftl01.cr.usgs.gov/MOLT/"),
-                      sentinel = list(local = NA,
-                                      online = "missing")
+                    project = NA,
+                    clc = list(local = NA,
+                               online = "missing"),
+                    emma = list(local = NA,
+                                online = "https://www.european-mammals.org/php/rendermap.php?latname=",
+                                gridLinks = "http://www.helsinki.fi/~rlampine/gmap/gridfilelinks.kml"),
+                    gfc = list(local = NA,
+                               online = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
+                    modis = list(local = NA,
+                                 online = "https://e4ftl01.cr.usgs.gov/MOLT/"),
+                    sentinel = list(local = NA,
+                                    online = "missing"),
+                    worldclim = list(local = NA,
+                                     online = "http://biogeo.ucdavis.edu/data/")
+                    
     )
   } else{
     load(pathFile)
