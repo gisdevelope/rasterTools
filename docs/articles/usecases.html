@@ -113,6 +113,13 @@
     
     
 <p>In this document you can find a collection of operations that can be carried out with the help of functions provided in <code>rasterTools</code>. It is assumed that you have read the <a href="/rastertools/articles/introduction.html">Introduction</a>.</p>
+<p>The operations are grouped into the following groups. However, before jumping there we should prepare the working environment.</p>
+<ol style="list-style-type: decimal">
+<li><a href="/rastertools/articles/basics.html">Basic operations</a></li>
+<li><a href="/rastertools/articles/classification.html">Classify values</a></li>
+<li><a href="/rastertools/articles/morphological.html">Morphological operations</a></li>
+<li><a href="/rastertools/articles/features.html">Identify features/objects</a></li>
+</ol>
 <p>Lets start with reading in the required packages:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rasterTools)
 <span class="co">#&gt; Hi, I am rasterTools 0.6.0 and I help you with your spatial data!</span>
@@ -140,15 +147,7 @@ binarised &lt;-<span class="st"> </span><span class="kw"><a href="../reference/r
 
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(catPatchesObj, binarised))</code></pre></div>
 <p><img src="usecases_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
-<p></p>
-<p>Then we can continue to process these objects, or other objects that contain a similar set of values.</p>
-<ol style="list-style-type: decimal">
-<li><a href="/rastertools/articles/basics.html">Basic operations</a></li>
-<li><a href="/rastertools/articles/classification.html">Classify values</a></li>
-<li><a href="/rastertools/articles/morphological.html">Morphological operations</a></li>
-<li><a href="/rastertools/articles/features.html">Identify features/objects</a></li>
-</ol>
-</div>
+  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
       </div>

@@ -44,12 +44,12 @@ If you did not install the HistMapR package yet, do that now:
 
 ```{r}
 # devtools::install_github("AGAuffret/HistMapR")
-library(HistMapR)
-data(HistMapRex)
+# library(HistMapR)
+# data(HistMapRex)
 ```
 
 We use the example dataset that comes with the package (`in.ras`).
 
 ```{r, out.width='100%'}
-visualise(gridded = in.ras, image = TRUE)
+# visualise(gridded = in.ras, image = TRUE)
 ```
