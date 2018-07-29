@@ -53,7 +53,7 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 
 ## Contribute
-In case you have a suggestion for a feature or function you think is missing, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
+In case you have a suggestion for a feature or function you think is missing, please file an [issue](https://github.com/EhrmannS/rasterTools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rasterTools/pulls) on github (I will include you as author of the respective function).
 
 ## Planned for future versions
 - Support of the Sentinel (high prio), Landsat and Lidar datasets.

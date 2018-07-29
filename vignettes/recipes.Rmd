@@ -1,5 +1,5 @@
 ---
-title: "Some spatial operations"
+title: "Usecases"
 author: "Steffen Ehrmann"
 date: "`r Sys.Date()`"
 output: 
@@ -10,7 +10,7 @@ output:
     theme: spacelab
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{Complex spatial operations}
+  %\VignetteIndexEntry{Usecases}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -22,7 +22,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this document you can find a collection of spatial operations in the form of algorithms or more complex combinations of the functions provided in `rasterTools`. It is assumed that you have read the [introduction](/rastertools/articles/terminology.html) and understand what *operator* and *algorithm* means in the scope of `rasterTools`.
+In this document you can find a collection of a range of spatial operations that can be carried out specifically with `rasterTools`. The spatial operations are eventually presented as algorithms that can be used on the specified spatial data type.  It is assumed that you have read the [Introduction](/rasterTools/articles/introduction.html) and understand what *operator* and *algorithm* means in the scope of `rasterTools`.
+
+The operations are grouped as follows:
+
+1) [Morphological operations](#morph)
+2) [Identify features/objects](#features)
+3) [Classify values](#classify)
 
 Lets start with reading in the required packages:
 
@@ -55,7 +61,7 @@ visualise(raster::stack(catPatchesObj, binarised))
 
 </br>
 
-# Morphological operations
+# Morphological operations {#morph}
 
 ## Morphologically open foreground
 The morphological operation *open* is an erosion, followed by a dilation. It results in a raster where cells at the boundary of patches are removed if they are exposed. *Exposed* means here, that they are protruding to a degree that an erosion removes them so that a dilation isn't able to reconstruct them. The result depends on the chosen kernel, which must be the same in both operations.
@@ -83,7 +89,7 @@ visualise(closed, trace = TRUE)
 
 </br>
 
-# Identify spatial features
+# Identify spatial features {#features}
 
 ## Identify the Medial axis
 The medial axis transform (MAT) results in a non-binary skeleton where each cell has the value of its distance to the original boundary. This can be calculated by determining the skeleton and the interior distance map of each patch. These two objects would be intersected by using the skeleton as mask on the distance map.
@@ -191,7 +197,7 @@ visualise(background)
 ## Identify openings that are connected to the background
 E.g. Clearcuts
 
-## Identify the distance map of centroids per patch
+## Compute the distance map of centroids per patch
 We may be interested in distance maps to calculate a range of landscape metrics. For example, the *Radius of Gyration* derives from the average distance of all cells of a patch to the patches' centroid. To calculate it, we would have to find the patch centroid and the patch specific distance of each cell of a patch to its centroid.
 
 ```{r, fig.width=7, out.width='100%'}
@@ -259,9 +265,7 @@ also include their classification
 ## Identify parallel structures
 
 
-# Other computations
-
-## Determine sharpness of a boundary
+# Classify values {#classify}
 
 ## Classify a raster based on colour values (*cf* HistMapR)
 The [HistMapR](https://doi.org/10.1111/2041-210X.12788) package can be used to digitise historic land-use maps in R, according to the authors. However, what their package actually does, in contrast to what is stated in the title, is *(re)classifying* values that are expressed as colour on a screen into numeric values that represent land use classes. The *digitising* part comes already long before, when the orthophotos are transformed from paper to digital form, but this is unfortunately not touched on in that package.
@@ -274,12 +278,16 @@ If you did not install the HistMapR package yet, do that now:
 
 ```{r}
 # devtools::install_github("AGAuffret/HistMapR")
-library(HistMapR)
-data(HistMapRex)
+# library(HistMapR)
+# data(HistMapRex)
 ```
 
 We use the example dataset that comes with the package (`in.ras`).
 
-```{r, out.width='100%'}
-visualise(gridded = in.ras, image = TRUE)
+```{r, fig.width=7, out.width='100%'}
+# visualise(gridded = in.ras, image = TRUE)
 ```
+
+# Sort in
+## Determine sharpness of a boundary
+
