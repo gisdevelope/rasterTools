@@ -437,7 +437,7 @@ rDilate <- function(obj, kernel = NULL){
 #' @return A \code{RasterLayer} of the same dimension as \code{obj}, where the
 #'   value of the background cells has been replaced with the distance to the
 #'   nearest foreground cell.
-#' @details In contrast to \code{raster::\link[raster]{distance}}, the distance
+#' @details In contrast to \code{\link[raster]{distance}}, the distance
 #'   values here do not warp around the boundaries of the map.
 #'
 #' @references Meijster, A., Roerdink, J.B.T.M., Hesselink, W.H., 2000. A

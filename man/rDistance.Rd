@@ -23,7 +23,7 @@ The distance map of a binarised raster contains the distance of each
 background cell to the nearest foreground cell.
 }
 \details{
-In contrast to \code{raster::\link[raster]{distance}}, the distance
+In contrast to \code{\link[raster]{distance}}, the distance
   values here do not warp around the boundaries of the map.
 }
 \examples{

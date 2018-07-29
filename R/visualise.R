@@ -6,10 +6,18 @@
 #' @param trace [\code{logical(1)}]\cr Print the gridded object's history (i.e.
 #'   the process according to which it has been created) (\code{TRUE}), or
 #'   simply plot the object (\code{FALSE}, default).
+#' @param image [\code{logical(1)}]\cr Does \code{gridded} have the channels
+#'   \code{red}, \code{green} and \code{blue}, i.e. is it an "image"
+#'   (\code{TRUE}) or is this not the case (\code{FALSE}, default)?
 #' @param new [\code{logical(1)}]\cr force a new plot (\code{TRUE}, default).
 #' @param ... [various]\cr Graphical parameters to \code{geom}.
 #' @details To create a plot with your own style, design it with
 #'   \code{\link{setTheme}} and use it in \code{theme}.
+#'
+#'   In case you want to plot an image (simiar to \code{\link[raster]{plotRGB}}),
+#'   you have to provide a \code{RasterStack} or \code{RasterBrick} with the
+#'   three layers \code{red}, \code{green} and \code{blue} and set \code{image =
+#'   TRUE}.
 #' @return Returns invisibly an object of class \code{recordedplot}, see
 #'   \code{\link{recordPlot}} for details (and warnings).
 #' @examples
@@ -41,7 +49,7 @@
 #' visualise(geom = aGeom, new = TRUE)
 #'
 #' @importFrom checkmate testClass testList assertNames assertList assertLogical
-#'   testCharacter
+#'   testCharacter testIntegerish
 #' @importFrom grid grid.newpage pushViewport viewport grid.rect grid.raster
 #'   unit grid.draw grid.grill upViewport grid.text gpar convertX downViewport
 #' @importFrom grDevices colorRampPalette as.raster recordPlot
@@ -49,8 +57,11 @@
 #' @export
 
 visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
-                      new = TRUE, ...){
+                      image = FALSE, new = TRUE, ...){
 
+  # bla <- matrix(0:109, 11, 11)
+  # gridded = in.ras; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  
   # check arguments
   isRaster <- testClass(gridded, "Raster")
   isRasterStackBrick <- testClass(gridded, "RasterStackBrick")
@@ -67,6 +78,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
     assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
   }
   assertLogical(trace)
+  assertLogical(image)
   assertLogical(new)
 
   # check whether a plot is already open and whether it is valid
@@ -87,12 +99,12 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       plotLayers <- nlayers(gridded)
       griddedNames <- names(gridded)
       vals <- lapply(1:plotLayers, function(x){
-        sort(unique(as.vector(gridded[[x]]), na.rm = TRUE))
+        as.vector(gridded[[x]])
       })
-      mat <- lapply(1:plotLayers, function(x){
-        temp <- as.matrix(gridded[[x]])
-        return(temp)
+      uniqueVals <- lapply(1:plotLayers, function(x){
+        sort(unique(vals[[x]], na.rm = TRUE))
       })
+      dims <- dim(gridded[[1]])
       ext <- extent(gridded[[1]])
       panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
       hasColourTable <- lapply(1:plotLayers, function(x){
@@ -103,13 +115,21 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
       plotLayers <- 1
       griddedNames <- "layer"
-      vals <- list(sort(unique(as.vector(gridded), na.rm = TRUE)))
-      mat <- gridded
-      panelExt <- c(xMin = 0, xMax = ncol(mat), yMin = 0, yMax = nrow(mat))
-      mat <- list(mat)
+      vals <- list(as.vector(gridded))
+      uniqueVals <- list(sort(unique(vals[[1]], na.rm = TRUE)))
+      dims <- dim(gridded)
+      panelExt <- c(xMin = 0, xMax = ncol(gridded), yMin = 0, yMax = nrow(gridded))
       hasColourTable <- FALSE
       
     }
+    
+    # checks in case gridded is supposed to be an "image"
+    if(image){
+      assertNames(griddedNames, permutation.of = c("red", "green", "blue"))
+      assertIntegerish(plotLayers, lower = 3, upper = 3)
+      plotLayers <- 1
+    }
+    
   }
 
   if(isOpenPlot){
@@ -146,7 +166,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
     isGeomInPlot <-FALSE
   }
 
-  if(isGeomInPlot & !isRasterInPlot){
+  if(isGeomInPlot & !isRasterInPlot | image){
     theme$plot$legend <- FALSE
   }
 
@@ -155,7 +175,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
     if(isOpenPlot){
       # if a plot is already open, we want to get it's extent so that the
-      # relative coordinates of geom can be calculated correctly.s
+      # relative coordinates of geom can be calculated correctly.
         extentGrobMeta <- grid.get(gPath("extentGrob"))
         panelExt <- c(xMin = 0, xMax = as.numeric(extentGrobMeta$width),
                       yMin = 0, yMax = as.numeric(extentGrobMeta$height))
@@ -220,40 +240,74 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
   # manage the colours
   if(existsGridded){
-
-    theColours <- lapply(seq_along(vals), function(x){
-      tempVals <- vals[[x]]
-
-      if(hasColourTable[[x]]){
-        if(any(tempVals == 0)){
-          gridded[[x]]@legend@colortable[tempVals+1]
+    
+    if(image){
+      red <- as.integer(vals[[which(panelNames == "red")]])
+      red[is.na(red)] <- 255L
+      green <- as.integer(vals[[which(panelNames == "green")]])
+      green[is.na(green)] <- 255L
+      blue <- as.integer(vals[[which(panelNames == "blue")]])
+      blue[is.na(blue)] <- 255L
+      
+      theColours <- list(rgb(red = red, green = green, blue = blue, maxColorValue = 255))
+      panelNames <- "image"
+    } else{
+      uniqueColours <- lapply(seq_along(uniqueVals), function(x){
+        tempVals <- uniqueVals[[x]]
+        nrVals <- length(tempVals)
+        if(nrVals < 256){
+          nrColours <- nrVals
         } else{
-          gridded[[x]]@legend@colortable[tempVals]
+          nrColours <- 256
         }
-      } else{
-        if(is.integer(tempVals)){
-          valsTemp <- c(tempVals[1]-1, tempVals)
-        } else{
-          valsTemp <- c(tempVals[1]-1, seq(tempVals[1], tempVals[[length(tempVals)]], length.out = length(tempVals)))
-        }
-        valCuts <- cut(tempVals, breaks = valsTemp, include.lowest = T)
         colorRampPalette(colors = theme$scale$colours,
                          bias = theme$scale$bias,
                          space = theme$scale$space,
-                         interpolate = theme$scale$interpolate)(length(valCuts))[valCuts]
+                         interpolate = theme$scale$interpolate)(nrColours)
+      })
+      
+      if(theme$plot$commonScale){
+        uniqueVals <- lapply(seq_along(uniqueVals), function(x){
+          sort(unique(unlist(uniqueVals), na.rm = TRUE))
+          
+        })
       }
 
-    })
+      theColours <- lapply(seq_along(uniqueVals), function(x){
+        tempVals <- uniqueVals[[x]]
+        nrVals <- length(tempVals)
+        if(nrVals < 256){
+          nrColours <- nrVals
+        } else{
+          nrColours <- 256
+        }
+        
+        if(hasColourTable[[x]]){
+          if(any(tempVals == 0)){
+            gridded[[x]]@legend@colortable[tempVals+1]
+          } else{
+            gridded[[x]]@legend@colortable[tempVals]
+          }
+        } else{
+          breaksTemp <- c(tempVals[1]-1, seq(tempVals[1], tempVals[[length(tempVals)]], length.out = nrColours))
+          valCuts <- cut(vals[[x]], breaks = breaksTemp, include.lowest = TRUE)
+          uniqueColours[[x]][valCuts]
+        }
 
-    theValues <- lapply(seq_along(vals), function(x){
-      if(length(vals[[x]]) > theme$bins$legend-1){
-        quantile(vals[[x]], probs = seq(0, 1, length.out = theme$bins$legend), type = 1, names = FALSE)
+      })
+    }
+
+    
+    # colours for the legend
+    tickValues <- lapply(seq_along(uniqueVals), function(x){
+      if(length(uniqueVals[[x]]) > theme$bins$legend-1){
+        quantile(uniqueVals[[x]], probs = seq(0, 1, length.out = theme$bins$legend), type = 1, names = FALSE)
       } else{
-        vals[[x]]
+        uniqueVals[[x]]
       }
     })
-    tickLabels <- lapply(seq_along(vals), function(x){
-      round(theValues[[x]], 1)
+    tickLabels <- lapply(seq_along(uniqueVals), function(x){
+      round(tickValues[[x]], 1)
     })
 
   } else if(isOpenPlot){
@@ -352,23 +406,23 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       # the legend viewport
       if(theme$plot$legend){
 
-        if(length(theValues[[i]]) < 2){
+        if(length(tickValues[[i]]) < 2){
           pushViewport(viewport(height = unit(1, "npc")*theme$legend$sizeRatio,
-                                yscale = c(1, length(vals[[i]])+0.1),
+                                yscale = c(1, length(uniqueVals[[i]])+0.1),
                                 name = "legend"))
         } else{
           pushViewport(viewport(height = unit(1, "npc")*theme$legend$sizeRatio,
-                                yscale = c(1, length(vals[[i]])+0.1),
+                                yscale = c(1, length(uniqueVals[[i]])+0.1),
                                 name = "legend"))
         }
 
         # order the legend
         if(theme$legend$ascending){
-          theLegend <- matrix(data = rev(theColours[[i]]), ncol = 1, nrow = length(vals[[i]]))
-          valPos <- unit(which(vals[[i]] %in% theValues[[i]]), "native")
+          theLegend <- matrix(data = rev(uniqueColours[[i]]), ncol = 1, nrow = length(uniqueColours[[i]]))
+          valPos <- unit(which(uniqueVals[[i]] %in% tickValues[[i]]), "native")
         } else{
-          theLegend <- matrix(data = theColours[[i]], ncol = 1, nrow = length(vals[[i]]))
-          valPos <- rev(unit(which(vals[[i]] %in% theValues[[i]]), "native"))
+          theLegend <- matrix(data = uniqueColours[[i]], ncol = 1, nrow = length(uniqueColours[[i]]))
+          valPos <- rev(unit(which(uniqueVals[[i]] %in% tickValues[[i]]), "native"))
         }
 
         grid.raster(x = unit(1, "npc") + unit(10, "points"),
@@ -472,17 +526,13 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
       # the raster viewport
       if(existsGridded){
-
-        toDraw <- subNumChrC(mat[[i]],
-                             replace = vals[[i]],
-                             with = theColours[[i]])
-
-        pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
                               yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
                               name = "raster"))
-        grid.raster(width = unit(1, "npc") - unit(2*margin$x, "native"),
-                    height = unit(1, "npc") - unit(2*margin$y, "native"),
-                    image = toDraw,
+        # grid.rect(gp = gpar(col = "green", fill = NA), name = "rasterGrob")
+        grid.raster(image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
                     name = "theRaster",
                     interpolate = FALSE)
         upViewport() # exit raster
@@ -504,7 +554,6 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
       # downViewport("vpLomm")
       downViewport(plotName)
       downViewport("plot")
-      # grid.rect(gp = gpar(col = "green", fill = NA))
 
       if(!isGeomInPlot){
         # this does not seem to shrink the viewport so that geoms are shown correctly.
@@ -571,8 +620,8 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #' @param from [\code{theme}]\cr the theme that serves as basis for
 #'   modifications, by default \code{theme_rt}.
 #' @param plot [\code{list(logical)}]\cr which elements (not) to plot:
-#'   \code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid} and
-#'   \code{minorGrid}.
+#'   \code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid},
+#'   \code{minorGrid} and \code{commonScale}.
 #' @param labels [\code{list(character)}]\cr the labels of: \code{xAxis} and
 #'   \code{yAxis}.
 #' @param bins [\code{list(integerish)}]\cr how many sections for: \code{yAxis},
@@ -629,7 +678,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
   out <- from
   assertList(plot, any.missing = FALSE, types = c("logical"), null.ok = TRUE)
   if(!is.null(plot)){
-    assertNames(names(plot), subset.of = c("title", "legend", "yAxis", "xAxis", "grid", "minorGrid"))
+    assertNames(names(plot), subset.of = c("title", "legend", "yAxis", "xAxis", "grid", "minorGrid", "commonScale"))
     prvPlot <- from[which(names(from) == "plot")]$plot
     matched <- names(prvPlot) %in% names(plot)
     out$plot[matched] <- plot

@@ -14,8 +14,8 @@ setTheme(from = NULL, plot = NULL, labels = NULL, bins = NULL,
 modifications, by default \code{theme_rt}.}
 
 \item{plot}{[\code{list(logical)}]\cr which elements (not) to plot:
-\code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid} and
-\code{minorGrid}.}
+\code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid},
+\code{minorGrid} and \code{commonScale}.}
 
 \item{labels}{[\code{list(character)}]\cr the labels of: \code{xAxis} and
 \code{yAxis}.}

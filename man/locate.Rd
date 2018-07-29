@@ -5,7 +5,7 @@
 \title{Locate (and identify) clicks}
 \usage{
 locate(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
-  snap = FALSE, silent = FALSE, show = FALSE, ...)
+  snap = FALSE, raw = FALSE, silent = FALSE, show = FALSE, ...)
 }
 \arguments{
 \item{samples}{[\code{integerish(1)}]\cr the number of clicks.}
@@ -23,6 +23,10 @@ with \code{\link{grep}}.}
 \item{snap}{[\code{logical(1)}]\cr should the returned value(s) be set to the
 nearest grid cell's center (\code{TRUE}) or should they remain the
 selected, "real" value (\code{FALSE}, default)?}
+
+\item{raw}{[\code{logical(1)}]\cr should the complete statistics about the
+clicks be returned (\code{TRUE}), or should only the basic output be
+returned (\code{FALSE}, default)?}
 
 \item{silent}{[\code{logical(1)}]\cr should all messages but errors be
 suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
