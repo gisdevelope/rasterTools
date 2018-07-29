@@ -66,13 +66,11 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   # check arguments
   existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
+  existsSpatial <- assert(testClass(mask, classes = "SpatialPolygon"),
+                          testClass(mask, classes = "SpatialPolygonsDataFrame"))
   if(!existsGeom & !existsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
-  # assertClass(mask, classes = "sp")
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(2000:2014)))
   assertLogical(keepRaw)
@@ -107,12 +105,12 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
                           y = c(-60, 80))
   tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), crs = projs$longlat)
   if(existsSpatial){
-    mask <- gFrom(mask)
+    mask <- gFrom(input = mask)
   }
 
   # determine tiles of interest
-  tabGFC <- getTable(tiles_gfc)
-  tabMask <- getTable(mask)
+  tabGFC <- getTable(x = tiles_gfc)
+  tabMask <- getTable(x = mask)
   ids <- unique(tabGFC$id)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -121,12 +119,12 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     yMatch <- c(yMatch, ifelse(any(tabMask$y < max(temp$y)) & any(tabMask$y > min(temp$y)), TRUE, FALSE))
   }
   tiles <- xMatch & yMatch
-  myTiles <- getSubset(tiles_gfc, tabGFC$id == ids[tiles])
+  myTiles <- getSubset(x = tiles_gfc, subset = tabGFC$id == ids[tiles])
 
   layerNames <- c("treecover2000", "loss", "gain", "lossyear", "datamask")
   allObjects <- NULL
 
-  tabTiles <- getTable(myTiles)
+  tabTiles <- getTable(x = myTiles)
   # go through all selected tiles and subset them with the mask
   for (i in unique(tabTiles$id)){
     min_x <- min(tabTiles$x[tabTiles$id == i])
@@ -174,7 +172,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     crs_name <- strsplit(target_crs, " ")[[1]][1]
     message(paste0("  ... reprojecting to '", crs_name, "'.\n"))
     mask <- setCRS(x = mask, crs = target_crs)
-    gfc_out <- setCRS(gfc_out, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    gfc_out <- setCRS(x = gfc_out, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     theExtent <- getExtent(x = mask)
     gfc_out <- crop(gfc_out, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))

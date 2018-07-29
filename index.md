@@ -16,7 +16,9 @@ Getting Started
 
 1.  Install the development version from github via:
 
-        devtools::install_github('EhrmannS/rasterTools')
+        devtools::install_github("EhrmannS/rasterTools")
+
+        library(rasterTools)
 
 2.  Read a **brief introduction** to understand the philosophy of `rasterTools`:
 
@@ -37,7 +39,7 @@ Example workflow
                            ...)
         myData <- obtain(data = myDatasets, mask = aMask)
 
-2.  Determine, for instance, forest patches in a raster with continuous integer values:
+2.  Determine forest patches in a raster with continuous integer values:
 
         get_patches <- list(list(operator = "rBinarise", thresh = 30),
                             list(operator = "rPatches"))
@@ -47,12 +49,12 @@ Example workflow
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png"  width="100%" />
 
-1.  Compute landscape metrics
+1.  Compute the *Class proportional area* in a raster with categorial values:
 
         myInput <- rtData$categorial
         myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
-                 a_c = list(operator = "mArea", scale = "class"),
-                 mCPA = "a_c / a_w * 100")
+                         a_c = list(operator = "mArea", scale = "class"),
+                         mCPA = "a_c / a_w * 100")
         measure(input = myInput, with = myMetrics)
 
 ------------------------------------------------------------------------
@@ -60,7 +62,7 @@ Example workflow
 Contribute
 ----------
 
-In case you have a suggestion for a feature or function you'd require, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](articles/contribute.html) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
+In case you have a suggestion for a feature or function you think is missing, please file an [issue](https://github.com/EhrmannS/rastertools/issues) and I try to implement it. If you want to contribute, [develop your own addition](articles/contribute.html) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rastertools/pulls) on github (I will include you as author of the respective function).
 
 ------------------------------------------------------------------------
 

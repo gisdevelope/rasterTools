@@ -15,12 +15,12 @@ The rasterTools package provides the toolchain for a transparent and reproducibl
 
 1) Install the development version from github via:
 
-        devtools::install_github('EhrmannS/rasterTools')
-        
+        devtools::install_github("EhrmannS/rasterTools")
+
 2) Read a **brief introduction** to understand the philosophy of `rasterTools`:
 
         ?`rasterTools-package`
-        
+
 3) The vignettes given an in detail [Introduction](https://ehrmanns.github.io/rasterTools/articles/introduction.html) and explain what the logic behind [landscape metrics](https://ehrmanns.github.io/rasterTools/articles/landscape_metrics.html) is.
 
 ## Example workflow
