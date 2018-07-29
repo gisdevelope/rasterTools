@@ -112,13 +112,12 @@
 
     
     
-<p>In this document you can find a collection of operations that can be carried out with the help of functions provided in <code>rasterTools</code>. It is assumed that you have read the <a href="/rasterTools/articles/introduction.html">Introduction</a>.</p>
-<p>The operations are grouped into the following groups. However, before jumping there we should prepare the working environment.</p>
+<p>In this document you can find a collection of a range of spatial operations that can be carried out specifically with <code>rasterTools</code>. The spatial operations are eventually presented as algorithms that can be used on the specified spatial data type. It is assumed that you have read the <a href="/rasterTools/articles/introduction.html">Introduction</a> and understand what <em>operator</em> and <em>algorithm</em> means in the scope of <code>rasterTools</code>.</p>
+<p>The operations are grouped as follows:</p>
 <ol style="list-style-type: decimal">
-<li><a href="/rasterTools/articles/basics.html">Basic operations</a></li>
-<li><a href="/rasterTools/articles/classification.html">Classify values</a></li>
-<li><a href="/rasterTools/articles/morphological.html">Morphological operations</a></li>
-<li><a href="/rasterTools/articles/features.html">Identify features/objects</a></li>
+<li><a href="#morph">Morphological operations</a></li>
+<li><a href="#features">Identify features/objects</a></li>
+<li><a href="#classify">Classify values</a></li>
 </ol>
 <p>Lets start with reading in the required packages:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rasterTools)
@@ -147,9 +146,285 @@ binarised &lt;-<span class="st"> </span><span class="kw"><a href="../reference/r
 
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(catPatchesObj, binarised))</code></pre></div>
 <p><img src="usecases_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
+<p></p>
+<div id="morph" class="section level1">
+<h1 class="hasAnchor">
+<a href="#morph" class="anchor"></a>Morphological operations</h1>
+<div id="morphologically-open-foreground" class="section level2">
+<h2 class="hasAnchor">
+<a href="#morphologically-open-foreground" class="anchor"></a>Morphologically open foreground</h2>
+<p>The morphological operation <em>open</em> is an erosion, followed by a dilation. It results in a raster where cells at the boundary of patches are removed if they are exposed. <em>Exposed</em> means here, that they are protruding to a degree that an erosion removes them so that a dilation isn’t able to reconstruct them. The result depends on the chosen kernel, which must be the same in both operations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">opened &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rErode.html">rErode</a></span>(binarised) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/rDilate.html">rDilate</a></span>()
+
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(opened)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-4-1.png" width="100%"></p>
+</div>
+<div id="morphologically-close-foreground" class="section level2">
+<h2 class="hasAnchor">
+<a href="#morphologically-close-foreground" class="anchor"></a>Morphologically close foreground</h2>
+<p>The morphological operation <em>close</em> is a dilation, followed by an erosion. It results in a raster where cells at the boundary of patches are added if this would lead to a closed patch. In this case, the dilation would add cells that an erosion could not remove because they are now “inside” a patch. The result depends also here on the chosen kernel, which again must be the same in both operations.</p>
+<p>Instead of using the pipeline notation, we can construct an algorithm.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">closePatches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDilate"</span>),
+                     <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rErode"</span>))
+
+closed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> closePatches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
+
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(closed, <span class="dt">trace =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; this object has the following history:</span>
+<span class="co">#&gt;  -&gt; the object was loaded from memory</span>
+<span class="co">#&gt;  -&gt; the values have been binarised</span>
+<span class="co">#&gt;  -&gt; the raster has been morphologically dilated</span>
+<span class="co">#&gt;  -&gt; the raster has been morphologically eroded</span></code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
+<p></p>
+</div>
+</div>
+<div id="features" class="section level1">
+<h1 class="hasAnchor">
+<a href="#features" class="anchor"></a>Identify spatial features</h1>
+<div id="identify-the-medial-axis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-the-medial-axis" class="anchor"></a>Identify the Medial axis</h2>
+<p>The medial axis transform (MAT) results in a non-binary skeleton where each cell has the value of its distance to the original boundary. This can be calculated by determining the skeleton and the interior distance map of each patch. These two objects would be intersected by using the skeleton as mask on the distance map.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">skeletonised &lt;-<span class="st"> </span>binarised <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/rSkeletonise.html">rSkeletonise</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/rFillNA.html">rFillNA</a></span>()
+
+distances &lt;-<span class="st"> </span>binarised <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/rPermute.html">rPermute</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/rDistance.html">rDistance</a></span>()
+
+MAT &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rMask.html">rMask</a></span>(<span class="dt">obj =</span> distances, <span class="dt">mask =</span> skeletonised)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(MAT)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
+<p>We see that increasingly complex computations become more and more wordy, which can be a source of error and confusion. We may thus again use an algorithm. Admittedly, it is not necessarily less wordy but it represents a more explicit declaration of the steps taken to derive the final object (and does not depend on other packages). Moreover, this algorithm can be used on any object (for which it has been devised). The object is independently defined in the call to <code>modify</code>, in contrast to the pipeline notation that needs to be adapted every time the objects change. Eventually the “clunky” nature of this algorithm pays off when it is used multiple times in conjunction with <code>modify</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getMedialAxis &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">skeleton =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSkeletonise"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                      <span class="dt">medAxis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPermute"</span>),
+                      <span class="dt">medAxis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
+                      <span class="dt">medAxis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"skeleton"</span>))
+
+MedialAxis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> getMedialAxis)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(MedialAxis<span class="op">$</span>medAxis)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
+</div>
+<div id="identify-openingsperforations" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-openingsperforations" class="anchor"></a>Identify openings/perforations</h2>
+<p>We may be interested in openings (or perforations, as they are called elsewhere) of foreground patches out of several reasons. Hence, we either want to end up with a raster of the openings without anything else, or a raster where the openings are labelled in a systematic way.</p>
+<p>To derive openings, we first have to determine the foreground patches, for which the rather straightforward algorithm below can be used.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getPatches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
+                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))
+
+patches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> continuous, <span class="dt">by =</span> getPatches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(patches)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<p>We see that there are several patches that haven an opening, but there is also an “opening” between the large lower-left greyish patch and its tiny neighbour to the bottom. In some situations this tiny neighbour might be a full-grown patch and we may have to delimit it from the northern neighbour, perhaps due to some ecological considerations. To delimit patches from each other and determine only true openings, we should segregate the raster into patches and carry out our identification algorithm per patch.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getSegPatches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
+                      <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                      <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>, <span class="dt">flatten =</span> <span class="ot">TRUE</span>, <span class="dt">background =</span> <span class="dv">0</span>))
+
+foregroundPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> continuous, <span class="dt">by =</span> getSegPatches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(foregroundPatches[[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">26</span>)]])</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
+<p>From here, we can then invert the raster and determine and label the background patches, of which an opening would be one in a binarised raster, which results in the following algorithm.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getBGPatches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">1</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPermute"</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rReduce"</span>, <span class="dt">fun =</span> max),
+                     <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>))
+
+backgroundPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> continuous, <span class="dt">by =</span> getBGPatches)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(backgroundPatches, <span class="dt">trace =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; this object has the following history:</span>
+<span class="co">#&gt;  -&gt; the object was loaded from memory</span>
+<span class="co">#&gt;  -&gt; the values have been binarised</span>
+<span class="co">#&gt;  -&gt; patches have been determined</span>
+<span class="co">#&gt;  -&gt; the raster has been segregated</span>
+<span class="co">#&gt;  -&gt; in layers: the values have been binarised</span>
+<span class="co">#&gt;  -&gt; in layers: values have been invert</span>
+<span class="co">#&gt;  -&gt; in layers: patches have been determined</span>
+<span class="co">#&gt;  -&gt; layers have been reduced into 1 new layer</span>
+<span class="co">#&gt;  -&gt; NA has been replaced with 0</span></code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
+<p>We should also aggregate the foreground patches, which we can do without any further considerations, because we do not modify the morphology of the patches.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">foreground &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rReduce.html">rReduce</a></span>(<span class="dt">obj =</span> foregroundPatches)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(foreground)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
+<p>As we have set background values to 0 throughout, we end up with two rasters that don’t contain any unknown values and we can do some raster arithmetics on them. Both, foreground patches and the matrix as the first background patch (i.e. the area which is not part of the greater patch) have the value 1 after applying the above computations. All background patches that are not matrix are openings and have a value larger than 1. Hence, we can get an object where merely the openings are provided by summarising foreground and background patches and subtracting 1. The value of the resulting openings is their running number per patch in which they are embedded.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">openings &lt;-<span class="st"> </span>foreground <span class="op">+</span><span class="st"> </span>backgroundPatches <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(openings)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-12-1.png" width="100%"></p>
+<p>Moreover, we can determine the greater patch (i.e. the patch if it had no opening) by summarising the foreground patches and the binarised openings.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fullPatches &lt;-<span class="st"> </span>foreground <span class="op">+</span><span class="st"> </span><span class="kw"><a href="../reference/rBinarise.html">rBinarise</a></span>(openings, <span class="dt">thresh =</span> <span class="dv">1</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(fullPatches)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-13-1.png" width="100%"></p>
+<p>In a situation where patches may be more clearly outlined, we could also use the less complex algorithm below, where we can avoid segregating the patches. From its output, some raster arithmetics can again lead to the desired result.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">findOpening &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                    <span class="dt">patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPermute"</span>),
+                    <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
+                    <span class="dt">background =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>))
+
+background &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> findOpening, <span class="dt">merge =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(background)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-14-1.png" width="100%"></p>
+</div>
+<div id="identify-openings-that-are-connected-to-the-background" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-openings-that-are-connected-to-the-background" class="anchor"></a>Identify openings that are connected to the background</h2>
+<p>E.g. Clearcuts</p>
+</div>
+<div id="compute-the-distance-map-of-centroids-per-patch" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compute-the-distance-map-of-centroids-per-patch" class="anchor"></a>Compute the distance map of centroids per patch</h2>
+<p>We may be interested in distance maps to calculate a range of landscape metrics. For example, the <em>Radius of Gyration</em> derives from the average distance of all cells of a patch to the patches’ centroid. To calculate it, we would have to find the patch centroid and the patch specific distance of each cell of a patch to its centroid.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centDistMap &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">1</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"input"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>))
+
+DistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> centDistMap)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(DistMap)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-15-1.png" width="100%"></p>
+<p>We see, however, that the distances of some centroids overlap with patches to which they do not belong. Hence, we have to segregate the raster into its patches.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getCentDist &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
+                    <span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"patchesMask"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rReduce"</span>, <span class="dt">fun =</span> max))
+
+patchObj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rPatches.html">rPatches</a></span>(binarised)
+centDistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> patchObj, <span class="dt">by =</span> getCentDist, <span class="dt">keepInput =</span> <span class="ot">TRUE</span>)
+centDistMap &lt;-<span class="st"> </span>raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(centDistMap[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)])
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(centDistMap)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-16-1.png" width="100%"></p>
+<p>See [link to radius of gyration metric] for how to proceed from here to calculate the <em>Radius of Gyration</em>.</p>
+</div>
+<div id="identify-signature-points-in-a-skeleton" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-signature-points-in-a-skeleton" class="anchor"></a>Identify signature points in a skeleton</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">skeleton &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rSkeletonise.html">rSkeletonise</a></span>(binarised, <span class="dt">background =</span> <span class="dv">0</span>)
+kernels &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">3</span>, <span class="dv">3</span>),
+                <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">3</span>),
+                <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">1</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">3</span>),
+                <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">1</span>, <span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="ot">NA</span>), <span class="dv">3</span>, <span class="dv">3</span>))
+
+getMetaSkel &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">endpoints =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMatch"</span>,
+                                     <span class="dt">kernel =</span> <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="ot">NA</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="ot">NA</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">3</span>, <span class="dv">3</span>),
+                                     <span class="dt">background =</span> <span class="dv">0</span>),
+                    <span class="dt">meta =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBlend"</span>, <span class="dt">overlay =</span> <span class="st">"endpoints"</span>))
+
+skeletonMeta &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> skeleton, <span class="dt">by =</span> getMetaSkel, <span class="dt">merge =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(skeletonMeta, <span class="dt">trace =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; the layer 'endpoints' has the following history:</span>
+<span class="co">#&gt;  -&gt; the object was loaded from memory</span>
+<span class="co">#&gt;  -&gt; the values have been binarised</span>
+<span class="co">#&gt;  -&gt; the morphological skeleton has been determined</span>
+<span class="co">#&gt;  -&gt; cells have been matched with a 3x3 kernel with values NA 0 0 NA 1 0 NA 0 0</span>
+<span class="co">#&gt; the layer 'meta' has the following history:</span>
+<span class="co">#&gt;  -&gt; the object was loaded from memory</span>
+<span class="co">#&gt;  -&gt; the values have been binarised</span>
+<span class="co">#&gt;  -&gt; the morphological skeleton has been determined</span>
+<span class="co">#&gt;  -&gt; the raster has been blended</span></code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-17-1.png" width="100%"></p>
+</div>
+<div id="identify-coreecotone-habitat" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-coreecotone-habitat" class="anchor"></a>Identify core/ecotone habitat</h2>
+</div>
+<div id="identify-boundaries" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-boundaries" class="anchor"></a>Identify boundaries</h2>
+<p>also include their classification</p>
+</div>
+<div id="identify-corridors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-corridors" class="anchor"></a>Identify corridors</h2>
+</div>
+<div id="identify-interrupted-corridors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-interrupted-corridors" class="anchor"></a>Identify interrupted corridors</h2>
+</div>
+<div id="identify-parallel-structures" class="section level2">
+<h2 class="hasAnchor">
+<a href="#identify-parallel-structures" class="anchor"></a>Identify parallel structures</h2>
+</div>
+</div>
+<div id="classify" class="section level1">
+<h1 class="hasAnchor">
+<a href="#classify" class="anchor"></a>Classify values</h1>
+<div id="classify-a-raster-based-on-colour-values-cf-histmapr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#classify-a-raster-based-on-colour-values-cf-histmapr" class="anchor"></a>Classify a raster based on colour values (<em>cf</em> HistMapR)</h2>
+<p>The <a href="https://doi.org/10.1111/2041-210X.12788">HistMapR</a> package can be used to digitise historic land-use maps in R, according to the authors. However, what their package actually does, in contrast to what is stated in the title, is <em>(re)classifying</em> values that are expressed as colour on a screen into numeric values that represent land use classes. The <em>digitising</em> part comes already long before, when the orthophotos are transformed from paper to digital form, but this is unfortunately not touched on in that package.</p>
+<p>Here I want to suggest a simpler and more straightforward to understand workflow that can be carried out with the <code>rasterTools</code> package. Generally speaking, one would carry out a supervised classification procedure on an orthophoto that has previously been made available digitally. As already outlined, the basic idea is to identify (colour) values in the original raster to assign them, after determining sensible thresholds, into new classes. Using <code>rasterTools</code>, these operations can be carried out by utilizing mostly the <code><a href="../reference/locate.html">locate()</a></code> and <code><a href="../reference/rCategorise.html">rCategorise()</a></code> functions.</p>
+<p>Some background: The <code><a href="../reference/visualise.html">visualise()</a></code> function can be used to plot different kinds of objects. Gridded objects are always based on a matrix/array of values. However, the information that is carried by the values differs between datasets. One could consider an image/photo as part of the dataset <em>“spectral properties of stuff”</em> as each image records the red, green and blue radiation that is emitted by “stuff”. Orthophotos are not different, they also consist of a red, green and blue channel. These channels carry actually the intensity of that colour per pixel, which ranges from 0 to 255. They are typically combined and gain their “colour” qualia only because they are combined. When <code><a href="../reference/visualise.html">visualise()</a></code> is used to plot an image, it abstracts the colour information (of potentially &gt; 1.000.000 colours) into a smaller set of values, 256 to be precise. This process already comprises an act of classifying because a range of (admittedly very similar) colours are aggregated into one colour. This is no problem, because let’s be honest, you probably can’t even remotely distinguish 200 different colours from a give colour scale! Nevertheless, what happens here - and actually also with other functions that plot stuff in R, for that matter - is that the original colours of your map were assigned into 256 classes of similar colours. What we now want to do is distinguish these colours into a substantially smaller set of actual land use classes.</p>
+<p>If you did not install the HistMapR package yet, do that now:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># devtools::install_github("AGAuffret/HistMapR")</span>
+<span class="co"># library(HistMapR)</span>
+<span class="co"># data(HistMapRex)</span></code></pre></div>
+<p>We use the example dataset that comes with the package (<code>in.ras</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># visualise(gridded = in.ras, image = TRUE)</span></code></pre></div>
+</div>
+</div>
+<div id="sort-in" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sort-in" class="anchor"></a>Sort in</h1>
+<div id="determine-sharpness-of-a-boundary" class="section level2">
+<h2 class="hasAnchor">
+<a href="#determine-sharpness-of-a-boundary" class="anchor"></a>Determine sharpness of a boundary</h2>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+        <div id="tocnav">
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+<li>
+<a href="#morph">Morphological operations</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#morphologically-open-foreground">Morphologically open foreground</a></li>
+      <li><a href="#morphologically-close-foreground">Morphologically close foreground</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#features">Identify spatial features</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#identify-the-medial-axis">Identify the Medial axis</a></li>
+      <li><a href="#identify-openingsperforations">Identify openings/perforations</a></li>
+      <li><a href="#identify-openings-that-are-connected-to-the-background">Identify openings that are connected to the background</a></li>
+      <li><a href="#compute-the-distance-map-of-centroids-per-patch">Compute the distance map of centroids per patch</a></li>
+      <li><a href="#identify-signature-points-in-a-skeleton">Identify signature points in a skeleton</a></li>
+      <li><a href="#identify-coreecotone-habitat">Identify core/ecotone habitat</a></li>
+      <li><a href="#identify-boundaries">Identify boundaries</a></li>
+      <li><a href="#identify-corridors">Identify corridors</a></li>
+      <li><a href="#identify-interrupted-corridors">Identify interrupted corridors</a></li>
+      <li><a href="#identify-parallel-structures">Identify parallel structures</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#classify">Classify values</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#classify-a-raster-based-on-colour-values-cf-histmapr">Classify a raster based on colour values (<em>cf</em> HistMapR)</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#sort-in">Sort in</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#determine-sharpness-of-a-boundary">Determine sharpness of a boundary</a></li>
+      </ul>
+</li>
+      </ul>
+</div>
       </div>
 
 </div>
