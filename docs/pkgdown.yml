@@ -2,10 +2,15 @@ pandoc: 1.19.2.1
 pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
+  basics: basics.html
+  classification: classification.html
   contribute: contribute.html
+  features: features.html
   introduction: introduction.html
   landscape_metrics: landscape_metrics.html
+  morpholoical: morpholoical.html
   recipes: recipes.html
+  usecases: usecases.html
 urls:
   reference: http://EhrmannS.github.io/rasterTools/reference
   article: http://EhrmannS.github.io/rasterTools/articles

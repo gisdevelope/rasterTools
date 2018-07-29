@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ***obtain and process earth observation data***
 
-The rasterTools package provides the toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions. Keywords: *earth observation data*, *spatial patterns*, *species distribution models*, *landscape metrics*, *(neutral) landscape models*, *evidence based science*
+The rasterTools package provides the toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions. Keywords: *earth observation data*, *spatial patterns*, *species distribution models*, *land-use*, *landscape metrics*, *(neutral) landscape models*, *evidence based science*
 
 ___________________________________________
 
@@ -109,14 +109,14 @@ Citation
 ------------------------------------------------------------
 
 
-Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.8.0. https://github.com/EhrmannS/rastertools
+Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.6.0. https://github.com/EhrmannS/rastertools
 
 ```
 @Manual{,
   title = {rasterTools: obtain and process earth observation data},
   author = {Steffen Ehrmann},
   year = {2018},
-  note = {R package version 0.8.0},
+  note = {R package version 0.6.0},
   url = {https://github.com/EhrmannS/rastertools},
 }
 ```

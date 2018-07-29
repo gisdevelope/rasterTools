@@ -5,7 +5,7 @@
 \title{Visualise gridded objects and geometries}
 \usage{
 visualise(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
-  new = TRUE, ...)
+  image = FALSE, new = TRUE, ...)
 }
 \arguments{
 \item{gridded}{[\code{Raster*} | \code{matrix}]\cr Gridded object.}
@@ -18,6 +18,10 @@ visualise(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 \item{trace}{[\code{logical(1)}]\cr Print the gridded object's history (i.e.
 the process according to which it has been created) (\code{TRUE}), or
 simply plot the object (\code{FALSE}, default).}
+
+\item{image}{[\code{logical(1)}]\cr Does \code{gridded} have the channels
+\code{red}, \code{green} and \code{blue}, i.e. is it an "image"
+(\code{TRUE}) or is this not the case (\code{FALSE}, default)?}
 
 \item{new}{[\code{logical(1)}]\cr force a new plot (\code{TRUE}, default).}
 
@@ -33,6 +37,11 @@ Visualise gridded objects and geometries
 \details{
 To create a plot with your own style, design it with
   \code{\link{setTheme}} and use it in \code{theme}.
+
+  In case you want to plot an image (simiar to \code{\link[raster]{plotRGB}}),
+  you have to provide a \code{RasterStack} or \code{RasterBrick} with the
+  three layers \code{red}, \code{green} and \code{blue} and set \code{image =
+  TRUE}.
 }
 \examples{
 input <- rtData$continuous

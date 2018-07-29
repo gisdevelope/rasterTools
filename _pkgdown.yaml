@@ -81,8 +81,7 @@ navbar:
   right:
     - icon: far fa-list-alt
       text: "Use cases"
-      menu:
-      - text: coming soon
+      href: articles/usecases.html
     - icon: fa-newspaper-o
       text: "News"
       href: news/index.html

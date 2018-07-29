@@ -71,14 +71,14 @@ In case you have a suggestion for a feature or function you think is missing, pl
 - more `Rcpp` and parallelisation.
 
 ## Citation
-Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.8.0. https://github.com/EhrmannS/rastertools
+Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.6.0. https://github.com/EhrmannS/rastertools
 
 ```
 @Manual{,
   title = {rasterTools: obtain and process earth observation data},
   author = {Steffen Ehrmann},
   year = {2018},
-  note = {R package version 0.8.0},
+  note = {R package version 0.6.0},
   url = {https://github.com/EhrmannS/rastertools},
 }
 ```

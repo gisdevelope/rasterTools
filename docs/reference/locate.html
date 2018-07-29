@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rasterTools</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.6.0</span>
       </span>
     </div>
 
@@ -101,17 +101,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <li>
+  <a href="../articles/usecases.html">
     <span class="far fa far fa-list-alt"></span>
      
     Use cases
-     
-    <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">coming soon</li>
-  </ul>
 </li>
 <li>
   <a href="../news/index.html">
@@ -150,7 +145,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>gridded</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>identify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>snap</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>snap</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,6 +175,12 @@ with <code>grep</code>.</p></td>
       <td><p>[<code>logical(1)</code>]<br /> should the returned value(s) be set to the
 nearest grid cell's center (<code>TRUE</code>) or should they remain the
 selected, "real" value (<code>FALSE</code>, default)?</p></td>
+    </tr>
+    <tr>
+      <th>raw</th>
+      <td><p>[<code>logical(1)</code>]<br /> should the complete statistics about the
+clicks be returned (<code>TRUE</code>), or should only the basic output be
+returned (<code>FALSE</code>, default)?</p></td>
     </tr>
     <tr>
       <th>silent</th>

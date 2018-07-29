@@ -41,7 +41,7 @@ categorial <- rtData$categorial
 visualise(raster::stack(continuous, categorial))
 ```
 
-Moreover, we need to create two frequently occuring derivations thereof, a raster where classes are assigned to distinct patches and a binarised raster, where some class(es) have been set as focal class. Here we derive them from the categorial raster, but this could as well be done from the continuous raster.
+Moreover, we need to create two frequently occurring derivations thereof, a raster where classes are assigned to distinct patches and a binarised raster, where some class(es) have been set as focal class. Here we derive them from the categorical raster, but this could as well be done from the continuous raster.
 
 ```{r, fig.width=7, out.width='100%'}
 catPatchesObj <- rSubstitute(obj = categorial, 
@@ -58,7 +58,7 @@ visualise(raster::stack(catPatchesObj, binarised))
 # Morphological operations
 
 ## Morphologically open foreground
-The morphological operation *open* is an erosion, followed by a dilation. It results in a raster where cells at the boundary of patches are removed if they are exposed. *Exposed* means here, that they are pertruding to a degree that an erosion removes them so that a dilation isn't able to reconstruct them. The result depends on the chosen kernel, which must be the same in both operations.
+The morphological operation *open* is an erosion, followed by a dilation. It results in a raster where cells at the boundary of patches are removed if they are exposed. *Exposed* means here, that they are protruding to a degree that an erosion removes them so that a dilation isn't able to reconstruct them. The result depends on the chosen kernel, which must be the same in both operations.
 
 ```{r, fig.width=7, out.width='100%'}
 opened <- rErode(binarised) %>% 
@@ -101,7 +101,7 @@ MAT <- rMask(obj = distances, mask = skeletonised)
 visualise(MAT)
 ```
 
-We see that increasingly complex computations become more and more wordy, which can be a source of error and confusion. We may thus again use an algorithm. Admittedly, it is not neccessarily less wordy but it represents a more explicit declaration of the steps taken to derive the final object (and does not depend on other packages). Moreover, this algorithm can be used on any object (for which it has been devised). The object is independently defined in the call to `modify`, in contrast to the pipeline notation that needs to be adapted every time the objects change. Eventually the "clunky" nature of this algorithm pays off when it is used multiple times in conjunction with `modify`.
+We see that increasingly complex computations become more and more wordy, which can be a source of error and confusion. We may thus again use an algorithm. Admittedly, it is not necessarily less wordy but it represents a more explicit declaration of the steps taken to derive the final object (and does not depend on other packages). Moreover, this algorithm can be used on any object (for which it has been devised). The object is independently defined in the call to `modify`, in contrast to the pipeline notation that needs to be adapted every time the objects change. Eventually the "clunky" nature of this algorithm pays off when it is used multiple times in conjunction with `modify`.
 
 ```{r, fig.width=7, out.width='100%'}
 getMedialAxis <- list(skeleton = list(operator = "rSkeletonise", background = 0),
@@ -114,7 +114,7 @@ visualise(MedialAxis$medAxis)
 ```
 
 ## Identify openings/perforations
-We may be interested in openings (or perforations, as they are called elsewhere) of foreground patches out of several reasons. Hence, we either want to end up with a raster of the openings without anything else, or a raster where the openings are labeled in a systematic way.
+We may be interested in openings (or perforations, as they are called elsewhere) of foreground patches out of several reasons. Hence, we either want to end up with a raster of the openings without anything else, or a raster where the openings are labelled in a systematic way.
 
 To derive openings, we first have to determine the foreground patches, for which the rather straightforward algorithm below can be used.
 
@@ -126,7 +126,7 @@ patches <- modify(input = continuous, by = getPatches, sequential = TRUE)
 visualise(patches)
 ```
 
-We see that there are several patches that haven an opening, but there is also an "opening" between the large lower-left turquoise patch and its tiny neigbour to the bottom. In some situations this tiny neighbour might a full-grown patch which we actually have to consider for ecological inference. To avoid such problems, we should segregate the raster into patches and carry out our identification algorithm on these.
+We see that there are several patches that haven an opening, but there is also an "opening" between the large lower-left greyish patch and its tiny neighbour to the bottom. In some situations this tiny neighbour might be a full-grown patch and we may have to delimit it from the northern neighbour, perhaps due to some ecological considerations. To delimit patches from each other and determine only true openings, we should segregate the raster into patches and carry out our identification algorithm per patch.
 
 ```{r, fig.width=7, out.width='100%'}
 getSegPatches <- list(list(operator = "rBinarise", thresh = 30),
@@ -160,7 +160,7 @@ foreground <- rReduce(obj = foregroundPatches)
 visualise(foreground)
 ```
 
-As we have set background values to 0 throughout, we end up with two rasters that don't contain any unknown values and we can do some raster arithmetics on them. Both, foreground patches and the matrix as the first background patch (i.e. the area which is not part of the greater patch) have the value 1 after applying the above algorithms. All background patches that are not matrix are openings and have a value larger than 1. Hence, we can get an object where merely the openings are provided by summarising foreground and background patches and subtracting 1. The value of the resulting openings is their running number per patch in which they are embedded.
+As we have set background values to 0 throughout, we end up with two rasters that don't contain any unknown values and we can do some raster arithmetics on them. Both, foreground patches and the matrix as the first background patch (i.e. the area which is not part of the greater patch) have the value 1 after applying the above computations. All background patches that are not matrix are openings and have a value larger than 1. Hence, we can get an object where merely the openings are provided by summarising foreground and background patches and subtracting 1. The value of the resulting openings is their running number per patch in which they are embedded.
 
 ```{r, fig.width=7, out.width='100%'}
 openings <- foreground + backgroundPatches - 1
@@ -262,3 +262,24 @@ also include their classification
 # Other computations
 
 ## Determine sharpness of a boundary
+
+## Classify a raster based on colour values (*cf* HistMapR)
+The [HistMapR](https://doi.org/10.1111/2041-210X.12788) package can be used to digitise historic land-use maps in R, according to the authors. However, what their package actually does, in contrast to what is stated in the title, is *(re)classifying* values that are expressed as colour on a screen into numeric values that represent land use classes. The *digitising* part comes already long before, when the orthophotos are transformed from paper to digital form, but this is unfortunately not touched on in that package.
+
+Here I want to suggest a simpler and more straightforward to understand workflow that can be carried out with the `rasterTools` package. Generally speaking, one would carry out a supervised classification procedure on an orthophoto that has previously been made available digitally. As already outlined, the basic idea is to identify (colour) values in the original raster to assign them, after determining sensible thresholds, into new classes. Using `rasterTools`, these operations can be carried out by utilizing mostly the `locate()` and `rCategorise()` functions.
+
+Some background: The `visualise()` function can be used to plot different kinds of objects. Gridded objects are always based on a matrix/array of values. However, the information that is carried by the values differs between datasets. One could consider an image/photo as part of the dataset *"spectral properties of stuff"* as each image records the red, green and blue radiation that is emitted by "stuff". Orthophotos are not different, they also consist of a red, green and blue channel. These channels carry actually the intensity of that colour per pixel, which ranges from 0 to 255. They are typically combined and gain their "colour" qualia only because they are combined. When `visualise()` is used to plot an image, it abstracts the colour information (of potentially > 1.000.000 colours) into a smaller set of values, 256 to be precise. This process already comprises an act of classifying because a range of (admittedly very similar) colours are aggregated into one colour. This is no problem, because let's be honest, you probably can't even remotely distinguish 200 different colours from a give colour scale! Nevertheless, what happens here - and actually also with other functions that plot stuff in R, for that matter - is that the original colours of your map were assigned into 256 classes of similar colours. What we now want to do is distinguish these colours into a substantially smaller set of actual land use classes.
+
+If you did not install the HistMapR package yet, do that now:
+
+```{r}
+# devtools::install_github("AGAuffret/HistMapR")
+library(HistMapR)
+data(HistMapRex)
+```
+
+We use the example dataset that comes with the package (`in.ras`).
+
+```{r, out.width='100%'}
+visualise(gridded = in.ras, image = TRUE)
+```

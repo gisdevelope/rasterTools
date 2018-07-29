@@ -1,6 +1,6 @@
 Package: rasterTools
 Title: obtain and process earth observation data
-Version: 0.8.0
+Version: 0.6.0
 Authors@R: person("Steffen", "Ehrmann", email = "steffen.science@funroll-loops.de",
     role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-2958-0796"))
