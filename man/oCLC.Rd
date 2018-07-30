@@ -46,5 +46,6 @@ reference(style = "bibtex")
 }
 \seealso{
 Other obtain operators: \code{\link{oEMMA}},
-  \code{\link{oGFC}}, \code{\link{oMODIS}}
+  \code{\link{oGFC}}, \code{\link{oMODIS}},
+  \code{\link{oWCLIM}}
 }
