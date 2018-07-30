@@ -159,6 +159,15 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <a href="#the-dependence-structure-of-landscape-metrics" class="anchor"></a>The dependence structure of landscape metrics</h2>
 <p>The following graph shows the relationship of all metrics defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>. This is followed by a section outlining details about the generic metrics and a list containing details and the equations of derived metrics.</p>
 <p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%"></p>
+<p>In the following you will find a list of the generic metrics defined (so far) and below that the derived metric sorted into the groups defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><a href="#area_and_edge">Area and Edge</a></li>
+<li><a href="#shape">Shape</a></li>
+<li><a href="#core_area">Core Area</a></li>
+<li><a href="#contrast">Contrast</a></li>
+<li>Aggregation (<a href="#dispersion">Dispersion</a>, <a href="#interspersion">Interspersion</a>, <a href="#subdivision">Subdivision</a>, <a href="#isolation">Isolation</a>)</li>
+<li><a href="#diversity">Diversity</a></li>
+</ol>
 </div>
 </div>
 <div id="generic-metrics" class="section level1">
@@ -247,9 +256,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <div id="derived-metrics" class="section level1">
 <h1 class="hasAnchor">
 <a href="#derived-metrics" class="anchor"></a>Derived metrics</h1>
-<div id="area-and-edge" class="section level2">
+<div id="area_and_edge" class="section level2">
 <h2 class="hasAnchor">
-<a href="#area-and-edge" class="anchor"></a>Area and Edge</h2>
+<a href="#area_and_edge" class="anchor"></a>Area and Edge</h2>
 <div id="mCPA" class="section level3">
 <h3 class="hasAnchor">
 <a href="#mCPA" class="anchor"></a>Class proportion of the Landscape</h3>
@@ -358,17 +367,17 @@ list(p_c = list(operator = "mPerimeter", scale = "class"),
 <p>Reference:</p>
 </div>
 </div>
-<div id="core-area" class="section level2">
+<div id="core_area" class="section level2">
 <h2 class="hasAnchor">
-<a href="#core-area" class="anchor"></a>Core Area</h2>
+<a href="#core_area" class="anchor"></a>Core Area</h2>
 </div>
 <div id="contrast" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contrast" class="anchor"></a>Contrast</h2>
 </div>
-<div id="aggregation-dispersion" class="section level2">
+<div id="dispersion" class="section level2">
 <h2 class="hasAnchor">
-<a href="#aggregation-dispersion" class="anchor"></a>Aggregation: Dispersion</h2>
+<a href="#dispersion" class="anchor"></a>Aggregation: Dispersion</h2>
 <div id="mPLA" class="section level3">
 <h3 class="hasAnchor">
 <a href="#mPLA" class="anchor"></a>Percentage of Like Adjacencies</h3>
@@ -390,13 +399,13 @@ list(p_c = list(operator = "mPerimeter", scale = "class"),
 <p>Reference:</p>
 </div>
 </div>
-<div id="aggregation-interspersion" class="section level2">
+<div id="interspersion" class="section level2">
 <h2 class="hasAnchor">
-<a href="#aggregation-interspersion" class="anchor"></a>Aggregation: Interspersion</h2>
+<a href="#interspersion" class="anchor"></a>Aggregation: Interspersion</h2>
 </div>
-<div id="aggregation-subdivision" class="section level2">
+<div id="subdivision" class="section level2">
 <h2 class="hasAnchor">
-<a href="#aggregation-subdivision" class="anchor"></a>Aggregation: Subdivision</h2>
+<a href="#subdivision" class="anchor"></a>Aggregation: Subdivision</h2>
 <div id="mDP" class="section level3">
 <h3 class="hasAnchor">
 <a href="#mDP" class="anchor"></a>Patch Density</h3>
@@ -418,9 +427,9 @@ list(p_c = list(operator = "mPerimeter", scale = "class"),
 <p>Reference: <span class="citation">Leitão et al. (<a href="#ref-leitao_measuring_2006">2006</a>)</span></p>
 </div>
 </div>
-<div id="aggregation-isolation" class="section level2">
+<div id="isolation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#aggregation-isolation" class="anchor"></a>Aggregation: Isolation</h2>
+<a href="#isolation" class="anchor"></a>Aggregation: Isolation</h2>
 </div>
 <div id="diversity" class="section level2">
 <h2 class="hasAnchor">
@@ -1192,14 +1201,14 @@ list(p_c = list(operator = "mPerimeter", scale = "class"),
 </li>
       <li>
 <a href="#derived-metrics">Derived metrics</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#area-and-edge">Area and Edge</a></li>
+<li><a href="#area_and_edge">Area and Edge</a></li>
       <li><a href="#shape">Shape</a></li>
-      <li><a href="#core-area">Core Area</a></li>
+      <li><a href="#core_area">Core Area</a></li>
       <li><a href="#contrast">Contrast</a></li>
-      <li><a href="#aggregation-dispersion">Aggregation: Dispersion</a></li>
-      <li><a href="#aggregation-interspersion">Aggregation: Interspersion</a></li>
-      <li><a href="#aggregation-subdivision">Aggregation: Subdivision</a></li>
-      <li><a href="#aggregation-isolation">Aggregation: Isolation</a></li>
+      <li><a href="#dispersion">Aggregation: Dispersion</a></li>
+      <li><a href="#interspersion">Aggregation: Interspersion</a></li>
+      <li><a href="#subdivision">Aggregation: Subdivision</a></li>
+      <li><a href="#isolation">Aggregation: Isolation</a></li>
       <li><a href="#diversity">Diversity</a></li>
       <li><a href="#to-complete-and-sort-in">To complete and sort in</a></li>
       </ul>

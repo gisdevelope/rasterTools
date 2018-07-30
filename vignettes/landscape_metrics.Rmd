@@ -63,6 +63,15 @@ The following graph shows the relationship of all metrics defined in @mcgarigal_
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%" />
 
+In the following you will find a list of the generic metrics defined (so far) and below that the derived metric sorted into the groups defined in @mcgarigal_fragstats_2015:
+
+1) [Area and Edge](#area_and_edge)
+2) [Shape](#shape)
+3) [Core Area](#core_area)
+4) [Contrast](#contrast)
+5) Aggregation ([Dispersion](#dispersion), [Interspersion](#interspersion), [Subdivision](#subdivision), [Isolation](#isolation))
+6) [Diversity](#diversity)
+
 # Generic metrics
 
 ## Number {#mNumber}
@@ -194,7 +203,7 @@ Reference: @mcgarigal_fragstats_2015
 
 # Derived metrics
 
-## Area and Edge
+## Area and Edge {#area_and_edge}
 ### Class proportion of the Landscape {#mCPA}
 
 Description: Proportion of the landscape window occupied by classes.
@@ -319,7 +328,7 @@ Employed in the derived metrics:
 Reference:
 
 
-## Shape
+## Shape {#shape}
 ### Perimeter-Area ratio {#mPAR}
 
 Description: Ratio of the perimeter per area of each patch.
@@ -350,9 +359,9 @@ Employed in the derived metrics:
 Reference: 
 
 
-## Core Area
-## Contrast
-## Aggregation: Dispersion 
+## Core Area {#core_area}
+## Contrast {#contrast}
+## Aggregation: Dispersion {#dispersion}
 ### Percentage of Like Adjacencies {#mPLA}
 
 Description: Percent of the adjacencies per class that are like adjacencies.
@@ -383,8 +392,8 @@ Employed in the derived metrics:
 Reference: 
 
 
-## Aggregation: Interspersion
-## Aggregation: Subdivision
+## Aggregation: Interspersion {#interspersion}
+## Aggregation: Subdivision {#subdivision}
 ### Patch Density {#mDP}
 
 Description: Number of patches per hectare of the landscape window.
@@ -415,8 +424,8 @@ Employed in the derived metrics:
 Reference: @leitao_measuring_2006
 
 
-## Aggregation: Isolation
-## Diversity
+## Aggregation: Isolation {#isolation}
+## Diversity {#diversity}
 ## To complete and sort in
 ### Aggregation Index {#mAI}
 
