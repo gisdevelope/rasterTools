@@ -34,9 +34,10 @@ reference:
     desc: operators to obtain raster objects from spatial datasets
     contents:
       - '`oCLC`'
+      - '`oEMMA`'
       - '`oGFC`'
       - '`oMODIS`'
-      - '`oEMMA`'
+      - '`oWCLIM`'
   - title: modifications
     desc: operators to modify raster objects
     contents:

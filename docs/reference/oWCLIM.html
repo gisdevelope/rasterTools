@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain Global Forest Change data — oGFC • rasterTools</title>
+<title>Obtain global climate data — oWCLIM • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,11 +30,11 @@
 
 
 
-<meta property="og:title" content="Obtain Global Forest Change data — oGFC" />
+<meta property="og:title" content="Obtain global climate data — oWCLIM" />
 
-<meta property="og:description" content="Obtain data from the 'Global Forest Change'
-dataset
-(paper)" />
+<meta property="og:description" content="Obtain data from the 'worldclim' dataset
+(paper1,
+paper2)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -135,22 +135,23 @@ dataset
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Obtain Global Forest Change data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/oGFC.R'><code>R/oGFC.R</code></a></small>
-    <div class="hidden name"><code>oGFC.Rd</code></div>
+    <h1>Obtain global climate data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rastertools/blob/master/R/oWCLIM.R'><code>R/oWCLIM.R</code></a></small>
+    <div class="hidden name"><code>oWCLIM.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Obtain data from the 'Global Forest Change'
-<a href='https://earthenginepartners.appspot.com/science-2013-global-forest'>dataset</a>
-(<a href='https://doi.org/10.1126/science.1244693'>paper</a>)</p>
+    <p>Obtain data from the 'worldclim' <a href='http://worldclim.org/'>dataset</a>
+(<a href='https://doi.org/10.1002/joc.1276'>paper1</a>,
+<a href='https://doi.org/10.1002/joc.5086'>paper2</a>)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>oGFC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>keepRaw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>month</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>:<span class='fl'>12</span>), <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 
-<span class='fu'>downloadGFC</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+<span class='fu'>downloadWCLIM</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,15 +162,24 @@ dataset
 the extent is the area of interest.</p></td>
     </tr>
     <tr>
-      <th>years</th>
-      <td><p>[<code>integerish(.)</code>]<br /> year(s) for which GFC data should be
-extracted; see Details.</p></td>
+      <th>variable</th>
+      <td><p>[<code>character(.)</code>]<br /> the climatic variable of interest;
+see Details to find which variables are available in which version.</p></td>
     </tr>
     <tr>
-      <th>keepRaw</th>
-      <td><p>[<code>logical(1)</code>]<br /> should the raw data be retained
-(<code>TRUE</code>), or should only the derived data be returned (<code>FALSE</code>,
-default)?</p></td>
+      <th>month</th>
+      <td><p>[<code>integerish(.)</code>]<br /> the month(s) for which the data should
+be extracted.</p></td>
+    </tr>
+    <tr>
+      <th>resolution</th>
+      <td><p>[<code>numeric(1)</code>]<br /> the spatial resolution in
+arc-minutes.</p></td>
+    </tr>
+    <tr>
+      <th>version</th>
+      <td><p>[<code>integerish(1)</code>]<br /> the version for which you'd like to
+obtain the worldclim data.</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -182,84 +192,77 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A <code>RasterStack</code> of gfc data.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The GFC dataset is based on a time-series analysis of Landsat images
-  characterizing forest extent and change.</p>
-<p>A problem with the GFC dataset is that the gain-layer is calculated for the
-  overall period from 2000 to 2014, while the loss-layer contains the loss
-  events on a yearly basis. Hence, to find the true value per year for a
-  raster-cell may not be straightforward. In <code>oGFC</code> a yearly value is
-  derived by removing all loss events up to the year in question from the
-  <em>year 2000</em>-layer and subsequently adding the <em>gain</em>-layer. Gain
-  events are in nature rather diffuse and happen progressively and relatively
-  slowely throughout time. A raster cell, which was marked as "forest absent"
-  in 2000 and which had a positive gain-value by 2014, "became tree" within
-  this time-frame (i.e. became over 5 m tall). This event, "becoming tree",
-  presumably does not mean that the vegetation in this raster cell grew to a
-  tall and mature forest. Much rather it would have some hight between 5 m
-  and what a tree in the given region can grow in that short time. To get a
-  more accurate estimation of the forest cover - particularly in very dynamic
-  landscapes - it might be wise to weigh the forest cover with some sort of
-  productivity and/or macroclimate dataset, because more suitable sites
-  result in faster growth of trees.</p>
+    <ul>
+<li><p>Version 2.0 includes
+  the variables:</p><ul>
+<li><p><code>"tmin"</code>: average monthly minimum
+  temperature [°C * 10],</p></li>
+<li><p><code>"tmax"</code>: average monthly maximum
+  temperature [°C * 10],</p></li>
+<li><p><code>"tavg"</code>: average monthly mean
+  temperature [°C * 10],</p></li>
+<li><p><code>"prec"</code>: average monthly precipitation
+  [mm],</p></li>
+<li><p><code>"srad"</code>: average monthly solar radiation [kJ m-2 day-1],</p></li>
+<li><p><code>"wind"</code>: average monthly wind speed [m s-1],</p></li>
+<li><p><code>"vapr"</code>: average monthly water vapour pressure [kPa],</p></li>
+<li><p><code>"bio"</code>: bioclimatic variables derived from the above.</p></li>
+</ul></li>
+</ul>
+    <p>The files of version 1.4 are shipped in the 'bil' format. While the files
+  are compressed into a zip-file, once unzipped, they take up a lot of space
+  on the harddisc. Hence, when using this function for the first time,
+  <code>downloadWCLIM</code> downloads and unzips the original file(s), transforms
+  the monthly files into 'tif' format (which uses only about 1/10th of the
+  space) and deletes the original 'bil' files. Beware that due to the size of
+  the inital files this takes a lot (!) of time, especially for the 30
+  arc-second files. However, when repeatedly using these data, so the hope,
+  this procedure should make the future work with these data smoother.</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     <ul>
-<li><p><code>downloadGFC</code>: function to download data related to the GFC dataset</p></li>
+<li><p><code>downloadWCLIM</code>: function to download global climte datasets</p></li>
 </ul>
-    
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Hansen, M.C., Potapov, P.V., Moore, R., Hancher, M., Turubanova,
-  S.A., Tyukavina, A., Thau, D., Stehman, S.V., Goetz, S.J., Loveland, T.R.,
-  Kommareddy, A., Egorov, A., Chini, L., Justice, C.O., Townshend, J.R.G.,
-  2013. High-Resolution Global Maps of 21st-Century Forest Cover Change.
-  Science 342, 846–850.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other obtain operators: <code><a href='oCLC.html'>oCLC</a></code>,
-  <code><a href='oEMMA.html'>oEMMA</a></code>, <code><a href='oMODIS.html'>oMODIS</a></code>,
-  <code><a href='oWCLIM.html'>oWCLIM</a></code></p></div>
+  <code><a href='oEMMA.html'>oEMMA</a></code>, <code><a href='oGFC.html'>oGFC</a></code>,
+  <code><a href='oMODIS.html'>oMODIS</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>require</span>(<span class='no'>magrittr</span>)
+    <pre class="examples"># NOT RUN {
+require(magrittr)
 
-<span class='co'># load and outline masks from file</span>
-<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"aWindow.csv"</span>,
-                   <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
+# load and outline masks from file
+myMask <- loadData(files = "aWindow.csv",
+                   localPath = system.file("csv", package="rasterTools")) %>%
+  geomRectangle() %>%
+  setCRS(crs = projs$laea)
 
-<span class='co'># extract GFC data for the derived mask</span>
-<span class='no'>myGFC</span> <span class='kw'>&lt;-</span> <span class='fu'>oGFC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
-              <span class='kw'>years</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2002</span>, <span class='fl'>2006</span>, <span class='fl'>2010</span>, <span class='fl'>2014</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myGFC</span>$<span class='no'>treecover_2002</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+# extract worldclim data for the derived mask
+myWCLIM <- oWCLIM(mask = myMask,
+                  variable = c("tmin", "tmax"),
+                  month = c(5:9))
+visualise(gridded = myWCLIM$, trace = TRUE)
 
-<span class='co'># get the (updated) bibliography</span>
-<span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)
-<span class='co'># }</span></pre>
+# get the (updated) bibliography
+reference(style = "bibtex")
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
 
       <li><a href="#functions">Functions</a></li>
-
-      <li><a href="#references">References</a></li>
 
       <li><a href="#see-also">See also</a></li>
       
