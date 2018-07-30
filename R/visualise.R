@@ -52,7 +52,7 @@
 #'   testCharacter testIntegerish
 #' @importFrom grid grid.newpage pushViewport viewport grid.rect grid.raster
 #'   unit grid.draw grid.grill upViewport grid.text gpar convertX downViewport
-#' @importFrom grDevices colorRampPalette as.raster recordPlot
+#' @importFrom grDevices colorRampPalette as.raster recordPlot rgb
 #' @importFrom raster nlayers values as.matrix ncol nrow
 #' @export
 

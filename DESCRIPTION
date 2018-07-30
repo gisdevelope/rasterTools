@@ -32,7 +32,6 @@ LinkingTo: Rcpp
 Suggests: testthat,
     magrittr,
     covr,
-    knitr,
-    rmarkdown
+    knitr
 SystemRequirements: C++11
 VignetteBuilder: knitr
