@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>rasterTools • rasterTools</title>
+<title>rasterTools - Introduction • rasterTools</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="rasterTools">
+<script src="../pkgdown.js"></script><meta property="og:title" content="rasterTools - Introduction">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -100,7 +100,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>rasterTools</h1>
+      <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
             <h4 class="date">2018-07-30</h4>
@@ -136,7 +136,13 @@
 </h2>
 <p><code>rasterTools</code> comes with its own (spatial) S4 class. This class is radically simplified (even in comparison to <code>sf</code>) and thus consists only of the feature classes <code>point</code>, <code>line</code> and <code>polygon</code>. It does, however, come with many functions that create specific types of lines or polygons, for instance <code><a href="../reference/geomPolygon.html">geomHexagon()</a></code>, which creates exclusively hexagonal polygon geometries.</p>
 <p>These geometries are deliberately per default not <em>spatial</em> in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a <em>coordinate reference system</em>. We learn a lot about them by simply creating and plotting one:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
+<span class="co">#&gt; Loading required package: sp</span>
+<span class="kw">library</span>(rasterTools)
+<span class="co">#&gt; Hi, I am rasterTools 0.6.1 and I help you with your spatial data!</span>
+<span class="co">#&gt; I don't know where your files are stored, please see '?updatePaths' to create a suitable index.</span>
+
+coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
                      <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
                      <span class="dt">id =</span> <span class="dv">1</span>)
 window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),
@@ -159,9 +165,6 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 <h1 class="hasAnchor">
 <a href="#example-workflow" class="anchor"></a>Example workflow</h1>
 <p>In the following you will find an example for each of the core functions. Let’s start by loading the package</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
-<span class="co">#&gt; Loading required package: sp</span>
-<span class="kw">library</span>(rasterTools)</code></pre></div>
 <p><code>rasterTools</code> may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via <code><a href="../reference/updatePaths.html">updatePaths(root = "/path/to/the/spatial/files")</a></code>.</p>
 <div id="generate-spatial-patterns" class="section level2">
 <h2 class="hasAnchor">
@@ -208,7 +211,7 @@ myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>continuous
 myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> myInput, <span class="dt">by =</span> get_patches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div id="measure-gridded-objects" class="section level2">
 <h2 class="hasAnchor">

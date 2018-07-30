@@ -118,6 +118,7 @@
 <li><a href="#morph">Morphological operations</a></li>
 <li><a href="#features">Identify features/objects</a></li>
 <li><a href="#classify">Classify values</a></li>
+<li><a href="#distance_map">Distance Maps</a></li>
 </ol>
 <p>Lets start with reading in the required packages:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rasterTools)
@@ -278,39 +279,6 @@ background &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <a href="#identify-openings-that-are-connected-to-the-background" class="anchor"></a>Identify openings that are connected to the background</h2>
 <p>E.g. Clearcuts</p>
 </div>
-<div id="compute-the-distance-map-of-centroids-per-patch" class="section level2">
-<h2 class="hasAnchor">
-<a href="#compute-the-distance-map-of-centroids-per-patch" class="anchor"></a>Compute the distance map of centroids per patch</h2>
-<p>We may be interested in distance maps to calculate a range of landscape metrics. For example, the <em>Radius of Gyration</em> derives from the average distance of all cells of a patch to the patches’ centroid. To calculate it, we would have to find the patch centroid and the patch specific distance of each cell of a patch to its centroid.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centDistMap &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
-                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">1</span>),
-                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
-                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
-                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"input"</span>),
-                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>))
-
-DistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> centDistMap)
-<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(DistMap)</code></pre></div>
-<p><img src="usecases_files/figure-html/unnamed-chunk-15-1.png" width="100%"></p>
-<p>We see, however, that the distances of some centroids overlap with patches to which they do not belong. Hence, we have to segregate the raster into its patches.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getCentDist &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
-                    <span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"patchesMask"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
-                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rReduce"</span>, <span class="dt">fun =</span> max))
-
-patchObj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rPatches.html">rPatches</a></span>(binarised)
-centDistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> patchObj, <span class="dt">by =</span> getCentDist, <span class="dt">keepInput =</span> <span class="ot">TRUE</span>)
-centDistMap &lt;-<span class="st"> </span>raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(centDistMap[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)])
-<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(centDistMap)</code></pre></div>
-<p><img src="usecases_files/figure-html/unnamed-chunk-16-1.png" width="100%"></p>
-<p>See [link to radius of gyration metric] for how to proceed from here to calculate the <em>Radius of Gyration</em>.</p>
-</div>
 <div id="identify-signature-points-in-a-skeleton" class="section level2">
 <h2 class="hasAnchor">
 <a href="#identify-signature-points-in-a-skeleton" class="anchor"></a>Identify signature points in a skeleton</h2>
@@ -337,7 +305,7 @@ skeletonMeta &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <span class="co">#&gt;  -&gt; the values have been binarised</span>
 <span class="co">#&gt;  -&gt; the morphological skeleton has been determined</span>
 <span class="co">#&gt;  -&gt; the raster has been blended</span></code></pre></div>
-<p><img src="usecases_files/figure-html/unnamed-chunk-17-1.png" width="100%"></p>
+<p><img src="usecases_files/figure-html/unnamed-chunk-15-1.png" width="100%"></p>
 </div>
 <div id="identify-coreecotone-habitat" class="section level2">
 <h2 class="hasAnchor">
@@ -378,6 +346,43 @@ skeletonMeta &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># visualise(gridded = in.ras, image = TRUE)</span></code></pre></div>
 </div>
 </div>
+<div id="distance_map" class="section level1">
+<h1 class="hasAnchor">
+<a href="#distance_map" class="anchor"></a>Distance Maps</h1>
+<div id="compute-the-distance-map-of-centroids-per-patch" class="section level2">
+<h2 class="hasAnchor">
+<a href="#compute-the-distance-map-of-centroids-per-patch" class="anchor"></a>Compute the distance map of centroids per patch</h2>
+<p>We may be interested in distance maps to calculate a range of landscape metrics. For example, the <em>Radius of Gyration</em> derives from the average distance of all cells of a patch to the patches’ centroid. To calculate it, we would have to find the patch centroid and the patch specific distance of each cell of a patch to its centroid.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centDistMap &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">1</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"input"</span>),
+                    <span class="dt">dis =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>))
+
+DistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> binarised, <span class="dt">by =</span> centDistMap)
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(DistMap)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
+<p>We see, however, that the distances of some centroids overlap with patches to which they do not belong. Hence, we have to segregate the raster into its patches.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">getCentDist &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
+                    <span class="dt">patchesMask =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rSegregate"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCentroid"</span>, <span class="dt">background =</span> <span class="dv">0</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rDistance"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rOffset"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rMask"</span>, <span class="dt">mask =</span> <span class="st">"patchesMask"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rFillNA"</span>),
+                    <span class="dt">distances =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rReduce"</span>, <span class="dt">fun =</span> max))
+
+patchObj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rPatches.html">rPatches</a></span>(binarised)
+centDistMap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> patchObj, <span class="dt">by =</span> getCentDist, <span class="dt">keepInput =</span> <span class="ot">TRUE</span>)
+centDistMap &lt;-<span class="st"> </span>raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(centDistMap[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)])
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(centDistMap)</code></pre></div>
+<p><img src="usecases_files/figure-html/unnamed-chunk-19-1.png" width="100%"></p>
+<p>See [link to radius of gyration metric] for how to proceed from here to calculate the <em>Radius of Gyration</em>.</p>
+</div>
+</div>
 <div id="sort-in" class="section level1">
 <h1 class="hasAnchor">
 <a href="#sort-in" class="anchor"></a>Sort in</h1>
@@ -404,7 +409,6 @@ skeletonMeta &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <li><a href="#identify-the-medial-axis">Identify the Medial axis</a></li>
       <li><a href="#identify-openingsperforations">Identify openings/perforations</a></li>
       <li><a href="#identify-openings-that-are-connected-to-the-background">Identify openings that are connected to the background</a></li>
-      <li><a href="#compute-the-distance-map-of-centroids-per-patch">Compute the distance map of centroids per patch</a></li>
       <li><a href="#identify-signature-points-in-a-skeleton">Identify signature points in a skeleton</a></li>
       <li><a href="#identify-coreecotone-habitat">Identify core/ecotone habitat</a></li>
       <li><a href="#identify-boundaries">Identify boundaries</a></li>
@@ -416,6 +420,11 @@ skeletonMeta &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
       <li>
 <a href="#classify">Classify values</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#classify-a-raster-based-on-colour-values-cf-histmapr">Classify a raster based on colour values (<em>cf</em> HistMapR)</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#distance_map">Distance Maps</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#compute-the-distance-map-of-centroids-per-patch">Compute the distance map of centroids per patch</a></li>
       </ul>
 </li>
       <li>

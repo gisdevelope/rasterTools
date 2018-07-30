@@ -180,17 +180,29 @@ specify here the layer for which the area of objects shall be calculated
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorial</span></div><div class='output co'>#&gt; <span class='error'>Error in .local(x, ...): invalid layer names</span></div><div class='input'><span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
+    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
+<span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
 
 <span class='co'># the number ...</span>
 <span class='co'># ... per landuse type</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpLh8AuZ/file57f9a2329c6"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpLh8AuZ/file57f91377b8c0")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpLh8AuZ/file57f91377b8c0",         ".error"))    stop(e)}): Assertion on 'obj' failed: Must have class 'Raster', but has class 'function'.</span></div><div class='input'>
+<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   window classes
+#&gt; 1      1       9</div><div class='input'>
 <span class='co'># ... of patches per landuse type</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpLh8AuZ/file57f9a2329c6"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpLh8AuZ/file57f91377b8c0")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpLh8AuZ/file57f91377b8c0",         ".error"))    stop(e)}): Assertion on 'obj' failed: Must have class 'Raster', but has class 'function'.</span></div><div class='input'>
+<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   class patches
+#&gt; 1     1       1
+#&gt; 2    11       1
+#&gt; 3    21       2
+#&gt; 4    24       3
+#&gt; 5    27       2
+#&gt; 6    31       3
+#&gt; 7    41      13
+#&gt; 8    44      14
+#&gt; 9    47      13</div><div class='input'>
 <span class='co'># ...  of certain values</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>match</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>mNumber</span>(<span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"values_binarised"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpLh8AuZ/file57f9a2329c6"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpLh8AuZ/file57f91377b8c0")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpLh8AuZ/file57f91377b8c0",         ".error"))    stop(e)}): Assertion on 'obj' failed: Must have class 'RasterLayer', but has class 'function'.</span></div><div class='input'>
+  <span class='fu'>mNumber</span>(<span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"values_binarised"</span>)</div><div class='output co'>#&gt;   window patches
+#&gt; 1      1      21</div><div class='input'>
 <span class='co'># ... from a binary raster</span>
 <span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   window patches
 #&gt; 1      1      26</div><div class='input'><span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   window classes
