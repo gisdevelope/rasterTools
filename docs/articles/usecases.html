@@ -133,16 +133,16 @@
 <span class="co">#&gt;     extract</span></code></pre></div>
 <p>For now, we can just ignore the note to run <code>updatePaths</code>, because we do not access the paths. We do however access the spatial example datasets of <code>rasterTools</code>, so lets also read these in.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">continuous &lt;-<span class="st"> </span>rtData<span class="op">$</span>continuous
-categorial &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorial
+categorical &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
 
-<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(continuous, categorial))</code></pre></div>
+<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(continuous, categorical))</code></pre></div>
 <p><img src="usecases_files/figure-html/unnamed-chunk-2-1.png" width="100%"></p>
 <p>Moreover, we need to create two frequently occurring derivations thereof, a raster where classes are assigned to distinct patches and a binarised raster, where some class(es) have been set as focal class. Here we derive them from the categorical raster, but this could as well be done from the continuous raster.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">catPatchesObj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rSubstitute.html">rSubstitute</a></span>(<span class="dt">obj =</span> categorial, 
-                             <span class="dt">old =</span> <span class="kw">sort</span>(base<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/getValues">values</a></span>(categorial))),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">catPatchesObj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rSubstitute.html">rSubstitute</a></span>(<span class="dt">obj =</span> categorical, 
+                             <span class="dt">old =</span> <span class="kw">sort</span>(base<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/getValues">values</a></span>(categorical))),
                              <span class="dt">new =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>))
 
-binarised &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rBinarise.html">rBinarise</a></span>(categorial, <span class="dt">match =</span> <span class="kw">c</span>(<span class="dv">41</span>, <span class="dv">44</span>, <span class="dv">47</span>))
+binarised &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rBinarise.html">rBinarise</a></span>(categorical, <span class="dt">match =</span> <span class="kw">c</span>(<span class="dv">41</span>, <span class="dv">44</span>, <span class="dv">47</span>))
 
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(catPatchesObj, binarised))</code></pre></div>
 <p><img src="usecases_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>

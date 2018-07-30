@@ -8,7 +8,7 @@
 
 ***obtain and process earth observation data***
 
-The rasterTools package provides the toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions.
+The rasterTools package provides a toolchain for a transparent and reproducible workflow to obtain and process spatial (earth observation) data for an evidence based approach to landscape ecological questions.
 
 
 ## Getting started

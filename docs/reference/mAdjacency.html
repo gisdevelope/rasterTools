@@ -194,31 +194,12 @@ specify here the layer for which the area of objects shall be calculated
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorial</span>
-<span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
+    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorial</span></div><div class='output co'>#&gt; <span class='error'>Error in .local(x, ...): invalid layer names</span></div><div class='input'><span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
 
 <span class='co'># couble count like adjacencies</span>
-<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>)</div><div class='output co'>#&gt;    class likeAdj
-#&gt; 1      1     114
-#&gt; 11    11     218
-#&gt; 21    21     898
-#&gt; 24    24    1656
-#&gt; 27    27    1568
-#&gt; 31    31    1392
-#&gt; 41    41    1586
-#&gt; 44    44    1418
-#&gt; 47    47    1740</div><div class='input'>
+<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>)</div><div class='output co'>#&gt; <span class='error'>Error in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpLh8AuZ/file57f9a2329c6"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpLh8AuZ/file57f91377b8c0")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpLh8AuZ/file57f91377b8c0",         ".error"))    stop(e)}): Assertion on 'obj' failed: Must have class 'Raster', but has class 'function'.</span></div><div class='input'>
 <span class='co'># paired adjacencies</span>
-<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"paired"</span>)</div><div class='output co'>#&gt;    class   1  11  21   24   27   31   41   44   47
-#&gt; 1      1 114   0   0    0    0    0   34    0    0
-#&gt; 11    11   0 218   0   22   36   35    2   53   47
-#&gt; 21    21   0   0 898   29    1    0   95   29   33
-#&gt; 24    24   0  22  29 1656    0   17  219   11   17
-#&gt; 27    27   0  36   1    0 1568   20   57   57   78
-#&gt; 31    31   0  35   0   17   20 1392   73    4   38
-#&gt; 41    41  34   2  95  219   57   73 1586   89   77
-#&gt; 44    44   0  53  29   11   57    4   89 1418  136
-#&gt; 47    47   0  47  33   17   78   38   77  136 1740</div><div class='input'>
+<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"paired"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpLh8AuZ/file57f9a2329c6"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpLh8AuZ/file57f91377b8c0")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpLh8AuZ/file57f91377b8c0",         ".error"))    stop(e)}): Assertion on 'obj' failed: Must have class 'Raster', but has class 'function'.</span></div><div class='input'>
 <span class='co'># adjacencies with single count</span>
 <span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>count</span> <span class='kw'>=</span> <span class='st'>"single"</span>)</div><div class='output co'>#&gt;   class likeAdj
 #&gt; 0     0    3746

@@ -214,7 +214,7 @@ myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/m
 <h2 class="hasAnchor">
 <a href="#measure-gridded-objects" class="anchor"></a>Measure gridded objects</h2>
 <p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorial
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
 myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
                   <span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>))
 <span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
