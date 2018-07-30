@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This is a technical documentation of landscape metrics, both as defined in FRAGSTATS [@mcgarigal_fragstats_2015], where the majority of landscape metrics are collected, but also from several newer references, or those that have not been included in FRAGSTATS. It is currently still work in progress, feel free to participate!
+This is a technical documentation of how landscape metrics are understood in `rasterTools`. This includes both metrics as defined in FRAGSTATS [@mcgarigal_fragstats_2015], where the majority of landscape metrics are collected, but also other references that have not been included in FRAGSTATS. The basic principle is fixed, but the documentation is currently still work in progress, feel free to participate!
 
 ## Level of measurement
 Many landscape metrics can be measured at different levels/scales of the landscape. Landscapes are visualised in the form of maps and these are stored in a gridded format, a socalled raster, in most GIS software.
@@ -63,7 +63,7 @@ The following graph shows the relationship of all metrics defined in @mcgarigal_
 
 <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%" />
 
-In the following you will find a list of the generic metrics defined (so far) and below that the derived metric sorted into the groups defined in @mcgarigal_fragstats_2015:
+In the following you will find a list of the generic metrics defined (so far) and below that the derived metrics sorted into the groups defined in @mcgarigal_fragstats_2015:
 
 1) [Area and Edge](#area_and_edge)
 2) [Shape](#shape)
@@ -261,7 +261,7 @@ Limitations:
 
 Employed in the derived metrics: -
 
-Comment: To derive the largest patch index at class scale from a categorial raster, i.e. the area covered by the largerst patch per class, first segregate the categorial raster per class and then use `mLPI` on the segregated elements. This is necessary, because determining patches from a categorial raster may be arbitrary, for instance when a forest patch consists of the classes deciduous and mixed forest.
+Comment: To derive the largest patch index at class scale from a categorical raster, i.e. the area covered by the largerst patch per class, first segregate the categorical raster per class and then use `mLPI` on the segregated elements. This is necessary, because determining patches from a categorical raster may be arbitrary, for instance when a forest patch consists of the classes deciduous and mixed forest.
 
 Reference: @mcgarigal_fragstats_2015
 

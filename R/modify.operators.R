@@ -20,7 +20,6 @@
 #' @export
 
 rBinarise <- function(obj, thresh = NULL, match = NULL){
-
   # check arguments
   assertClass(obj, "RasterLayer")
   assertNumber(thresh, null.ok = TRUE)
@@ -1589,7 +1588,7 @@ rSkeletonise <- function(obj, method = "hitormiss", kernel = NULL, background = 
 #'   \code{old} values have been replaced by \code{new} values.
 #' @family operators to modify cell values
 #' @examples
-#' input <- rtData$categorial
+#' input <- rtData$categorical
 #' substituted <- rSubstitute(input, old = c(41:47), new = 40)
 #' visualise(raster::brick(input, substituted))
 #' @importFrom checkmate assertClass

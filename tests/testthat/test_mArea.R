@@ -4,7 +4,7 @@ context("mArea")
 
 
 test_that("output is data.frame", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch")
@@ -31,7 +31,7 @@ test_that("determines patches, when binarised input is provided and 'scale = pat
 })
 
 test_that("output has the correct columm names", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch")
@@ -48,7 +48,7 @@ test_that("output has the correct columm names", {
 })
 
 test_that("output with the correct unit", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch", unit = "map")
@@ -65,7 +65,7 @@ test_that("output with the correct unit", {
 })
 
 test_that("Error if arguments have wrong value", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   mat <- as.matrix(cat)
 
   expect_error(mArea(obj = mat))
@@ -75,7 +75,7 @@ test_that("Error if arguments have wrong value", {
 })
 
 test_that("bibliography item has been created", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
 
   output <- mArea(obj = cat, scale = "class")
   theBib <- getOption("bibliography")

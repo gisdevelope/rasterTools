@@ -46,7 +46,7 @@ A landscape metric can be generic or derived. In the first case the
   raster. }
 }
 \examples{
-input <- rtData$categorial
+input <- rtData$categorical
 
 # calculate generic metrics 'area per class' and 'area per window', 'obj' does
 # not need to be specified per operator in the algorithm, as 'measure' assigns it.

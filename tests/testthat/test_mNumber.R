@@ -3,7 +3,7 @@ context("mNumber")
 
 
 test_that("output is data.frame", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mNumber(obj = bin, scale = "patch")
@@ -17,7 +17,7 @@ test_that("output is data.frame", {
 })
 
 test_that("determines patches, when binarised input is provided and 'scale = patch'", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mNumber(obj = bin, scale = "patch")
@@ -28,7 +28,7 @@ test_that("determines patches, when binarised input is provided and 'scale = pat
 })
 
 test_that("output has the correct columm names", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mNumber(obj = bin, scale = "patch")
@@ -42,7 +42,7 @@ test_that("output has the correct columm names", {
 })
 
 test_that("Error if arguments have wrong value", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   mat <- as.matrix(cat)
 
   expect_error(mNumber(obj = mat))
@@ -51,7 +51,7 @@ test_that("Error if arguments have wrong value", {
 })
 
 test_that("bibliography item has been created", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
 
   output <- mNumber(obj = cat, scale = "class")
   theBib <- getOption("bibliography")

@@ -147,7 +147,7 @@ visualise(raster::stack(myInput, myPatches))
 Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
 
 ```{r}
-myInput <- rtData$categorial
+myInput <- rtData$categorical
 myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
                   a_w = list(operator = "mArea", scale = "window"))
 measure(input = myInput, with = myMetrics)

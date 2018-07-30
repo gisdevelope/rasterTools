@@ -3,7 +3,7 @@ context("mAdjacency")
 
 
 test_that("output is data.frame", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mAdjacency(obj = cat)
@@ -23,7 +23,7 @@ test_that("output is data.frame", {
 })
 
 test_that("output with the correct column names", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mAdjacency(obj = cat)
@@ -40,7 +40,7 @@ test_that("output with the correct column names", {
 })
 
 test_that("Error if arguments have wrong value", {
-  cat <- rtData$categorial
+  cat <- rtData$categorical
   mat <- as.matrix(cat)
 
   expect_error(mAdjacency(obj = mat))

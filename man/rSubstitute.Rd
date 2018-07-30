@@ -21,7 +21,7 @@ A \code{RasterLayer} of the same dimensions as \code{obj}, in which
 Substitute values in a raster
 }
 \examples{
-input <- rtData$categorial
+input <- rtData$categorical
 substituted <- rSubstitute(input, old = c(41:47), new = 40)
 visualise(raster::brick(input, substituted))
 }
