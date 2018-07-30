@@ -65,7 +65,7 @@ window <- data.frame(x = c(0, 80),
 (aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE))
 ```
 
-The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. To be compatible with the other existing spatial classes in R (namely `sp` and `sf`), it has the classic extent slot, that behaves exactly as with any other spatial class in R. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and the other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` funciton. The foreign methods have been defined for the sake of internal consistency and simplification.
+The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` funciton. The foreign methods have been defined for the sake of internal consistency and simplification.
 
 Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to other spatial classes have been programmed (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
 
@@ -153,7 +153,7 @@ myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
 measure(input = myInput, with = myMetrics)
 ```
 
-The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the window area (*a_c / a_w * 100*). 
+The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the window area:
 
 ```{r}
 myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
@@ -161,7 +161,7 @@ myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
                  mCPA = "a_c / a_w * 100")
 ```
 
-Several derived metrics can be defined in one algorithm, given the required terms are also defined
+Several derived metrics can be defined in one algorithm, given the required terms are defined:
 
 ```{r}
 myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
@@ -171,7 +171,7 @@ myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   mLPI = "max(a_p) / a_w * 100")
 ```
 
-The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are predefined. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
 Finally, the measurement of the *class proportional area* and the *largest patch index*, in a raster where patches have been determined, would be carried out by:
 
