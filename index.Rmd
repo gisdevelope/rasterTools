@@ -104,24 +104,6 @@ Planned for future versions
 ___________________________________________
 
 
-Citation
-------------------------------------------------------------
-
-
-Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.6.0. https://github.com/EhrmannS/rastertools
-
-```
-@Manual{,
-  title = {rasterTools: obtain and process earth observation data},
-  author = {Steffen Ehrmann},
-  year = {2018},
-  note = {R package version 0.6.0},
-  url = {https://github.com/EhrmannS/rastertools},
-}
-```
-___________________________________________
-
-
 Acknowledgements
 ------------------------------------------------------------
 

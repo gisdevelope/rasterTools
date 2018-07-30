@@ -70,19 +70,6 @@ In case you have a suggestion for a feature or function you think is missing, pl
 
 - more `Rcpp` and parallelisation.
 
-## Citation
-Steffen Ehrmann (2018). rasterTools: obtain and process earth observation data. R package version 0.6.0. https://github.com/EhrmannS/rastertools
-
-```
-@Manual{,
-  title = {rasterTools: obtain and process earth observation data},
-  author = {Steffen Ehrmann},
-  year = {2018},
-  note = {R package version 0.6.0},
-  url = {https://github.com/EhrmannS/rastertools},
-}
-```
-
 ## Acknowledgements
 I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the [FunBo Project](https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo), which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.
 

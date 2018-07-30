@@ -1,14 +1,14 @@
 Package: rasterTools
 Title: obtain and process earth observation data
-Version: 0.6.0
+Version: 0.6.1
 Authors@R: person("Steffen", "Ehrmann", email = "steffen.science@funroll-loops.de",
     role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0002-2958-0796"))
 Description: The rasterTools package provides the toolchain for a transparent 
     and reproducible workflow to obtain and process spatial (earth observation)
     data for an evidence based approach to landscape ecological questions.
-URL: https://github.com/EhrmannS/rastertools
-BugReports: https://github.com/EhrmannS/rastertools/issues
+URL: https://github.com/EhrmannS/rasterTools
+BugReports: https://github.com/EhrmannS/rasterTools/issues
 Depends:
     R (>= 2.10)
 License: GPL-3
