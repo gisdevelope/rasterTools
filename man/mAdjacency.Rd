@@ -36,7 +36,7 @@ In case \code{type = "like"}, only the diagonal of the adjacency
   matrix is returned.
 }
 \examples{
-cat <- rtData$categorial
+cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # couble count like adjacencies

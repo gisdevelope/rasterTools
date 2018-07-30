@@ -20,7 +20,7 @@
 #'   \code{obj}.
 #' @family generic metrics
 #' @examples
-#' cat <- rtData$categorial
+#' cat <- rtData$categorical
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # couble count like adjacencies
@@ -97,7 +97,7 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 #'   (i.e. the area of patches per class).
 #' @family generic metrics
 #' @examples
-#' cat <- rtData$categorial
+#' cat <- rtData$categorical
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the area ...
@@ -223,7 +223,7 @@ mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 #'   value (i.e. the number of patches per class).
 #' @family generic metrics
 #' @examples
-#' cat <- rtData$categorial
+#' cat <- rtData$categorical
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the number ...
@@ -337,7 +337,7 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
 #'   distinct objects per distinct values (i.e. the area of patches per class).
 #' @family generic metrics
 #' @examples
-#' cat <- rtData$categorial
+#' cat <- rtData$categorical
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
 #' # the perimeter ...

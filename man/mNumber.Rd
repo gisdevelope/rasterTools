@@ -25,7 +25,7 @@ For \code{scale = "class"} the number of unique values (classes) in
 Count the number of objects in a raster
 }
 \examples{
-cat <- rtData$categorial
+cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the number ...

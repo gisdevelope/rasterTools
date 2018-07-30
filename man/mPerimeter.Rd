@@ -31,7 +31,7 @@ For \code{scale = "class"} the edge length of each unique value
 Calculate the length of edges/boundaries between objects in a spatial raster.
 }
 \examples{
-cat <- rtData$categorial
+cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the perimeter ...

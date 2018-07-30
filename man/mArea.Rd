@@ -31,7 +31,7 @@ For \code{scale = "window"} the area of the overall raster, for
 Calculate the area of objects in a raster
 }
 \examples{
-cat <- rtData$categorial
+cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the area ...
