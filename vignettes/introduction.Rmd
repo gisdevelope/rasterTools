@@ -1,17 +1,12 @@
 ---
-title: "rasterTools"
+title: "rasterTools - Introduction"
 author: "Steffen Ehrmann"
 date: "`r Sys.Date()`"
 bibliography: rasterTools.bib
-output: 
-  rmarkdown::html_vignette:
-  rmarkdown::html_document:
-    toc: true
-    toc_float: true
-    theme: spacelab
 link-citations: yes
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rasterTools}
+  %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +16,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(rasterTools)
 ```
 
 # Introduction
@@ -57,6 +51,9 @@ This modularity is one of the strong sides of `rasterTools`. It allows the user 
 These geometries are deliberately per default not *spatial* in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a *coordinate reference system*. We learn a lot about them by simply creating and plotting one:
 
 ```{r}
+library(raster)
+library(rasterTools)
+
 coords <- data.frame(x = c(40, 70, 70, 50),
                      y = c(40, 40, 60, 70),
                      id = 1)
@@ -72,11 +69,6 @@ Additionally, several "tools" to modify the `geom` vertices and to transform the
 
 # Example workflow
 In the following you will find an example for each of the core functions. Let's start by loading the package
-
-```{r}
-library(raster)
-library(rasterTools)
-```
 
 `rasterTools` may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via `updatePaths(root = "/path/to/the/spatial/files")`.
 

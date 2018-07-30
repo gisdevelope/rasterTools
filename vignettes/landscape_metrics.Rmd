@@ -3,17 +3,12 @@ title: "Landscape metrics"
 author: "Steffen Ehrmann"
 date: "`r Sys.Date()`"
 bibliography: rasterTools.bib
-output: 
-  rmarkdown::html_vignette:
-  rmarkdown::html_document:
-    toc: true
-    toc_float: true
-    theme: spacelab
 link-citations: yes
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Landscape metrics}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
