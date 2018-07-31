@@ -1,7 +1,7 @@
 #' Obtain data of European mammals.
 #'
 #' Obtain occurence data of mammals in Europe of the first EMMA
-#' \href{https://www.european-mammals.org/}{dataset}
+#' \href{https://www.european-mammals.org/}{dataset}.
 #'
 #' @template mask
 #' @param species [\code{character(.)}]\cr name(s) of species to get occurrence

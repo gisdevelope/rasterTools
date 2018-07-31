@@ -31,7 +31,7 @@ A \code{RasterStack} of gfc data.
 \description{
 Obtain data from the 'Global Forest Change'
 \href{https://earthenginepartners.appspot.com/science-2013-global-forest}{dataset}
-(\href{https://doi.org/10.1126/science.1244693}{paper})
+(\href{https://doi.org/10.1126/science.1244693}{paper}).
 }
 \details{
 The GFC dataset is based on a time-series analysis of Landsat images

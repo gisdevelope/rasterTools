@@ -3,7 +3,7 @@
 \docType{data}
 \name{meta_emma}
 \alias{meta_emma}
-\title{Metadata of the MODIS datasets}
+\title{Metadata of the EMMA datasets}
 \format{The \code{data.frame} with 5 variables and 245 entries contains
   meta-data for the mammals covered in the Atlas of European Mammals.
   \describe{ \item{\code{original}}{the species name as noted in the Atlas of
@@ -15,6 +15,6 @@
 meta_emma
 }
 \description{
-Metadata of the MODIS datasets
+Metadata of the EMMA datasets
 }
 \keyword{datasets}

@@ -2,6 +2,7 @@
 #'
 #' Obtain data from the 'Corine Land Cover'
 #' \href{http://land.copernicus.eu/pan-european/corine-land-cover}{dataset}
+#' (currently you have to download it manually).
 #'
 #' @template mask
 #' @param years [\code{integerish(.)}]\cr year(s) for which CLC data should be

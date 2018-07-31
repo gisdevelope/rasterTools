@@ -49,7 +49,7 @@ where product files are stored.}
 A \code{RasterLayer} or \code{RasterStack} of MODIS data.
 }
 \description{
-Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}
+Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}.
 }
 \details{
 The period can either be given as a single value if only one year is

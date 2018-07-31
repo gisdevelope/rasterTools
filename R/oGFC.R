@@ -2,7 +2,7 @@
 #'
 #' Obtain data from the 'Global Forest Change'
 #' \href{https://earthenginepartners.appspot.com/science-2013-global-forest}{dataset}
-#' (\href{https://doi.org/10.1126/science.1244693}{paper})
+#' (\href{https://doi.org/10.1126/science.1244693}{paper}).
 #'
 #' @template mask
 #' @param years [\code{integerish(.)}]\cr year(s) for which GFC data should be

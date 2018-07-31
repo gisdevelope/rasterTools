@@ -42,7 +42,7 @@ A data-frame of the species of interest occuring in the area outlined
 }
 \description{
 Obtain occurence data of mammals in Europe of the first EMMA
-\href{https://www.european-mammals.org/}{dataset}
+\href{https://www.european-mammals.org/}{dataset}.
 }
 \details{
 The website \href{http://www.european-mammals.org/}{Societas

@@ -15,34 +15,37 @@ includes the operator name and its arguments as sub-elements; see Examples.}
 the extent is the area of interest.}
 }
 \value{
-Depends on the method called, but it is always organised in lists.
-  The first hierarchical level of the list contains all the spatial
-  units/masks. The second level contains an entry for each dataset and its
-  temporal extent. The third level contains the resulting output. Mostly this
-  would be an extracted raster according to what has been specified in the
-  arguments, but for some operators the output is a \code{data.frame} or
-  \code{SpatialPointsDataFrame}.
+A list of objects that is organised according to the stratification
+  in \code{data}. The first hierarchical level of the list contains all the
+  spatial units/masks. The second level contains an entry for each dataset
+  and its temporal extent. The third level contains the resulting output.
+  Mostly this would be an extracted raster according to what has been
+  specified in the arguments, but for some operators the output is a
+  \code{data.frame} or \code{SpatialPointsDataFrame}.
 }
 \description{
 Extract information from various spatial (gridded) datasets both from local
 and online resources.
 }
 \details{
-\code{obtain} expects an individual directory for each dataset,
-  where all the files of this particular dataset are located.
+\code{obtain} expects an individual directory on the harddisc for
+  each dataset, where all the files of this particular dataset are located.
   \code{rasterTools} provides a list of paths \code{getOption("rtPaths")},
-  which contains the directories and urls of the local and online resources,
-  respectively. In case the dataset files are not available locally and if a
-  url is available, an attempt to download the files is undertaken. That
-  means typically you do not have to use the dataset specific
-  \code{download*} functions manually, they are documented nevertheless for
-  those who are interested. In case an error occurs, it might be necessary to
-  specify new paths in \code{rtPaths} (see \code{\link{updatePaths}}).
+  which contains the directories and urls of the local and online resources.
+  In case the dataset files are not available locally and if a url is
+  available, an attempt to download the files is undertaken. That means
+  typically you do not have to use the dataset specific \code{download*}
+  functions manually, they are documented nevertheless for those who are
+  interested. In case an error occurs, it might be necessary to specify new
+  paths in \code{rtPaths} (see \code{\link{updatePaths}}).
 
-  Recently supported datasets are: \itemize{ \item \code{\link{oCLC}}: Corine
-  Land Cover data \item \code{\link{oEMMA}}: Occurence data of the
-  \emph{Atlas of European Mammals} \item \code{\link{oGFC}}: Global Forest
-  Change dataset \item \code{\link{oMODIS}}: MODIS products}
+  Recently supported datasets are: \itemize{
+    \item \code{\link{oCLC}}: Corine Land Cover data
+    \item \code{\link{oEMMA}}: Occurence data of the \emph{Atlas of European Mammals}
+    \item \code{\link{oGFC}}: Global Forest Change dataset
+    \item \code{\link{oMODIS}}: MODIS products
+    \item \code{\link{oWCLIM}}: Worldclim dataset
+  }
 }
 \examples{
 \dontrun{

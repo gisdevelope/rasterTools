@@ -2,7 +2,7 @@
 #'
 #' Obtain data from the 'worldclim' \href{http://worldclim.org/}{dataset}
 #' (\href{https://doi.org/10.1002/joc.1276}{paper1},
-#' \href{https://doi.org/10.1002/joc.5086}{paper2})
+#' \href{https://doi.org/10.1002/joc.5086}{paper2}).
 #'
 #' @template mask
 #' @param variable [\code{character(.)}]\cr the climatic variable of interest;

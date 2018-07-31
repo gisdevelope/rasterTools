@@ -19,6 +19,7 @@ A \code{RasterLayer} of clc data.
 \description{
 Obtain data from the 'Corine Land Cover'
 \href{http://land.copernicus.eu/pan-european/corine-land-cover}{dataset}
+(currently you have to download it manually).
 }
 \details{
 The CLC data dataset is available for the years 1990, 2000, 2006 and

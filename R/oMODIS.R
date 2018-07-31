@@ -1,6 +1,6 @@
 #' Obtain MODIS data
 #'
-#' Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}
+#' Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}.
 #' @template mask
 #' @param period [\code{integerish(.)}]\cr year of interest (YYYY), optionally
 #'   concatenated to day of the year (DDD), which must be between \code{001} and

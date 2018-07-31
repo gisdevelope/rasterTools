@@ -35,7 +35,7 @@
 #'   \item{\code{correction_factor}}{a correction factor}}
 "meta_modis"
 
-#' Metadata of the MODIS datasets
+#' Metadata of the EMMA datasets
 #'
 #' @format The \code{data.frame} with 5 variables and 245 entries contains
 #'   meta-data for the mammals covered in the Atlas of European Mammals.
