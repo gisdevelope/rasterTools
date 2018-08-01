@@ -9,7 +9,7 @@ test_that("Error if arguments have wrong value", {
     geomRectangle() %>%
     setCRS(crs = projs$laea)
   
- expect_error(oCLC(mask = myMask))
- expect_error(oCLC(mask = myMask, years = "bla"))
+  expect_error(oCLC(mask = "myMask"))
+  expect_error(oCLC(mask = myMask, years = "bla"))
  
 })
