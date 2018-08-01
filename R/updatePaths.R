@@ -72,7 +72,7 @@ updatePaths <- function(root, project, set){
       if(length(thisDir) == 0){
         thisDir <- datasets[i]
         message(paste0("I create the directory '", thisDir, "' in '", root, "'.\n"))
-        dir.create(paste0(root, thisDir))
+        dir.create(paste0(root, "/", thisDir))
       }
       rtPaths[[pos]]$local <- paste0(root, "/", thisDir)
 
