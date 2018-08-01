@@ -1,4 +1,5 @@
 library(checkmate)
+library(testthat)
 context("oMODIS")
 
 
