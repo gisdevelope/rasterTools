@@ -48,13 +48,10 @@ and other files containing spatial data.
   \code{\link{updatePaths}}).
 }
 \examples{
-\dontrun{
-
 # load a batch of '.csv'-files containing coordinates into the gloabl environment.
-loadData(files = c("myLocations1.csv", "myLocations2.csv"),
-         localPath = rtPaths$project, verbose = TRUE)
-
-}
+myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
+                        localPath = system.file("csv", package="rasterTools"), 
+                        verbose = TRUE)
 }
 \seealso{
 The specific load operators: \code{\link{load_kml}},

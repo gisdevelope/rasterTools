@@ -31,13 +31,10 @@
 #'   \code{\link{load_csv}}, \code{\link{load_kml}}, \code{\link{load_hdf}},
 #'   \code{load_tif}, \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
 #' @examples
-#' \dontrun{
-#'
 #' # load a batch of '.csv'-files containing coordinates into the gloabl environment.
-#' loadData(files = c("myLocations1.csv", "myLocations2.csv"),
-#'          localPath = rtPaths$project, verbose = TRUE)
-#'
-#' }
+#' myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
+#'                         localPath = system.file("csv", package="rasterTools"), 
+#'                         verbose = TRUE)
 #' @importFrom checkmate testCharacter testDataFrame assertCharacter assertNames
 #'   testIntegerish assertDirectory assertLogical assertEnvironment assertFile
 #'   assertDataFrame
