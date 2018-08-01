@@ -74,6 +74,8 @@ oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
   if(isDFSpecies){
     assertNames(names(species), must.include = c("original", "abbr"))
     species <- species$original
+  } else{
+    assertCharacter(species)
   }
   isVectorSpecies <- testVector(species, strict = TRUE, min.len = 1, any.missing = FALSE)
   assertIntegerish(version, any.missing = FALSE, len = 1)

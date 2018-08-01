@@ -66,8 +66,9 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   # check arguments
   existsGeom <- testClass(mask, classes = "geom")
-  existsSpatial <- assert(testClass(mask, classes = "SpatialPolygon"),
-                          testClass(mask, classes = "SpatialPolygonsDataFrame"))
+  existsSp <- testClass(mask, classes = "SpatialPolygon")
+  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
   if(!existsGeom & !existsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
