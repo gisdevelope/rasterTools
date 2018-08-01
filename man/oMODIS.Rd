@@ -19,19 +19,21 @@ the extent is the area of interest.}
 concatenated to day of the year (DDD), which must be between \code{001} and
 \code{366}.}
 
-\item{product}{name of the modis-product of interest. Can be abbreviated if
-an \code{index} is provided.}
+\item{product}{[\code{character(1)}]\cr name of the modis-product of
+interest. Can be abbreviated if an \code{index} is provided.}
 
-\item{layer}{layer(s) of interest. Can be numerical or a character string of
-its name.}
+\item{layer}{[\code{character(1)} | \code{integerish(1)}]\cr layer(s) of
+interest. Either the integer of the layers position or the name of the
+layer.}
 
-\item{version}{version of a modis dataset with 3 leading zeros, e.g. 055,
-default = "newest".}
+\item{version}{[\code{integerish(1)} | \code{character(1)}]\cr version of a
+modis dataset with 3 leading zeros, e.g. 055, default = "newest".}
 
-\item{raw}{logical; should the raw modis-data be obtained (\code{TRUE}) or
-should a correction be applied (\code{FALSE}, default). Applying the
-correction (i.e. the range is cut to the valid range and the correction
-factor is applied) is highly recommended, to end up with consisten data.}
+\item{raw}{[\code{logical}]\cr should the raw modis-data be obtained
+(\code{TRUE}) or should a correction be applied (\code{FALSE}, default).
+Applying the correction (i.e. the range is cut to the valid range and the
+correction factor is applied) is highly recommended, to end up with
+consisten data.}
 
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 

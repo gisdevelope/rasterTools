@@ -5,16 +5,18 @@
 #' @param period [\code{integerish(.)}]\cr year of interest (YYYY), optionally
 #'   concatenated to day of the year (DDD), which must be between \code{001} and
 #'   \code{366}.
-#' @param product name of the modis-product of interest. Can be abbreviated if
-#'   an \code{index} is provided.
-#' @param layer layer(s) of interest. Can be numerical or a character string of
-#'   its name.
-#' @param version version of a modis dataset with 3 leading zeros, e.g. 055,
-#'   default = "newest".
-#' @param raw logical; should the raw modis-data be obtained (\code{TRUE}) or
-#'   should a correction be applied (\code{FALSE}, default). Applying the
-#'   correction (i.e. the range is cut to the valid range and the correction
-#'   factor is applied) is highly recommended, to end up with consisten data.
+#' @param product [\code{character(1)}]\cr name of the modis-product of
+#'   interest. Can be abbreviated if an \code{index} is provided.
+#' @param layer [\code{character(1)} | \code{integerish(1)}]\cr layer(s) of
+#'   interest. Either the integer of the layers position or the name of the
+#'   layer.
+#' @param version [\code{integerish(1)} | \code{character(1)}]\cr version of a
+#'   modis dataset with 3 leading zeros, e.g. 055, default = "newest".
+#' @param raw [\code{logical}]\cr should the raw modis-data be obtained
+#'   (\code{TRUE}) or should a correction be applied (\code{FALSE}, default).
+#'   Applying the correction (i.e. the range is cut to the valid range and the
+#'   correction factor is applied) is highly recommended, to end up with
+#'   consisten data.
 #' @details The period can either be given as a single value if only one year is
 #'   of interest, or as two values, the start and end date. If you do not
 #'   specify DDD, it will be set to "001" and "366" for start and end year
@@ -105,9 +107,10 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   }
 
   # check version
-  if(version=="newest"){
+  if(version == "newest"){
     productVersion <- sprintf('%03i', meta$newest_version[1])
   } else{
+    assertIntegerish(version, len = 3)
     productVersion <- sprintf('%03i', version)
   }
 
