@@ -83,7 +83,7 @@ Tiles are a set of regularly arranged neighbouring rectangles that represent dif
   datasetTiles <- geomTiles(window = aWindow, cells = c(36, 14), crs = projs$longlat)
 ```
 
-From the object `myTiles` we need to determine the subset of rectangles in which the data we are interested in are to be found (this is not ideally solved at the moment and might change in the future):
+From the object `datasetTiles` we need to determine the subset of rectangles in which the data we are interested in are to be found (this is not ideally solved at the moment and might change in the future):
 
 ```{r, eval=FALSE}
   tabTiles <- getTable(x = datasetTiles)
@@ -100,7 +100,7 @@ From the object `myTiles` we need to determine the subset of rectangles in which
 ```
 
 ## Iterate through the arguments
-Once we have determined the spatial subset of the data we are interested in, we have to find the other subsets, maybe according to the temporal extent or according to other properties of the dataset. When a dataset is stored in a tiled way, we have to figure out code that would let us derive the name under which the tile of our interest is stored. To assist in this, we could for instance create an `id` variable for the object `datasetTiles`, that contains the systematic names, or components thereof. Other name components could perhaps be derived from the respective arguments based on which we want to subset. The `oGFC()` functions handles this in the following way:
+Once we have determined the spatial subset of the data we are interested in, we have to find the other subsets, maybe according to the temporal extent or according to other properties of the dataset. When a dataset is stored in a tiled way, we have to figure out code that would let us derive the name under which the tile of our interest is stored. To assist in this, we could for instance create an `id` variable for the object `datasetTiles`, that contains the systematic names, or components thereof. Other name components could perhaps be derived from the respective arguments based on which we want to subset. The `oGFC()` function handles this in the following way:
 
 ```{r, eval=FALSE}
   tabTiles <- getTable(x = myTiles)
@@ -128,15 +128,24 @@ Once we have determined the spatial subset of the data we are interested in, we 
 ```
 
 ## Load and crop raster
-As some of the spatial operations may take up a large quantity of time, `rasterTools` is designed so that it always gives feedback about what it is doing at the moment. For that purpose the `message()` function is employed throughout in combination with `paste0()` (a slightly more efficient wrapper of `paste()` with `sep = ''` on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise.
+As some of the spatial operations may take up a large quantity of time, `rasterTools` is designed so that it always gives feedback about what it is doing at the moment. For that purpose the `message()` function is employed throughout in combination with `paste0()` (a slightly more efficient wrapper of `paste()` with `sep = ''` on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise. Again, the `oGFC()`  function handles this in the following way
 
 ```{r, eval=FALSE}
-
+message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':\n"))
+tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
 ```
 
-Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. `tDATASET` is the target object that would be processed successively to load the subset of dataset (`...`). Often a dataset may not be saved with a coordinate reference system and in these cases, this needs to be assigned. In most cases you will want to crop the overall dataset to `mask` or load only parts of it into `R`. The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.
+Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. The function `loadData()` is comparable to the four core functions in that it is a wrapper that calls other functions depending on its input. In the case of the GFC dataset, the spatial data are stored in the *tif* format. `loadData()` calls the file-type specific loaders, for instance `load_tif()`, which contains all the code logic that is required to load the respective format. In case you want to handle a format or which such a function is not yet defined, see [below](#loaders).
+
+In most cases you want to crop the overall dataset to `mask`, or actually its extent. The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.
+
+```{r, eval=FALSE}
+message("  ... cropping to targeted study area.\n")
+tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+```
 
 ## Merge multiple tiles
+*wip*
 
 ```{r, eval=FALSE}
 
@@ -154,7 +163,9 @@ As a final step of operations on the spatial data you should reproject the outpu
 ```
 
 ## Postprocessing
-Some datasets have a typical colour pattern which would be worth to maintain. `raster` objects have the slot `$colortable`, where we can store a set of colour values that shall be used to visualise the `raster`.
+*wip*
+
+ datasets have a typical colour pattern which would be worth to maintain. `raster` objects have the slot `$colortable`, where we can store a set of colour values that shall be used to visualise the `raster`.
 
 ```{r, eval=FALSE}
 
@@ -162,6 +173,8 @@ Some datasets have a typical colour pattern which would be worth to maintain. `r
 
 
 # Modify gridded objects
+*wip*
+
 Each operator that modifies a raster has at least the argument `obj`, which denotes the raster that shall be modified. Most computations in `rasterTools` are performed on matrix objects and thus the first thing is to define a matrix from the raster. Often, also the values of this raster are of interest and in that case you would assign them to a variable early on.
 
     rMODIFY <- function(obj, ARG){
@@ -213,75 +226,86 @@ list(term1 = list(operator = "mArea", scale = "patch"),
          
 If you want to contribute to the collection of derived metrics listed in the [landscape metrics](articles/landscape_metrics.html) vignette, simply edit that file and create a pull request, or let the author of `rasterTools` know about your addition via E-Mail.
 
-# Loading spatial data into R
+# Loading spatial data into R {#loaders}
 
 Also `loadData()` is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function `loadData()` contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective `load*` and `download*` functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into `R` can be handled by `loadData()`, given the respective wrapper has been defined.
 
 ## `load*`
-Each class should be able to take an argument `path`, the exact location of the file to load. Optionally, for instance when the file is saved in `shp`, the argument `layer`, declaring the layer to be loaded.
+Each class should be able to take an argument `path`, the exact location of the file to load. Optionally, for instance when the file is saved in the `shp` format, the argument `layer` declares these details.
 
 One of the simplest classes for `loadData()` is that for loading shape-files:
 
-    loadSHP <- function(path, layer){
-      rgdal::readOGR(dsn = path,
-                     layer = layer,
-                     verbose = FALSE)
-    }
+```{r, eval=FALSE}
+load_shp <- function(path, layer){
+  rgdal::readOGR(dsn = path,
+                 layer = layer,
+                 verbose = FALSE)
+}
+```
 
 The simplest 'template' of this class would hence be:
 
-    loadFORMAT <- function(path, layer){
-      rgdal::readOGR(dsn = path,
-                     layer = layer,
-                     verbose = FALSE)
-    }
+```{r, eval=FALSE}
+load_FORMAT <- function(path, layer){
+  rgdal::readOGR(dsn = path,
+                 layer = layer,
+                 verbose = FALSE)
+}
+```
 
-Building on `rgdal::readOGR()` makes defining new classes for `loadData()` a breeze. But you can of course also use other functions, if they should be more efficient, or if `readOGR()` doesn't support the format.
+Building on `rgdal::readOGR()` makes defining new classes for `loadData()` a breeze. But you can of course also use other functions where this is more efficient or required because `readOGR()` doesn't support the format.
 
-It is important to note, that neither the classes to `loadData()` nor `loadData()` handle the coordinate reference system, this is carried out by `spCRS()`. The class simply loads what is found in `path` with `layer` and makes it available to `loadData()`, which turns the information into the respective output format.
+It is important to note, that neither the functions called by `loadData()` nor `loadData()` itself handle the coordinate reference system, this is carried out by the obtain operators. The class simply loads what is found in `path` with `layer` and makes it available to `loadData()`, which turns the information into the respective output format.
 
 ## `download*`
+*wip*
 
 # Be informative
-`rasterTools` intends to be as transparent as possible and this ensues that error messages or relevant warnings are easy to understand and appear whenever a problem occurs. This is where the checkmate package comes in, that `rasterTools` heavily utilizes. Thus many of the recommendations with regard to error management derive from their directives. Also, since several of the functions here can be quite time-consuming, a message that informs the user about the currently processing step can be helpful. This includes a progressbar, which indicates the progress of a iterative computation.
+`rasterTools` intends to be as transparent as possible and this ensues that error messages or relevant warnings are easy to understand and appear whenever a problem occurs. This is where the checkmate package comes in, which `rasterTools` heavily utilizes. Thus many of the recommendations with regard to error management derive from `checkmate`s directives. 
 
-For example, the `index()` function builds an index based on all the files that are found in a certain directory. This index can be useful when a project is meant to deal with a large number of files in some directory (for instance in "./myProject/aLargeNumberOfFiles/") that need to be accessed arbitrarily, i.e. not all of them at a time or only a subset according to the current conditions. Hence, it might not be required to load all the files into the global environment of R but instead it would be useful to provide a simple key, according to which the files can be loaded. Think, for example, about all the different products, tiles, temporal extents and layers of the MODIS dataset. The file-names of the respective files are a long and cumbersome combination of all these information and very timeconsuming to type in; sure, tab-completion is your friend, but with these files you still need tab through several "levels" of file specification, so to speak.
+Also, since several of the functions here can be quite time-consuming, a message that informs the user about the currently processing step can be helpful. This includes a progressbar, which indicates the progress of a iterative computation. For example, the `catalog()` function builds an index based on all the files that are found in a certain directory. This index can be useful when a project is meant to deal with a large number of files in some directory (for instance in "./myProject/myDataset/aLargeNumberOfFiles.tif") that need to be accessed arbitrarily, i.e. not all of them at a time or only a subset according to the current conditions. Hence, it might not be required to load all the files into the global environment of R but instead it would be useful to provide a simple key, according to which the files can be loaded. Think, for example, about all the different products, tiles, temporal extents and layers of the MODIS dataset. The file-names of the respective files are a long and cumbersome combination of all these information and very timeconsuming to type in; sure, tab-completion is your friend, but with these files you still need tab through several "levels" of file specification, so to speak.
 
-Anyway, while `index()` is an example of functions that makes `rasterTools` more informative, it utilizes the `txtProgressBar` function in the following way:
+Anyway, while `catalog()` is an example of functions that makes `rasterTools` more informative, it utilizes the `txtProgressBar` function in the following way:
 
+```{r, eval=FALSE}
     FILES <- list.files(PATH)
     pb <- txtProgressBar(min = 0, max = length(FILES), style = 3, char=">", width=getOption("width")-14)
     for(i in seq_along(FILES)){
     
-      # store the name and an abbreviation of each file to a data-frame
+      # store the name and an abbreviation of each file to a data-frame, then...
       setTxtProgressBar(pb, i)
       
     }
     close(pb)
+```
 
 This informs the user about the progress of this function and should be helpful especially when many files need to be accessed and the whole procedure naturally takes a while. If your new function also goes through many files, it would be recommended that you employ the same specifications for the progress bar you may want to use.
 
-Moreover, if computations are employed that take a certain while, for instance loading a large raster into the global environment, or reprojecting a raster, it may be useful to inform the user also about these steps. This is frequently done in the `obtain()` operators. Here, the `message` function is used. This function has the advantage over `cat`, that it can be integrated with a translation framework that would provide the messages in the language `rasterTools` is expected to communicate with the user (not supported yet). Hence, it is recommended that you also use this function, so that your function seamlessly blends in with this framework.
+Moreover, if computations are employed that take a certain while, for instance loading a large raster into the global environment, or reprojecting a raster, it may be useful to inform the user also about these steps. This is frequently done in the `obtain()` operators. Here, the `message()` function is used. This function has the advantage over `cat`, that it can be integrated with a translation framework that would provide the messages in the language `rasterTools` is expected to communicate with the user (not supported yet). Hence, it is recommended that you also use this function, so that your function seamlessly blends in with this framework.
 
 # Create a bibliography entry
 `rasterTools` has the `reference()` function, which helps the user to put together the correct bibliography when reporting the results in a publication. If your function is based on the work that has been defined by somebody else, it should report the respective reference. `R` comes with the `bibentry()` function, which lets you define the reference(s) of your function.
 
-    bib <- bibentry(bibtype = "",
-                  title = "",
-                  author = person(""),
-                  year = ,
-                  ... 
-    )
-    
-Then, your function should first check whether a bibliography already exists in the options of the current session. If this is not found, create it. If a bibliography object has already been created, it needs to be checked whether or not the recent reference is already included and if this is not the case, concatenate the reference.
+```{r, eval=FALSE}
+bib <- bibentry(bibtype = "",
+                title = "",
+                author = person(""),
+                year = ,
+                ... 
+)
+```
 
-    if(is.null(getOption("bibliography"))){
-      options(bibliography = bib)
-    } else{
-      currentBib <- getOption("bibliography")
-      if(!bib%in%currentBib){
-        options(bibliography = c(currentBib, bib))
-      }
-    }
-    
-This will assure that the algorithm your function is based upon is properly included when it is used in a computation that should be published.
+Then, your function should first check whether a bibliography already exists in the options of the current session and in case this is not found, create it. If a bibliography object has already been created, it needs to be checked whether or not the recent reference is already included and if this is not the case, concatenate the reference.
+
+```{r, eval=FALSE}
+if(is.null(getOption("bibliography"))){
+  options(bibliography = bib)
+} else{
+  currentBib <- getOption("bibliography")
+  if(!bib%in%currentBib){
+    options(bibliography = c(currentBib, bib))
+  }
+}
+```
+
+This will ensure that the algorithm your function is based upon is properly included when it is used in a computation that should be published.

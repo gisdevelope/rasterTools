@@ -16,16 +16,27 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this document you can find a collection of a range of spatial operations that can be carried out specifically with `rasterTools`. The spatial operations are eventually presented as algorithms that can be used on the specified spatial data type.  It is assumed that you have read the [Introduction](/rasterTools/articles/introduction.html) and understand what *operator* and *algorithm* means in the scope of `rasterTools`.
+In this document you can find a collection of a range of spatial operations that can be carried out specifically with `rasterTools`. The spatial operations are eventually presented as algorithms that can be used on the specified spatial data type.  It is assumed that you have read the [Introduction](/rasterTools/articles/introduction.html) and understand what *operator* and *algorithm* means in the scope of `rasterTools`. Beware that this file is a constantly ongoing work in progress. In case you use `rasterTools` and came up with a nice algorithm, let me know, I would love to include it here!
 
-The operations are grouped as follows:
+The following is a list of all the topics covered so far:
 
-1) [Morphological operations](#morph)
-2) [Identify features/objects](#features)
-3) [Classify values](#classify)
-4) [Distance Maps](#distance_map)
+* Morphological operations
+    + [Open foreground](#morph_open)
+    + [Close foreground](#morph_close)
+      
+* Identify features/objects
+    + [Media axis transform](#identify_mat)
+    + [Openings/Perforations](#openings)
+    + [Signature points in a skeleton](#signature_points_skel)
+    
+* Classify values
+    + [Click into a map (cf HistMapR)](#class_colours_click)
 
-Lets start with reading in the required packages:
+* Distance Maps
+    + [Distance map of centroids per patch](#dist_centroid)
+
+# Getting Started
+Lets start with reading in the required packages.
 
 ```{r}
 library(rasterTools)
@@ -33,7 +44,7 @@ library(raster)
 library(magrittr)
 ```
 
-For now, we can just ignore the note to run `updatePaths`, because we do not access the paths. We do however access the spatial example datasets of `rasterTools`, so lets also read these in.
+For now, we can just ignore the note to run `updatePaths`, because we do not access the paths. We do however access the spatial example datasets of `rasterTools`, so lets assign these more intuitive names.
 
 ```{r, fig.width=7, out.width='100%'}
 continuous <- rtData$continuous
@@ -58,7 +69,7 @@ visualise(raster::stack(catPatchesObj, binarised))
 
 # Morphological operations {#morph}
 
-## Morphologically open foreground
+## Morphologically open foreground {#morph_open}
 The morphological operation *open* is an erosion, followed by a dilation. It results in a raster where cells at the boundary of patches are removed if they are exposed. *Exposed* means here, that they are protruding to a degree that an erosion removes them so that a dilation isn't able to reconstruct them. The result depends on the chosen kernel, which must be the same in both operations.
 
 ```{r, fig.width=7, out.width='100%'}
@@ -68,7 +79,7 @@ opened <- rErode(binarised) %>%
 visualise(opened)
 ```
 
-## Morphologically close foreground
+## Morphologically close foreground {#morph_close}
 The morphological operation *close* is a dilation, followed by an erosion. It results in a raster where cells at the boundary of patches are added if this would lead to a closed patch. In this case, the dilation would add cells that an erosion could not remove because they are now "inside" a patch. The result depends also here on the chosen kernel, which again must be the same in both operations.
 
 Instead of using the pipeline notation, we can construct an algorithm.
@@ -86,7 +97,7 @@ visualise(closed, trace = TRUE)
 
 # Identify spatial features {#features}
 
-## Identify the Medial axis
+## Identify the Medial axis {#identify_mat}
 The medial axis transform (MAT) results in a non-binary skeleton where each cell has the value of its distance to the original boundary. This can be calculated by determining the skeleton and the interior distance map of each patch. These two objects would be intersected by using the skeleton as mask on the distance map.
 
 ```{r, fig.width=7, out.width='100%'}
@@ -114,7 +125,7 @@ MedialAxis <- modify(input = binarised, by = getMedialAxis)
 visualise(MedialAxis$medAxis)
 ```
 
-## Identify openings/perforations
+## Identify openings/perforations {#openings}
 We may be interested in openings (or perforations, as they are called elsewhere) of foreground patches out of several reasons. Hence, we either want to end up with a raster of the openings without anything else, or a raster where the openings are labelled in a systematic way.
 
 To derive openings, we first have to determine the foreground patches, for which the rather straightforward algorithm below can be used.
@@ -188,11 +199,7 @@ background <- modify(input = binarised, by = findOpening, merge = TRUE)
 visualise(background)
 ```
 
-
-## Identify openings that are connected to the background
-E.g. Clearcuts
-
-## Identify signature points in a skeleton
+## Identify signature points in a skeleton {#signature_points_skel}
 
 ```{r, fig.width=7, out.width='100%'}
 skeleton <- rSkeletonise(binarised, background = 0)
@@ -209,27 +216,14 @@ getMetaSkel <- list(endpoints = list(operator = "rMatch",
 skeletonMeta <- modify(input = skeleton, by = getMetaSkel, merge = TRUE)
 visualise(skeletonMeta, trace = TRUE)
 ```
-
-## Identify core/ecotone habitat
-
-## Identify boundaries
-also include their classification
-
-## Identify corridors
-
-## Identify interrupted corridors
-
-## Identify parallel structures
-
-
 # Classify values {#classify}
 
-## Classify a raster based on colour values (*cf* HistMapR)
+## Classify a raster by clicking on colour values (*cf* HistMapR) {#class_colours_click}
 The [HistMapR](https://doi.org/10.1111/2041-210X.12788) package can be used to digitise historic land-use maps in R, according to the authors. However, what their package actually does, in contrast to what is stated in the title, is *(re)classifying* values that are expressed as colour on a screen into numeric values that represent land use classes. The *digitising* part comes already long before, when the orthophotos are transformed from paper to digital form, but this is unfortunately not touched on in that package.
 
 Here I want to suggest a simpler and more straightforward to understand workflow that can be carried out with the `rasterTools` package. Generally speaking, one would carry out a supervised classification procedure on an orthophoto that has previously been made available digitally. As already outlined, the basic idea is to identify (colour) values in the original raster to assign them, after determining sensible thresholds, into new classes. Using `rasterTools`, these operations can be carried out by utilizing mostly the `locate()` and `rCategorise()` functions.
 
-Some background: The `visualise()` function can be used to plot different kinds of objects. Gridded objects are always based on a matrix/array of values. However, the information that is carried by the values differs between datasets. One could consider an image/photo as part of the dataset *"spectral properties of stuff"* as each image records the red, green and blue radiation that is emitted by "stuff". Orthophotos are not different, they also consist of a red, green and blue channel. These channels carry actually the intensity of that colour per pixel, which ranges from 0 to 255. They are typically combined and gain their "colour" qualia only because they are combined. When `visualise()` is used to plot an image, it abstracts the colour information (of potentially > 1.000.000 colours) into a smaller set of values, 256 to be precise. This process already comprises an act of classifying because a range of (admittedly very similar) colours are aggregated into one colour. This is no problem, because let's be honest, you probably can't even remotely distinguish 200 different colours from a give colour scale! Nevertheless, what happens here - and actually also with other functions that plot stuff in R, for that matter - is that the original colours of your map were assigned into 256 classes of similar colours. What we now want to do is distinguish these colours into a substantially smaller set of actual land use classes.
+Some background: All gridded objects such as rasters store data as matrix/array of values. However, the information that is carried by the values differs between datasets. One could consider an image/photo as part of the dataset *"spectral properties of stuff"* as each image records the red, green and blue radiation that is reflected by *stuff*. Orthophotos are not different, they also consist of a red, green and blue channel. These channels carry actually the intensity of that colour per pixel, which ranges from 0 to 255. The channels are typically combined and gain their *colour qualia* only because they are combined. When `visualise()` is used to plot an image, it abstracts the colour information (of potentially > 1.000.000 colours) into a smaller set of values, 256 to be precise. This process already comprises an act of classifying because a range of (admittedly very similar) colours are aggregated into one colour. This is no problem, because let's be honest, you probably can't even remotely distinguish 200 different colours from a give colour scale! Nevertheless, what happens here - and actually also with other functions that plot stuff in R, for that matter - is that the original colours of your map were assigned into 256 classes of similar colours. What we now want to do is distinguish these colours into a substantially smaller set of classes that represent the most likely land use in each of the grid cells.
 
 If you did not install the HistMapR package yet, do that now:
 
@@ -245,8 +239,10 @@ We use the example dataset that comes with the package (`in.ras`).
 # visualise(gridded = in.ras, image = TRUE)
 ```
 
+...
+
 # Distance Maps {#distance_map}
-## Compute the distance map of centroids per patch
+## Compute the distance map of centroids per patch {#dist_centroid}
 We may be interested in distance maps to calculate a range of landscape metrics. For example, the *Radius of Gyration* derives from the average distance of all cells of a patch to the patches' centroid. To calculate it, we would have to find the patch centroid and the patch specific distance of each cell of a patch to its centroid.
 
 ```{r, fig.width=7, out.width='100%'}
@@ -285,5 +281,20 @@ See [link to radius of gyration metric] for how to proceed from here to calculat
 
 
 # Sort in
+
+## Identify core/ecotone habitat
+
+## Identify boundaries
+also include their classification
+
+## Identify corridors
+
+## Identify interrupted corridors
+
+## Identify parallel structures
+
+## Identify openings that are connected to the background
+E.g. Clearcuts
+
 ## Determine sharpness of a boundary
 
