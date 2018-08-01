@@ -33,6 +33,9 @@ and R-packages
 # just return the list to the console ...
 reference(style = "latex")
 
+\dontrun{
+
 # ... or store it in your project path
 reference(outFile = "myBib.bib")
+}
 }

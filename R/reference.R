@@ -18,8 +18,11 @@
 #' # just return the list to the console ...
 #' reference(style = "latex")
 #'
+#'\dontrun{
+#'
 #' # ... or store it in your project path
 #' reference(outFile = "myBib.bib")
+#'}
 #' @importFrom utils bibentry person citation
 #' @export
 
@@ -41,6 +44,7 @@ reference <- function(outFile = NULL, print = TRUE, style = "bibtex", ...){
                                       email = "steffen.science@funroll-loops.de",
                                       role = c("aut", "cre")),
                       url = "https://ehrmanns.github.io/rasterTools",
+                      note = paste0("version ", packageVersion("rasterTools")),
                       year = 2018)
   )
 
