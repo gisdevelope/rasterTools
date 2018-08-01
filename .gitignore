@@ -35,3 +35,4 @@ inst/doc
 ToDo.txt
 myBib.bib
 ToDo_functions.R
+tests/testthatmyBib.bib
