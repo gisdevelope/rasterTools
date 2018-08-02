@@ -60,7 +60,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
   # bla <- matrix(0:109, 11, 11)
-  # gridded = in.ras; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # gridded = gridded; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
   
   # check arguments
   isRaster <- testClass(gridded, "Raster")
@@ -260,10 +260,14 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
         } else{
           nrColours <- 256
         }
-        colorRampPalette(colors = theme$scale$colours,
-                         bias = theme$scale$bias,
-                         space = theme$scale$space,
-                         interpolate = theme$scale$interpolate)(nrColours)
+        if(hasColourTable[[x]]){
+          gridded[[x]]@legend@colortable[tempVals]
+        } else{
+          colorRampPalette(colors = theme$scale$colours,
+                           bias = theme$scale$bias,
+                           space = theme$scale$space,
+                           interpolate = theme$scale$interpolate)(nrColours)
+        }
       })
       
       if(theme$plot$commonScale){
@@ -283,17 +287,12 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
         }
         
         if(hasColourTable[[x]]){
-          if(any(tempVals == 0)){
-            gridded[[x]]@legend@colortable[tempVals+1]
-          } else{
-            gridded[[x]]@legend@colortable[tempVals]
-          }
+          breaksTemp <- c(tempVals[1]-1, tempVals)
         } else{
           breaksTemp <- c(tempVals[1]-1, seq(tempVals[1], tempVals[[length(tempVals)]], length.out = nrColours))
-          valCuts <- cut(vals[[x]], breaks = breaksTemp, include.lowest = TRUE)
-          uniqueColours[[x]][valCuts]
         }
-
+        valCuts <- cut(vals[[x]], breaks = breaksTemp, include.lowest = TRUE)
+        uniqueColours[[x]][valCuts]
       })
     }
 
