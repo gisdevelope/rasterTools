@@ -197,29 +197,27 @@ the extent is the area of interest.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"># NOT RUN {
-require(magrittr)
-require(rgeos)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>require</span>(<span class='no'>magrittr</span>)
+<span class='fu'>require</span>(<span class='no'>rgeos</span>)
 
-# specify the datasets from which you want to get data
-myDatasets <- list(list(operator = "oCLC", years = 2006),
-                   list(operator = "oGFC", years = c(2005:2007)))
-                   ,
-                   list(operator = "oMODIS", product = "mod17a3", period = 2006,
-                        layer = 2))
+<span class='co'># specify the datasets from which you want to get data</span>
+<span class='no'>myDatasets</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oCLC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fl'>2006</span>),
+                   <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oGFC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2005</span>:<span class='fl'>2007</span>)),
+                   <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oMODIS"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"mod17a3"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2006</span>,
+                        <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>2</span>))
 
-# load and outline masks from a file with locations
-myLocations <- loadData(files = "locations.csv",
-                        localPath = system.file("csv", package="rasterTools"))
-myMask <- gGroup(geom = myLocations, distance = 10000) %>%
-  geomRectangle() %>%
-  gToSp(crs = projs$laea) %>%
-  gBuffer(width = 1000, byid = TRUE, quadsegs = 1)
+<span class='co'># load and outline masks from a file with locations</span>
+<span class='no'>myLocations</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"locations.csv"</span>,
+                        <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>))
+<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>myLocations</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='fl'>10000</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='gToSp.html'>gToSp</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/rgeos/topics/misc-gBuffer'>gBuffer</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-# grab the data
-myData <- obtain(data = myDatasets, mask = myMask)
-# }
-</pre>
+<span class='co'># grab the data</span>
+<span class='no'>myData</span> <span class='kw'>&lt;-</span> <span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>myDatasets</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
