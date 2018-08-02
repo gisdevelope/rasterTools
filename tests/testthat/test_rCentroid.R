@@ -19,8 +19,8 @@ test_that("output is valid geometry", {
   patches <- rPatches(rBinarise(input, thresh = 30))
 
   output <- rCentroid(obj = patches, output = "geom")
-  expect_list(output)
-  expect_names(names(output), permutation.of = c("coords", "extent", "type"))
+  expect_class(output, classes = "geom")
+  expect_true(output@type == "point")
 })
 
 test_that("output is named", {

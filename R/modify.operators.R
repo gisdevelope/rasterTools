@@ -307,7 +307,7 @@ rCategorise <- function(obj, breaks = NULL, n = NULL){
 #'
 #' # get centroid coordinates
 #' centroid_coords <- rCentroid(patches, output = "geom")
-#' visualise(gridded = input, geom = centroid_coords, col = "red")
+#' visualise(gridded = patches, geom = centroid_coords, col = "red")
 #' @importFrom checkmate assertClass
 #' @importFrom raster values rasterToPoints rasterize crs
 #' @export
