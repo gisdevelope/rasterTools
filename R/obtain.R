@@ -6,19 +6,20 @@
 #'   spatial datasets are specified. Each \code{operator} is a list iteself and
 #'   includes the operator name and its arguments as sub-elements; see Examples.
 #' @template mask
-#' @details \code{obtain} expects an individual directory on the harddisc for
-#'   each dataset, where all the files of this particular dataset are located.
-#'   \code{rasterTools} provides a list of paths \code{getOption("rtPaths")},
-#'   which contains the directories and urls of the local and online resources.
-#'   In case the dataset files are not available locally and if a url is
-#'   available, an attempt to download the files is undertaken. That means
-#'   typically you do not have to use the dataset specific \code{download*}
-#'   functions manually, they are documented nevertheless for those who are
-#'   interested. In case an error occurs, it might be necessary to specify new
-#'   paths in \code{rtPaths} (see \code{\link{updatePaths}}).
+#' @details \code{obtain} expects a root directory in which an individual
+#'   directory for each dataset dwells, where in turn all the files of this
+#'   particular dataset are located. \code{rasterTools} provides a list of paths
+#'   \code{getOption("rtPaths")}, which contains the directories and urls of the
+#'   local and online resources. In case the dataset files are not available
+#'   locally and if a url is available, an attempt to download the files is
+#'   undertaken. That means typically you do not have to use the dataset
+#'   specific \code{download*} functions manually, they are documented
+#'   nevertheless for those who are interested. In case an error occurs, it
+#'   might be necessary to specify new paths in \code{rtPaths} (see
+#'   \code{\link{updatePaths}}).
 #'
 #'   Recently supported datasets are: \itemize{
-#'     \item \code{\link{oCLC}}: Corine Land Cover data
+#'     \item \code{\link{oCLC}}: Corine Land Cover data (European)
 #'     \item \code{\link{oEMMA}}: Occurence data of the \emph{Atlas of European Mammals}
 #'     \item \code{\link{oGFC}}: Global Forest Change dataset
 #'     \item \code{\link{oMODIS}}: MODIS products

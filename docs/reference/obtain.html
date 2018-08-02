@@ -146,7 +146,7 @@ and online resources.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>obtain</span>(<span class='no'>data</span>, <span class='no'>mask</span>)</pre>
+    <pre class="usage"><span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,18 +176,19 @@ the extent is the area of interest.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>obtain</code> expects an individual directory on the harddisc for
-  each dataset, where all the files of this particular dataset are located.
-  <code>rasterTools</code> provides a list of paths <code>getOption("rtPaths")</code>,
-  which contains the directories and urls of the local and online resources.
-  In case the dataset files are not available locally and if a url is
-  available, an attempt to download the files is undertaken. That means
-  typically you do not have to use the dataset specific <code>download*</code>
-  functions manually, they are documented nevertheless for those who are
-  interested. In case an error occurs, it might be necessary to specify new
-  paths in <code>rtPaths</code> (see <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
+    <p><code>obtain</code> expects a root directory in which an individual
+  directory for each dataset dwells, where in turn all the files of this
+  particular dataset are located. <code>rasterTools</code> provides a list of paths
+  <code>getOption("rtPaths")</code>, which contains the directories and urls of the
+  local and online resources. In case the dataset files are not available
+  locally and if a url is available, an attempt to download the files is
+  undertaken. That means typically you do not have to use the dataset
+  specific <code>download*</code> functions manually, they are documented
+  nevertheless for those who are interested. In case an error occurs, it
+  might be necessary to specify new paths in <code>rtPaths</code> (see
+  <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
 <p>Recently supported datasets are:</p><ul>
-<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover data</p></li>
+<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover data (European)</p></li>
 <li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Occurence data of the <em>Atlas of European Mammals</em></p></li>
 <li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change dataset</p></li>
 <li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS products</p></li>
@@ -198,6 +199,7 @@ the extent is the area of interest.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
+<span class='fu'>require</span>(<span class='no'>rgeos</span>)
 
 <span class='co'># specify the datasets from which you want to get data</span>
 <span class='no'>myDatasets</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oCLC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fl'>2006</span>),
@@ -210,8 +212,8 @@ the extent is the area of interest.</p></td>
                         <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>))
 <span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>myLocations</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='fl'>10000</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='gToSp.html'>gToSp</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)<span class='co'># %&gt;%</span>
-  <span class='fu'>gBuffer</span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'><a href='gToSp.html'>gToSp</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/rgeos/topics/misc-gBuffer'>gBuffer</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># grab the data</span>
 <span class='no'>myData</span> <span class='kw'>&lt;-</span> <span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>myDatasets</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>)
