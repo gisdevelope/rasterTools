@@ -527,23 +527,24 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
     anchors <- anchor
   }
   newCoords <- NULL
-  if(any(colnames(anchors) == "id")){
-    for(i in unique(anchors$id)){
-      tempAnchor <- anchors[anchors$id == i,]
-      # get minimum and maximum value of x and y
-      tempAnchor <- data.frame(x = c(min(tempAnchor$x), max(tempAnchor$x)),
-                               y = c(min(tempAnchor$y), max(tempAnchor$y)),
-                               id = i)
-      # change positions of vertices, so that they follow a square
-      tempAnchor <- data.frame(x = rep(tempAnchor$x, each = 2),
-                               y = c(tempAnchor$y, rev(tempAnchor$y)),
-                               id = i)
-      newCoords <- rbind(newCoords, tempAnchor)
-    }
-    anchor <- newCoords
+  if(!any(colnames(anchors) == "id")){
+    anchors <- cbind(anchors, id = 1)
+  }
+    
+  for(i in unique(anchors$id)){
+    tempAnchor <- anchors[anchors$id == i,]
+    # get minimum and maximum value of x and y
+    tempAnchor <- data.frame(x = c(min(tempAnchor$x), max(tempAnchor$x)),
+                             y = c(min(tempAnchor$y), max(tempAnchor$y)),
+                             id = i)
+    # change positions of vertices, so that they follow a square
+    tempAnchor <- data.frame(x = rep(tempAnchor$x, each = 2),
+                             y = c(tempAnchor$y, rev(tempAnchor$y)),
+                             id = i)
+    newCoords <- rbind(newCoords, tempAnchor)
   }
 
-  theGeom <- geomPolygon(anchor = anchor,
+  theGeom <- geomPolygon(anchor = newCoords,
                          window = window,
                          template = template,
                          features = features,
