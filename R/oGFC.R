@@ -95,19 +95,25 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
             "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 154))
 
   # transform crs of the mask to the dataset crs
+  if(existsSpatial){
+    mask <- gFrom(input = mask)
+  }
   target_crs <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = target_crs)
+  
   if(target_crs != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
+    targetExtent <- setCRS(theExtent, crs = projs$longlat)
+  } else{
+    targetExtent <- theExtent
   }
-  theExtent <- getExtent(x = mask)
-
+  
   # create the tiles geometry to determine the data-subset to load
   gfcWindow <- data.frame(x = c(-180, 180),
                           y = c(-60, 80))
   tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), crs = projs$longlat)
-  if(existsSpatial){
-    mask <- gFrom(input = mask)
-  }
+
 
   # determine tiles of interest
   tabGFC <- getTable(x = tiles_gfc)
@@ -151,8 +157,9 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
     history <- c(history, paste0(tempObject[[1]]@history, " with the grid ID '", gridId, "'"))
 
+    targetExtent <- getExtent(x = targetExtent)
     message("  ... cropping to targeted study area")
-    tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    tempObject <- crop(tempObject, targetExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been cropped")))
 
     allObjects <- c(allObjects, list(tempObject))
@@ -172,9 +179,8 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   if(getCRS(mask) != target_crs){
     crs_name <- strsplit(target_crs, " ")[[1]][1]
     message(paste0("  ... reprojecting to '", crs_name))
-    mask <- setCRS(x = mask, crs = target_crs)
     gfc_out <- setCRS(x = gfc_out, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    theExtent <- getExtent(x = mask)
+    theExtent <- getExtent(x = theExtent)
     gfc_out <- crop(gfc_out, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
   }
