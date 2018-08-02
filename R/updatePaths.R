@@ -25,8 +25,6 @@
 #'
 #' getOption("rtPaths")
 #' }
-#'
-#' # updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial/")
 #' @export
 
 updatePaths <- function(root, project, set){

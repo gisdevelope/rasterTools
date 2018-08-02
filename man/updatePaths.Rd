@@ -42,6 +42,4 @@ updatePaths(set = list(sentinel = "https://new_url_to_sentinel/",
 
 getOption("rtPaths")
 }
-
-# updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial/")
 }
