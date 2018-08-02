@@ -51,7 +51,10 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
     filesIsChar <- testCharacter(files, any.missing = FALSE, min.len = 1)
     filesIsDF <- testDataFrame(files, types = "character", ncols = 2, col.names = c("original", "abbr"))
     if(filesIsDF){
+      assertNames(names(files), must.include = c("original", "abbr"))
       files <- files$original
+    } else{
+      assertCharacter(files)
     }
   }
   assertCharacter(dataset, ignore.case = TRUE, any.missing = FALSE, min.len = 1, null.ok = TRUE)
