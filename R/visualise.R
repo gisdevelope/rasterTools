@@ -68,6 +68,9 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
   isMatrix <- testClass(gridded, "matrix")
   existsGridded <- ifelse(c(isRaster | isMatrix), TRUE, FALSE)
   existsGeom <- testClass(geom, classes = "geom")
+  if(!existsGeom & !is.null(geom)){
+    stop("please provide a valid 'geom' object to plot.")
+  }
   if(!existsGridded & !existsGeom){
     stop("please provide either a gridded object or a geometry to plot.")
   }
