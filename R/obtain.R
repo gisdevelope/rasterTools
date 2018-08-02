@@ -84,7 +84,7 @@ obtain <- function(data = NULL, mask = NULL){
       if(exists(operator)){
         operator <- operator
       } else{
-        warning(paste0("operator '", operator, "' will be ignored, because it does not exist."))
+        warning(paste0("operator '", operator, "' was ignored, because it does not exist."))
         operator <- FALSE
       }
       return(operator)
