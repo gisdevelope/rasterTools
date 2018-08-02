@@ -166,25 +166,27 @@ concatenated to day of the year (DDD), which must be between <code>001</code> an
     </tr>
     <tr>
       <th>product</th>
-      <td><p>name of the modis-product of interest. Can be abbreviated if
-an <code>index</code> is provided.</p></td>
+      <td><p>[<code>character(1)</code>]<br /> name of the modis-product of
+interest. Can be abbreviated if an <code>index</code> is provided.</p></td>
     </tr>
     <tr>
       <th>layer</th>
-      <td><p>layer(s) of interest. Can be numerical or a character string of
-its name.</p></td>
+      <td><p>[<code>character(1)</code> | <code>integerish(1)</code>]<br /> layer(s) of
+interest. Either the integer of the layers position or the name of the
+layer.</p></td>
     </tr>
     <tr>
       <th>version</th>
-      <td><p>version of a modis dataset with 3 leading zeros, e.g. 055,
-default = "newest".</p></td>
+      <td><p>[<code>integerish(1)</code> | <code>character(1)</code>]<br /> version of a
+modis dataset with 3 leading zeros, e.g. 055, default = "newest".</p></td>
     </tr>
     <tr>
       <th>raw</th>
-      <td><p>logical; should the raw modis-data be obtained (<code>TRUE</code>) or
-should a correction be applied (<code>FALSE</code>, default). Applying the
-correction (i.e. the range is cut to the valid range and the correction
-factor is applied) is highly recommended, to end up with consisten data.</p></td>
+      <td><p>[<code>logical</code>]<br /> should the raw modis-data be obtained
+(<code>TRUE</code>) or should a correction be applied (<code>FALSE</code>, default).
+Applying the correction (i.e. the range is cut to the valid range and the
+correction factor is applied) is highly recommended, to end up with
+consisten data.</p></td>
     </tr>
     <tr>
       <th>file</th>
