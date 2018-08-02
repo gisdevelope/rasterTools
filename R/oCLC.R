@@ -54,6 +54,9 @@ oCLC <- function(mask = NULL, years = NULL){
     mask <- setCRS(x = mask, crs = projs$laea)
   }
   theExtent <- getExtent(x = mask)
+  if(existsSpatial){
+    mask <- gFrom(input = mask)
+  }
 
   clc_out <- stack()
   history <- list()
