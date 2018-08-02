@@ -21,7 +21,7 @@ test_that(("oCLC works with Spatial* mask (that has another crs than the dataset
                      localPath = system.file("csv", package="rasterTools")) %>%
     geomRectangle() %>%
     setCRS(crs = projs$laea)
-  myMask <- gToSp(geom = myMask, crs = projs$laea) %>% 
+  myMask <- gToSp(geom = myMask) %>% 
     setCRS(crs = projs$longlat)
   
   output <- oCLC(mask = myMask, years = 2000)
