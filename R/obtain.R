@@ -34,6 +34,7 @@
 #' @examples
 #' \dontrun{
 #' require(magrittr)
+#' require(rgeos)
 #'
 #' # specify the datasets from which you want to get data
 #' myDatasets <- list(list(operator = "oCLC", years = 2006),
@@ -46,7 +47,7 @@
 #'                         localPath = system.file("csv", package="rasterTools"))
 #' myMask <- gGroup(geom = myLocations, distance = 10000) %>%
 #'   geomRectangle() %>%
-#'   gToSp(crs = projs$laea)# %>%
+#'   gToSp(crs = projs$laea) %>%
 #'   gBuffer(width = 1000, byid = TRUE)
 #'
 #' # grab the data
@@ -56,21 +57,24 @@
 #' @importFrom utils glob2rx read.csv setTxtProgressBar txtProgressBar write.csv
 #' @export
 
-obtain <- function(data, mask){
+obtain <- function(data = NULL, mask = NULL){
 
+  # check arguments
   assertList(data, types = "list", min.len = 1, any.missing = FALSE)
   assertNames(names(data[[1]]), must.include = "operator")
-
-  if(missing(mask)){
-    warning("full dataset extraction is so far only supported for national forest inventories.")
-  } else {
-    theMasks <- mask
+  existsGeom <- testClass(mask, classes = "geom")
+  existsSp <- testClass(mask, classes = "SpatialPolygon")
+  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
+  if(!existsGeom & !existsSpatial){
+    stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
+  
+  if(existsSpatial){
+    mask <- gFrom(input = mask)
+  }
+  theMasks <- mask
   out <- list()
-
-  if(depthList(data) == 1){
-    data <- list(data)
-  }
 
   # test whether the specified operators do exists
   funs <- unlist(lapply(
@@ -87,6 +91,7 @@ obtain <- function(data, mask){
   ))
   if(any(funs == FALSE)){
     data <- data[-which(funs == FALSE)]
+    funs <- funs[-which(funs == FALSE)]
   }
 
   # put together a list of datasets, paths, functions and arguments
@@ -103,10 +108,11 @@ obtain <- function(data, mask){
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
   tabMasks <- getTable(x = theMasks)
-  for(i in unique(tabMasks$id)){
+  maskElements <- unique(tabMasks$id)
+  for(i in maskElements){
     tempMask <- getSubset(x = theMasks, subset = tabMasks$id == i)
 
-    message(paste0("I am extracting information for mask ", i, ":\n"))
+    message(paste0("--> I am extracting information for mask ", i, ":\n"))
     temp_out <- unlist(lapply(
       seq_along(funs), function(j){
         do.call(what = funs[j],
@@ -115,9 +121,14 @@ obtain <- function(data, mask){
     ), recursive = FALSE)
 
     temp_out <- setNames(temp_out, datasets)
-    out <- c(out, temp_out)
+    out <- c(out, list(temp_out))
 
   }
-
+  if(length(out) == 1){
+    out <- out[[1]]
+  } else{
+    out <- setNames(out, paste0("mask_", maskElements))
+  }
+  
   return(out)
 }

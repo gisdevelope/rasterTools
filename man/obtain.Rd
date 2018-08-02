@@ -4,7 +4,7 @@
 \alias{obtain}
 \title{Obtain spatial datasets}
 \usage{
-obtain(data, mask)
+obtain(data = NULL, mask = NULL)
 }
 \arguments{
 \item{data}{[\code{list(.)}]\cr algorithm in which the operators to load
@@ -50,6 +50,7 @@ and online resources.
 \examples{
 \dontrun{
 require(magrittr)
+require(rgeos)
 
 # specify the datasets from which you want to get data
 myDatasets <- list(list(operator = "oCLC", years = 2006),
@@ -62,7 +63,7 @@ myLocations <- loadData(files = "locations.csv",
                         localPath = system.file("csv", package="rasterTools"))
 myMask <- gGroup(geom = myLocations, distance = 10000) \%>\%
   geomRectangle() \%>\%
-  gToSp(crs = projs$laea)# \%>\%
+  gToSp(crs = projs$laea) \%>\%
   gBuffer(width = 1000, byid = TRUE)
 
 # grab the data
