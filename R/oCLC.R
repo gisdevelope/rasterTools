@@ -60,7 +60,7 @@ oCLC <- function(mask = NULL, years = NULL){
   # go through years to extract the respective data and subset it with theExtent
   for(i in seq_along(years)){
 
-    message(paste0("I am handling the clc datasets of the year '", years[i], "':\n"))
+    message(paste0("I am handling the clc datasets of the year '", years[i], "':"))
     fileName <- paste0( "g100_", substr(years[i], start = nchar(years[i])-1, stop = nchar(years[i])), ".tif")
     tempObject <- loadData(files = fileName, dataset = "clc")
     cols <- colortable(tempObject)[-1]
@@ -69,14 +69,14 @@ oCLC <- function(mask = NULL, years = NULL){
 
     tempObject <- setCRS(x = tempObject, crs = projs$laea)
 
-    message(paste0("  ... cropping CLC to target area\n"))
+    message(paste0("  ... cropping CLC to target area"))
     tempObject <- crop(tempObject, theExtent, snap = "out")
     names(tempObject) <- paste0("landcover_", years[i])
     history <-  c(history, list(paste0("object has been cropped")))
 
     if(getCRS(mask) != target_crs){
       crs_name <- strsplit(target_crs, " ")[[1]][1]
-      message(paste0("  ... reprojecting target CLC to '",crs_name, "'\n"))
+      message(paste0("  ... reprojecting target CLC to '",crs_name))
       tempObject <- setCRS(x = tempObject, crs = target_crs, method = "ngb")
       history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
     }
@@ -100,6 +100,7 @@ oCLC <- function(mask = NULL, years = NULL){
                   ogranization = "OPOCE",
                   address = "Luxembourg")
 
+  message()
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
