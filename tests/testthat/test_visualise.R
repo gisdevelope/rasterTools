@@ -2,6 +2,37 @@ library(checkmate)
 context("visualise")
 
 
-test_that("make tests", {
+test_that("visualise a gridded object", {
+  continuous <- rtData$continuous
+  
+  output <- visualise(gridded = continuous)
+  expect_class(output, "recordedplot")
+})
 
+test_that("visualise an object with NA values", {
+  continuous <- rtData$continuous
+  get_patches <- list(list(operator = "rBinarise", thresh = 30),
+                      list(operator = "rPatches"))
+  myPatches <- modify(input = continuous, by = get_patches, sequential = TRUE)
+  
+  output <- visualise(gridded = myPatches)
+  expect_class(output, "recordedplot")
+})
+
+test_that("Error if arguments have wrong value", {
+  continuous <- rtData$continuous
+  coords <- data.frame(x = c(40, 70, 70, 50),
+                       y = c(40, 40, 60, 70),
+                       id = 1)
+  window <- data.frame(x = c(0, 80),
+                       y = c(0, 80))
+  aGeom <- geomPolygon(anchor = coords)
+  # anImage <- system.file()
+  
+  expect_error(visualise())
+  expect_error(visualise(gridded = "bla"))
+  expect_error(visualise(gridded = continuous, geom = "bla"))
+  expect_error(visualise(gridded = continuous, theme = "bla"))
+  expect_error(visualise(gridded = continuous, trace = 1))
+  expect_error(visualise(gridded = continuous, image = 0))
 })
