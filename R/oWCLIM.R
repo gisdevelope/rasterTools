@@ -229,7 +229,7 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
       for(i in 1:12){
         temp <- raster(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")))
         writeRaster(temp, filename = paste0(localPath, "/", paste0("wc1.4_", fileNames[2], "_", fileNames[1], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif")), 
-                    format='GTiff', options="COMPRESS=DEFLATE")
+                    format = 'GTiff', options = "COMPRESS=DEFLATE")
         file.remove(c(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")),
                       paste0(localPath, "/", paste0(fileNames[1], "_", i, ".hdr"))))
         setTxtProgressBar(pb, i)
