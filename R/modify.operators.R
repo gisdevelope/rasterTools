@@ -348,10 +348,14 @@ rCentroid <- function(obj, output = "raster", background = NULL){
   }
 
   if(output == "geom"){
-    xt <- extent(obj)
-    out <- list(coords = cbind(theMeans[c(1, 2)], id = theMeans[,3]),
-                extent = data.frame(x = c(xt@xmin, xt@xmax), y = c(xt@ymin, xt@ymax)),
-                type = "point")
+    names(theMeans) <- c("x", "y", "id")
+    out <- new(Class = "geom",
+               type = "point",
+               table = theMeans,
+               window = data.frame(x = rep(c(min(theMeans$x), max(theMeans$x)), each = 2), y = c(min(theMeans$y), max(theMeans$y), max(theMeans$y), min(theMeans$y))),
+               scale = "absolute",
+               crs = as.character(NA),
+               history = list(paste0("the centroids of patches have been determined")))
     return(out)
   } else{
     out <- rasterize(x = theMeans[c(1, 2)], y = obj, background = background)
