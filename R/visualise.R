@@ -60,7 +60,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
   # bla <- matrix(0:109, 11, 11)
-  # gridded = gridded; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # gridded = gfc_out$treecover2000; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
   
   # check arguments
   isRaster <- testClass(gridded, "Raster")
@@ -531,7 +531,9 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
                               yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
                               name = "raster"))
         # grid.rect(gp = gpar(col = "green", fill = NA), name = "rasterGrob")
-        grid.raster(image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
+        grid.raster(width = unit(1, "npc"),
+                    height = unit(1, "npc"),
+                    image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
                     name = "theRaster",
                     interpolate = FALSE)
         upViewport() # exit raster
