@@ -11,6 +11,12 @@ test_that("function loads 'csv' files", {
   expect_class(output[[1]], "geom")
 })
 
+test_that("function loads also from a 'catalog'", {
+  
+})
+
+
+# here come the 'load_*'-methods specific tests
 test_that("function loads 'kml' files", {
   output <- loadData(files = "cgrs_estonia.kml",
                      localPath = system.file("kml", package="rasterTools"))
