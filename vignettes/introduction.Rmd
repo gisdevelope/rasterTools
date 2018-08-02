@@ -80,8 +80,7 @@ In the following you will find an example for each of the core functions. Let's 
 An algorithm with which one would obtain information from various spatial data sets could be:
 
 ```{r}
-myDatasets <- list(list(operator = "oCLC", period = 2006),
-                   list(operator = "oGFC", period = c(2005:2007)),
+myDatasets <- list(list(operator = "oGFC", period = c(2006)),
                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
                         layer = 2))
 ```

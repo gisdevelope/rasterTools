@@ -140,7 +140,6 @@
 <span class="co">#&gt; Loading required package: sp</span>
 <span class="kw">library</span>(rasterTools)
 <span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you with your spatial data!</span>
-<span class="co">#&gt; I don't know where your files are stored, please see '?updatePaths' to create a suitable index.</span>
 
 coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
                      <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
@@ -175,8 +174,7 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 <h2 class="hasAnchor">
 <a href="#obtain-spatial-datasets" class="anchor"></a>Obtain spatial datasets</h2>
 <p>An algorithm with which one would obtain information from various spatial data sets could be:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myDatasets &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oCLC"</span>, <span class="dt">period =</span> <span class="dv">2006</span>),
-                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oGFC"</span>, <span class="dt">period =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2007</span>)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myDatasets &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oGFC"</span>, <span class="dt">period =</span> <span class="kw">c</span>(<span class="dv">2006</span>)),
                    <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oMODIS"</span>, <span class="dt">product =</span> <span class="st">"mod17a3"</span>, <span class="dt">period =</span> <span class="dv">2006</span>,
                         <span class="dt">layer =</span> <span class="dv">2</span>))</code></pre></div>
 <p>Most of the different spatial datasets are available in a specific file format and may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the <code>product</code> and <code>layer</code> need to be specified. Each of the required arguments can be found in the respective documentation, for instance with <code><a href="../reference/oMODIS.html">?oMODIS</a></code>.</p>
