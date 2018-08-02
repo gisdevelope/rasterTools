@@ -52,8 +52,8 @@ and online resources.
 require(magrittr)
 
 # specify the datasets from which you want to get data
-myDatasets <- list(list(operator = "oCLC", period = 2006),
-                   list(operator = "oGFC", period = c(2005:2007)),
+myDatasets <- list(list(operator = "oCLC", years = 2006),
+                   list(operator = "oGFC", years = c(2005:2007)),
                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
                         layer = 2))
 

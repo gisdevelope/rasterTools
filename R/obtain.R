@@ -36,8 +36,8 @@
 #' require(magrittr)
 #'
 #' # specify the datasets from which you want to get data
-#' myDatasets <- list(list(operator = "oCLC", period = 2006),
-#'                    list(operator = "oGFC", period = c(2005:2007)),
+#' myDatasets <- list(list(operator = "oCLC", years = 2006),
+#'                    list(operator = "oGFC", years = c(2005:2007)),
 #'                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
 #'                         layer = 2))
 #'
@@ -66,7 +66,7 @@ obtain <- function(data, mask){
   } else {
     theMasks <- mask
   }
-  out <- theMasks
+  out <- list()
 
   if(depthList(data) == 1){
     data <- list(data)
@@ -102,23 +102,22 @@ obtain <- function(data, mask){
 
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
-  for(i in seq_along(theMasks)){
+  tabMasks <- getTable(x = theMasks)
+  for(i in unique(tabMasks$id)){
+    tempMask <- getSubset(x = theMasks, subset = tabMasks$id == i)
 
-    message(paste0("\n", names(theMasks[i]), ":\n--->\n"))
+    message(paste0("I am extracting information for mask ", i, ":\n"))
     temp_out <- unlist(lapply(
       seq_along(funs), function(j){
         do.call(what = funs[j],
-                args = c(args[[j]], mask = list(theMasks[[i]])))
+                args = c(args[[j]], mask = list(tempMask)))
       }
     ), recursive = FALSE)
 
     temp_out <- setNames(temp_out, datasets)
-    out[[i]] <- temp_out
+    out <- c(out, temp_out)
 
   }
 
-  if(length(out) == 1){
-    out <- out[[1]]
-  }
   return(out)
 }
