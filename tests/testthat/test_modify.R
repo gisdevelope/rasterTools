@@ -82,9 +82,9 @@ test_that("rBlend is properly handled", {
 
 test_that("rMask is properly handled", {
   input <- rtData$continuous
-  binarised <- rBinarise(input, thresh = 30)
+  binarised <<- rBinarise(input, thresh = 30)
   
-  # test proper handling of 'rMask' and of 'merge = FALSE'
+  # test that a mask can be taken from the current algorithm
   getMedialAxis <- list(skeleton = list(operator = "rSkeletonise", background = 0),
                         medAxis = list(operator = "rPermute"),
                         medAxis = list(operator = "rDistance"),
@@ -100,6 +100,11 @@ test_that("rMask is properly handled", {
                       dis = list(operator = "rMask", mask = "input"))
   
   output <- modify(input = binarised, by = centDistMap)
+  expect_class(output, "RasterLayer")
+  
+  # test that a mask can be taken from the global environment
+  patchValues <- list(list(operator = "rMask", mask = "binarised"))
+  output <- modify(input = input, by = patchValues)
   expect_class(output, "RasterLayer")
 })
 
@@ -190,13 +195,19 @@ test_that("Error if arguments have wrong value", {
   mat <- as.matrix(input)
   getPatches <- list(list(operator = "rBinarise", thresh = 40),
                      list(operator = "rPatches"))
-
+  wrongAlgo1 <- list(list(operator = "rMask", mask = "bla"))
+  wrongAlgo2 <- list(list(operator = "rMask", overlay = mat))
+  wrongAlgo3 <- list(list(operator = "rBlend", mask = "bla"))
+  wrongAlgo4 <- list(list(operator = "rBlend", overlay = mat))
+  
   expect_error(modify(input = "bla", by = getPatches, sequential = TRUE))
   expect_error(modify(input = input, by = "bla", sequential = TRUE))
   expect_error(modify(input = input, by = getPatches))
   expect_error(modify(input = input, by = getPatches, sequential = "yup"))
   expect_error(modify(input = input, by = getPatches, sequential = TRUE, merge = "yup"))
   expect_error(modify(input = input, by = getPatches, sequential = TRUE, keepInput = "yup"))
+  expect_error(modify(input = input, by = wrongAlgo1))
+  expect_error(modify(input = input, by = wrongAlgo2))
 })
 
 test_that("history is correct", {

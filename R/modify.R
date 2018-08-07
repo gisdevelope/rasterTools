@@ -98,8 +98,6 @@
 modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
                    keepInput = FALSE){
 
-  # input = input; by = binarise; sequential = FALSE; merge = FALSE; keepInput = FALSE
-  # 
   # check arguments
   isRaster <- testClass(input, "Raster")
   isStackBrick <- testClass(input, "RasterStack")
@@ -157,7 +155,7 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
           } else if(any(names(out) == tempAlgorithm[[k]]$mask)){
             theMask <- out[[which(names(out) == tempAlgorithm[[k]]$mask)]]
           } else{
-            theMask <- get(tempAlgorithm[[k]]$mask)
+            theMask <- get(tempAlgorithm[[k]]$mask, envir = .GlobalEnv)
           }
         } else if(testClass(tempAlgorithm[[k]]$mask, "RasterLayer")){
           theMask <- tempAlgorithm[[k]]$mask
@@ -174,7 +172,7 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
           if(any(names(out) == tempAlgorithm[[k]]$overlay)){
             theOverlay <- out[[which(names(out) == tempAlgorithm[[k]]$overlay)]]
           } else{
-            theOverlay <- get(tempAlgorithm[[k]]$overlay)
+            theOverlay <- get(tempAlgorithm[[k]]$overlay, envir = .GlobalEnv)
           }
         } else if(!testClass(tempAlgorithm[[k]]$overlay, "RasterLayer")){
           stop(paste0("please provide either the name of a layer or a RasterLayer as 'overlay' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
