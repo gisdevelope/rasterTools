@@ -92,11 +92,14 @@
 #' MAT <- modify(binarised, by = getMedialAxis, merge = TRUE)
 #' visualise(MAT, trace = TRUE)
 #' @importFrom raster stack
+#' @importFrom checkmate testClass assertList assertNames assertLogical
 #' @export
 
 modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
                    keepInput = FALSE){
 
+  # input = input; by = binarise; sequential = FALSE; merge = FALSE; keepInput = FALSE
+  # 
   # check arguments
   isRaster <- testClass(input, "Raster")
   isStackBrick <- testClass(input, "RasterStack")
@@ -116,8 +119,12 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
   # check which input we are dealing with and adapt if needs be
   if(isList){
     objs <- unlist(input)
+    objNames <- lapply(seq_along(input), function(x){
+      names(input[[x]])
+    })
   } else if(isRaster){
-    objs <- setNames(list(input), "thisObject")
+    objNames <- "thisObject"
+    objs <- setNames(list(input), objNames)
   }
 
   # if the algos don't have names, assign generic ones and separate it into subalgos
@@ -134,36 +141,48 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
   } else{
     out <- list()
   }
-
+  
   for(j in seq_along(subAlgoNames)){
-
+    
     tempObjs <- objs
     tempAlgorithm <- by[which(names(by) == subAlgoNames[j])]
-
+    
     for(k in seq_along(tempAlgorithm)){
-
+      
       # set the correct mask raster
       if(tempAlgorithm[[k]]$operator == "rMask"){
         if(is.character(tempAlgorithm[[k]]$mask)){
           if(tempAlgorithm[[k]]$mask == "input"){
             theMask <- input
-          } else{
+          } else if(any(names(out) == tempAlgorithm[[k]]$mask)){
             theMask <- out[[which(names(out) == tempAlgorithm[[k]]$mask)]]
+          } else{
+            theMask <- get(tempAlgorithm[[k]]$mask)
           }
-          # warning when the string doesn't match and object of the algorithm
+        } else if(testClass(tempAlgorithm[[k]]$mask, "RasterLayer")){
+          theMask <- tempAlgorithm[[k]]$mask
+        } else{
+          stop(paste0("please provide either the name of a layer or a RasterLayer as 'mask' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
         }
       } else{
         theMask <- NULL
       }
-
+      
       # # set the correct overlay raster
       if(tempAlgorithm[[k]]$operator == "rBlend"){
         if(is.character(tempAlgorithm[[k]]$overlay)){
-          theOverlay <- theGroups <- out[[which(names(out) == tempAlgorithm[[k]]$overlay)]]
-          tempAlgorithm[[k]]$overlay <- theOverlay
+          if(any(names(out) == tempAlgorithm[[k]]$overlay)){
+            theOverlay <- out[[which(names(out) == tempAlgorithm[[k]]$overlay)]]
+          } else{
+            theOverlay <- get(tempAlgorithm[[k]]$overlay)
+          }
+        } else if(!testClass(tempAlgorithm[[k]]$overlay, "RasterLayer")){
+          stop(paste0("please provide either the name of a layer or a RasterLayer as 'overlay' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
         }
+      } else{
+        theOverlay <- NULL
       }
-
+      
       # set the correct groups raster
       if(tempAlgorithm[[k]]$operator == "rSegregate"){
         if(is.character(tempAlgorithm[[k]]$by)){
@@ -171,25 +190,26 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
           tempAlgorithm[[k]]$by <- theGroups
         }
       }
-
+      
       # set a switch to reduce layers
       if(tempAlgorithm[[k]]$operator == "rReduce"){
         reduce <- TRUE
       } else{
         reduce <- FALSE
       }
-
+      
       for(i in seq_along(tempObjs)){
         thisObj <- tempObjs[[i]]
-
+        thisOverlay <- theOverlay[[i]]
+        
         # if the object has more than one layer and reduce != TRUE, go
         # through each layer separately; if reduce == TRUE, treat the
         # multiple layer raster as one, because rReduce expects several
         # layers to combine them.
         if(dim(thisObj)[3] > 1 & !reduce){
-
+          
           for(l in 1:dim(thisObj)[3]){
-
+            
             # in case a mask has to be set and the mask contains several layers
             # (i.e. after segregating of the mask), assign the respective mask.
             if(!is.null(theMask)){
@@ -199,18 +219,18 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
                 tempAlgorithm[[k]]$mask <- theMask[[1]]
               }
             }
-
+            
             modifiedObj <- do.call(what = tempAlgorithm[[k]]$operator,
                                    args = c(obj = list(thisObj[[l]]), tempAlgorithm[[k]][-1]))
             thisObj[[l]] <- modifiedObj
-
+            
           }
           newHistory <- paste0("in layers: ", modifiedObj@history[[length(modifiedObj@history)]])
           thisObj@history <- c(thisObj@history, list(newHistory))
           tempObjs[[i]] <- thisObj
-
+          
         } else{
-
+          
           if(!is.null(theMask)){
             if(dim(theMask)[3] > 1){
               tempAlgorithm[[k]]$mask <- theMask[[1]]
@@ -219,19 +239,26 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
               tempAlgorithm[[k]]$mask <- theMask
             }
           }
-
+          if(!is.null(theOverlay)){
+            tempAlgorithm[[k]]$overlay <- thisOverlay
+          }
+          
           modifiedObj <- do.call(what = tempAlgorithm[[k]]$operator,
                                  args = c(obj = list(thisObj), tempAlgorithm[[k]][-1]))
           tempObjs[[i]] <- modifiedObj
-
+          
         }
+        tempObjs <- setNames(tempObjs, nm = objNames)
       }
-
+      
     }
-    out <- c(out, setNames(object = tempObjs, nm = subAlgoNames[j]))
-
+    if(length(tempObjs) == 1){
+      tempObjs <- tempObjs[[1]]
+    }
+    out <- c(out, setNames(object = list(tempObjs), nm = subAlgoNames[j]))
+    
   }
-
+  
   if(length(out) == 1){
     out <- out[[1]]
   }

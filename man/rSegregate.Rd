@@ -36,11 +36,11 @@ visualise(myPatches[[c(2, 3, 12, 16)]])
 
 # when flattening, all values are set to 1
 myPatches2 <- rSegregate(patches, flatten = TRUE)
-visualise(myPatches2[[c(2, 3, 12, 16)]], new = TRUE)
+visualise(myPatches2[[c(2, 3, 12, 16)]])
 
 # cut out by 'patches'
 patchValues <- rSegregate(input, by = patches)
-visualise(patchValues[[c(2, 3, 12, 16)]], new = TRUE)
+visualise(patchValues[[c(2, 3, 12, 16)]])
 }
 \seealso{
 Other operators to modify a raster: \code{\link{rBlend}},

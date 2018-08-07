@@ -1407,11 +1407,11 @@ rRescale <- function(obj, factor = NULL, kernelFunction = NULL){
 #'
 #' # when flattening, all values are set to 1
 #' myPatches2 <- rSegregate(patches, flatten = TRUE)
-#' visualise(myPatches2[[c(2, 3, 12, 16)]], new = TRUE)
+#' visualise(myPatches2[[c(2, 3, 12, 16)]])
 #'
 #' # cut out by 'patches'
 #' patchValues <- rSegregate(input, by = patches)
-#' visualise(patchValues[[c(2, 3, 12, 16)]], new = TRUE)
+#' visualise(patchValues[[c(2, 3, 12, 16)]])
 #' @importFrom checkmate assertClass testNull assert testClass assertLogical
 #'   assertIntegerish
 #' @importFrom raster as.matrix values extent<- stack crs crs<-
