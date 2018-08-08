@@ -242,7 +242,7 @@ load_kml <- function(path, layer){
 #' @importFrom raster stack raster
 #' @export
 
-load_hdf <- function(path, layer){
+load_hdf <- function(path, layer = NULL){
   # get the layers; could be done via get_subdatasets(path), but if we look into
   # get_subdatasets(), we see that it is a rather low-level wrapper around
   # gdalinfo(). So we can also use gdalinfo() and have more control.
@@ -262,25 +262,31 @@ load_hdf <- function(path, layer){
         gsub("\"", "", strsplit(subsets_name[i], "=")[[1]][2])
       }
     ))
+    files <- unlist(lapply(
+      seq_along(subsets_name), function(i){
+        parts <- strsplit(subsets_name[i], ":")[[1]]
+        parts[length(parts)]
+        
+      }
+    ))
   }
 
   # select the layer(s)
-  if(layer %in% seq_along(files)){
-    layer <- layer
-  } else if(!is.numeric(layer)){
-    layer <- grep(layer, files, ignore.case = TRUE)
-    if(length(layer) == 0){
-      message(paste0("      -> you did not specify any layer, so I create a RasterStack\n"))
-      layer <- seq_along(files)
-    }
+  if(!is.numeric(layer)){
+    layer <- which(files %in% layer)
   }
+  if(length(layer) == 0 | all(!layer %in% seq_along(files))){
+    message(paste0("      -> you did not properly specify any layer, so I create a RasterStack\n"))
+    layer <- seq_along(files)
+  }
+
   tsds <- paths[layer]
   files <- files[layer]
 
   if(length(tsds)>1){
-    out <- raster::stack(tsds)
+    out <- stack(tsds)
   } else{
-    out <- raster::raster(tsds)
+    out <- raster(tsds)
   }
   names(out) <- files
 

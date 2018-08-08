@@ -4,7 +4,7 @@
 \alias{load_hdf}
 \title{Load \code{hdf} files}
 \usage{
-load_hdf(path, layer)
+load_hdf(path, layer = NULL)
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the local path of the file to load.}
