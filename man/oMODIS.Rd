@@ -6,7 +6,7 @@
 \title{Obtain MODIS data}
 \usage{
 oMODIS(mask = NULL, period = NULL, product = NULL, layer = NULL,
-  version = "newest", raw = FALSE)
+  version = "newest", process = TRUE, raw = FALSE)
 
 downloadMODIS(file = NULL, localPath = NULL, getDates = NULL,
   getFiles = NULL)
@@ -28,6 +28,10 @@ layer.}
 
 \item{version}{[\code{integerish(1)} | \code{character(1)}]\cr version of a
 modis dataset with 3 leading zeros, e.g. 055, default = "newest".}
+
+\item{process}{[\code{logical(1)}]\cr should the data be procesed further in
+R (\code{TRUE}, default) or should the data merely be downloaded and stored
+on the harddisc (\code{FALSE})?}
 
 \item{raw}{[\code{logical}]\cr should the raw modis-data be obtained
 (\code{TRUE}) or should a correction be applied (\code{FALSE}, default).

@@ -37,7 +37,7 @@
 #'                         verbose = TRUE)
 #' @importFrom checkmate testCharacter testDataFrame assertCharacter assertNames
 #'   testIntegerish assertDirectory assertLogical assertEnvironment assertFile
-#'   assertDataFrame
+#'   assertDataFrame testDirectoryExists
 #' @importFrom utils file_test
 #' @importFrom raster raster res<- stack
 #' @export
@@ -64,11 +64,13 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
   } else{
     if(is.null(localPath)) localPath <- getwd()
   }
+  if(!testDirectoryExists(localPath)){
+    dir.create(localPath)
+  }
   if(!is.null(layer)){
     layerIsInt <- testIntegerish(layer, len = 1, any.missing = FALSE)
     layerIsChar <- testCharacter(layer, len = 1, any.missing = FALSE)
   }
-  assertDirectory(localPath, access = "rw")
   # asser (onlinePath)
   assertLogical(verbose, any.missing = FALSE, len = 1)
 
