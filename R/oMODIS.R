@@ -374,7 +374,6 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
         progress())
     
     # http://www.spatial-analyst.net/wiki/index.php?title=Download_and_resampling_of_MODIS_images
-    # https://modis.ornl.gov/data/modis_webservice.html
 
   } else if(!is.null(getDates)){
 
