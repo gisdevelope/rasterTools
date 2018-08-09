@@ -56,7 +56,7 @@ An algorithm to be used in `measure()` can also contain several derived metrics,
 ## The dependence structure of landscape metrics
 The following graph shows the relationship of all metrics defined in @mcgarigal_fragstats_2015. This is followed by a section outlining details about the generic metrics and a list containing details and the equations of derived metrics.
 
-<!-- <img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%" /> -->
+<img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%" />
 
 In the following you will find a list of the generic metrics defined (so far) and below that the derived metrics sorted into the groups defined in @mcgarigal_fragstats_2015:
 
