@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-You might find `rasterTools` useful when your work depends in one way or the other on gridded earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
+You might find `rasterTools` useful when your work depends in one way or the other on earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
 
-`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
 
 Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in `rasterTools` is given as list of lists.
 
@@ -105,7 +105,7 @@ myData <- obtain(data = myDatasets, mask = myMask)
 
 (output here not shown as it may download the datasets, if you do not have them yet)
 
-## Modify gridded objects
+## Modify raster objects
 A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:
 
 ```{r}
@@ -134,7 +134,7 @@ visualise(raster::stack(myInput, myPatches))
 ```
 
 
-## Measure gridded objects
+## Measure raster objects
 Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
 
 ```{r}
