@@ -4,7 +4,7 @@
 \alias{measure}
 \title{Measure gridded objects}
 \usage{
-measure(input, with, simplify = TRUE)
+measure(input = NULL, with = NULL, simplify = TRUE)
 }
 \arguments{
 \item{input}{[\code{RasterLayer(1)} | \code{list(.)} thereof]\cr an object or
