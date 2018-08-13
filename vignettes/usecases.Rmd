@@ -23,7 +23,6 @@ The following is a list of all the topics covered so far:
 * Morphological operations
     + [Open foreground](#morph_open)
     + [Close foreground](#morph_close)
-    + Determine sharpness of a boundary
       
 * Identify features/objects
     + [Media axis transform](#identify_mat)
@@ -42,6 +41,9 @@ The following is a list of all the topics covered so far:
 
 * Distance Maps
     + [Distance map of centroids per patch](#dist_centroid)
+    
+* Other
+    + Determine sharpness of a boundary
 
 # Getting Started
 Lets start with reading in the required packages.
