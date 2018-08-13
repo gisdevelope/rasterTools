@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Number of objects — mNumber • rasterTools</title>
+<title>Metric distribution — mMetric • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Number of objects — mNumber" />
+<meta property="og:title" content="Metric distribution — mMetric" />
 
-<meta property="og:description" content="Count the number of objects in a raster" />
+<meta property="og:description" content="Metric distribution" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -133,18 +133,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Number of objects</h1>
+    <h1>Metric distribution</h1>
     <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/measure.operators.R'><code>R/measure.operators.R</code></a></small>
-    <div class="hidden name"><code>mNumber.Rd</code></div>
+    <div class="hidden name"><code>mMetric.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Count the number of objects in a raster</p>
+    <p>Metric distribution</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mNumber</span>(<span class='no'>obj</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>mMetric</span>(<span class='no'>obj</span>, <span class='no'>metric</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,72 +154,18 @@
       <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
-      <th>scale</th>
-      <td><p>[<code>character(1)</code>]<br /> scale at which the area of objects
-should be calculated; possible values are <code>"patch"</code> and <code>"class"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>layer</th>
-      <td><p>[<code>character(1)</code>]<br /> in case <code>obj</code> has several layers,
-specify here the layer for which the area of objects shall be calculated
-(by default, the first layer).</p></td>
+      <th>metric</th>
+      <td><p>[<code>character(.)</code>]<br /> the metric(s) that shall be assessed.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>For <code>scale = "class"</code> the number of unique values (classes) in
-  the raster. For <code>scale = "patch"</code> the number of objects per distinc
-  value (i.e. the number of patches per class).</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other generic metrics: <code><a href='mAdjacency.html'>mAdjacency</a></code>,
-  <code><a href='mArea.html'>mArea</a></code>, <code><a href='mPerimeter.html'>mPerimeter</a></code>,
-  <code><a href='mValues.html'>mValues</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
-<span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-
-<span class='co'># the number ...</span>
-<span class='co'># ... per landuse type</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   landscape classes
-#&gt; 1         1       9</div><div class='input'>
-<span class='co'># ... of patches per landuse type</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   class patches
-#&gt; 1     1       1
-#&gt; 2    11       1
-#&gt; 3    21       2
-#&gt; 4    24       3
-#&gt; 5    27       2
-#&gt; 6    31       3
-#&gt; 7    41      13
-#&gt; 8    44      14
-#&gt; 9    47      13</div><div class='input'>
-<span class='co'># ... of certain values</span>
-<span class='fu'>require</span>(<span class='no'>magrittr</span>)
-<span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>match</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>mNumber</span>(<span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"values_binarised"</span>)</div><div class='output co'>#&gt;   landscape patches
-#&gt; 1         1      21</div><div class='input'>
-<span class='co'># ... from a binary raster</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   landscape patches
-#&gt; 1         1      26</div><div class='input'><span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   landscape classes
-#&gt; 1         1       2</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

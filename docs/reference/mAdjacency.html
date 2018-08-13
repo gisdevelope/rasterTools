@@ -151,7 +151,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>obj</th>
-      <td><p>[<code>RasterLayer(1)</code>]<br /> The object to measure.</p></td>
+      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
       <th>type</th>
@@ -197,7 +197,7 @@ specify here the layer for which the area of objects shall be calculated
     <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
 <span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
 
-<span class='co'># couble count like adjacencies</span>
+<span class='co'># double count like adjacencies</span>
 <span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>)</div><div class='output co'>#&gt;    class likeAdj
 #&gt; 1      1     114
 #&gt; 11    11     218

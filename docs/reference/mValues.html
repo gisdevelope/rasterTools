@@ -151,27 +151,26 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>obj</th>
-      <td><p>[<code>RasterLayer(1)</code>]<br /> The object to measure.</p></td>
+      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
       <th>param</th>
       <td><p>[<code>character(.)</code>]<br /> parameter(s) to calculate; possible
 parameters are <code>"mean"</code>, <code>"sum"</code>, <code>"number"</code>, <code>"sd"</code>,
 <code>"cv"</code>, <code>"iqr"</code>, <code>"min"</code>, <code>"median"</code>, <code>"max"</code>,
-<code>"quantile"</code>, <code>"weighted.mean"</code>, <code>"identity"</code>, <code>"all"</code>
-or <code>"raw"</code>.</p></td>
+<code>"quantile"</code>, <code>"weighted.mean"</code> or <code>"all"</code>.</p></td>
     </tr>
     <tr>
       <th>layer</th>
       <td><p>[<code>character(1)</code>]<br /> in case <code>obj</code> has several layers,
 specify here the layer for which the area of objects shall be calculated
-(by default, the first layer).</p></td>
+(by default the first layer).</p></td>
     </tr>
     <tr>
       <th>groupBy</th>
-      <td><p>another layer (typically part of the same raster::brick),
-according which you want to divide the cells in the input layer. see
-Details.</p></td>
+      <td><p>[<code>RasterLayer(1)</code>]<br /> (another) layer based on the unique
+values of which to calculate distribution parameters (by default the second
+layer).</p></td>
     </tr>
     </table>
     
@@ -179,11 +178,6 @@ Details.</p></td>
 
     <p>A list with elements resulting from the stratification with the value
   of each specified parameter per object in <code>groupBby</code>.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>You can give a raster stack with at least two layers as <code>obj</code>
-  and then use <code>groupBby</code> to 'mask' the cells, so to speak.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -193,7 +187,56 @@ Details.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># work in progress
+    <pre class="examples"><div class='input'><span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
+<span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>con</span>, <span class='fl'>30</span>)
+<span class='no'>patches</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rPatches.html'>rPatches</a></span>(<span class='no'>bin</span>)
+
+<span class='co'># the average and standard deviation of all values</span>
+<span class='fu'>mValues</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>con</span>, <span class='kw'>param</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mean"</span>, <span class='st'>"sd"</span>))</div><div class='output co'>#&gt;   value     mean       sd
+#&gt; 1    NA 35.74583 32.98776</div><div class='input'>
+<span class='co'># destribution parameters per patch ...</span>
+<span class='fu'>mValues</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>con</span>, <span class='no'>patches</span>),
+        <span class='kw'>param</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"weighted.mean"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>), <span class='kw'>groupBy</span> <span class='kw'>=</span> <span class='st'>"patches"</span>)</div><div class='output co'>#&gt;    value min max wgh.mean
+#&gt; 1      1  44  98 80.50172
+#&gt; 2      2  30  82 60.05102
+#&gt; 3      3  30  96 44.17164
+#&gt; 4      4  30  95 70.35691
+#&gt; 5      5  33  33 33.00000
+#&gt; 6      6  31  56 37.00000
+#&gt; 7      7  31  34 32.50000
+#&gt; 8      8  30  52 33.73913
+#&gt; 9      9  46  46 46.00000
+#&gt; 10    10  30  77 49.69231
+#&gt; 11    11  30  30 30.00000
+#&gt; 12    12  30  99 73.82258
+#&gt; 13    13  30  81 35.34821
+#&gt; 14    14  30  74 36.65385
+#&gt; 15    15  32  32 32.00000
+#&gt; 16    16  32  32 32.00000
+#&gt; 17    17  48  48 48.00000
+#&gt; 18    18  30  39 34.88889
+#&gt; 19    19  52  52 52.00000
+#&gt; 20    20  33  33 33.00000
+#&gt; 21    21  53  53 53.00000
+#&gt; 22    22  49  49 49.00000
+#&gt; 23    23  37  37 37.00000
+#&gt; 24    24  45  45 45.00000
+#&gt; 25    25  33  57 48.54545
+#&gt; 26    26  31  33 32.00000
+#&gt; 27    27  31 100 83.60078
+#&gt; 28    28  33  33 33.00000</div><div class='input'>
+<span class='co'># ... or per class</span>
+<span class='fu'>mValues</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>con</span>, <span class='no'>rtData</span>$<span class='no'>categorical</span>),
+        <span class='kw'>param</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mean"</span>, <span class='st'>"sd"</span>), <span class='kw'>groupBy</span> <span class='kw'>=</span> <span class='st'>"categorical"</span>)</div><div class='output co'>#&gt;   value      mean        sd
+#&gt; 1     1  0.000000  0.000000
+#&gt; 2    11  1.000000  0.000000
+#&gt; 3    21 23.338078 10.328339
+#&gt; 4    24  5.822485  5.231031
+#&gt; 5    27  5.197425  2.573578
+#&gt; 6    31 13.383292  3.244627
+#&gt; 7    41 53.814617 22.516530
+#&gt; 8    44 73.788079 21.347403
+#&gt; 9    47 71.704044 22.035688</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -202,8 +245,6 @@ Details.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

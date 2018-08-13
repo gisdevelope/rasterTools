@@ -103,7 +103,7 @@
       <h1>Landscape metrics</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-10</h4>
+            <h4 class="date">2018-08-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/landscape_metrics.Rmd"><code>vignettes/landscape_metrics.Rmd</code></a></small>
       <div class="hidden name"><code>landscape_metrics.Rmd</code></div>
@@ -144,15 +144,15 @@
 <p>A second group of landscape metrics, which are called <em>derived metrics</em> in <code>rasterTools</code>, are are a combination of several generic and potentially other derived metrics. Landscape metrics are computed in the <code><a href="../reference/measure.html">measure()</a></code> function, where they are specified as named list. Each derived metric contains <em>terms</em> (generic metrics) and an <em>equation</em>, in which the relation between the different terms is given.</p>
 <pre><code>list(myMetric = list(operator = "mMetric", scale = "patch"))  # generic metric
 list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
-     term2 = list(operator = "mMetric2", scale = "window"),
+     term2 = list(operator = "mMetric2", scale = "landscape"),
      myMetric = "term1 / term2 * 100")
      </code></pre>
 <p>An algorithm to be used in <code><a href="../reference/measure.html">measure()</a></code> can also contain several derived metrics, which makes sense when several derived metrics depend on a similar set of generic metrics:</p>
 <pre><code>myMetrics &lt;- list(a_c = list(operator = "mArea", scale = "class"),
-                  a_w = list(operator = "mArea", scale = "window"),
+                  a_l = list(operator = "mArea", scale = "landscape"),
                   a_p = list(operator = "mArea", scale = "patch"),
-                  mCPA = "a_c / a_w * 100",
-                  mLPI = "max(a_p) / a_w * 100")</code></pre>
+                  mCPA = "a_c / a_l * 100",
+                  mLPI = "max(a_p) / a_l * 100")</code></pre>
 </div>
 <div id="the-dependence-structure-of-landscape-metrics" class="section level2">
 <h2 class="hasAnchor">
@@ -266,12 +266,12 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Level of measurement: Class</p>
 <p>Internal name: class proportional area (CPA)</p>
 <span class="math display">\[\begin{equation} 
-  CPA = \frac{A_C}{A_W} \cdot 100
+  CPA = \frac{A_C}{A_L} \cdot 100
 \end{equation}\]</span>
-<p>with <span class="math inline">\(A_{C}\)</span> = <a href="#mArea">Area</a> of a class, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
+<p>with <span class="math inline">\(A_{C}\)</span> = <a href="#mArea">Area</a> of a class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(a_c = list(operator = "mArea", scale = "class"),
-     a_w = list(operator = "mArea", scale = "window"),
-     mCPA = "a_c / a_w * 100")</code></pre>
+     a_l = list(operator = "mArea", scale = "landscape"),
+     mCPA = "a_c / a_l * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; CPA ≤ 100\)</span></p>
 <p>Interpretation: CPA approaches 0 (100) when the respective class becomes increasingly rare (frequent).</p>
@@ -286,12 +286,12 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Level of measurement: Landscape</p>
 <p>Internal name: largest patch index (LPI)</p>
 <span class="math display">\[\begin{equation} 
-  LPI = \frac{max(A_{P})}{A_W} \cdot 100
+  LPI = \frac{max(A_{P})}{A_L} \cdot 100
 \end{equation}\]</span>
-<p>with <span class="math inline">\(max(A_{P})\)</span> = <a href="#mArea">Area</a> of the largest patch, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>list(a_w = list(operator = "mArea", scale = "window"),
+<p>with <span class="math inline">\(max(A_{P})\)</span> = <a href="#mArea">Area</a> of the largest patch, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
+<pre><code>list(a_l = list(operator = "mArea", scale = "landscape"),
      a_p = list(operator = "mArea", scale = "patch"),
-     mLPI = "max(a_p) / a_w * 100")</code></pre>
+     mLPI = "max(a_p) / a_l * 100")</code></pre>
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; LPI ≤ 100\)</span></p>
 <p>Interpretation: LPI approaches 0 (100) when the largest patch is increasingly small (large). It is thus a measure of dominance.</p>
@@ -325,12 +325,12 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Level of measurement: Class, Landscape</p>
 <p>Internal name: density of edges (DE)</p>
 <span class="math display">\[\begin{equation} 
-  DE = \frac{P_{X}}{A_W} \cdot 10000
+  DE = \frac{P_{X}}{A_L} \cdot 10000
 \end{equation}\]</span>
-<p>with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
+<p>with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(p_c = list(operator = "mPerimeter", scale = "class"),
-     a_w = list(operator = "mArea", scale = "window"),
-     mDE = "p_c / a_w * 10000")</code></pre>
+     a_l = list(operator = "mArea", scale = "landscape"),
+     mDE = "p_c / a_l * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(m\,ha^{-1}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; DE ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial heterogeneity and possible fragmentation of the focal habitat type.</p>
@@ -390,7 +390,7 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Unit: <span class="math inline">\(\%\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PLA ≤ 100\)</span></p>
 <p>Interpretation:</p>
-<p>Limitations: Lower values indicate higher disaggregation, where 0 means that each patch is a single cell. Hiher values indicate higher aggregation, where 100 means that the complete window is filled with this patch.</p>
+<p>Limitations: Lower values indicate higher disaggregation, where 0 means that each patch is a single cell. Hiher values indicate higher aggregation, where 100 means that the complete landscape is filled with this patch.</p>
 <p>Employed in the derived metrics:</p>
 <p>Reference:</p>
 </div>
@@ -409,12 +409,12 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Level of measurement: Class, Landscape</p>
 <p>Internal name: density of patches (DP)</p>
 <span class="math display">\[\begin{equation} 
-  DP = \frac{N_P}{A_W} \cdot 10000
+  DP = \frac{N_P}{A_L} \cdot 10000
 \end{equation}\]</span>
-<p>with <span class="math inline">\(N_P\)</span> = <a href="#mNumber">Number</a> of patches, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
+<p>with <span class="math inline">\(N_P\)</span> = <a href="#mNumber">Number</a> of patches, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(n_p = list(operator = "mNumber", scale = "patch"),
-     a_w = list(operator = "mArea", scale = "window"),
-     mDP = "n_p / a_w * 10000")</code></pre>
+     a_l = list(operator = "mArea", scale = "landscape"),
+     mDP = "n_p / a_l * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(n\,ha^{-1}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; PD ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial fragmentation of a particular class.</p>

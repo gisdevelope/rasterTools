@@ -46,14 +46,11 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
 3) Compute the *Class proportional area* in a raster with categorial values:
 
         myInput <- rtData$categorial
-        myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
+        myMetric <- list(a_l = list(operator = "mArea", scale = "landscape"),
                          a_c = list(operator = "mArea", scale = "class"),
-                         mCPA = "a_c / a_w * 100")
+                         mCPA = "a_c / a_l * 100")
         measure(input = myInput, with = myMetrics)
 
-
-## Contribute
-In case you have a suggestion for a feature or function you think is missing, please file an [issue](https://github.com/EhrmannS/rasterTools/issues) and I try to implement it. If you want to contribute, [develop your own addition](/vignettes/contribute.Rmd) to `rasterTools` and share it with the community by creating a [pull request](https://github.com/EhrmannS/rasterTools/pulls) on github (I will include you as author of the respective function).
 
 ## Planned for future versions
 - Support of the Sentinel (high prio), Landsat and Lidar datasets.
