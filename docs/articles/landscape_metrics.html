@@ -103,7 +103,7 @@
       <h1>Landscape metrics</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-09</h4>
+            <h4 class="date">2018-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/landscape_metrics.Rmd"><code>vignettes/landscape_metrics.Rmd</code></a></small>
       <div class="hidden name"><code>landscape_metrics.Rmd</code></div>
@@ -322,19 +322,15 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <h3 class="hasAnchor">
 <a href="#mDE" class="anchor"></a>Edge Density</h3>
 <p>Description: Length of edges per hectare of the landscape window.</p>
-<p>Level of measurement: Patch, Class</p>
+<p>Level of measurement: Class, Landscape</p>
 <p>Internal name: density of edges (DE)</p>
 <span class="math display">\[\begin{equation} 
   DE = \frac{P_{X}}{A_W} \cdot 10000
 \end{equation}\]</span>
 <p>with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_W\)</span> = <a href="#mArea">Area</a> of the window</p>
-<pre><code>list(p_p = list(operator = "mPerimeter", scale = "patch"),
+<pre><code>list(p_c = list(operator = "mPerimeter", scale = "class"),
      a_w = list(operator = "mArea", scale = "window"),
-     mDE = "p_p / a_w * 10000")
-
-list(p_c = list(operator = "mPerimeter", scale = "class"),
-     a_w = list(operator = "mArea", scale = "window"),
-     mDEc = "p_c / a_w * 10000")</code></pre>
+     mDE = "p_c / a_w * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(m\,ha^{-1}\)</span></p>
 <p>Range: <span class="math inline">\(0 &lt; DE ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial heterogeneity and possible fragmentation of the focal habitat type.</p>

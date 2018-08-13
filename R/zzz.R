@@ -16,7 +16,7 @@
                     gfc = list(local = NA,
                                online = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
                     modis = list(local = NA,
-                                 online = "https://e4ftl01.cr.usgs.gov/MOLT/"),
+                                 online = "https://e4ftl01.cr.usgs.gov/"),
                     sentinel = list(local = NA,
                                     online = "missing"),
                     worldclim = list(local = NA,

@@ -103,7 +103,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-09</h4>
+            <h4 class="date">2018-08-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -115,8 +115,8 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>You might find <code>rasterTools</code> useful when your work depends in one way or the other on gridded earth observation data <span class="citation">(Bush et al. <a href="#ref-bush_connecting_2017">2017</a>)</span>. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.</p>
-<p><code>rasterTools</code> does NOT intend to replace <code>raster</code> <span class="citation">(Hijmans <a href="#ref-hijmans_raster_2017">2017</a>)</span> but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into <em>operators</em> (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In <code>rasterTools</code> the four functions <code><a href="../reference/obtain.html">obtain()</a></code>, <code><a href="../reference/generate.html">generate()</a></code>, <code><a href="../reference/modify.html">modify()</a></code> and <code><a href="../reference/measure.html">measure()</a></code> represent the major tasks of spatial operations. <code>rasterTools</code> has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, “loading the MODIS dataset” is oursourced to a seperate function (the <code><a href="../reference/oMODIS.html">oMODIS()</a></code> operator). New operators to all the core functions and to <code><a href="../reference/loadData.html">loadData()</a></code> can hence be devised easily.</p>
+<p>You might find <code>rasterTools</code> useful when your work depends in one way or the other on earth observation data <span class="citation">(Bush et al. <a href="#ref-bush_connecting_2017">2017</a>)</span>. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.</p>
+<p><code>rasterTools</code> does NOT intend to replace <code>raster</code> <span class="citation">(Hijmans <a href="#ref-hijmans_raster_2017">2017</a>)</span> but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into <em>operators</em> (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In <code>rasterTools</code> the four functions <code><a href="../reference/obtain.html">obtain()</a></code>, <code><a href="../reference/generate.html">generate()</a></code>, <code><a href="../reference/modify.html">modify()</a></code> and <code><a href="../reference/measure.html">measure()</a></code> represent the major tasks of spatial operations. <code>rasterTools</code> has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, “loading the MODIS dataset” is oursourced to a seperate function (the <code><a href="../reference/oMODIS.html">oMODIS()</a></code> operator). New operators to all the core functions and to <code><a href="../reference/loadData.html">loadData()</a></code> can hence be devised easily.</p>
 <p>Several operators are combined to <em>algorithms</em> to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in <code>rasterTools</code> is given as list of lists.</p>
 <pre><code>algo_name &lt;- list(list(operator1),
                   list(operator2))
@@ -194,9 +194,9 @@ myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</code></pre></div>
 <p>(output here not shown as it may download the datasets, if you do not have them yet)</p>
 </div>
-<div id="modify-gridded-objects" class="section level2">
+<div id="modify-raster-objects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modify-gridded-objects" class="anchor"></a>Modify gridded objects</h2>
+<a href="#modify-raster-objects" class="anchor"></a>Modify raster objects</h2>
 <p>A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
                     <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</code></pre></div>
@@ -212,9 +212,9 @@ myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/m
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
-<div id="measure-gridded-objects" class="section level2">
+<div id="measure-raster-objects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#measure-gridded-objects" class="anchor"></a>Measure gridded objects</h2>
+<a href="#measure-raster-objects" class="anchor"></a>Measure raster objects</h2>
 <p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
 myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
@@ -299,8 +299,8 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <a href="#example-workflow">Example workflow</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#generate-spatial-patterns">Generate spatial patterns</a></li>
       <li><a href="#obtain-spatial-datasets">Obtain spatial datasets</a></li>
-      <li><a href="#modify-gridded-objects">Modify gridded objects</a></li>
-      <li><a href="#measure-gridded-objects">Measure gridded objects</a></li>
+      <li><a href="#modify-raster-objects">Modify raster objects</a></li>
+      <li><a href="#measure-raster-objects">Measure raster objects</a></li>
       </ul>
 </li>
       <li><a href="#acknowledgements">Acknowledgements</a></li>

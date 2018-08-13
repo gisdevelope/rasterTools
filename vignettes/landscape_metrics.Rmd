@@ -293,7 +293,7 @@ Reference:
 
 Description: Length of edges per hectare of the landscape window.
 
-Level of measurement: Patch, Class
+Level of measurement: Class, Landscape
 
 Internal name: density of edges (DE)
 
@@ -302,13 +302,9 @@ Internal name: density of edges (DE)
 \end{equation}
 with $P_{X}$ = [Perimeter](#mPerimeter) of a patch or class, $A_L$ = [Area](#mArea) of the landscape
 
-    list(p_p = list(operator = "mPerimeter", scale = "patch"),
-         a_l = list(operator = "mArea", scale = "landscape"),
-         mDE = "p_p / a_l * 10000")
-
     list(p_c = list(operator = "mPerimeter", scale = "class"),
          a_l = list(operator = "mArea", scale = "landscape"),
-         mDEc = "p_c / a_l * 10000")
+         mDE = "p_c / a_l * 10000")
 
 Unit: $m\,ha^{-1}$
 
