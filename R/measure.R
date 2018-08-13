@@ -143,18 +143,6 @@ measure <- function(input, with, simplify = TRUE){
     # compute the result
     for(k in seq_along(equations)){
       theResult <- round(eval(parse(text = equations[[k]]), envir = theValues), 2)
-      
-      elements <- strsplit(equations[[k]], "[ ]")[[1]]
-      # IDs <- NULL
-      bla <- lapply(seq_along(elements), function(x){
-        tryCatch(eval(parse(text = paste0(elements[x])), envir = theValues), error = function(e) NULL)
-        # if(!is.null(target)){
-          # eval(parse(text = paste0(elements[x], "$", target)), envir = value_list)
-        # }
-        # tryCatch(eval(parse(text = elements[x]), envir = theValues), error = function(e) NULL)
-      })
-      names(bla) <- elements
-      
       result_list <- c(result_list, setNames(list(theResult), metricNames[k]))
     }
   }
