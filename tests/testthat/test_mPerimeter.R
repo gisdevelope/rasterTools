@@ -69,7 +69,7 @@ test_that("bibliography item has been created", {
   input <- rtData$categorical
   options(bibliography = NULL)
   
-  output <- mArea(obj = input, scale = "class")
+  output <- mPerimeter(obj = input, scale = "class")
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
 })

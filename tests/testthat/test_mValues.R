@@ -12,8 +12,11 @@ test_that("output is data.frame", {
   output <- mValues(obj = input, param = c("mean", "sd", "iqr", "number"))
   expect_data_frame(output, ncols = 5, nrows = 1)
   
-  output <- mValues(obj = raster::stack(input, patches), param = c("weighted.mean", "quantile"), groupBy = "patches")
+  output <- mValues(obj = raster::stack(input, patches), param = c("weighted.mean", "quantile"), layer = "continuous", groupBy = "patches")
   expect_data_frame(output, ncols = 7, nrows = 26)
+  
+  output <- mValues(obj = raster::stack(input, patches), param = c("all"))
+  expect_data_frame(output, ncols = 16, nrows = 26)
 })
 
 test_that("Error if arguments have wrong value", {
