@@ -32,7 +32,3 @@ test_that("Error if arguments have wrong value", {
   expect_error(mValues(obj = input, layer = 1))
   
 })
-
-test_that("bibliography item has been created", {
-
-})

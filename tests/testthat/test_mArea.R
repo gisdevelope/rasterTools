@@ -81,4 +81,12 @@ test_that("bibliography item has been created", {
   output <- mArea(obj = input, scale = "class")
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
+  
+  options(bibliography = NULL)
+  bin <- rBinarise(rtData$continuous, thresh = 40)
+  disEuc <- rDistance(bin)
+  
+  output <- mArea(obj = input, scale = "class")
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
 })

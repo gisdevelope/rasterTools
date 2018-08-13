@@ -66,8 +66,16 @@ test_that("Error if arguments have wrong value", {
 })
 
 test_that("bibliography item has been created", {
-  input <- rtData$categorical
   options(bibliography = NULL)
+  input <- rtData$categorical
+  
+  output <- mPerimeter(obj = input, scale = "class")
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
+  
+  options(bibliography = NULL)
+  bin <- rBinarise(rtData$continuous, thresh = 40)
+  disEuc <- rDistance(bin)
   
   output <- mPerimeter(obj = input, scale = "class")
   theBib <- getOption("bibliography")
