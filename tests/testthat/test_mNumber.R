@@ -32,13 +32,13 @@ test_that("output has the correct columm names", {
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mNumber(obj = bin, scale = "patch")
-  expect_names(names(output), identical.to = c("window", "patches"))
+  expect_names(names(output), identical.to = c("landscape", "patches"))
 
-  output <- mNumber(obj = cat, scale = "patch")
+  output <- mNumber(obj = cat, layer = "categorical", scale = "patch")
   expect_names(names(output), identical.to = c("class", "patches"))
 
   output <- mNumber(obj = cat, scale = "class")
-  expect_names(names(output), identical.to = c("window", "classes"))
+  expect_names(names(output), identical.to = c("landscape", "classes"))
 })
 
 test_that("Error if arguments have wrong value", {
@@ -52,7 +52,8 @@ test_that("Error if arguments have wrong value", {
 
 test_that("bibliography item has been created", {
   cat <- rtData$categorical
-
+  options(bibliography = NULL)
+  
   output <- mNumber(obj = cat, scale = "class")
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")

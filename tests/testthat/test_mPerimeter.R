@@ -3,21 +3,21 @@ context("mPerimeter")
 
 
 test_that("output is data.frame", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mPerimeter(obj = bin, scale = "patch")
   expect_data_frame(output, ncols = 3, nrows = 26, any.missing = FALSE)
 
-  output <- mPerimeter(obj = cat, scale = "patch")
+  output <- mPerimeter(obj = input, layer = "categorical", scale = "patch")
   expect_data_frame(output, ncols = 3, nrows = 52, any.missing = FALSE)
 
-  output <- mPerimeter(obj = cat, scale = "class")
+  output <- mPerimeter(obj = input, scale = "class")
   expect_data_frame(output, ncols = 2, nrows = 9, any.missing = FALSE)
 })
 
 test_that("determines patches, when binarised input is provided and 'scale = patch'", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mPerimeter(obj = bin, scale = "patch")
@@ -28,47 +28,48 @@ test_that("determines patches, when binarised input is provided and 'scale = pat
 })
 
 test_that("output has the correct columm names", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mPerimeter(obj = bin, scale = "patch")
   expect_names(names(output), identical.to = c("class", "patch", "edges"))
 
-  output <- mPerimeter(obj = cat, scale = "patch")
+  output <- mPerimeter(obj = input, scale = "patch")
   expect_names(names(output), identical.to = c("class", "patch", "edges"))
 
-  output <- mPerimeter(obj = cat, scale = "class")
+  output <- mPerimeter(obj = input, scale = "class")
   expect_names(names(output), identical.to = c("class", "edges"))
 })
 
 test_that("output with the correct unit", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mPerimeter(obj = bin, scale = "patch", unit = "map")
   expect_names(names(output), identical.to = c("class", "patch", "edgelength"))
 
-  output <- mPerimeter(obj = cat, scale = "patch", unit = "map")
+  output <- mPerimeter(obj = input, scale = "patch", unit = "map")
   expect_names(names(output), identical.to = c("class", "patch", "edgelength"))
 
-  output <- mPerimeter(obj = cat, scale = "class", unit = "map")
+  output <- mPerimeter(obj = input, scale = "class", unit = "map")
   expect_names(names(output), identical.to = c("class", "edgelength"))
 })
 
 test_that("Error if arguments have wrong value", {
-  cat <- rtData$categorical
-  mat <- as.matrix(cat)
+  input <- rtData$categorical
+  mat <- as.matrix(input)
 
   expect_error(mPerimeter(obj = mat))
-  expect_error(mPerimeter(obj = cat, scale = "landscape"))
-  expect_error(mPerimeter(obj = cat, unit = "meter"))
-  expect_error(mPerimeter(obj = cat, layer = 1))
+  expect_error(mPerimeter(obj = input, scale = "landscape"))
+  expect_error(mPerimeter(obj = input, unit = "meter"))
+  expect_error(mPerimeter(obj = input, layer = 1))
 })
 
 test_that("bibliography item has been created", {
-  cat <- rtData$categorical
-
-  output <- mArea(obj = cat, scale = "class")
+  input <- rtData$categorical
+  options(bibliography = NULL)
+  
+  output <- mArea(obj = input, scale = "class")
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
 })

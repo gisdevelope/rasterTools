@@ -4,19 +4,19 @@ context("mArea")
 
 
 test_that("output is data.frame", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch")
   expect_data_frame(output, ncols = 3, nrows = 26, any.missing = FALSE)
 
-  output <- mArea(obj = cat, scale = "patch")
+  output <- mArea(obj = input, scale = "patch")
   expect_data_frame(output, ncols = 3, nrows = 52, any.missing = FALSE)
 
-  output <- mArea(obj = cat, scale = "class")
+  output <- mArea(obj = input, scale = "class")
   expect_data_frame(output, ncols = 2, nrows = 9, any.missing = FALSE)
 
-  output <- mArea(obj = cat, scale = "window")
+  output <- mArea(obj = input, scale = "landscape")
   expect_data_frame(output, ncols = 2, nrows = 1, any.missing = FALSE)
 })
 
@@ -31,53 +31,54 @@ test_that("determines patches, when binarised input is provided and 'scale = pat
 })
 
 test_that("output has the correct columm names", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch")
   expect_names(names(output), identical.to = c("class", "patch", "cells"))
 
-  output <- mArea(obj = cat, scale = "patch")
+  output <- mArea(obj = input, scale = "patch")
   expect_names(names(output), identical.to = c("class", "patch", "cells"))
 
-  output <- mArea(obj = cat, scale = "class")
+  output <- mArea(obj = input, scale = "class")
   expect_names(names(output), identical.to = c("class", "cells"))
 
-  output <- mArea(obj = cat, scale = "window")
-  expect_names(names(output), identical.to = c("window", "cells"))
+  output <- mArea(obj = input, scale = "landscape")
+  expect_names(names(output), identical.to = c("landscape", "cells"))
 })
 
 test_that("output with the correct unit", {
-  cat <- rtData$categorical
+  input <- rtData$categorical
   bin <- rBinarise(rtData$continuous, thresh = 40)
 
   output <- mArea(obj = bin, scale = "patch", unit = "map")
   expect_names(names(output), identical.to = c("class", "patch", "area"))
 
-  output <- mArea(obj = cat, scale = "patch", unit = "map")
+  output <- mArea(obj = input, scale = "patch", layer = "categorical", unit = "map")
   expect_names(names(output), identical.to = c("class", "patch", "area"))
 
-  output <- mArea(obj = cat, scale = "class", unit = "map")
+  output <- mArea(obj = input, scale = "class", unit = "map")
   expect_names(names(output), identical.to = c("class", "area"))
 
-  output <- mArea(obj = cat, scale = "window", unit = "map")
-  expect_names(names(output), identical.to = c("window", "area"))
+  output <- mArea(obj = input, scale = "landscape", unit = "map")
+  expect_names(names(output), identical.to = c("landscape", "area"))
 })
 
 test_that("Error if arguments have wrong value", {
-  cat <- rtData$categorical
-  mat <- as.matrix(cat)
+  input <- rtData$categorical
+  mat <- as.matrix(input)
 
   expect_error(mArea(obj = mat))
-  expect_error(mArea(obj = cat, scale = "landscape"))
-  expect_error(mArea(obj = cat, unit = "meter"))
-  expect_error(mArea(obj = cat, layer = 1))
+  expect_error(mArea(obj = input, scale = "bla"))
+  expect_error(mArea(obj = input, unit = "meter"))
+  expect_error(mArea(obj = input, layer = 1))
 })
 
 test_that("bibliography item has been created", {
-  cat <- rtData$categorical
-
-  output <- mArea(obj = cat, scale = "class")
+  input <- rtData$categorical
+  options(bibliography = NULL)
+  
+  output <- mArea(obj = input, scale = "class")
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
 })

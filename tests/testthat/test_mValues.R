@@ -1,35 +1,33 @@
 library(checkmate)
+library(testthat)
+library(raster)
 context("mValues")
 
 
 test_that("output is data.frame", {
-
-})
-
-test_that("output on the correct scale", {
-
-})
-
-test_that("output with the correct unit", {
-
-})
-
-test_that("determines patches, when binarised input is provided and 'scale = patch'", {
-  # bin <- rBinarise(lommData$continuous, thresh = 40)
-  #
-  # output <- mArea(obj = bin, scale = "patch")
-  # expect_data_frame(output, ncols = 2, nrows = 27, any.missing = FALSE)
-  #
-  # output <- mArea(obj = bin, scale = "class")
-  # expect_data_frame(output, ncols = 2, nrows = 2, any.missing = FALSE)
-})
-
-test_that("warning when input is neither binary nor with determined patches but 'scale = patch'.", {
-
+  input <- rtData$continuous
+  bin <- rBinarise(rtData$continuous, thresh = 40)
+  patches <- rPatches(bin)
+  
+  output <- mValues(obj = input, param = c("mean", "sd", "iqr", "number"))
+  expect_data_frame(output, ncols = 5, nrows = 1)
+  
+  output <- mValues(obj = raster::stack(input, patches), param = c("weighted.mean", "quantile"), groupBy = "patches")
+  expect_data_frame(output, ncols = 7, nrows = 26)
 })
 
 test_that("Error if arguments have wrong value", {
-
+  input <- rtData$continuous
+  mat <- as.matrix(input)
+  
+  expect_error(mValues(obj = "bla"))
+  expect_error(mValues(obj = input, param = "bla"))
+  expect_error(mValues(obj = input, param = 1))
+  expect_error(mValues(obj = input, groupBy = "bla"))
+  expect_error(mValues(obj = input, groupBy = 1))
+  expect_error(mValues(obj = input, layer = "bla"))
+  expect_error(mValues(obj = input, layer = 1))
+  
 })
 
 test_that("bibliography item has been created", {
