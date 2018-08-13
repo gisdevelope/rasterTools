@@ -42,16 +42,16 @@ A landscape metric can be generic or derived. In the first case the
   \code{\link{mArea}}: Calculate the area of objects in a raster. \item
   \code{\link{mNumber}}: Count the number of objects in a raster. \item
   \code{\link{mPerimeter}}: Calculate the length of the boundary of objects
-  in a raster. \item \code{mValues}: Summarise the values of objects in a
-  raster. }
+  in a raster. \item \code{\link{mValues}}: Summarise the values of objects
+  in a raster. }
 }
 \examples{
 input <- rtData$categorical
 
-# calculate generic metrics 'area per class' and 'area per window', 'obj' does
+# calculate generic metrics 'area per class' and 'area per landscape', 'obj' does
 # not need to be specified per operator in the algorithm, as 'measure' assigns it.
 myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
-                  a_w = list(operator = "mArea", scale = "window"))
+                  a_l = list(operator = "mArea", scale = "landscape"))
 (measure(input = input, with = myMetrics))
 
 # calculate 'class proportional area' and 'larges patch index'
@@ -59,9 +59,9 @@ myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
 # 2) define the equations that are used based on these terms
 myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   a_c = list(operator = "mArea", scale = "class"),
-                  a_w = list(operator = "mArea", scale = "window"),
-                  mCPA = "a_c / a_w * 100",
-                  mLPI = "max(a_p) / a_w * 100")
+                  a_l = list(operator = "mArea", scale = "landscape"),
+                  mCPA = "a_c / a_l * 100",
+                  mLPI = "max(a_p) / a_l * 100")
 (measure(input = input, with = myMetrics, simplify = FALSE))
 
 # however, in the above example patches are derived per class, which might

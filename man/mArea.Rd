@@ -7,11 +7,11 @@
 mArea(obj, scale = "patch", unit = "cells", layer = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to measure.}
+\item{obj}{[\code{Raster*(1)}]\cr The object to measure.}
 
 \item{scale}{[\code{character(1)}]\cr scale at which the area of objects
 should be calculated; possible values are \code{"patch"}, \code{"class"}
-and \code{"window"}.}
+and \code{"landscape"}.}
 
 \item{unit}{[\code{character(1)}]\cr the unit the output should have. With
 \code{"map"} the result will be in the respective map unit and with
@@ -22,7 +22,7 @@ specify here the layer for which the area of objects shall be calculated
 (by default, the first layer).}
 }
 \value{
-For \code{scale = "window"} the area of the overall raster, for
+For \code{scale = "landscape"} the area of the overall raster, for
   \code{scale = "class"} the total area of each unique value (class), for
   \code{scale = "patch"} the area of distinct objects per distinct values
   (i.e. the area of patches per class).
