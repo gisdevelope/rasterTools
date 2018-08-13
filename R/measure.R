@@ -62,7 +62,7 @@
 #'   testCharacter
 #' @export
 
-measure <- function(input, with, simplify = TRUE){
+measure <- function(input = NULL, with = NULL, simplify = TRUE){
 
   # check arguments
   isRaster <- testClass(input, "Raster")
@@ -79,6 +79,11 @@ measure <- function(input, with, simplify = TRUE){
   
   if(!isList){
     input <- list(input)
+    objNames <- "thisObject"
+  } else{
+    objNames <- lapply(seq_along(input), function(x){
+      names(input[[x]])
+    })
   }
   out <- input
   
@@ -144,30 +149,37 @@ measure <- function(input, with, simplify = TRUE){
     for(k in seq_along(equations)){
       theResult <- round(eval(parse(text = equations[[k]]), envir = theValues), 2)
       result_list <- c(result_list, setNames(list(theResult), metricNames[k]))
+    }  
+    
+    if(simplify){
+      # get the number of rows per generic metric ...
+      elemInValues <- lapply(seq_along(value_list), function(x){
+        dim(value_list[[x]])[1]
+      })
+      
+      # ... and try to match it with the results. If a generic metric has the same
+      # length, the ids are what we want
+      idInResults <- NULL
+      tempOut <- lapply(seq_along(result_list), function(x){
+        nElements <- length(result_list[[x]])
+        idPos <- which(elemInValues == nElements)
+        idInResults <- c(idInResults, idPos)
+        
+        id_list[[idInResults]] <- data.frame(id_list[[idInResults]], result_list[[x]], fix.empty.names = FALSE)
+        names(id_list[[idInResults]])[dim(id_list[[idInResults]])[2]] <- metricNames[x]
+        
+        id_list[[unique(idInResults)]]
+      })
+      out[[i]] <- tempOut
+    } else{
+      out[[i]] <- c(value_list, result_list)
     }
   }
-  if(simplify){
-    # get the number of rows per generic metric ...
-    elemInValues <- lapply(seq_along(value_list), function(x){
-      dim(value_list[[x]])[1]
-    })
-    
-    # ... and try to match it with the results. If a generic metric has the same
-    # length, the ids are what we want
-    idInResults <- NULL
-    out <- lapply(seq_along(result_list), function(x){
-      nElements <- length(result_list[[x]])
-      idPos <- which(elemInValues == nElements)
-      idInResults <- c(idInResults, idPos)
-      
-      id_list[[idInResults]] <- data.frame(id_list[[idInResults]], result_list[[x]], fix.empty.names = FALSE)
-      names(id_list[[idInResults]])[dim(id_list[[idInResults]])[2]] <- metricNames[x]
-      
-      id_list[[unique(idInResults)]]
-    })
-  } else{
-    out <- c(value_list, result_list)
+  names(out) <- objNames
+  
+  if(length(out) == 1){
+    out <- out[[1]]
   }
- 
+  
   return(out)
 }
