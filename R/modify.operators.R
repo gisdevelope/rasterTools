@@ -31,7 +31,7 @@ rBinarise <- function(obj, thresh = NULL, match = NULL){
   if(is.null(thresh)){
     thresh <- max(vals)
   } else{
-    if(!min(vals, na.rm = TRUE)<thresh | !thresh<=max(vals, na.rm = TRUE)){
+    if(!min(vals, na.rm = TRUE)<=thresh | !thresh<=max(vals, na.rm = TRUE)){
       stop("please provide a value for 'thresh' within the range of the values of 'obj'.")
     }
   }
