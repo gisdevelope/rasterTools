@@ -1,4 +1,4 @@
-#' Obtain data of European mammals.
+#' Obtain data from the Atlas of European Mammals.
 #'
 #' Obtain occurence data of mammals in Europe of the first EMMA
 #' \href{https://www.european-mammals.org/}{dataset}.
@@ -24,7 +24,7 @@
 #'   The dataset \code{\link{meta_emma}} lists all available species.
 #' @return A data-frame of the species of interest occuring in the area outlined
 #'   by \code{mask}.
-#' @references  Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
+#' @references Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
 #'   P, Spitzenberger F, Stubbe M, Thissen J, Vohralík V and Zima J (1999). The
 #'   Atlas of European Mammals. Academic Press, London
 #' @family obtain operators
@@ -60,7 +60,7 @@
 #' @importFrom rgeos gIntersects gConvexHull
 #' @export
 
-oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
+oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
 
   # check arguments
   existsGeom <- testClass(mask, classes = "geom")

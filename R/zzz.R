@@ -13,6 +13,8 @@
                     emma = list(local = NA,
                                 online = "https://www.european-mammals.org/php/rendermap.php?latname=",
                                 gridLinks = "http://www.helsinki.fi/~rlampine/gmap/gridfilelinks.kml"),
+                    efta = list(local = NA,
+                                online = "https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/"),
                     gfc = list(local = NA,
                                online = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
                     modis = list(local = NA,
@@ -21,7 +23,6 @@
                                     online = "missing"),
                     worldclim = list(local = NA,
                                      online = "http://biogeo.ucdavis.edu/data/")
-                    
     )
   } else{
     load(pathFile)

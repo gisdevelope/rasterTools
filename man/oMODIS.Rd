@@ -119,6 +119,6 @@ reference(style = "bibtex")
 }
 \seealso{
 Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEMMA}}, \code{\link{oGFC}},
-  \code{\link{oWCLIM}}
+  \code{\link{oEFTA}}, \code{\link{oEMMA}},
+  \code{\link{oGFC}}, \code{\link{oWCLIM}}
 }
