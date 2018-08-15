@@ -83,11 +83,11 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
                    version = "newest", process = TRUE, raw = FALSE){
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
+  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
+  if(!maskIsGeom & !maskIsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
   assertIntegerish(period, any.missing = FALSE, min.len = 1, max.len = 2, unique = TRUE)
@@ -180,7 +180,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     mask <- setCRS(x = mask, crs = projs$sinu)
   }
   theExtent <- getExtent(x = mask)
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(mask)
   }
 

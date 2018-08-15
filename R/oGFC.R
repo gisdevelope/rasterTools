@@ -65,11 +65,11 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   # check whether a smaller window also works, after determining new coordinates
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
+  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
+  if(!maskIsGeom & !maskIsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
@@ -95,7 +95,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
             "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 154))
 
   # transform crs of the mask to the dataset crs
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
   target_crs <- getCRS(x = mask)

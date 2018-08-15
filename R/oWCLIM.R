@@ -66,9 +66,9 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
                    version = 2){
   
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSpatial <- testClass(mask, classes = "Spatial")
-  if(!existsGeom & !existsSpatial){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  if(!maskIsGeom & !maskIsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
   assertCharacter(variable, any.missing = FALSE, min.len = 1)
@@ -119,7 +119,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   }
   theExtent <- getExtent(x = mask)
   
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
   

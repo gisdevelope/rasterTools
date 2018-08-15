@@ -24,6 +24,25 @@
 
 oEFTA <- function(mask = NULL, species = NULL, inclMeta = FALSE){
   
+  # check arguments
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
+  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
+  if(!maskIsGeom & !maskIsSpatial){
+    stop("please provide either a SpatialPolygon* or a geom to mask with.")
+  }
+  speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
+  if(speciesIsDF){
+    assertNames(names(species), must.include = c("original", "abbr"))
+    species <- species$original
+  } else{
+    assertCharacter(species)
+  }
+  speciesIsVector <- testVector(species, strict = TRUE, min.len = 1, any.missing = FALSE)
+  
+  
+  
   # manage the bibliography entry
   bib <- bibentry(bibtype = "InBook",
                   title = "The European Atlas of Forest Tree Species: modelling, data and information on forest tree species",

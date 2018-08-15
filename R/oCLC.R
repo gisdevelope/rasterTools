@@ -38,11 +38,11 @@
 oCLC <- function(mask = NULL, years = NULL){
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
+  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
+  if(!maskIsGeom & !maskIsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
@@ -54,7 +54,7 @@ oCLC <- function(mask = NULL, years = NULL){
     mask <- setCRS(x = mask, crs = projs$laea)
   }
   theExtent <- getExtent(x = mask)
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
 

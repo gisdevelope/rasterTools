@@ -63,21 +63,20 @@
 oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
+  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
+  maskIsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
+  if(!maskIsGeom & !maskIsSpatial){
     stop("please provide either a SpatialPolygon* or a geom to mask with.")
   }
-  isDFSpecies <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
-  if(isDFSpecies){
+  speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
+  if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
     species <- species$original
   } else{
     assertCharacter(species)
   }
-  isVectorSpecies <- testVector(species, strict = TRUE, min.len = 1, any.missing = FALSE)
   assertIntegerish(version, any.missing = FALSE, len = 1)
   assertLogical(inclMeta, any.missing = FALSE, len = 1)
 
@@ -88,11 +87,14 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   }
 
   # transform crs of the mask to the dataset crs
+  if(maskIsSpatial){
+    mask <- gFrom(input = mask)
+  }
   target_crs <- getCRS(x = mask)
   if(target_crs != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
   }
-
+  
   # this will download the AFE grids and assemble them to an overal european grid
   message(paste0("I am handling the European AFE grid:"))
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
@@ -100,7 +102,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
                          localPath = rtPaths$emma$local)
   tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
   message("  ... done\n")
-  if(existsGeom){
+  if(maskIsGeom){
     mask <- gToSp(mask)
   }
 
