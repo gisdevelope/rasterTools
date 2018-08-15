@@ -103,7 +103,7 @@
       <h1>Best practices to contribute</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-09</h4>
+            <h4 class="date">2018-08-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/contribute.Rmd"><code>vignettes/contribute.Rmd</code></a></small>
       <div class="hidden name"><code>contribute.Rmd</code></div>
@@ -115,14 +115,9 @@
 <p>In this document you can find an outline of the default design of the operators employed in the core-functions of <code>rasterTools</code> and other “best practices”. In case you want to write a new operator that is readily compatible with <code>rasterTools</code>, it is recommended that you stick to the design which is suggested here. I do my best to keep this document updated, but as the development of <code>rasterTools</code> and other packages progresses, one or the other thing here may be outdate, so don’t be too frustrated if something does not work ad-hoc. If you want the operator you wrote to be part of <code>rasterTools</code>, create a pull-request and when everything is running smoothly, I will include you as author of that function, if you want that.</p>
 <p>Many of the code-chunks of this documentation are written in so-called pseudocode, which is a placeholder or variable, which would be replaced in an actual function. Pseudocode elements are written in CAPITAL LETTERS and typically have a rather self-explanatory name.</p>
 <p><code>rasterTools</code> builds largely on the framework of the <a href="https://cran.r-project.org/web/packages/checkmate/index.html"><code>checkmate</code></a> package so that arguments are properly tested. This makes the source code very verbose but helps to maintain consistency.</p>
-<div id="generate-spatial-patterns" class="section level1">
+<div id="build-the-operator" class="section level1">
 <h1 class="hasAnchor">
-<a href="#generate-spatial-patterns" class="anchor"></a>Generate spatial patterns</h1>
-<p><em>Coming soon</em></p>
-</div>
-<div id="obtain-spatial-datasets" class="section level1">
-<h1 class="hasAnchor">
-<a href="#obtain-spatial-datasets" class="anchor"></a>Obtain spatial datasets</h1>
+<a href="#build-the-operator" class="anchor"></a>Build the operator</h1>
 <div id="tldr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tldr" class="anchor"></a><em>tl;dr</em>
@@ -143,30 +138,29 @@
 <p>Each operator for the <code><a href="../reference/obtain.html">obtain()</a></code>-function has at least the argument <code>mask</code> but most likely also other arguments to handle distinct subsets of the dataset, such as different years or products. We must first make sure that the arguments follow the intended input patterns. <code>rasterTools</code> accepts <code>geom</code> objects as spatial objects, so we need to test which spatial mask we deal with.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">oDATASET &lt;-<span class="st"> </span><span class="cf">function</span>(mask, ARG){
   
-  existsGeom &lt;-<span class="st"> </span><span class="kw">testClass</span>(mask, <span class="dt">classes =</span> <span class="st">"geom"</span>)
-  existsSpatial &lt;-<span class="st"> </span><span class="kw">assert</span>(<span class="kw">testClass</span>(mask, <span class="dt">classes =</span> <span class="st">"SpatialPolygon"</span>),
-                          <span class="kw">testClass</span>(mask, <span class="dt">classes =</span> <span class="st">"SpatialPolygonsDataFrame"</span>))
-  <span class="co"># existsSF &lt;- testClass(mask, classes = "...") for a "simple features" object</span>
-  <span class="cf">if</span>(<span class="op">!</span>existsGeom <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>existsSpatial){
-    <span class="kw">stop</span>(<span class="st">"please provide either a SpatialPolygon* or a geom to mask with."</span>)
-  }
-  <span class="kw">assertXZY</span>(ARG)
-  <span class="co"># assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))</span></code></pre></div>
-<p>The arguments would typically reflect characteristics of the dataset, which could be seen as the distinctive for the subsets of this dataset. This is, for instance, the ‘year’ in case of the Corine land-cover dataset, which provides a distinct map for each of the years 1990, 2000, 2006 and 2012, or the ‘product’ and ‘layer’ in case of a MODIS dataset. You can define as many of these arguments as needed.</p>
+  maskIsGeom &lt;-<span class="st"> </span><span class="kw">testClass</span>(mask, <span class="dt">classes =</span> <span class="st">"geom"</span>)
+  maskIsSpatial &lt;-<span class="st"> </span><span class="kw">testClass</span>(mask, <span class="dt">classes =</span> <span class="st">"Spatial"</span>)
+  <span class="kw">assert</span>(maskIsGeom, maskIsSpatial)
+  <span class="kw">assertXZY</span>(ARG)</code></pre></div>
+<p>The arguments would typically reflect characteristics of the dataset, which could be seen as distinctive for the subsets of this dataset. This is, for instance, the ‘year’ in case of the Corine land-cover dataset or the ‘product’ and ‘layer’ in case of a MODIS dataset. You can define as many of these arguments as needed.</p>
 </div>
 <div id="handle-projection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#handle-projection" class="anchor"></a>Handle projection</h2>
 <p>We must handle the projection of the involved files, to avoid accidently building on spatial objects with the wrong coordinate reference system. Controlling the projection is crucial, as problems with the projection of one out of many files may already lead to problems that are hard to trace back. <code>rasterTools</code> comes with various functions that are able to handle more than one class, socalled generic functions and class specific methods. One pair of such functions is <code><a href="../reference/getCRS.html">getCRS()</a></code> and <code><a href="../reference/setCRS.html">setCRS()</a></code>, which can handle both <code>Spatial*</code> and <code>geom</code> objects (and in the future also <code>sf</code>). This means that we can use simple code statements and can avoid the “diverse beauty” of the various spatial packages that are recently out there.</p>
-<p>The object defined in <code>mask</code> provides the target projection the user wants to work with, so we take the <code>target_crs</code> from this mask. However, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. <code>rasterTools</code> includes the dataset <code>projs</code> in which some of the most frequent projections are stored, but you can of course use any other <a href="http://proj4.org/">proj4</a> string.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  target_crs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getCRS.html">getCRS</a></span>(<span class="dt">x =</span> mask)
-  <span class="cf">if</span>(target_crs <span class="op">!=</span><span class="st"> </span>projs<span class="op">$</span>laea){
-    mask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">x =</span> mask, <span class="dt">crs =</span> projs<span class="op">$</span>laea)
-  }
-  theExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getExtent.html">getExtent</a></span>(<span class="dt">x =</span> mask)</code></pre></div>
-<p>In case the mask is not of class <code>geom</code>, we want to create this class:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="cf">if</span>(existsSpatial){
+<p>The object defined in <code>mask</code> provides the target projection the user wants to work with, so we take <code>targetCrs</code> and <code>targetExtent</code> from this mask. Next, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. <code>rasterTools</code> includes the dataset <code>projs</code> in which some of the most frequent projections are stored, but you can of course use any other <a href="http://proj4.org/">proj4</a> string.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  <span class="cf">if</span>(maskIsSpatial){
     mask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gFrom.html">gFrom</a></span>(<span class="dt">input =</span> mask)
+  }
+  targetCRS &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getCRS.html">getCRS</a></span>(<span class="dt">x =</span> mask)
+  theExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>(<span class="dt">anchor =</span> <span class="kw"><a href="../reference/getExtent.html">getExtent</a></span>(<span class="dt">x =</span> mask))
+  theExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">x =</span> theExtent, <span class="dt">crs =</span> targetCRS)
+  
+  <span class="cf">if</span>(targetCRS <span class="op">!=</span><span class="st"> </span>projs<span class="op">$</span>laea){
+    mask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">x =</span> mask, <span class="dt">crs =</span> projs<span class="op">$</span>laea)
+    targetExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(theExtent, <span class="dt">crs =</span> projs<span class="op">$</span>laea)
+  } <span class="cf">else</span>{
+    targetExtent &lt;-<span class="st"> </span>theExtent
   }</code></pre></div>
 </div>
 <div id="determine-target-tiles" class="section level2">
@@ -219,13 +213,14 @@
 <div id="load-and-crop-raster" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-and-crop-raster" class="anchor"></a>Load and crop raster</h2>
-<p>As some of the spatial operations may take up a large quantity of time, <code>rasterTools</code> is designed so that it always gives feedback about what it is doing at the moment. For that purpose the <code>message()</code> function is employed throughout in combination with <code>paste0()</code> (a slightly more efficient wrapper of <code>paste()</code> with <code>sep = ''</code> on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise. Again, the <code><a href="../reference/oGFC.html">oGFC()</a></code> function handles this in the following way</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">message</span>(<span class="kw">paste0</span>(<span class="st">"I am handling the gfc datasets with the grid ID '"</span>, gridId, <span class="st">"':</span><span class="ch">\n</span><span class="st">"</span>))
-tempObject &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> fileNames, <span class="dt">dataset =</span> <span class="st">"gfc"</span>))</code></pre></div>
-<p>Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. The function <code><a href="../reference/loadData.html">loadData()</a></code> is comparable to the four core functions in that it is a wrapper that calls other functions depending on its input. In the case of the GFC dataset, the spatial data are stored in the <em>tif</em> format. <code><a href="../reference/loadData.html">loadData()</a></code> calls the file-type specific loaders, for instance <code>load_tif()</code>, which contains all the code logic that is required to load the respective format. In case you want to handle a format or which such a function is not yet defined, see <a href="#loaders">below</a>.</p>
-<p>In most cases you want to crop the overall dataset to <code>mask</code>, or actually its extent. The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">message</span>(<span class="st">"  ... cropping to targeted study area.</span><span class="ch">\n</span><span class="st">"</span>)
-tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject, theExtent, <span class="dt">snap =</span> <span class="st">"out"</span>, <span class="dt">datatype=</span><span class="st">'INT1U'</span>, <span class="dt">format=</span><span class="st">'GTiff'</span>, <span class="dt">options=</span><span class="st">"COMPRESS=LZW"</span>)</code></pre></div>
+<p>As some of the spatial operations may take up a large quantity of time, <code>rasterTools</code> is designed so that it always gives feedback about what it is doing at the moment. For that purpose the <code>message()</code> function is employed throughout in combination with <code>paste0()</code> (a slightly more efficient wrapper of <code>paste()</code> with <code>sep = ''</code> on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise. Again, the <code><a href="../reference/oGFC.html">oGFC()</a></code> function handles this in the following way.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="kw">message</span>(<span class="kw">paste0</span>(<span class="st">"I am handling the gfc datasets with the grid ID '"</span>, gridId, <span class="st">"':</span><span class="ch">\n</span><span class="st">"</span>))
+    tempObject &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> fileNames, <span class="dt">dataset =</span> <span class="st">"gfc"</span>))</code></pre></div>
+<p>Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. The function <code><a href="../reference/loadData.html">loadData()</a></code> is comparable to the four core functions in that it is a wrapper that calls other functions depending on its input. In the case of the GFC dataset, the spatial data are stored in the <em>tif</em> format. <code><a href="../reference/loadData.html">loadData()</a></code> calls the file-type specific loaders, for instance <code>load_tif()</code>, which contains all the code logic that is required to load the respective format. In case you want to handle a format of which such a function is not yet defined, see <a href="#loaders">below</a>.</p>
+<p>In most cases you want to crop the overall dataset to <code>mask</code>, or actually the extent of mask (<code>targetExtent</code>). The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    targetExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getExtent.html">getExtent</a></span>(<span class="dt">x =</span> targetExtent)
+    <span class="kw">message</span>(<span class="st">"  ... cropping to targeted study area.</span><span class="ch">\n</span><span class="st">"</span>)
+    tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject, targetExtent, <span class="dt">snap =</span> <span class="st">"out"</span>, <span class="dt">datatype=</span><span class="st">'INT1U'</span>, <span class="dt">format=</span><span class="st">'GTiff'</span>, <span class="dt">options=</span><span class="st">"COMPRESS=LZW"</span>)</code></pre></div>
 </div>
 <div id="merge-multiple-tiles" class="section level2">
 <h2 class="hasAnchor">
@@ -235,11 +230,15 @@ tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject
 <div id="reproject" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reproject" class="anchor"></a>Reproject</h2>
-<p>As a final step of operations on the spatial data you should reproject the output. If a user wants to include various different datasets in one analysis, all the datasets should have the same projection. <code>rasterTools</code> assumes that this is the projection the initial <code>mask</code> had. Hence, <code>tDATASET</code> should be reprojected to this crs.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">            <span class="cf">if</span>(<span class="kw">proj4string</span>(mask) <span class="op">!=</span><span class="st"> </span>target_crs){
-              <span class="kw">cat</span>(<span class="kw">paste0</span>(<span class="st">"reprojecting tDATASET to '"</span>, <span class="kw">strsplit</span>(target_crs, <span class="st">" "</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>], <span class="st">"'</span><span class="ch">\n</span><span class="st">"</span>))
-              tDATASET &lt;-<span class="st"> </span><span class="kw">projectRaster</span>(tDATASET, <span class="dt">crs =</span> target_crs, ...)
-            }</code></pre></div>
+<p>As a final step of operations on the spatial data you should reproject the output. If a user wants to include various different datasets in one analysis, all the datasets should have the same projection. <code>rasterTools</code> assumes that this is the projection of the initial <code>mask</code>. Hence, <code>tempObject</code> should be reprojected to <code>targetCRS</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">    <span class="cf">if</span>(<span class="kw"><a href="../reference/getCRS.html">getCRS</a></span>(mask) <span class="op">!=</span><span class="st"> </span>targetCRS){
+      crs_name &lt;-<span class="st"> </span><span class="kw">strsplit</span>(targetCRS, <span class="st">" "</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]
+      <span class="kw">message</span>(<span class="kw">paste0</span>(<span class="st">"  ... reprojecting to '"</span>, crs_name))
+      tempObject &lt;-<span class="st"> </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">x =</span> tempObject, <span class="dt">crs =</span> targetCRS)
+      theExtent &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getExtent.html">getExtent</a></span>(<span class="dt">x =</span> theExtent)
+      tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject, theExtent, <span class="dt">snap =</span> <span class="st">"out"</span>, <span class="dt">datatype=</span><span class="st">'INT1U'</span>, <span class="dt">format=</span><span class="st">'GTiff'</span>, <span class="dt">options=</span><span class="st">"COMPRESS=LZW"</span>)
+      history &lt;-<span class="st">  </span><span class="kw">c</span>(history, <span class="kw">list</span>(<span class="kw">paste0</span>(<span class="st">"object has been reprojected to "</span>, crs_name)))
+    }</code></pre></div>
 </div>
 <div id="postprocessing" class="section level2">
 <h2 class="hasAnchor">
@@ -248,53 +247,10 @@ tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject
 <p>datasets have a typical colour pattern which would be worth to maintain. <code>raster</code> objects have the slot <code>$colortable</code>, where we can store a set of colour values that shall be used to visualise the <code>raster</code>.</p>
 </div>
 </div>
-<div id="modify-gridded-objects" class="section level1">
-<h1 class="hasAnchor">
-<a href="#modify-gridded-objects" class="anchor"></a>Modify gridded objects</h1>
-<p><em>wip</em></p>
-<p>Each operator that modifies a raster has at least the argument <code>obj</code>, which denotes the raster that shall be modified. Most computations in <code>rasterTools</code> are performed on matrix objects and thus the first thing is to define a matrix from the raster. Often, also the values of this raster are of interest and in that case you would assign them to a variable early on.</p>
-<pre><code>rMODIFY &lt;- function(obj, ARG){
-  mat &lt;- as.matrix(obj)
-  vals &lt;- values(obj)
-  </code></pre>
-<p>Next, a computation is carried out. In case the computation is based on a specifically formated raster, for example a binarised one, this should be tested and a respective error should be thrown. In most cases it is preferable to interrupt a computation that has not been strictly outlined over wasting time on deriving flawed results.</p>
-<pre><code>  if(!isBinaryC(mat)){
-    stop("spatial object is not binary, please run 'rBinarise()' initially.")
-  }
-  temp &lt;- ...</code></pre>
-<p>As you have carried out the computations with a matrix, you have to transfer the matrix back to a <code>raster</code>. You would use the spatial information of <code>obj</code> to reconstruct the exact dimensions and coordinate reference system (CRS). In very rare cases the new raster’s dimensions have changed and in this case also the extent and CRS must be adapted computationally.</p>
-<pre><code>  out &lt;- raster(temp)
-  extent(out) &lt;- extent(obj)
-  sp::proj4string(out) &lt;- sp::proj4string(obj)</code></pre>
-<p>Each <code>raster</code> object has the slot <code>@history</code> and <code>rasterTools</code> takes advantage of that. This slot is recently not used by the raster package and hence you can fill it with information. <code>rasterTools</code> expects here a list of all the operations that have been carried out with the raster. So you would either specify here that the raster was just loaded from the memory, which is the default that needs to be assigned to any raster that has an unknown history (in the eyes of <code>rasterTools</code>, that is). Otherwise, extract the <code>@history</code> slot and concatenate an informative but concise sentence about what your algorithm has done to the raster.</p>
-<p>The <code><a href="../reference/visualise.html">visualise()</a></code> function has been conceptualised so that it can print the history of a raster. This may be a rather helpful tool when putting together complex spatial operations or when reporting the procedure according to which a raster has been created. Moreover, to increase the awareness of the user with which raster one deals, you should also assign a <code>SHORT_NAME</code> to the raster. This will be printed as panel name by <code><a href="../reference/visualise.html">visualise()</a></code>.</p>
-<pre><code>  if(length(obj@history)==0){
-    history &lt;- list(paste0("object loaded from memory"))
-  } else{
-    history &lt;- obj@history
-  }
-  out@history &lt;- c(history, list(paste0("THIS HAS BEEN DONE")))
-
-  names(out) &lt;- paste0("SHORT_NAME")
-  </code></pre>
-<p>Finally the raster would be returned.</p>
-<pre><code>  return(out)
-}</code></pre>
-</div>
-<div id="measure-gridded-objects" class="section level1">
-<h1 class="hasAnchor">
-<a href="#measure-gridded-objects" class="anchor"></a>Measure gridded objects</h1>
-<p>All the generic metrics already come with <code>rasterTools</code> so there is no need to contribute, other than suggesting bug fixes or requesting new features.</p>
-<p>That being said, derived metrics are deliberately constructed so that everybody can easiy contribute and write their own “function”. In that case, however, mathematical functions. A derived landscape metric in <code>rasterTools</code> is nothing more than the mathematical equation that relates several properties of the raster, which are measured by generic metrics (terms). Hence, one simply has to define the terms and outline the equation that shall be used to compute the metric.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list</span>(<span class="dt">term1 =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>),
-     <span class="dt">term2 =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
-     <span class="dt">newMetric =</span> <span class="st">"term1 / term2 * 100"</span>)</code></pre></div>
-<p>If you want to contribute to the collection of derived metrics listed in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette, simply edit that file and create a pull request, or let the author of <code>rasterTools</code> know about your addition via E-Mail.</p>
-</div>
 <div id="loaders" class="section level1">
 <h1 class="hasAnchor">
-<a href="#loaders" class="anchor"></a>Loading spatial data into R</h1>
-<p>Also <code><a href="../reference/loadData.html">loadData()</a></code> is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function <code><a href="../reference/loadData.html">loadData()</a></code> contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective <code>load*</code> and <code>download*</code> functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into <code>R</code> can be handled by <code><a href="../reference/loadData.html">loadData()</a></code>, given the respective wrapper has been defined.</p>
+<a href="#loaders" class="anchor"></a>Loading the data into R</h1>
+<p><code><a href="../reference/loadData.html">loadData()</a></code> is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function <code><a href="../reference/loadData.html">loadData()</a></code> contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective <code>load*</code> and <code>download*</code> functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into <code>R</code> can be handled by <code><a href="../reference/loadData.html">loadData()</a></code>, given the respective wrapper has been defined.</p>
 <div id="load" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load" class="anchor"></a><code>load*</code>
@@ -359,7 +315,7 @@ tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject
     <span class="kw">options</span>(<span class="dt">bibliography =</span> <span class="kw">c</span>(currentBib, bib))
   }
 }</code></pre></div>
-<p>This will ensure that the algorithm your function is based upon is properly included when it is used in a computation that should be published.</p>
+<p>This will ensure that the dataset your function is based upon is properly included when it is used in a computation that should be published.</p>
 </div>
   </div>
 
@@ -368,9 +324,8 @@ tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#generate-spatial-patterns">Generate spatial patterns</a></li>
-      <li>
-<a href="#obtain-spatial-datasets">Obtain spatial datasets</a><ul class="nav nav-pills nav-stacked">
+<li>
+<a href="#build-the-operator">Build the operator</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#tldr"><em>tl;dr</em></a></li>
       <li><a href="#check-arguments">Check arguments</a></li>
       <li><a href="#handle-projection">Handle projection</a></li>
@@ -382,10 +337,8 @@ tempObject &lt;-<span class="st"> </span><span class="kw">crop</span>(tempObject
       <li><a href="#postprocessing">Postprocessing</a></li>
       </ul>
 </li>
-      <li><a href="#modify-gridded-objects">Modify gridded objects</a></li>
-      <li><a href="#measure-gridded-objects">Measure gridded objects</a></li>
       <li>
-<a href="#loaders">Loading spatial data into R</a><ul class="nav nav-pills nav-stacked">
+<a href="#loaders">Loading the data into R</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#load"><code>load*</code></a></li>
       <li><a href="#download"><code>download*</code></a></li>
       </ul>

@@ -118,6 +118,9 @@
     <loc>http://EhrmannS.github.io/rasterTools/reference/measure.html</loc>
   </url>
   <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/meta_efta.html</loc>
+  </url>
+  <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/meta_emma.html</loc>
   </url>
   <url>
@@ -128,6 +131,9 @@
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/oCLC.html</loc>
+  </url>
+  <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/oEFTA.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/oEMMA.html</loc>
@@ -227,6 +233,9 @@
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/rtData.html</loc>
+  </url>
+  <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtPalette.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/rtPaths.html</loc>

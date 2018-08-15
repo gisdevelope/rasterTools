@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain Corine Land Cover data — oCLC • rasterTools</title>
+<title>Obtain data from the European Atlas of Forest Tree Species — oEFTA • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,11 +30,13 @@
 
 
 
-<meta property="og:title" content="Obtain Corine Land Cover data — oCLC" />
+<meta property="og:title" content="Obtain data from the European Atlas of Forest Tree Species — oEFTA" />
 
-<meta property="og:description" content="Obtain data from the 'Corine Land Cover'
-dataset
-(currently you have to download it manually)." />
+<meta property="og:description" content="Obtain presence and habitat suitability
+data
+from the
+European
+Atlas of Forest Tree Species" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -135,20 +137,24 @@ dataset
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Obtain Corine Land Cover data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/oCLC.R'><code>R/oCLC.R</code></a></small>
-    <div class="hidden name"><code>oCLC.Rd</code></div>
+    <h1>Obtain data from the European Atlas of Forest Tree Species</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/oEFTA.R'><code>R/oEFTA.R</code></a></small>
+    <div class="hidden name"><code>oEFTA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Obtain data from the 'Corine Land Cover'
-<a href='http://land.copernicus.eu/pan-european/corine-land-cover'>dataset</a>
-(currently you have to download it manually).</p>
+    <p>Obtain presence and habitat suitability
+<a href='http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/atlas-data-and-metadata/'>data</a>
+from the
+<a href='http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/'>European
+Atlas of Forest Tree Species</a></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>oCLC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>oEFTA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"rpp"</span>)
+
+<span class='fu'>downloadEFTA</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,25 +165,54 @@ dataset
 the extent is the area of interest.</p></td>
     </tr>
     <tr>
-      <th>years</th>
-      <td><p>[<code>integerish(.)</code>]<br /> year(s) for which CLC data should be
-extracted; see Details.</p></td>
+      <th>species</th>
+      <td><p>[<code>character(.)</code>]<br /> name(s) of species to get data for.
+Can be abbreviated if a <code><a href='catalog.html'>catalog</a></code> is provided.</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>[<code>character(1)</code>]<br /> the dataset type, either <code>"rpp"</code>
+(relative probability of presence) or <code>"mhs"</code> (maximum habitat
+suitability).</p></td>
+    </tr>
+    <tr>
+      <th>file</th>
+      <td><p>[<code>character(1)</code>]<br /> the name of the file to download.</p></td>
+    </tr>
+    <tr>
+      <th>localPath</th>
+      <td><p>[<code>character(1)</code>]<br /> the local path where files are
+supposed to be stored (i.e. on your harddisc).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>RasterLayer</code> of clc data.</p>
+    <p>bla</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The CLC data dataset is available for the years 1990, 2000, 2006 and
-  2012. It covers 45 land cover classes for many European countries. It was
-  compiled by the European Environmental Agency.</p>
+    <p>https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
+  https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre</p>  
+<p>mention that values are integers and not "probabilities" between 0 and 1)</p>
+    
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    <ul>
+<li><p><code>downloadEFTA</code>: function to download data related to the EMMA dataset</p></li>
+</ul>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>de Rigo, D., Caudullo, G., Houston Durrant, T., San-Miguel-Ayanz,
+  J., 2016. The European Atlas of Forest Tree Species: modelling, data and
+  information on forest tree species. In: San-Miguel-Ayanz, J., de Rigo, D.,
+  Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of
+  Forest Tree Species. Publ. Off. EU, Luxembourg, pp.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other obtain operators: <code><a href='oEFTA.html'>oEFTA</a></code>,
+    <div class='dont-index'><p>Other obtain operators: <code><a href='oCLC.html'>oCLC</a></code>,
   <code><a href='oEMMA.html'>oEMMA</a></code>, <code><a href='oGFC.html'>oGFC</a></code>,
   <code><a href='oMODIS.html'>oMODIS</a></code>, <code><a href='oWCLIM.html'>oWCLIM</a></code></p></div>
     
@@ -192,12 +227,10 @@ extracted; see Details.</p></td>
   <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
 
-<span class='co'># extract CLC data for the derived mask</span>
-<span class='no'>myCLC</span> <span class='kw'>&lt;-</span> <span class='fu'>oCLC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2006</span>, <span class='fl'>2012</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myCLC</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='co'># get the (updated) bibliography</span>
-<span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)
+<span class='co'># extract data for the derived mask</span>
+<span class='no'>myTrees</span> <span class='kw'>&lt;-</span> <span class='fu'>oEFTA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
+                 <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Quercus robur"</span>, <span class='st'>"Alnus incana"</span>, <span class='st'>"Betula sp"</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myTrees</span>$<span class='no'>`Betula sp`</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -208,6 +241,10 @@ extracted; see Details.</p></td>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#functions">Functions</a></li>
+
+      <li><a href="#references">References</a></li>
 
       <li><a href="#see-also">See also</a></li>
       
