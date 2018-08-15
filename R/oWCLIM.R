@@ -68,9 +68,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
   maskIsSpatial <- testClass(mask, classes = "Spatial")
-  if(!maskIsGeom & !maskIsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  assert(maskIsGeom, maskIsSpatial)
   assertCharacter(variable, any.missing = FALSE, min.len = 1)
   assertSubset(variable, choices = c("tmean", "tavg", "tmin", "tmax", "prec", "bio", "alt"))
   assertIntegerish(month, lower = 1, upper = 12, any.missing = FALSE, min.len = 1)

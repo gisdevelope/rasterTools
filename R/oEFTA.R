@@ -1,9 +1,16 @@
 #' Obtain data from the European Atlas of Forest Tree Species
 #'
-#' Obtain 
+#' Obtain presence and habitat suitability
+#' \href{http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/atlas-data-and-metadata/}{data}
+#' from the
+#' \href{http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/}{European
+#' Atlas of Forest Tree Species}
 #' @template mask
 #' @param species [\code{character(.)}]\cr name(s) of species to get data for.
 #'   Can be abbreviated if a \code{\link{catalog}} is provided.
+#' @param type [\code{character(1)}]\cr the dataset type, either \code{"rpp"}
+#'   (relative probability of presence) or \code{"mhs"} (maximum habitat
+#'   suitability).
 #' @param inclMeta [\code{logical(1)}]\cr output merely the occurence data
 #'   (\code{FALSE}, default), or output additionally metadata on the species
 #'   (\code{TRUE})?
@@ -14,24 +21,20 @@
 #'   Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of
 #'   Forest Tree Species. Publ. Off. EU, Luxembourg, pp.
 #' @details https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
-#' https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
+#'   https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
 #' @family obtain operators
-#' @examples 
-#' 
+#' @examples
+#'
 #' # something
 #' @importFrom checkmate testClass
 #' @export
 
-oEFTA <- function(mask = NULL, species = NULL, inclMeta = FALSE){
+oEFTA <- function(mask = NULL, species = NULL, type = "rpp", inclMeta = FALSE){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
-  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
-  if(!maskIsGeom & !maskIsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
@@ -39,9 +42,12 @@ oEFTA <- function(mask = NULL, species = NULL, inclMeta = FALSE){
   } else{
     assertCharacter(species)
   }
-  speciesIsVector <- testVector(species, strict = TRUE, min.len = 1, any.missing = FALSE)
-  
-  
+
+  # go through 'species' to extract data
+  efta <- NULL
+  for(i in seq_along(species)){
+    
+  }
   
   # manage the bibliography entry
   bib <- bibentry(bibtype = "InBook",

@@ -39,12 +39,8 @@ oCLC <- function(mask = NULL, years = NULL){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
-  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  maskIsSpatial <- ifelse(c(maskIsSP | maskIsSPDF), TRUE, FALSE)
-  if(!maskIsGeom & !maskIsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
 

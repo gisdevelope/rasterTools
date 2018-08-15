@@ -64,12 +64,8 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSP <- testClass(mask, classes = "SpatialPolygon")
-  maskIsSPDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  maskIsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!maskIsGeom & !maskIsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
@@ -87,9 +83,6 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   }
 
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
-    mask <- gFrom(input = mask)
-  }
   target_crs <- getCRS(x = mask)
   if(target_crs != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
