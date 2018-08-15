@@ -94,11 +94,11 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
-  target_crs <- getCRS(x = mask)
+  targetCRS <- getCRS(x = mask)
   theExtent <- geomRectangle(anchor = getExtent(x = mask))
-  theExtent <- setCRS(x = theExtent, crs = target_crs)
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
   
-  if(target_crs != projs$longlat){
+  if(targetCRS != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
     targetExtent <- setCRS(theExtent, crs = projs$longlat)
   } else{
@@ -150,7 +150,6 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':"))
     tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
     tempObject <- setNames(tempObject, layerNames)
-
     history <- c(history, paste0(tempObject[[1]]@history, " with the grid ID '", gridId, "'"))
 
     targetExtent <- getExtent(x = targetExtent)
@@ -172,12 +171,12 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   }
 
   # reproject
-  if(getCRS(mask) != target_crs){
-    crs_name <- strsplit(target_crs, " ")[[1]][1]
+  if(getCRS(mask) != targetCRS){
+    crs_name <- strsplit(targetCRS, " ")[[1]][1]
     message(paste0("  ... reprojecting to '", crs_name))
-    gfc_out <- setCRS(x = gfc_out, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    theExtent <- getExtent(x = theExtent)
-    gfc_out <- crop(gfc_out, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    gfc_out <- setCRS(x = gfc_out, crs = targetCRS, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    tempExtent <- getExtent(x = theExtent)
+    gfc_out <- crop(gfc_out, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
   }
 

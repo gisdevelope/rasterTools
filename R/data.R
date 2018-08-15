@@ -26,13 +26,14 @@
 #'   \item{\code{temporal_granularity}}{the number of days between two
 #'   data-files} \item{\code{pixel_size}}{the spatial resolution, i.e. the size
 #'   of one raster cell} \item{\code{sds_layer_name}}{the machine-readable name
-#'   of the layer} \item{\code{description}}{a human-readable description of the
-#'   layer} \item{\code{units}}{the unit in which the data are saved}
+#'   of the layer} \item{\code{description_raw}}{a human-readable description of
+#'   the layer} \item{\code{units}}{the unit in which the data are saved}
 #'   \item{\code{data_type}}{bit number which determines the length of the
-#'   values} \item{\code{fill_min}}{minimum fill value}
-#'   \item{\code{fill_max}}{maximum fill value} \item{\code{valid_min}}{the
+#'   values} \item{\code{fill}}{the fill value} \item{\code{valid_min}}{the
 #'   minimum valid value} \item{\code{valid_max}}{the maximum valid value}
-#'   \item{\code{correction_factor}}{a correction factor}}
+#'   \item{\code{scaling_factor}}{a correction factor} \item{start_terra}{the
+#'   launch date for the Terra satellite} \item{start_aqua}{the launch date for
+#'   the Aqua satellite}}
 "meta_modis"
 
 #' Metadata of the EMMA datasets
@@ -45,6 +46,18 @@
 #'   order} \item{\code{family}}{the species family} \item{\code{iucn}}{the
 #'   conservation status according to the IUCN Red List of Threatened Species}}
 "meta_emma"
+
+#' Metadata of the EFTA datasets
+#'
+#' @format The \code{data.frame} with 4 variables and 43 entries contains
+#'   meta-data for the tree species covered in the European Atlas of Forest Tree
+#'   Species. \describe{ \item{\code{botanical}}{the species name as noted in
+#'   the European Atlas of Forest Tree Species} \item{\code{english}}{the
+#'   english name} \item{\code{rpp}}{a binary variable whether the 'relative
+#'   probability of presence' dataset is available for this species}
+#'   \item{\code{mhs}}{a binary variable whether the 'maximum habitat
+#'   suitability' dataset is available for this species}}
+"meta_efta"
 
 #' References of the MODIS dataset
 #'

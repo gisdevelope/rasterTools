@@ -5,7 +5,7 @@
 \alias{downloadEFTA}
 \title{Obtain data from the European Atlas of Forest Tree Species}
 \usage{
-oEFTA(mask = NULL, species = NULL, inclMeta = FALSE)
+oEFTA(mask = NULL, species = NULL, type = "rpp")
 
 downloadEFTA(file = NULL, localPath = NULL)
 }
@@ -16,9 +16,9 @@ the extent is the area of interest.}
 \item{species}{[\code{character(.)}]\cr name(s) of species to get data for.
 Can be abbreviated if a \code{\link{catalog}} is provided.}
 
-\item{inclMeta}{[\code{logical(1)}]\cr output merely the occurence data
-(\code{FALSE}, default), or output additionally metadata on the species
-(\code{TRUE})?}
+\item{type}{[\code{character(1)}]\cr the dataset type, either \code{"rpp"}
+(relative probability of presence) or \code{"mhs"} (maximum habitat
+suitability).}
 
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
@@ -29,11 +29,17 @@ supposed to be stored (i.e. on your harddisc).}
 bla
 }
 \description{
-Obtain data from the European Atlas of Forest Tree Species
+Obtain presence and habitat suitability
+\href{http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/atlas-data-and-metadata/}{data}
+from the
+\href{http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/}{European
+Atlas of Forest Tree Species}
 }
 \details{
 https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
-https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
+  https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
+  
+  mention that values are integers and not "probabilities" between 0 and 1)
 }
 \section{Functions}{
 \itemize{
@@ -41,8 +47,21 @@ https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
 }}
 
 \examples{
+\dontrun{
 
-# something
+require(magrittr)
+
+# load and outline masks from file
+myMask <- loadData(files = "aWindow.csv",
+                   localPath = system.file("csv", package="rasterTools")) \%>\%
+  geomRectangle() \%>\%
+  setCRS(crs = projs$laea)
+
+# extract data for the derived mask
+myTrees <- oEFTA(mask = myMask,
+                 species = c("Quercus robur", "Alnus incana", "Betula sp"))
+visualise(gridded = myTrees$`Betula sp`, trace = TRUE)
+}
 }
 \references{
 de Rigo, D., Caudullo, G., Houston Durrant, T., San-Miguel-Ayanz,

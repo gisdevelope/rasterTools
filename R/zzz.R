@@ -14,7 +14,7 @@
                                 online = "https://www.european-mammals.org/php/rendermap.php?latname=",
                                 gridLinks = "http://www.helsinki.fi/~rlampine/gmap/gridfilelinks.kml"),
                     efta = list(local = NA,
-                                online = "https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/"),
+                                online = "https://w3id.org/mtv/FISE/map-data"),
                     gfc = list(local = NA,
                                online = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
                     modis = list(local = NA,
@@ -52,6 +52,6 @@
 # internal rasterTools data
 globalVariables(c("rtPaths", "rtData", "theme_rt"))
 # meta data
-globalVariables(c("meta_modis", "meta_emma"))
+globalVariables(c("meta_modis", "meta_emma", "meta_efta"))
 # projections
 globalVariables(c("projs"))

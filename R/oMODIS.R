@@ -268,9 +268,9 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
         crs_name <- strsplit(target_crs, " ")[[1]][1]
         message(paste0("  ... reprojecting to '", crs_name, "'\n"))
         mask <- setCRS(x = mask, crs = target_crs)
-        tempObject <- setCRS(tempObject, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-        theExtent <- getExtent(x = mask)
-        tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+        tempObject <- setCRS(tempObject, crs = target_crs)
+        tempExtent <- getExtent(x = mask)
+        tempObject <- crop(tempObject, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
         history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
       }
       tempObject@history <- history
