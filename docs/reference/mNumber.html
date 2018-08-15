@@ -86,9 +86,6 @@
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -151,7 +148,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>obj</th>
-      <td><p>[<code>RasterLayer(1)</code>]<br /> The object to measure.</p></td>
+      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
       <th>scale</th>
@@ -185,8 +182,8 @@ specify here the layer for which the area of objects shall be calculated
 
 <span class='co'># the number ...</span>
 <span class='co'># ... per landuse type</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   window classes
-#&gt; 1      1       9</div><div class='input'>
+<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   landscape classes
+#&gt; 1         1       9</div><div class='input'>
 <span class='co'># ... of patches per landuse type</span>
 <span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   class patches
 #&gt; 1     1       1
@@ -198,15 +195,15 @@ specify here the layer for which the area of objects shall be calculated
 #&gt; 7    41      13
 #&gt; 8    44      14
 #&gt; 9    47      13</div><div class='input'>
-<span class='co'># ...  of certain values</span>
+<span class='co'># ... of certain values</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>match</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>mNumber</span>(<span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"values_binarised"</span>)</div><div class='output co'>#&gt;   window patches
-#&gt; 1      1      21</div><div class='input'>
+  <span class='fu'>mNumber</span>(<span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"values_binarised"</span>)</div><div class='output co'>#&gt;   landscape patches
+#&gt; 1         1      21</div><div class='input'>
 <span class='co'># ... from a binary raster</span>
-<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   window patches
-#&gt; 1      1      26</div><div class='input'><span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   window classes
-#&gt; 1      1       2</div><div class='input'>
+<span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>)</div><div class='output co'>#&gt;   landscape patches
+#&gt; 1         1      26</div><div class='input'><span class='fu'>mNumber</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   landscape classes
+#&gt; 1         1       2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

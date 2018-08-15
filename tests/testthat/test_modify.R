@@ -78,11 +78,20 @@ test_that("rBlend is properly handled", {
   
   output <- modify(input = skeleton, by = getMetasSkel, merge = TRUE)
   expect_class(output, "RasterStack")
+  
+  # # test that an overlay can be taken from the global environment (this seems to create some problem atm)
+  # points <- rMatch(obj = skeleton,
+  #                  kernel = matrix(c(NA, 0, 0, NA, 1, 0, NA, 0, 0), 3, 3),
+  #                  background = 0)
+  # getMetasSkel <- list(list(operator = "rBlend", overlay = "points"))
+  # output <- modify(input = skeleton, by = getMetasSkel)
+  # expect_class(output, "RasterLayer")
 })
 
 test_that("rMask is properly handled", {
   input <- rtData$continuous
   binarised <<- rBinarise(input, thresh = 30)
+  aStack <- raster::stack()
   
   # test that a mask can be taken from the current algorithm
   getMedialAxis <- list(skeleton = list(operator = "rSkeletonise", background = 0),
@@ -138,6 +147,21 @@ test_that("rSegregate and rReduce is properly handled", {
                      list(operator = "rReduce"))
   output <- modify(input, by = getPatches, sequential = TRUE)
   expect_equal(dim(output), dim1)
+  
+  # test 'rSegregate', some operation and then only 'rReduce'
+  patches <- rPatches(rBinarise(input, thresh = 30))
+  getCentDist <- list(patchesMask = list(operator = "rSegregate"),
+                      patchesMask = list(operator = "rFillNA"),
+                      distances = list(operator = "rSegregate"),
+                      distances = list(operator = "rFillNA"),
+                      distances = list(operator = "rCentroid", background = 0),
+                      distances = list(operator = "rDistance"),
+                      distances = list(operator = "rOffset"),
+                      distances = list(operator = "rMask", mask = "patchesMask"),
+                      distances = list(operator = "rFillNA"),
+                      distances = list(operator = "rReduce", fun = max))
+  centDistMap <- modify(input = patches, by = getCentDist)
+  expect_list(centDistMap, len = 2)
 })
 
 test_that("input retained if 'keepInput = TRUE'", {
@@ -196,9 +220,11 @@ test_that("Error if arguments have wrong value", {
   getPatches <- list(list(operator = "rBinarise", thresh = 40),
                      list(operator = "rPatches"))
   wrongAlgo1 <- list(list(operator = "rMask", mask = "bla"))
-  wrongAlgo2 <- list(list(operator = "rMask", overlay = mat))
-  wrongAlgo3 <- list(list(operator = "rBlend", mask = "bla"))
+  wrongAlgo2 <- list(list(operator = "rMask", mask = mat))
+  wrongAlgo3 <- list(list(operator = "rBlend", overlay = "bla"))
   wrongAlgo4 <- list(list(operator = "rBlend", overlay = mat))
+  wrongAlgo5 <- list(list(operator = "rSegregate", by = "bla"))
+  wrongAlgo6 <- list(list(operator = "rSegregate", by = mat))
   
   expect_error(modify(input = "bla", by = getPatches, sequential = TRUE))
   expect_error(modify(input = input, by = "bla", sequential = TRUE))
@@ -208,6 +234,8 @@ test_that("Error if arguments have wrong value", {
   expect_error(modify(input = input, by = getPatches, sequential = TRUE, keepInput = "yup"))
   expect_error(modify(input = input, by = wrongAlgo1))
   expect_error(modify(input = input, by = wrongAlgo2))
+  expect_error(modify(input = input, by = wrongAlgo3))
+  expect_error(modify(input = input, by = wrongAlgo4))
 })
 
 test_that("history is correct", {

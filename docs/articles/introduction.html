@@ -54,9 +54,6 @@
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -103,7 +100,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-10</h4>
+            <h4 class="date">2018-08-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -140,7 +137,6 @@
 <span class="co">#&gt; Loading required package: sp</span>
 <span class="kw">library</span>(rasterTools)
 <span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you with your spatial data!</span>
-<span class="co">#&gt; I don't know where your files are stored, please see '?updatePaths' to create a suitable index.</span>
 
 coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
                      <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
@@ -158,7 +154,7 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 #&gt; coord. ref.  : NA
 #&gt; variables    : 1  (id)</code></pre>
 <p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> funciton. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
-<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
+<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to and from other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
 </div>
 </div>
 <div id="example-workflow" class="section level1">
@@ -218,7 +214,7 @@ myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/m
 <p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
 myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>))
+                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>))
 <span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
 <span class="co">#&gt; $a_c</span>
 <span class="co">#&gt;   class result</span>
@@ -232,19 +228,19 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <span class="co">#&gt; 8    44    453</span>
 <span class="co">#&gt; 9    47    544</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $a_w</span>
-<span class="co">#&gt;   window result</span>
-<span class="co">#&gt; 1      1   3360</span></code></pre></div>
-<p>The so defined <em>terms</em> are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the <em>Class proportional area</em> is the class areas divided by the window area:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
+<span class="co">#&gt; $a_l</span>
+<span class="co">#&gt;   landscape result</span>
+<span class="co">#&gt; 1         1   3360</span></code></pre></div>
+<p>The so defined <em>terms</em> are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the <em>Class proportional area</em> is the class areas divided by the landscape area:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
                  <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_w * 100"</span>)</code></pre></div>
+                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>)</code></pre></div>
 <p>Several derived metrics can be defined in one algorithm, given the required terms are defined:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_p =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>),
                   <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
-                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_w * 100"</span>,
-                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_w * 100"</span>)</code></pre></div>
+                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
+                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>,
+                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_l * 100"</span>)</code></pre></div>
 <p>The generic metrics <code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code> are available. Equations for the derived metrics can be found in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette (and with increasing version numbers more of them, for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code>). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
 <p>Finally, the measurement of the <em>class proportional area</em> and the <em>largest patch index</em>, in a raster where patches have been determined, would be carried out by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
@@ -261,8 +257,8 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <span class="co">#&gt; 9    47 16.19</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;   window mLPI</span>
-<span class="co">#&gt; 1      1 8.81</span></code></pre></div>
+<span class="co">#&gt;   landscape mLPI</span>
+<span class="co">#&gt; 1         1 8.81</span></code></pre></div>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">

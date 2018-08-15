@@ -7,21 +7,20 @@
 mValues(obj, param = NULL, layer = NULL, groupBy = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to measure.}
+\item{obj}{[\code{Raster*(1)}]\cr The object to measure.}
 
 \item{param}{[\code{character(.)}]\cr parameter(s) to calculate; possible
 parameters are \code{"mean"}, \code{"sum"}, \code{"number"}, \code{"sd"},
 \code{"cv"}, \code{"iqr"}, \code{"min"}, \code{"median"}, \code{"max"},
-\code{"quantile"}, \code{"weighted.mean"}, \code{"identity"}, \code{"all"}
-or \code{"raw"}.}
+\code{"quantile"}, \code{"weighted.mean"} or \code{"all"}.}
 
 \item{layer}{[\code{character(1)}]\cr in case \code{obj} has several layers,
 specify here the layer for which the area of objects shall be calculated
-(by default, the first layer).}
+(by default the first layer).}
 
-\item{groupBy}{another layer (typically part of the same raster::brick),
-according which you want to divide the cells in the input layer. see
-Details.}
+\item{groupBy}{[\code{RasterLayer(1)}]\cr (another) layer based on the unique
+values of which to calculate distribution parameters (by default the second
+layer).}
 }
 \value{
 A list with elements resulting from the stratification with the value
@@ -30,12 +29,22 @@ A list with elements resulting from the stratification with the value
 \description{
 Calculate distribution parameters of cell values of a raster
 }
-\details{
-You can give a raster stack with at least two layers as \code{obj}
-  and then use \code{groupBby} to 'mask' the cells, so to speak.
-}
 \examples{
-# work in progress
+con <- rtData$continuous
+bin <- rBinarise(con, 30)
+patches <- rPatches(bin)
+
+# the average and standard deviation of all values
+mValues(obj = con, param = c("mean", "sd"))
+
+# destribution parameters per patch ...
+mValues(obj = raster::stack(con, patches),
+        param = c("weighted.mean", "min", "max"), groupBy = "patches")
+
+# ... or per class
+mValues(obj = raster::stack(con, rtData$categorical),
+        param = c("mean", "sd"), groupBy = "categorical")
+
 }
 \seealso{
 Other generic metrics: \code{\link{mAdjacency}},

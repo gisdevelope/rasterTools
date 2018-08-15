@@ -86,9 +86,6 @@
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -151,13 +148,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>obj</th>
-      <td><p>[<code>RasterLayer(1)</code>]<br /> The object to measure.</p></td>
+      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
       <th>scale</th>
       <td><p>[<code>character(1)</code>]<br /> scale at which the area of objects
 should be calculated; possible values are <code>"patch"</code>, <code>"class"</code>
-and <code>"window"</code>.</p></td>
+and <code>"landscape"</code>.</p></td>
     </tr>
     <tr>
       <th>unit</th>
@@ -175,7 +172,7 @@ specify here the layer for which the area of objects shall be calculated
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>For <code>scale = "window"</code> the area of the overall raster, for
+    <p>For <code>scale = "landscape"</code> the area of the overall raster, for
   <code>scale = "class"</code> the total area of each unique value (class), for
   <code>scale = "patch"</code> the area of distinct objects per distinct values
   (i.e. the area of patches per class).</p>

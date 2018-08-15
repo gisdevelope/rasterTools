@@ -26,16 +26,16 @@
 #'   \code{\link{mArea}}: Calculate the area of objects in a raster. \item
 #'   \code{\link{mNumber}}: Count the number of objects in a raster. \item
 #'   \code{\link{mPerimeter}}: Calculate the length of the boundary of objects
-#'   in a raster. \item \code{mValues}: Summarise the values of objects in a
-#'   raster. }
+#'   in a raster. \item \code{\link{mValues}}: Summarise the values of objects
+#'   in a raster. }
 #' @return depending on the employed metric, but typically a \code{data.frame}.
 #' @examples
 #' input <- rtData$categorical
 #'
-#' # calculate generic metrics 'area per class' and 'area per window', 'obj' does
+#' # calculate generic metrics 'area per class' and 'area per landscape', 'obj' does
 #' # not need to be specified per operator in the algorithm, as 'measure' assigns it.
 #' myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
-#'                   a_w = list(operator = "mArea", scale = "window"))
+#'                   a_l = list(operator = "mArea", scale = "landscape"))
 #' (measure(input = input, with = myMetrics))
 #'
 #' # calculate 'class proportional area' and 'larges patch index'
@@ -43,9 +43,9 @@
 #' # 2) define the equations that are used based on these terms
 #' myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
 #'                   a_c = list(operator = "mArea", scale = "class"),
-#'                   a_w = list(operator = "mArea", scale = "window"),
-#'                   mCPA = "a_c / a_w * 100",
-#'                   mLPI = "max(a_p) / a_w * 100")
+#'                   a_l = list(operator = "mArea", scale = "landscape"),
+#'                   mCPA = "a_c / a_l * 100",
+#'                   mLPI = "max(a_p) / a_l * 100")
 #' (measure(input = input, with = myMetrics, simplify = FALSE))
 #'
 #' # however, in the above example patches are derived per class, which might
@@ -62,7 +62,7 @@
 #'   testCharacter
 #' @export
 
-measure <- function(input, with, simplify = TRUE){
+measure <- function(input = NULL, with = NULL, simplify = TRUE){
 
   # check arguments
   isRaster <- testClass(input, "Raster")
@@ -79,6 +79,11 @@ measure <- function(input, with, simplify = TRUE){
   
   if(!isList){
     input <- list(input)
+    objNames <- "thisObject"
+  } else{
+    objNames <- lapply(seq_along(input), function(x){
+      names(input[[x]])
+    })
   }
   out <- input
   
@@ -123,7 +128,7 @@ measure <- function(input, with, simplify = TRUE){
       # call the function and assign names
       values <- do.call(what = tempTerm$operator,
                         args = c(tempTerm[-1], obj =  input[[1]]))
-      colnames(values)[!names(values) %in% c("window", "class", "patch")] <- "result"
+      colnames(values)[!names(values) %in% c("landscape", "class", "patch")] <- "result"
       
       value_list <- c(value_list, setNames(list(values), termName))
     }
@@ -143,43 +148,38 @@ measure <- function(input, with, simplify = TRUE){
     # compute the result
     for(k in seq_along(equations)){
       theResult <- round(eval(parse(text = equations[[k]]), envir = theValues), 2)
-      
-      elements <- strsplit(equations[[k]], "[ ]")[[1]]
-      # IDs <- NULL
-      bla <- lapply(seq_along(elements), function(x){
-        tryCatch(eval(parse(text = paste0(elements[x])), envir = theValues), error = function(e) NULL)
-        # if(!is.null(target)){
-          # eval(parse(text = paste0(elements[x], "$", target)), envir = value_list)
-        # }
-        # tryCatch(eval(parse(text = elements[x]), envir = theValues), error = function(e) NULL)
-      })
-      names(bla) <- elements
-      
       result_list <- c(result_list, setNames(list(theResult), metricNames[k]))
+    }  
+    
+    if(simplify){
+      # get the number of rows per generic metric ...
+      elemInValues <- lapply(seq_along(value_list), function(x){
+        dim(value_list[[x]])[1]
+      })
+      
+      # ... and try to match it with the results. If a generic metric has the same
+      # length, the ids are what we want
+      idInResults <- NULL
+      tempOut <- lapply(seq_along(result_list), function(x){
+        nElements <- length(result_list[[x]])
+        idPos <- which(elemInValues == nElements)
+        idInResults <- c(idInResults, idPos)
+        
+        id_list[[idInResults]] <- data.frame(id_list[[idInResults]], result_list[[x]], fix.empty.names = FALSE)
+        names(id_list[[idInResults]])[dim(id_list[[idInResults]])[2]] <- metricNames[x]
+        
+        id_list[[unique(idInResults)]]
+      })
+      out[[i]] <- tempOut
+    } else{
+      out[[i]] <- c(value_list, result_list)
     }
   }
-  if(simplify){
-    # get the number of rows per generic metric ...
-    elemInValues <- lapply(seq_along(value_list), function(x){
-      dim(value_list[[x]])[1]
-    })
-    
-    # ... and try to match it with the results. If a generic metric has the same
-    # length, the ids are what we want
-    idInResults <- NULL
-    out <- lapply(seq_along(result_list), function(x){
-      nElements <- length(result_list[[x]])
-      idPos <- which(elemInValues == nElements)
-      idInResults <- c(idInResults, idPos)
-      
-      id_list[[idInResults]] <- data.frame(id_list[[idInResults]], result_list[[x]], fix.empty.names = FALSE)
-      names(id_list[[idInResults]])[dim(id_list[[idInResults]])[2]] <- metricNames[x]
-      
-      id_list[[unique(idInResults)]]
-    })
-  } else{
-    out <- c(value_list, result_list)
+  names(out) <- objNames
+  
+  if(length(out) == 1){
+    out <- out[[1]]
   }
- 
+  
   return(out)
 }

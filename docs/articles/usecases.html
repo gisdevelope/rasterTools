@@ -54,9 +54,6 @@
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -103,7 +100,7 @@
       <h1>Usecases</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-10</h4>
+            <h4 class="date">2018-08-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -119,6 +116,7 @@
 <ul>
 <li><a href="#morph_open">Open foreground</a></li>
 <li><a href="#morph_close">Close foreground</a></li>
+<li>Determine sharpness of a boundary</li>
 </ul>
 </li>
 <li>Identify features/objects
@@ -126,11 +124,18 @@
 <li><a href="#identify_mat">Media axis transform</a></li>
 <li><a href="#openings">Openings/Perforations</a></li>
 <li><a href="#signature_points_skel">Signature points in a skeleton</a></li>
+<li>Identify core/ecotone habitat</li>
+<li>Identify boundaries</li>
+<li>Identify corridors</li>
+<li>Identify interrupted corridors</li>
+<li>Identify parallel structures</li>
+<li>Identify openings that are connected to the background (e.g. clearcuts)</li>
 </ul>
 </li>
 <li>Classify values
 <ul>
 <li><a href="#class_colours_click">Click into a map (cf HistMapR)</a></li>
+<li>Classify boundaries</li>
 </ul>
 </li>
 <li>Distance Maps
@@ -145,7 +150,6 @@
 <p>Lets start with reading in the required packages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rasterTools)
 <span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you with your spatial data!</span>
-<span class="co">#&gt; I don't know where your files are stored, please see '?updatePaths' to create a suitable index.</span>
 <span class="kw">library</span>(raster)
 <span class="co">#&gt; Loading required package: sp</span>
 <span class="kw">library</span>(magrittr)

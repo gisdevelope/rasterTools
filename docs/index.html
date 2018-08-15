@@ -56,9 +56,6 @@
     <li>
       <a href="articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -157,18 +154,12 @@ visualise(raster::stack(myInput, myPatches))</code></pre>
 <li>
 <p>Compute the <em>Class proportional area</em> in a raster with categorial values:</p>
 <pre><code>myInput &lt;- rtData$categorial
-myMetric &lt;- list(a_w = list(operator = "mArea", scale = "window"),
+myMetric &lt;- list(a_l = list(operator = "mArea", scale = "landscape"),
                  a_c = list(operator = "mArea", scale = "class"),
-                 mCPA = "a_c / a_w * 100")
+                 mCPA = "a_c / a_l * 100")
 measure(input = myInput, with = myMetrics)</code></pre>
 </li>
 </ol>
-<hr>
-</div>
-<div id="contribute" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contribute" class="anchor"></a>Contribute</h2>
-<p>In case you have a suggestion for a feature or function you think is missing, please file an <a href="https://github.com/EhrmannS/rasterTools/issues">issue</a> and I try to implement it. If you want to contribute, <a href="articles/contribute.html">develop your own addition</a> to <code>rasterTools</code> and share it with the community by creating a <a href="https://github.com/EhrmannS/rasterTools/pulls">pull request</a> on github (I will include you as author of the respective function).</p>
 <hr>
 </div>
 <div id="planned-for-future-versions" class="section level2">
