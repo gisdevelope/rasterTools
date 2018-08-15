@@ -109,3 +109,49 @@ rad <- function(degree){
   assertNumeric(degree)
   (degree * pi)/180
 }
+
+#' Create non-linear palettes
+#'
+#' A wrapper around \code{colorRampPalette} to create palettes where the number
+#' of interpolated colours is not linear, i.e. there may be a different number
+#' of colour values between the colors that shall be interpolated.
+#' @param colors [\code{character(.)}]\cr colours to interpolate. must be a valid
+#'   argument to \code{\link[grDevices]{col2rgb}}.
+#' @param steps [\code{integerish(.)}]\cr the number of colours between each of
+#'   \code{'colors'}.
+#' @param ... arguments to pass to \code{colorRampPalette}.
+#' @examples
+#' myColours <- terrain.colors(5)
+#'
+#' linearPalette <- rtPalette(colors = myColours)
+#' pie(x = rep(1, 50), col = linearPalette(50))
+#'
+#' nonlinearPalette <- rtPalette(colors = myColours, steps = c(20, 20, 2, 2))
+#' pie(x = rep(1, 50), col = nonlinearPalette(50))
+#' @importFrom grDevices colorRampPalette col2rgb
+#' @export
+
+rtPalette <- function(colors, steps = NULL, ...){
+  # found at https://menugget.blogspot.com/2011/11/define-color-steps-for-colorramppalette.html
+  
+  if(is.null(steps)) steps <- rep(0, (length(colors)-1))
+  if(length(steps) != length(colors)-1) stop("Must have one less 'steps' value than 'colors'")
+  
+  fillValues <- cumsum(rep(1, length(colors)) + c(0, steps))
+  RGB <- matrix(NA, nrow = 3, ncol = fillValues[length(fillValues)])
+  RGB[,fillValues] <- col2rgb(colors)
+  
+  for(i in which(steps > 0)){
+    col.start = RGB[,fillValues[i]]
+    col.end = RGB[,fillValues[i+1]]
+    for(j in seq(3)){
+      vals <- seq(col.start[j], col.end[j], length.out = steps[i] + 2)[2:(2+steps[i] - 1)]  
+      RGB[j,(fillValues[i] + 1):(fillValues[i + 1] - 1)] <- vals
+    }
+  }
+  
+  newValues <- rgb(RGB[1,], RGB[2,], RGB[3,], maxColorValue = 255)
+  pal <- colorRampPalette(newValues, ...)
+  
+  return(pal)
+}
