@@ -23,7 +23,7 @@
 #' cat <- rtData$categorical
 #' bin <- rBinarise(rtData$continuous, thresh = 40)
 #'
-#' # couble count like adjacencies
+#' # double count like adjacencies
 #' mAdjacency(obj = cat)
 #' 
 #' # paired adjacencies
@@ -47,6 +47,7 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
     countDouble <- TRUE
   }
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(layer, choices = names(obj))
   if(is.null(layer)){
     layer <- names(obj)[1]
   } else{
@@ -84,14 +85,14 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 #' @template obj2
 #' @param scale [\code{character(1)}]\cr scale at which the area of objects
 #'   should be calculated; possible values are \code{"patch"}, \code{"class"}
-#'   and \code{"window"}.
+#'   and \code{"landscape"}.
 #' @param unit [\code{character(1)}]\cr the unit the output should have. With
 #'   \code{"map"} the result will be in the respective map unit and with
 #'   \code{"cells"} (default) it will be the number of raster cells.
 #' @param layer [\code{character(1)}]\cr in case \code{obj} has several layers,
 #'   specify here the layer for which the area of objects shall be calculated
 #'   (by default, the first layer).
-#' @return For \code{scale = "window"} the area of the overall raster, for
+#' @return For \code{scale = "landscape"} the area of the overall raster, for
 #'   \code{scale = "class"} the total area of each unique value (class), for
 #'   \code{scale = "patch"} the area of distinct objects per distinct values
 #'   (i.e. the area of patches per class).
@@ -124,9 +125,10 @@ mAdjacency <- function(obj, type = "like", count = "double", layer = NULL){
 mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 
   assertClass(obj, "Raster")
-  scale <- match.arg(scale, c("patch", "class", "window"))
+  scale <- match.arg(scale, c("patch", "class", "landscape"))
   unit <- match.arg(unit, c("cells", "map"))
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(layer, choices = names(obj))
   if(is.null(layer)){
     layer <- names(obj)[1]
   } else{
@@ -138,9 +140,9 @@ mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
   resolution <- res(obj)
 
   # do calculation for the respective scale
-  if(scale == "window"){
+  if(scale == "landscape"){
 
-    groups <- data.frame(window = 1)
+    groups <- data.frame(landscape = 1)
     values <- data.frame(cells = dim(mat)[1] * dim(mat)[2])
 
   } else if(scale == "class"){
@@ -233,7 +235,7 @@ mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 #' # ... of patches per landuse type
 #' mNumber(obj = cat, scale = "patch")
 #'
-#' # ...  of certain values
+#' # ... of certain values
 #' require(magrittr)
 #' rBinarise(obj = cat, match = c(41, 44, 47)) %>%
 #'   mNumber(scale = "patch", layer = "values_binarised")
@@ -252,6 +254,7 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
   assertClass(obj, "Raster")
   scale <- match.arg(scale, c("patch", "class"))
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(layer, choices = names(obj))
   if(is.null(layer)){
     layer <- names(obj)[1]
   } else{
@@ -266,7 +269,7 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
   if(scale == "class"){
 
     vals <- base::unique(as.vector(mat[!is.na(mat)]))
-    values <- data.frame(window = 1, classes = length(vals))
+    values <- data.frame(landscape = 1, classes = length(vals))
 
   } else{
 
@@ -275,7 +278,7 @@ mNumber <- function(obj, scale = "patch", layer = NULL){
 
       temp <- components(mat, shapeKernel(c(3, 3), type = "diamond"))
       vals <- base::unique(as.vector(temp[!is.na(temp)]))
-      values <- data.frame(window = 1, patches = length(vals))
+      values <- data.frame(landscape = 1, patches = length(vals))
 
     } else {
 
@@ -367,6 +370,7 @@ mPerimeter <- function(obj, scale = "patch", unit = "cells", layer = NULL){
   scale <- match.arg(scale, c("patch", "class"))
   unit <- match.arg(unit, c("cells", "map"))
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(layer, choices = names(obj))
   if(is.null(layer)){
     layer <- names(obj)[1]
   } else{
@@ -453,21 +457,32 @@ mPerimeter <- function(obj, scale = "patch", unit = "cells", layer = NULL){
 #' @param param [\code{character(.)}]\cr parameter(s) to calculate; possible
 #'   parameters are \code{"mean"}, \code{"sum"}, \code{"number"}, \code{"sd"},
 #'   \code{"cv"}, \code{"iqr"}, \code{"min"}, \code{"median"}, \code{"max"},
-#'   \code{"quantile"}, \code{"weighted.mean"}, \code{"identity"}, \code{"all"}
-#'   or \code{"raw"}.
+#'   \code{"quantile"}, \code{"weighted.mean"} or \code{"all"}.
 #' @param layer [\code{character(1)}]\cr in case \code{obj} has several layers,
 #'   specify here the layer for which the area of objects shall be calculated
-#'   (by default, the first layer).
-#' @param groupBy another layer (typically part of the same raster::brick),
-#'   according which you want to divide the cells in the input layer. see
-#'   Details.
+#'   (by default the first layer).
+#' @param groupBy [\code{RasterLayer(1)}]\cr (another) layer based on the unique
+#'   values of which to calculate distribution parameters (by default the second
+#'   layer).
 #' @return A list with elements resulting from the stratification with the value
 #'   of each specified parameter per object in \code{groupBby}.
-#' @details You can give a raster stack with at least two layers as \code{obj}
-#'   and then use \code{groupBby} to 'mask' the cells, so to speak.
 #' @family generic metrics
 #' @examples
-#' # work in progress
+#' con <- rtData$continuous
+#' bin <- rBinarise(con, 30)
+#' patches <- rPatches(bin)
+#'
+#' # the average and standard deviation of all values
+#' mValues(obj = con, param = c("mean", "sd"))
+#'
+#' # destribution parameters per patch ...
+#' mValues(obj = raster::stack(con, patches),
+#'         param = c("weighted.mean", "min", "max"), groupBy = "patches")
+#'
+#' # ... or per class
+#' mValues(obj = raster::stack(con, rtData$categorical),
+#'         param = c("mean", "sd"), groupBy = "categorical")
+#'
 #' @importFrom checkmate assertClass assertCharacter
 #' @importFrom stats weighted.mean quantile
 #' @export
@@ -481,15 +496,19 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
     stop("please provide a vaid 'obj'.")
   }
   param <- match.arg(param, c("mean", "sum", "number", "sd", "cv", "iqr", "min",
-                              "median", "max", "quantile", "weighted.mean", "all",
-                              "raw"), several.ok = TRUE)
+                              "median", "max", "quantile", "weighted.mean", "all"), several.ok = TRUE)
+  if(any(param == "all")){
+    param <- c("mean", "sum", "number", "sd", "cv", "iqr", "min", "median", "max", "quantile", "weighted.mean")
+  }
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(layer, choices = names(obj))
   if(is.null(layer)){
     layer <- names(obj)[1]
   } else{
     layer <- names(obj)[grep(pattern = layer, x = names(obj))]
   }
   assertCharacter(groupBy, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertSubset(groupBy, choices = names(obj))
   if(isStackBrick){
     if(is.null(groupBy)){
       groupBy <- names(obj)[2]
@@ -500,11 +519,7 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
 
   mat <- as.matrix(eval(parse(text = paste0("obj$", layer))))
 
-  if(any(param == "all")){
-    param <- c("mean", "sum", "number", "sd", "cv", "iqr", "min", "median", "max", "quantile", "weighted.mean")
-  }
-
-  # manage parameter names
+  # adapt parameter names to have the respective function name
   if(any(param == "iqr")){
     param[which(param == "iqr")] <- "IQR"
   }
@@ -523,50 +538,60 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
     # values <- setNames(values, vals)
   } else{
     values <- list(values(obj))
-    vals <- 1
+    vals <- NA
   }
 
-  if(param == "raw"){
-
-    out <- setNames(list(values), "raw")
-
-  } else{
-
-    # handle weighted.mean and raw, because they can't be retrieved with the below do.call snippet
-    if(any(param == "weighted.mean")){
-      out_wm <- sapply(seq_along(vals), function(x){
-        tempVals <- table(values[[x]])
-        dimnames(tempVals) <- NULL
-        tempWeights <- rep(tempVals, tempVals)
-        stats::weighted.mean(x = sort(values[[x]]),
-                             w = tempWeights)
-      })
-      param <- param[-which(param == "weighted.mean")]
-    }
-
-    # split quantiles up into list elements
-    if(any(param=="quantile")){
-      out_q <- sapply(seq_along(values), function(x){
-        quantile(values[[x]])
-      })
-      out_q <- t(out_q)
-      colnames(out_q) <- paste0("q", substr(colnames(out_q), 0, nchar(colnames(out_q))-1))
-      param <- param[-which(param =="quantile")]
-    }
-
-    # handle all other functions
-    out <- sapply(seq_along(param), function(i){
-      sapply(seq_along(values), function(j){
-        do.call(what = param[i], args = list(values[[j]]))
-      })
+  out <- NULL
+  # handle 'weighted.mean' and 'quantile', because they can't be retrieved
+  # with the below do.call snippet
+  if(any(param == "weighted.mean")){
+    out_wm <- sapply(seq_along(vals), function(x){
+      tempVals <- table(values[[x]])
+      dimnames(tempVals) <- NULL
+      tempWeights <- rep(tempVals, tempVals)
+      stats::weighted.mean(x = sort(values[[x]]),
+                           w = tempWeights)
     })
-    colnames(out) <- param
-    if(!missing(out_wm)) out <- cbind(out, wgh.mean = out_wm)
-    if(!missing(out_q)) out <- cbind(out, out_q)
-
-    result <- data.frame(out)
-
+    param <- param[-which(param == "weighted.mean")]
+  } else{
+    out_wm <- NULL
+  }
+  
+  if(any(param=="quantile")){
+    out_q <- sapply(seq_along(values), function(x){
+      quantile(values[[x]])
+    })
+    out_q <- t(out_q)
+    colnames(out_q) <- paste0("q", substr(colnames(out_q), 0, nchar(colnames(out_q))-1))
+    param <- param[-which(param =="quantile")]
+  } else{
+    out_q <- NULL
+  }
+  
+  # handle all other functions
+  for(i in seq_along(param)){
+    
+    temp <- unlist(lapply(
+      seq_along(values), function(j){
+        do.call(what = param[i], args = list(values[[j]]))
+      }
+    ))
+    out <- cbind(out, temp)
+    colnames(out)[i] <- param[i]
   }
 
+  if(!is.null(out_wm)) out <- cbind(out, wgh.mean = out_wm)
+  if(!is.null(out_q)) out <- cbind(out, out_q)
+  
+  result <- data.frame(value = vals, out)
+  
   return(result)
+}
+
+#' Metric distribution
+#' @template obj2
+#' @param metric [\code{character(.)}]\cr the metric(s) that shall be assessed.
+
+mMetric <- function(obj, metric){
+  
 }

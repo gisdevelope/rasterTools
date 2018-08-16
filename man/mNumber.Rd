@@ -7,7 +7,7 @@
 mNumber(obj, scale = "patch", layer = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to measure.}
+\item{obj}{[\code{Raster*(1)}]\cr The object to measure.}
 
 \item{scale}{[\code{character(1)}]\cr scale at which the area of objects
 should be calculated; possible values are \code{"patch"} and \code{"class"}.}
@@ -35,7 +35,7 @@ mNumber(obj = cat, scale = "class")
 # ... of patches per landuse type
 mNumber(obj = cat, scale = "patch")
 
-# ...  of certain values
+# ... of certain values
 require(magrittr)
 rBinarise(obj = cat, match = c(41, 44, 47)) \%>\%
   mNumber(scale = "patch", layer = "values_binarised")

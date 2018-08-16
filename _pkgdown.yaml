@@ -75,8 +75,6 @@ navbar:
          href: articles/introduction.html
       -  text: Landscape metrics
          href: articles/landscape_metrics.html
-      -  text: Best practices to contribute
-         href: articles/contribute.html
     - icon: fa-file-code-o
       text: "Glossary"
       href: reference/index.html

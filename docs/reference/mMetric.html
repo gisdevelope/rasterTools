@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load <code>kml</code> files — load_kml • rasterTools</title>
+<title>Metric distribution — mMetric • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Load <code>kml</code> files — load_kml" />
+<meta property="og:title" content="Metric distribution — mMetric" />
 
-<meta property="og:description" content="kml is the short form of Keyhole Markup Language, which uses the
-XML format; this is a simple wrapper around readOGR." />
+<meta property="og:description" content="Metric distribution" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -131,46 +130,31 @@ XML format; this is a simple wrapper around readOGR." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load <code>kml</code> files</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/loadData.R'><code>R/loadData.R</code></a></small>
-    <div class="hidden name"><code>load_kml.Rd</code></div>
+    <h1>Metric distribution</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/measure.operators.R'><code>R/measure.operators.R</code></a></small>
+    <div class="hidden name"><code>mMetric.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>kml is the short form of <em>Keyhole Markup Language</em>, which uses the
-<code>XML</code> format; this is a simple wrapper around <a href='http://www.rdocumentation.org/packages/rgdal/topics/readOGR'>readOGR</a>.</p>
+    <p>Metric distribution</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>load_kml</span>(<span class='no'>path</span>, <span class='no'>layer</span>)</pre>
+    <pre class="usage"><span class='fu'>mMetric</span>(<span class='no'>obj</span>, <span class='no'>metric</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>path</th>
-      <td><p>[<code>character(1)</code>]<br /> the local path of the file to load.</p></td>
+      <th>obj</th>
+      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
     </tr>
     <tr>
-      <th>layer</th>
-      <td><p>[<code>character(1)</code>]<br /> the layer name.</p></td>
+      <th>metric</th>
+      <td><p>[<code>character(.)</code>]<br /> the metric(s) that shall be assessed.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>the <code>readOGR</code> standard for kml files.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This is a helper to <code><a href='loadData.html'>loadData</a></code> and is not intended to be used on
-its own.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other loaders: <code><a href='load_csv.html'>load_csv</a></code>,
-  <code><a href='load_hdf.html'>load_hdf</a></code>, <code><a href='load_svg.html'>load_svg</a></code></p></div>
     
 
   </div>
@@ -178,13 +162,7 @@ its own.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

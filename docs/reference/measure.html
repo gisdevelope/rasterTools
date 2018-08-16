@@ -87,9 +87,6 @@ maps of landscapes, artificial (spatial) patterns or even photographs." />
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -146,7 +143,7 @@ maps of landscapes, artificial (spatial) patterns or even photographs.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>measure</span>(<span class='no'>input</span>, <span class='no'>with</span>, <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,18 +189,18 @@ created, where the resulting values are associated to the correct ids
 <li><p><code><a href='mNumber.html'>mNumber</a></code>: Count the number of objects in a raster.</p></li>
 <li><p><code><a href='mPerimeter.html'>mPerimeter</a></code>: Calculate the length of the boundary of objects
   in a raster.</p></li>
-<li><p><code>mValues</code>: Summarise the values of objects in a
-  raster.</p></li>
+<li><p><code><a href='mValues.html'>mValues</a></code>: Summarise the values of objects
+  in a raster.</p></li>
 </ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
 
-<span class='co'># calculate generic metrics 'area per class' and 'area per window', 'obj' does</span>
+<span class='co'># calculate generic metrics 'area per class' and 'area per landscape', 'obj' does</span>
 <span class='co'># not need to be specified per operator in the algorithm, as 'measure' assigns it.</span>
 <span class='no'>myMetrics</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>a_c</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>),
-                  <span class='kw'>a_w</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"window"</span>))
+                  <span class='kw'>a_l</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"landscape"</span>))
 (<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; $a_c
 #&gt;   class result
 #&gt; 1     1     37
@@ -216,18 +213,18 @@ created, where the resulting values are associated to the correct ids
 #&gt; 8    44    453
 #&gt; 9    47    544
 #&gt; 
-#&gt; $a_w
-#&gt;   window result
-#&gt; 1      1   3360
+#&gt; $a_l
+#&gt;   landscape result
+#&gt; 1         1   3360
 #&gt; </div><div class='input'>
 <span class='co'># calculate 'class proportional area' and 'larges patch index'</span>
 <span class='co'># 1) define the terms (generic metrics) that are needed to compute the metrics</span>
 <span class='co'># 2) define the equations that are used based on these terms</span>
 <span class='no'>myMetrics</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>a_p</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>),
                   <span class='kw'>a_c</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>),
-                  <span class='kw'>a_w</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"window"</span>),
-                  <span class='kw'>mCPA</span> <span class='kw'>=</span> <span class='st'>"a_c / a_w * 100"</span>,
-                  <span class='kw'>mLPI</span> <span class='kw'>=</span> <span class='st'>"max(a_p) / a_w * 100"</span>)
+                  <span class='kw'>a_l</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"landscape"</span>),
+                  <span class='kw'>mCPA</span> <span class='kw'>=</span> <span class='st'>"a_c / a_l * 100"</span>,
+                  <span class='kw'>mLPI</span> <span class='kw'>=</span> <span class='st'>"max(a_p) / a_l * 100"</span>)
 (<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>, <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; $a_p
 #&gt;    class patch result
 #&gt; 1      1     1     37
@@ -295,9 +292,9 @@ created, where the resulting values are associated to the correct ids
 #&gt; 8    44    453
 #&gt; 9    47    544
 #&gt; 
-#&gt; $a_w
-#&gt;   window result
-#&gt; 1      1   3360
+#&gt; $a_l
+#&gt;   landscape result
+#&gt; 1         1   3360
 #&gt; 
 #&gt; $mCPA
 #&gt; [1]  1.10  3.10  8.36 15.09 13.87 12.11 16.70 13.48 16.19
@@ -321,8 +318,8 @@ created, where the resulting values are associated to the correct ids
 #&gt; 7    40 46.37
 #&gt; 
 #&gt; [[2]]
-#&gt;   window  mLPI
-#&gt; 1      1 15.71
+#&gt;   landscape  mLPI
+#&gt; 1         1 15.71
 #&gt; </div><div class='input'>
 # set of spatial operations that enables more complex metrics
 # derive 'Disjunct Cores Density', which is a rather complex metric

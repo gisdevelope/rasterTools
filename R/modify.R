@@ -156,11 +156,15 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             theMask <- out[[which(names(out) == tempAlgorithm[[k]]$mask)]]
           } else{
             theMask <- get(tempAlgorithm[[k]]$mask, envir = .GlobalEnv)
+            if(dim(theMask)[3] > 1){
+              theMask <- theMask[[1]]
+            }
           }
+          tempAlgorithm[[k]]$mask <- theMask
         } else if(testClass(tempAlgorithm[[k]]$mask, "RasterLayer")){
           theMask <- tempAlgorithm[[k]]$mask
         } else{
-          stop(paste0("please provide either the name of a layer or a RasterLayer as 'mask' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
+          stop(paste0("please provide either the name of a layer in 'input' or a RasterLayer as 'mask' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
         }
       } else{
         theMask <- NULL
@@ -173,9 +177,13 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             theOverlay <- out[[which(names(out) == tempAlgorithm[[k]]$overlay)]]
           } else{
             theOverlay <- get(tempAlgorithm[[k]]$overlay, envir = .GlobalEnv)
+            if(dim(theOverlay)[3] > 1){
+              theOverlay <- theOverlay[[1]]
+            }
           }
+          tempAlgorithm[[k]]$overlay <- theOverlay
         } else if(!testClass(tempAlgorithm[[k]]$overlay, "RasterLayer")){
-          stop(paste0("please provide either the name of a layer or a RasterLayer as 'overlay' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
+          stop(paste0("please provide either the name of a layer in 'input' or a RasterLayer as 'overlay' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
         }
       } else{
         theOverlay <- NULL
@@ -184,9 +192,18 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
       # set the correct groups raster
       if(tempAlgorithm[[k]]$operator == "rSegregate"){
         if(is.character(tempAlgorithm[[k]]$by)){
-          theGroups <- out[[which(names(out) == tempAlgorithm[[k]]$by)]]
+          if(any(names(out) == tempAlgorithm[[k]]$by)){
+            theGroups <- out[[which(names(out) == tempAlgorithm[[k]]$by)]]
+          } else{
+            theGroups <- get(tempAlgorithm[[k]]$by, envir = .GlobalEnv)
+            if(dim(theGroups)[3] > 1){
+              theGroups <- theGroups[[1]]
+            }
+          }
           tempAlgorithm[[k]]$by <- theGroups
         }
+      } else{
+        theGroups <- NULL
       }
       
       # set a switch to reduce layers
@@ -198,8 +215,7 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
       
       for(i in seq_along(tempObjs)){
         thisObj <- tempObjs[[i]]
-        thisOverlay <- theOverlay[[i]]
-        
+
         # if the object has more than one layer and reduce != TRUE, go
         # through each layer separately; if reduce == TRUE, treat the
         # multiple layer raster as one, because rReduce expects several
@@ -228,18 +244,6 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
           tempObjs[[i]] <- thisObj
           
         } else{
-          
-          if(!is.null(theMask)){
-            if(dim(theMask)[3] > 1){
-              tempAlgorithm[[k]]$mask <- theMask[[1]]
-              warning("only the first element of 'mask' was utilized.")
-            } else{
-              tempAlgorithm[[k]]$mask <- theMask
-            }
-          }
-          if(!is.null(theOverlay)){
-            tempAlgorithm[[k]]$overlay <- thisOverlay
-          }
           
           modifiedObj <- do.call(what = tempAlgorithm[[k]]$operator,
                                  args = c(obj = list(thisObj), tempAlgorithm[[k]][-1]))

@@ -23,14 +23,22 @@ The following is a list of all the topics covered so far:
 * Morphological operations
     + [Open foreground](#morph_open)
     + [Close foreground](#morph_close)
+    + Determine sharpness of a boundary
       
 * Identify features/objects
     + [Media axis transform](#identify_mat)
     + [Openings/Perforations](#openings)
     + [Signature points in a skeleton](#signature_points_skel)
-    
+    + Identify core/ecotone habitat
+    + Identify boundaries
+    + Identify corridors
+    + Identify interrupted corridors
+    + Identify parallel structures
+    + Identify openings that are connected to the background (e.g. clearcuts)
+
 * Classify values
     + [Click into a map (cf HistMapR)](#class_colours_click)
+    + Classify boundaries
 
 * Distance Maps
     + [Distance map of centroids per patch](#dist_centroid)

@@ -42,16 +42,16 @@ A second group of landscape metrics, which are called  *derived metrics* in `ras
 
     list(myMetric = list(operator = "mMetric", scale = "patch"))  # generic metric
     list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
-         term2 = list(operator = "mMetric2", scale = "window"),
+         term2 = list(operator = "mMetric2", scale = "landscape"),
          myMetric = "term1 / term2 * 100")
          
 An algorithm to be used in `measure()` can also contain several derived metrics, which makes sense when several derived metrics depend on a similar set of generic metrics:
 
     myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
-                      a_w = list(operator = "mArea", scale = "window"),
+                      a_l = list(operator = "mArea", scale = "landscape"),
                       a_p = list(operator = "mArea", scale = "patch"),
-                      mCPA = "a_c / a_w * 100",
-                      mLPI = "max(a_p) / a_w * 100")
+                      mCPA = "a_c / a_l * 100",
+                      mLPI = "max(a_p) / a_l * 100")
 
 ## The dependence structure of landscape metrics
 The following graph shows the relationship of all metrics defined in @mcgarigal_fragstats_2015. This is followed by a section outlining details about the generic metrics and a list containing details and the equations of derived metrics.
@@ -157,7 +157,7 @@ Reference: @mcgarigal_fragstats_2015
 
 Description: 
 
-Level of measurement: 
+Level of measurement:
 
     mValues(...)
 
@@ -208,13 +208,13 @@ Level of measurement: Class
 Internal name: class proportional area (CPA)
 
 \begin{equation} 
-  CPA = \frac{A_C}{A_W} \cdot 100
+  CPA = \frac{A_C}{A_L} \cdot 100
 \end{equation}
-with $A_{C}$ = [Area](#mArea) of a class, $A_W$ = [Area](#mArea) of the window
+with $A_{C}$ = [Area](#mArea) of a class, $A_L$ = [Area](#mArea) of the landscape
 
     list(a_c = list(operator = "mArea", scale = "class"),
-         a_w = list(operator = "mArea", scale = "window"),
-         mCPA = "a_c / a_w * 100")
+         a_l = list(operator = "mArea", scale = "landscape"),
+         mCPA = "a_c / a_l * 100")
 
 Unit: $\%$
 
@@ -238,13 +238,13 @@ Level of measurement: Landscape
 Internal name: largest patch index (LPI)
 
 \begin{equation} 
-  LPI = \frac{max(A_{P})}{A_W} \cdot 100
+  LPI = \frac{max(A_{P})}{A_L} \cdot 100
 \end{equation}
-with $max(A_{P})$ = [Area](#mArea) of the largest patch, $A_W$ = [Area](#mArea) of the window
+with $max(A_{P})$ = [Area](#mArea) of the largest patch, $A_L$ = [Area](#mArea) of the landscape
 
-    list(a_w = list(operator = "mArea", scale = "window"),
+    list(a_l = list(operator = "mArea", scale = "landscape"),
          a_p = list(operator = "mArea", scale = "patch"),
-         mLPI = "max(a_p) / a_w * 100")
+         mLPI = "max(a_p) / a_l * 100")
     
 Unit: $\%$
 
@@ -293,22 +293,18 @@ Reference:
 
 Description: Length of edges per hectare of the landscape window.
 
-Level of measurement: Patch, Class
+Level of measurement: Class, Landscape
 
 Internal name: density of edges (DE)
 
 \begin{equation} 
-  DE = \frac{P_{X}}{A_W} \cdot 10000
+  DE = \frac{P_{X}}{A_L} \cdot 10000
 \end{equation}
-with $P_{X}$ = [Perimeter](#mPerimeter) of a patch or class, $A_W$ = [Area](#mArea) of the window
-
-    list(p_p = list(operator = "mPerimeter", scale = "patch"),
-         a_w = list(operator = "mArea", scale = "window"),
-         mDE = "p_p / a_w * 10000")
+with $P_{X}$ = [Perimeter](#mPerimeter) of a patch or class, $A_L$ = [Area](#mArea) of the landscape
 
     list(p_c = list(operator = "mPerimeter", scale = "class"),
-         a_w = list(operator = "mArea", scale = "window"),
-         mDEc = "p_c / a_w * 10000")
+         a_l = list(operator = "mArea", scale = "landscape"),
+         mDE = "p_c / a_l * 10000")
 
 Unit: $m\,ha^{-1}$
 
@@ -380,7 +376,7 @@ Range: $0 < PLA ≤ 100$
 
 Interpretation: 
 
-Limitations: Lower values indicate higher disaggregation, where 0 means that each patch is a single cell. Hiher values indicate higher aggregation, where 100 means that the complete window is filled with this patch.
+Limitations: Lower values indicate higher disaggregation, where 0 means that each patch is a single cell. Hiher values indicate higher aggregation, where 100 means that the complete landscape is filled with this patch.
 
 Employed in the derived metrics: 
 
@@ -398,13 +394,13 @@ Level of measurement: Class, Landscape
 Internal name: density of patches (DP)
 
 \begin{equation} 
-  DP = \frac{N_P}{A_W} \cdot 10000
+  DP = \frac{N_P}{A_L} \cdot 10000
 \end{equation}
-with $N_P$ = [Number](#mNumber) of patches, $A_W$ = [Area](#mArea) of the window
+with $N_P$ = [Number](#mNumber) of patches, $A_L$ = [Area](#mArea) of the landscape
 
     list(n_p = list(operator = "mNumber", scale = "patch"),
-         a_w = list(operator = "mArea", scale = "window"),
-         mDP = "n_p / a_w * 10000")
+         a_l = list(operator = "mArea", scale = "landscape"),
+         mDP = "n_p / a_l * 10000")
 
 Unit: $n\,ha^{-1}$
 

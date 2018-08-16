@@ -54,9 +54,6 @@
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -115,8 +112,8 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>You might find <code>rasterTools</code> useful when your work depends in one way or the other on gridded earth observation data <span class="citation">(Bush et al. <a href="#ref-bush_connecting_2017">2017</a>)</span>. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.</p>
-<p><code>rasterTools</code> does NOT intend to replace <code>raster</code> <span class="citation">(Hijmans <a href="#ref-hijmans_raster_2017">2017</a>)</span> but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into <em>operators</em> (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In <code>rasterTools</code> the four functions <code><a href="../reference/obtain.html">obtain()</a></code>, <code><a href="../reference/generate.html">generate()</a></code>, <code><a href="../reference/modify.html">modify()</a></code> and <code><a href="../reference/measure.html">measure()</a></code> represent the major tasks of spatial operations. <code>rasterTools</code> has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, “loading the MODIS dataset” is oursourced to a seperate function (the <code><a href="../reference/oMODIS.html">oMODIS()</a></code> operator). New operators to all the core functions and to <code><a href="../reference/loadData.html">loadData()</a></code> can hence be devised easily.</p>
+<p>You might find <code>rasterTools</code> useful when your work depends in one way or the other on earth observation data <span class="citation">(Bush et al. <a href="#ref-bush_connecting_2017">2017</a>)</span>. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.</p>
+<p><code>rasterTools</code> does NOT intend to replace <code>raster</code> <span class="citation">(Hijmans <a href="#ref-hijmans_raster_2017">2017</a>)</span> but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into <em>operators</em> (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In <code>rasterTools</code> the four functions <code><a href="../reference/obtain.html">obtain()</a></code>, <code><a href="../reference/generate.html">generate()</a></code>, <code><a href="../reference/modify.html">modify()</a></code> and <code><a href="../reference/measure.html">measure()</a></code> represent the major tasks of spatial operations. <code>rasterTools</code> has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, “loading the MODIS dataset” is oursourced to a seperate function (the <code><a href="../reference/oMODIS.html">oMODIS()</a></code> operator). New operators to all the core functions and to <code><a href="../reference/loadData.html">loadData()</a></code> can hence be devised easily.</p>
 <p>Several operators are combined to <em>algorithms</em> to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in <code>rasterTools</code> is given as list of lists.</p>
 <pre><code>algo_name &lt;- list(list(operator1),
                   list(operator2))
@@ -157,7 +154,7 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 #&gt; coord. ref.  : NA
 #&gt; variables    : 1  (id)</code></pre>
 <p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> funciton. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
-<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
+<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to and from other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
 </div>
 </div>
 <div id="example-workflow" class="section level1">
@@ -193,9 +190,9 @@ myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</code></pre></div>
 <p>(output here not shown as it may download the datasets, if you do not have them yet)</p>
 </div>
-<div id="modify-gridded-objects" class="section level2">
+<div id="modify-raster-objects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modify-gridded-objects" class="anchor"></a>Modify gridded objects</h2>
+<a href="#modify-raster-objects" class="anchor"></a>Modify raster objects</h2>
 <p>A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
                     <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</code></pre></div>
@@ -211,13 +208,13 @@ myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/m
 <span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
-<div id="measure-gridded-objects" class="section level2">
+<div id="measure-raster-objects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#measure-gridded-objects" class="anchor"></a>Measure gridded objects</h2>
+<a href="#measure-raster-objects" class="anchor"></a>Measure raster objects</h2>
 <p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
 myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>))
+                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>))
 <span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
 <span class="co">#&gt; $a_c</span>
 <span class="co">#&gt;   class result</span>
@@ -231,19 +228,19 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <span class="co">#&gt; 8    44    453</span>
 <span class="co">#&gt; 9    47    544</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $a_w</span>
-<span class="co">#&gt;   window result</span>
-<span class="co">#&gt; 1      1   3360</span></code></pre></div>
-<p>The so defined <em>terms</em> are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the <em>Class proportional area</em> is the class areas divided by the window area:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
+<span class="co">#&gt; $a_l</span>
+<span class="co">#&gt;   landscape result</span>
+<span class="co">#&gt; 1         1   3360</span></code></pre></div>
+<p>The so defined <em>terms</em> are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the <em>Class proportional area</em> is the class areas divided by the landscape area:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
                  <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_w * 100"</span>)</code></pre></div>
+                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>)</code></pre></div>
 <p>Several derived metrics can be defined in one algorithm, given the required terms are defined:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_p =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>),
                   <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_w =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"window"</span>),
-                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_w * 100"</span>,
-                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_w * 100"</span>)</code></pre></div>
+                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
+                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>,
+                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_l * 100"</span>)</code></pre></div>
 <p>The generic metrics <code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code> are available. Equations for the derived metrics can be found in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette (and with increasing version numbers more of them, for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code>). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
 <p>Finally, the measurement of the <em>class proportional area</em> and the <em>largest patch index</em>, in a raster where patches have been determined, would be carried out by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
@@ -260,8 +257,8 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <span class="co">#&gt; 9    47 16.19</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;   window mLPI</span>
-<span class="co">#&gt; 1      1 8.81</span></code></pre></div>
+<span class="co">#&gt;   landscape mLPI</span>
+<span class="co">#&gt; 1         1 8.81</span></code></pre></div>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">
@@ -298,8 +295,8 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <a href="#example-workflow">Example workflow</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#generate-spatial-patterns">Generate spatial patterns</a></li>
       <li><a href="#obtain-spatial-datasets">Obtain spatial datasets</a></li>
-      <li><a href="#modify-gridded-objects">Modify gridded objects</a></li>
-      <li><a href="#measure-gridded-objects">Measure gridded objects</a></li>
+      <li><a href="#modify-raster-objects">Modify raster objects</a></li>
+      <li><a href="#measure-raster-objects">Measure raster objects</a></li>
       </ul>
 </li>
       <li><a href="#acknowledgements">Acknowledgements</a></li>

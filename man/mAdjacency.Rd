@@ -7,7 +7,7 @@
 mAdjacency(obj, type = "like", count = "double", layer = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to measure.}
+\item{obj}{[\code{Raster*(1)}]\cr The object to measure.}
 
 \item{type}{[\code{character(1)}]\cr which type of adjacencies to calculate;
 either \code{"like"} adjacencies between cells of the same value,
@@ -39,7 +39,7 @@ In case \code{type = "like"}, only the diagonal of the adjacency
 cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
-# couble count like adjacencies
+# double count like adjacencies
 mAdjacency(obj = cat)
 
 # paired adjacencies

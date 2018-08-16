@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-You might find `rasterTools` useful when your work depends in one way or the other on gridded earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
+You might find `rasterTools` useful when your work depends in one way or the other on earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
 
-`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with gridded data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain gridded datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
 
 Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in `rasterTools` is given as list of lists.
 
@@ -64,7 +64,7 @@ window <- data.frame(x = c(0, 80),
 
 The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` funciton. The foreign methods have been defined for the sake of internal consistency and simplification.
 
-Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to other spatial classes have been programmed (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
+Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to and from other spatial classes have been programmed (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
 
 
 # Example workflow
@@ -105,7 +105,7 @@ myData <- obtain(data = myDatasets, mask = myMask)
 
 (output here not shown as it may download the datasets, if you do not have them yet)
 
-## Modify gridded objects
+## Modify raster objects
 A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:
 
 ```{r}
@@ -134,22 +134,22 @@ visualise(raster::stack(myInput, myPatches))
 ```
 
 
-## Measure gridded objects
+## Measure raster objects
 Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
 
 ```{r}
 myInput <- rtData$categorical
 myMetrics <- list(a_c = list(operator = "mArea", scale = "class"),
-                  a_w = list(operator = "mArea", scale = "window"))
+                  a_l = list(operator = "mArea", scale = "landscape"))
 measure(input = myInput, with = myMetrics)
 ```
 
-The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the window area:
+The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the landscape area:
 
 ```{r}
-myMetric <- list(a_w = list(operator = "mArea", scale = "window"),
+myMetric <- list(a_l = list(operator = "mArea", scale = "landscape"),
                  a_c = list(operator = "mArea", scale = "class"),
-                 mCPA = "a_c / a_w * 100")
+                 mCPA = "a_c / a_l * 100")
 ```
 
 Several derived metrics can be defined in one algorithm, given the required terms are defined:
@@ -157,9 +157,9 @@ Several derived metrics can be defined in one algorithm, given the required term
 ```{r}
 myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   a_c = list(operator = "mArea", scale = "class"),
-                  a_w = list(operator = "mArea", scale = "window"),
-                  mCPA = "a_c / a_w * 100",
-                  mLPI = "max(a_p) / a_w * 100")
+                  a_l = list(operator = "mArea", scale = "landscape"),
+                  mCPA = "a_c / a_l * 100",
+                  mLPI = "max(a_p) / a_l * 100")
 ```
 
 The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
