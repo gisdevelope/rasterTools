@@ -51,7 +51,6 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
                          mCPA = "a_c / a_l * 100")
         measure(input = myInput, with = myMetrics)
 
-
 ## Planned for future versions
 - Support of the Sentinel (high prio), Landsat and Lidar datasets.
 

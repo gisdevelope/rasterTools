@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain data from the Atlas of European Mammals. — oEMMA • rasterTools</title>
+<title>Obtain data from the European Atlas of Forest Tree Species — oEFTA • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,13 @@
 
 
 
-<meta property="og:title" content="Obtain data from the Atlas of European Mammals. — oEMMA" />
+<meta property="og:title" content="Obtain data from the European Atlas of Forest Tree Species — oEFTA" />
 
-<meta property="og:description" content="Obtain occurence data of mammals in Europe of the first EMMA
-dataset." />
+<meta property="og:description" content="Obtain presence and habitat suitability
+data
+from the
+European
+Atlas of Forest Tree Species" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -87,6 +90,9 @@ dataset." />
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
+    <li>
+      <a href="../articles/contribute.html">Best practices to contribute</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -131,22 +137,24 @@ dataset." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Obtain data from the Atlas of European Mammals.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/oEMMA.R'><code>R/oEMMA.R</code></a></small>
-    <div class="hidden name"><code>oEMMA.Rd</code></div>
+    <h1>Obtain data from the European Atlas of Forest Tree Species</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/oEFTA.R'><code>R/oEFTA.R</code></a></small>
+    <div class="hidden name"><code>oEFTA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Obtain occurence data of mammals in Europe of the first EMMA
-<a href='https://www.european-mammals.org/'>dataset</a>.</p>
+    <p>Obtain presence and habitat suitability
+<a href='http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/atlas-data-and-metadata/'>data</a>
+from the
+<a href='http://forest.jrc.ec.europa.eu/european-atlas-of-forest-tree-species/'>European
+Atlas of Forest Tree Species</a></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>inclMeta</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>oEFTA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"rpp"</span>)
 
-<span class='fu'>downloadEMMA</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>getGrids</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keepGrids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>downloadEFTA</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,19 +166,14 @@ the extent is the area of interest.</p></td>
     </tr>
     <tr>
       <th>species</th>
-      <td><p>[<code>character(.)</code>]<br /> name(s) of species to get occurrence
-for. Can be abbreviated if a <code><a href='catalog.html'>catalog</a></code> is provided.</p></td>
+      <td><p>[<code>character(.)</code>]<br /> name(s) of species to get data for.
+Can be abbreviated if a <code><a href='catalog.html'>catalog</a></code> is provided.</p></td>
     </tr>
     <tr>
-      <th>version</th>
-      <td><p>[<code>integerish(1)</code>]<br /> The version of the <em>Atlas of
-European Mammals</em>; the recent version is 1, but an update is in the making.</p></td>
-    </tr>
-    <tr>
-      <th>inclMeta</th>
-      <td><p>[<code>logical(1)</code>]<br /> output merely the occurence data
-(<code>FALSE</code>, default), or output additionally metadata on the species
-(<code>TRUE</code>)?</p></td>
+      <th>type</th>
+      <td><p>[<code>character(1)</code>]<br /> the dataset type, either <code>"rpp"</code>
+(relative probability of presence) or <code>"mhs"</code> (maximum habitat
+suitability).</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -181,52 +184,36 @@ European Mammals</em>; the recent version is 1, but an update is in the making.<
       <td><p>[<code>character(1)</code>]<br /> the local path where files are
 supposed to be stored (i.e. on your harddisc).</p></td>
     </tr>
-    <tr>
-      <th>getGrids</th>
-      <td><p>[<code>character(1)</code>]<br /> the online path to the gridfiles of
-the EMMA project; stored under <code>rtPaths$emma$gridLinks</code></p></td>
-    </tr>
-    <tr>
-      <th>keepGrids</th>
-      <td><p>[<code>logic(1)</code>]<br /> should the the downloaded and seperate
-gridfiles be stored (<code>TRUE</code>), or should merely the overall European
-grid be stored (<code>FALSE</code>, default)?</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data-frame of the species of interest occuring in the area outlined
-  by <code>mask</code>.</p>
+    <p>bla</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The website <a href='http://www.european-mammals.org/'>Societas
-  Europaea Mammalogica</a> kindly offers maps of the ocurrence of all mammals in
-  Europe, which are parsed by <code>oEMMA</code>. See <code><a href='load_svg.html'>load_svg</a></code> for a
-  technical explanation.</p>
-<p>The occurrence data are recorded and stored on a grid of 50 x 50 km. This
-  is the same grid as used for the
-  <a href='http://www.luomus.fi/en/new-grid-system-atlas-florae-europaeae'>Atlas
-  Florae Europaeae</a>.</p>
-<p>The dataset <code><a href='meta_emma.html'>meta_emma</a></code> lists all available species.</p>
+    <p>https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
+  https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre</p>  
+<p>mention that values are integers and not "probabilities" between 0 and 1)</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     <ul>
-<li><p><code>downloadEMMA</code>: function to download data related to the EMMA dataset</p></li>
+<li><p><code>downloadEFTA</code>: function to download data related to the EMMA dataset</p></li>
 </ul>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
-  P, Spitzenberger F, Stubbe M, Thissen J, Vohralík V and Zima J (1999). The
-  Atlas of European Mammals. Academic Press, London</p>
+    <p>de Rigo, D., Caudullo, G., Houston Durrant, T., San-Miguel-Ayanz,
+  J., 2016. The European Atlas of Forest Tree Species: modelling, data and
+  information on forest tree species. In: San-Miguel-Ayanz, J., de Rigo, D.,
+  Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of
+  Forest Tree Species. Publ. Off. EU, Luxembourg, pp.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other obtain operators: <code><a href='oCLC.html'>oCLC</a></code>,
-  <code><a href='oEFTA.html'>oEFTA</a></code>, <code><a href='oGFC.html'>oGFC</a></code>,
+  <code><a href='oEMMA.html'>oEMMA</a></code>, <code><a href='oGFC.html'>oGFC</a></code>,
   <code><a href='oMODIS.html'>oMODIS</a></code>, <code><a href='oWCLIM.html'>oWCLIM</a></code></p></div>
     
 
@@ -240,20 +227,10 @@ grid be stored (<code>FALSE</code>, default)?</p></td>
   <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
 
-<span class='no'>mySpecies</span> <span class='kw'>&lt;-</span> <span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
-                   <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Apodemus agrarius"</span>,
-                               <span class='st'>"Apodemus flavicollis"</span>,
-                               <span class='st'>"Vulpes vulpes"</span>))
-
-<span class='co'># Subset from a large set of files using an index</span>
-<span class='no'>abbr_species</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-  <span class='fu'>tolower</span>(<span class='fu'>paste</span>(<span class='fu'>substr</span>(<span class='fu'>unlist</span>(<span class='fu'>strsplit</span>(<span class='no'>x</span>, <span class='st'>' '</span>)), <span class='fl'>1</span>, <span class='fl'>3</span>), <span class='kw'>collapse</span> <span class='kw'>=</span> <span class='st'>'_'</span>))
-}
-<span class='no'>mySpecies</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='catalog.html'>catalog</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>rtPaths</span>$<span class='no'>emma</span>$<span class='no'>local</span>,
-                   <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>'svg'</span>, <span class='kw'>abbr</span> <span class='kw'>=</span> <span class='no'>abbr_species</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>subset</span>(<span class='no'>abbr</span> <span class='kw'>%in%</span> <span class='fu'>c</span>(<span class='st'>"apo_agr"</span>, <span class='st'>"apo_fla"</span>, <span class='st'>"vul_vul"</span>)) <span class='kw'>%$%</span>
-  <span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='no'>original</span>)
-
+<span class='co'># extract data for the derived mask</span>
+<span class='no'>myTrees</span> <span class='kw'>&lt;-</span> <span class='fu'>oEFTA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
+                 <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Quercus robur"</span>, <span class='st'>"Alnus incana"</span>, <span class='st'>"Betula sp"</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myTrees</span>$<span class='no'>`Betula sp`</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

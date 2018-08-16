@@ -11,13 +11,14 @@
   \item{\code{temporal_granularity}}{the number of days between two
   data-files} \item{\code{pixel_size}}{the spatial resolution, i.e. the size
   of one raster cell} \item{\code{sds_layer_name}}{the machine-readable name
-  of the layer} \item{\code{description}}{a human-readable description of the
-  layer} \item{\code{units}}{the unit in which the data are saved}
+  of the layer} \item{\code{description_raw}}{a human-readable description of
+  the layer} \item{\code{units}}{the unit in which the data are saved}
   \item{\code{data_type}}{bit number which determines the length of the
-  values} \item{\code{fill_min}}{minimum fill value}
-  \item{\code{fill_max}}{maximum fill value} \item{\code{valid_min}}{the
+  values} \item{\code{fill}}{the fill value} \item{\code{valid_min}}{the
   minimum valid value} \item{\code{valid_max}}{the maximum valid value}
-  \item{\code{correction_factor}}{a correction factor}}}
+  \item{\code{scaling_factor}}{a correction factor} \item{start_terra}{the
+  launch date for the Terra satellite} \item{start_aqua}{the launch date for
+  the Aqua satellite}}}
 \usage{
 meta_modis
 }
