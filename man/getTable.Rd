@@ -4,11 +4,14 @@
 \name{getTable}
 \alias{getTable}
 \alias{getTable,geom-method}
+\alias{getTable,RasterLayer-method}
 \title{Get the table (generic)}
 \usage{
 getTable(x, ...)
 
 \S4method{getTable}{geom}(x)
+
+\S4method{getTable}{RasterLayer}(x)
 }
 \arguments{
 \item{x}{the object from which to derive the attribute table.}
@@ -21,5 +24,7 @@ Get the table (generic)
 \section{Methods (by class)}{
 \itemize{
 \item \code{geom}: get the attribute table (including coordinates) of a \code{geom}
+
+\item \code{RasterLayer}: get the attribute table (including coordinates) of a \code{RasterLayer}
 }}
 

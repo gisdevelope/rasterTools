@@ -34,6 +34,19 @@ setMethod(f = "getTable",
             x@table
           })
 
+#' @describeIn getTable get the attribute table (including coordinates) of a \code{RasterLayer}
+#' @export
+
+setMethod(f = "getTable",
+          signature = "RasterLayer",
+          definition = function(x){
+            if(length(r@data@attributes) == 0){
+              data.frame()
+            } else{
+              x@data@attributes[[1]]
+            }
+          })
+
 #' @describeIn getWindow get the reference window of a \code{geom}
 #' @export
 
