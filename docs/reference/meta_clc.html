@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the table (generic) — getTable • rasterTools</title>
+<title>Metadata of the Corine Land Cover dataset — meta_clc • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Get the table (generic) — getTable" />
+<meta property="og:title" content="Metadata of the Corine Land Cover dataset — meta_clc" />
 
-<meta property="og:description" content="Get the table (generic)" />
+<meta property="og:description" content="Metadata of the Corine Land Cover dataset" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -133,53 +133,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the table (generic)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/generics.R'><code>R/generics.R</code></a>, <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
-    <div class="hidden name"><code>getTable.Rd</code></div>
+    <h1>Metadata of the Corine Land Cover dataset</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>meta_clc.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get the table (generic)</p>
+    <p>Metadata of the Corine Land Cover dataset</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getTable</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='no'>meta_clc</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-<span class='co'># S4 method for geom</span>
-<span class='fu'>getTable</span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for RasterLayer</span>
-<span class='fu'>getTable</span>(<span class='no'>x</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>the object from which to derive the attribute table.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>other arguments.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
-
-    <ul>
-<li><p><code>geom</code>: get the attribute table (including coordinates) of a <code>geom</code></p></li>
-<li><p><code>RasterLayer</code>: get the attribute table (including coordinates) of a <code>RasterLayer</code></p></li>
-</ul>
+    <p>The <code>data.frame</code> with 4 variables and 44 entries contains
+  meta-data for the classes of land cover in the clc dataset.</p><dl class='dl-horizontal'>
+  <dt><code>level1</code></dt><dd><p>level 1 description of the land cover class</p></dd>
+  <dt><code>level2</code></dt><dd><p>level 2 description of the land cover class</p></dd>
+  <dt><code>clc_code</code></dt><dd><p>numeric code of the level 3 description</p></dd>
+  <dt><code>level3</code></dt><dd><p>most detailed description of the land cover class</p></dd></dl>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#methods-by-class-">Methods (by class)</a></li>
+      <li><a href="#format">Format</a></li>
           </ul>
 
   </div>
