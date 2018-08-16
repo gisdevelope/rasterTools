@@ -36,6 +36,16 @@
 #'   the Aqua satellite}}
 "meta_modis"
 
+#' Metadata of the Corine Land Cover dataset
+#'
+#' @format The \code{data.frame} with 4 variables and 44 entries contains
+#'   meta-data for the classes of land cover in the clc dataset. \describe{
+#'   \item{\code{level1}}{level 1 description of the land cover class}
+#'   \item{\code{level2}}{level 2 description of the land cover class}
+#'   \item{\code{clc_code}}{numeric code of the level 3 description}
+#'   \item{\code{level3}}{most detailed description of the land cover class}}
+"meta_clc"
+
 #' Metadata of the EMMA datasets
 #'
 #' @format The \code{data.frame} with 5 variables and 245 entries contains

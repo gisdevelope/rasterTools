@@ -32,7 +32,7 @@
 #' }
 #' @importFrom checkmate testClass assertIntegerish assertTRUE
 #' @importFrom sp spTransform proj4string
-#' @importFrom raster stack crop projectRaster colortable
+#' @importFrom raster stack crop projectRaster colortable levels
 #' @export
 
 oCLC <- function(mask = NULL, years = NULL){
@@ -43,6 +43,8 @@ oCLC <- function(mask = NULL, years = NULL){
   assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
+  
+  labels <- meta_clc
 
   # transform crs of the mask to the dataset crs
   target_crs <- getCRS(x = mask)
@@ -62,7 +64,7 @@ oCLC <- function(mask = NULL, years = NULL){
     message(paste0("I am handling the clc datasets of the year '", years[i], "':"))
     fileName <- paste0( "g100_", substr(years[i], start = nchar(years[i])-1, stop = nchar(years[i])), ".tif")
     tempObject <- loadData(files = fileName, dataset = "clc")
-    cols <- colortable(tempObject)[-1]
+    outCols <- colortable(tempObject)[-1]
 
     history <- c(history, paste0(tempObject@history, " for the year ", years[i], ""))
 
@@ -79,9 +81,14 @@ oCLC <- function(mask = NULL, years = NULL){
       tempObject <- setCRS(x = tempObject, crs = target_crs, method = "ngb")
       history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
     }
-
-    # set colourtable
-    tempObject@legend@colortable <- cols
+    
+    # create and set RAT table
+    tempObject <- ratify(tempObject)
+    tempLvls <- levels(tempObject)[[1]]
+    levels(tempObject) <- cbind(tempLvls, labels[rat$ID,])
+    
+    # set colortable
+    tempObject@legend@colortable <- outCols
 
     # add up all upcoming years
     clc_out <- stack(clc_out, tempObject)

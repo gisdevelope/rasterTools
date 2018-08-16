@@ -52,6 +52,6 @@
 # internal rasterTools data
 globalVariables(c("rtPaths", "rtData", "theme_rt"))
 # meta data
-globalVariables(c("meta_modis", "meta_emma", "meta_efta"))
+globalVariables(c("meta_modis", "meta_clc", "meta_emma", "meta_efta"))
 # projections
 globalVariables(c("projs"))
