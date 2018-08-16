@@ -32,7 +32,7 @@
 #' }
 #' @importFrom checkmate testClass assertIntegerish assertTRUE
 #' @importFrom sp spTransform proj4string
-#' @importFrom raster stack crop projectRaster colortable levels
+#' @importFrom raster stack crop projectRaster colortable unique
 #' @export
 
 oCLC <- function(mask = NULL, years = NULL){
@@ -83,9 +83,9 @@ oCLC <- function(mask = NULL, years = NULL){
     }
     
     # create and set RAT table
-    tempObject <- ratify(tempObject)
-    tempLvls <- levels(tempObject)[[1]]
-    levels(tempObject) <- cbind(tempLvls, labels[rat$ID,])
+    tempObject@data@isfactor <- TRUE
+    ids <- unique(tempObject)
+    tempObject@data@attributes <- list(data.frame(id = ids, labels[ids,]))
     
     # set colortable
     tempObject@legend@colortable <- outCols

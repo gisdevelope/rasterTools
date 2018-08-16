@@ -39,6 +39,7 @@
 #' visualise(gridded = myTrees$`Betula sp`, trace = TRUE)
 #' }
 #' @importFrom checkmate testClass
+#' @importFrom raster crop unique
 #' @export
 
 oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
@@ -56,27 +57,19 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   }
   assertSubset(type, choices = c("rpp", "mhs"))
   
-  YGBl <- rtPalette(c("#fcf0d400", "#e8f5c3ff", "#bfe361ff", "#7abd2aff", "#438532ff", "#16301bff", "#050707ff", "#050707ff"), 
-                    steps = c(5, 5, 20, 20, 20, 20, 10))
-  rppCols <- c(YGBl(100), rep("#000000", 155))
-  
-  mhsCols <- c("#EAF3E6", "#E8F1E3", "#E6F0E1", "#E4EEDF", "#E3EDDD", "#E1ECDB",
-               "#DFEAD9", "#DDE9D7", "#DBE8D4", "#DAE6D2", "#D8E5D0", "#D6E3CE",
-               "#D4E2CC", "#D3E1CA", "#D1DFC8", "#CFDEC6", "#CEDDC3", "#CCDBC1",
-               "#CADABF", "#C8D8BD", "#C6D7BB", "#C5D6B9", "#C3D4B7", "#C1D3B5",
-               "#C0D2B2", "#BED0B0", "#BCCFAE", "#BACEAC", "#B9CCAA", "#B7CBA8",
-               "#B5C9A6", "#B3C8A3", "#B2C7A1", "#B0C59F", "#AEC49D", "#ACC39B",
-               "#ABC199", "#A9C097", "#A7BE95", "#A5BD92", "#A3BC90", "#A2BA8E",
-               "#A0B98C", "#9EB88A", "#9DB688", "#9BB586", "#99B384", "#97B281",
-               "#95B17F", "#94AF7D", "#92AE7B", "#90AD79", "#8FAB77", "#8DAA75",
-               "#8BA972", "#89A770", "#87A66E", "#86A46C", "#84A36A", "#82A268",
-               "#81A066", "#7F9F64", "#7D9E61", "#7B9C5F", "#799B5D", "#78995B",
-               "#769859", "#749757", "#729555", "#719453", "#6F9350", "#6D914E",
-               "#6C904C", "#6A8E4A", "#688D48", "#668C46", "#648A44", "#638941",
-               "#61883F", "#5F863D", "#5D853B", "#5C8439", "#5A8237", "#588135",
-               "#577F33", "#557E30", "#537D2E", "#517B2C", "#507A2A", "#4E7928",
-               "#4C7726", "#4A7624", "#497422", "#47731F", "#45721D", "#43701B",
-               "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 154))
+  if(type == "rpp"){
+    steps <- c(5, 5, 20, 20, 20, 20, 10)
+    labels <- rep(c("marginal", "low", "mid-low", "medium", "mid-high", "high", "very-high"), steps)
+    efta_palette <- rtPalette(colors = c("#fcf0d400", "#e8f5c3ff", "#bfe361ff", "#7abd2aff", "#438532ff", "#16301bff", "#050707ff", "#050707ff"), 
+                              steps = steps)
+    outCols <- c(efta_palette(100), rep("#000000", 155))
+  } else{
+    # steps <- c(, , , , , )
+    # labels <- rep(c("negligible", "low", "mid-low", "medium", "mid-high", "high"), steps)
+    # efta_palette <- rtPalette(colors = c("#", "#", "#", "#", "#", "#", "#", "#"), 
+    #                           steps = steps)
+    # outCols <- c(efta_palette(100), rep("#000000", 155))
+  }
   
   # transform crs of the mask to the dataset crs
   if(maskIsSpatial){
@@ -129,11 +122,17 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
     }
     tempObject <- round(tempObject*100)
     
+    # create and set RAT table
+    tempObject@data@isfactor <- TRUE
+    ids <- unique(tempObject)
     if(type == "rpp"){
-      tempObject@legend@colortable <- rppCols
+      tempObject@data@attributes <- list(data.frame(id = ids, presence = labels[ids+1]))
     } else{
-      tempObject@legend@colortable <- mhsCols
+      tempObject@data@attributes <- list(data.frame(id = ids, suitability = labels[ids+1]))
     }
+    
+    # set colortable
+    tempObject@legend@colortable <- outCols
     
     names(tempObject) <- sub(thisSpecies, pattern = " ", replacement = "_")
     efta_out <- c(efta_out, setNames(list(tempObject), thisSpecies))

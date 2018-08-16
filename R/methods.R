@@ -40,7 +40,7 @@ setMethod(f = "getTable",
 setMethod(f = "getTable",
           signature = "RasterLayer",
           definition = function(x){
-            if(length(r@data@attributes) == 0){
+            if(length(x@data@attributes) == 0){
               data.frame()
             } else{
               x@data@attributes[[1]]
