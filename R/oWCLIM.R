@@ -111,61 +111,70 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   }
   
   # transform crs of the mask to the dataset crs
-  target_crs <- getCRS(x = mask)
-  if(target_crs != projs$longlat){
-    mask <- setCRS(x = mask, crs = projs$longlat)
-  }
-  theExtent <- getExtent(x = mask)
-  
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
+  targetCRS <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
   
-  # manage file names  
-  if(version == 1.4){
-    if(resolution == 2.5){
-      resolution <- "2-5m"
-    } else if(resolution == 0.5){
-      resolution <- "30s"
-      if(variable == "bio"){
-        variable <- c("bio1-9", "bio10-19")
-      }
-    } else{
-      resolution <- paste0(resolution, "m")
-    }
-    fileNames <- paste0(variable, "_", formatC(month, width = 2, format = "d", flag = "0"), "_", resolution, ".bil")
+  if(targetCRS != projs$longlat){
+    mask <- setCRS(x = mask, crs = projs$longlat)
+    targetExtent <- setCRS(theExtent, crs = projs$longlat)
   } else{
-    if(resolution == 0.5){
-      resolution <- 30
-      fileNames <- paste0("wc2.0_", resolution, "s_", variable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+    targetExtent <- theExtent
+  }
+  
+  wc_out <- list()
+  for(i in seq_along(variable)){
+    
+    thisVariable <- variable[i]
+    
+    # manage file names  
+    if(version == 1.4){
+      if(resolution == 2.5){
+        resolution <- "2-5m"
+      } else if(resolution == 0.5){
+        resolution <- "30s"
+        if(thisVariable == "bio"){
+          thisVariable <- c("bio1-9", "bio10-19")
+        }
+      } else{
+        resolution <- paste0(resolution, "m")
+      }
+      fileNames <- paste0(thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), "_", resolution, ".bil")
     } else{
-      fileNames <- paste0("wc2.0_", resolution, "m_", variable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+      if(resolution == 0.5){
+        tempRes <- 30
+        fileNames <- paste0("wc2.0_", tempRes, "s_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+      } else{
+        fileNames <- paste0("wc2.0_", resolution, "m_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+      }
     }
+    
+    history <- list()
+    message(paste0("I am handling the worldclim variable '", thisVariable, "':"))
+    tempObject <- stack(loadData(files = fileNames, dataset = "wclim", localPath = rtPaths$worldclim$local))
+    history <- c(history, paste0(tempObject[[1]]@history))
+    
+    message("  ... cropping to targeted study area.")
+    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    history <-  c(history, list(paste0("object has been cropped")))
+    names(tempObject) <- paste0(thisVariable, "_", month.abb[month])
+    
+    # reproject
+    if(getCRS(mask) != targetCRS){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      message(paste0("  ... reprojecting to '", crs_name, "'."))
+      tempObject <- setCRS(x = tempObject, crs = targetCRS)
+      tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
+    }
+    
+    tempObject@history <- history
+    
+    wc_out <- c(wc_out, setNames(list(tempObject), thisVariable))
   }
-  
-  history <- list()
-  message(paste0("I am handling the worldclim variable '", variable, "':"))
-  tempObject <- stack(loadData(files = fileNames, dataset = "wclim", localPath = rtPaths$worldclim$local))
-  history <- c(history, paste0(tempObject[[1]]@history))
-  # tempObject <- setCRS(x = tempObject, crs = projs$longlat)
-  
-  message("  ... cropping to targeted study area.")
-  wc_out <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-  history <-  c(history, list(paste0("object has been cropped")))
-  names(wc_out) <- paste0(variable, "_", month.abb[month])
-  
-  # reproject
-  if(getCRS(mask) != target_crs){
-    crs_name <- strsplit(target_crs, " ")[[1]][1]
-    message(paste0("  ... reprojecting to '", crs_name, "'."))
-    mask <- setCRS(x = mask, crs = target_crs)
-    wc_out <- setCRS(x = wc_out, crs = target_crs)
-    tempExtent <- getExtent(x = mask)
-    wc_out <- crop(wc_out, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
-  }
-  
-  wc_out@history <- history
   
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)

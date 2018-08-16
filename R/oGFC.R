@@ -152,9 +152,8 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     tempObject <- setNames(tempObject, layerNames)
     history <- c(history, paste0(tempObject[[1]]@history, " with the grid ID '", gridId, "'"))
 
-    targetExtent <- getExtent(x = targetExtent)
     message("  ... cropping to targeted study area")
-    tempObject <- crop(tempObject, targetExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been cropped")))
 
     allObjects <- c(allObjects, list(tempObject))
@@ -175,8 +174,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     crs_name <- strsplit(targetCRS, " ")[[1]][1]
     message(paste0("  ... reprojecting to '", crs_name))
     gfc_out <- setCRS(x = gfc_out, crs = targetCRS, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    tempExtent <- getExtent(x = theExtent)
-    gfc_out <- crop(gfc_out, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    gfc_out <- crop(gfc_out, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
   }
 
