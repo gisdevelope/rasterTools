@@ -60,7 +60,7 @@ myMask <- loadData(files = "aWindow.csv",
 # extract data for the derived mask
 myTrees <- oEFTA(mask = myMask,
                  species = c("Quercus robur", "Alnus incana", "Betula sp"))
-visualise(gridded = myTrees$`Betula sp`, trace = TRUE)
+visualise(gridded = myTrees, trace = TRUE)
 }
 }
 \references{
