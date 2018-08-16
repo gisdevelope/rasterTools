@@ -3,9 +3,9 @@
 \name{oEMMA}
 \alias{oEMMA}
 \alias{downloadEMMA}
-\title{Obtain data of European mammals.}
+\title{Obtain data from the Atlas of European Mammals.}
 \usage{
-oEMMA(mask, species, version = 1, inclMeta = FALSE)
+oEMMA(mask = NULL, species = NULL, version = 1, inclMeta = FALSE)
 
 downloadEMMA(file = NULL, localPath = NULL, getGrids = NULL,
   keepGrids = FALSE)
@@ -96,6 +96,6 @@ Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
 }
 \seealso{
 Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oGFC}}, \code{\link{oMODIS}},
-  \code{\link{oWCLIM}}
+  \code{\link{oEFTA}}, \code{\link{oGFC}},
+  \code{\link{oMODIS}}, \code{\link{oWCLIM}}
 }

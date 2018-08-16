@@ -66,11 +66,9 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
                    version = 2){
   
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSpatial <- testClass(mask, classes = "Spatial")
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   assertCharacter(variable, any.missing = FALSE, min.len = 1)
   assertSubset(variable, choices = c("tmean", "tavg", "tmin", "tmax", "prec", "bio", "alt"))
   assertIntegerish(month, lower = 1, upper = 12, any.missing = FALSE, min.len = 1)
@@ -119,7 +117,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   }
   theExtent <- getExtent(x = mask)
   
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
   
@@ -146,13 +144,12 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   }
   
   history <- list()
-  message(paste0("I am handling the worldclim variable '", variable, "':\n"))
+  message(paste0("I am handling the worldclim variable '", variable, "':"))
   tempObject <- stack(loadData(files = fileNames, dataset = "wclim", localPath = rtPaths$worldclim$local))
-  
   history <- c(history, paste0(tempObject[[1]]@history))
   # tempObject <- setCRS(x = tempObject, crs = projs$longlat)
   
-  message("  ... cropping to targeted study area.\n")
+  message("  ... cropping to targeted study area.")
   wc_out <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
   history <-  c(history, list(paste0("object has been cropped")))
   names(wc_out) <- paste0(variable, "_", month.abb[month])
@@ -160,11 +157,11 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   # reproject
   if(getCRS(mask) != target_crs){
     crs_name <- strsplit(target_crs, " ")[[1]][1]
-    message(paste0("  ... reprojecting to '", crs_name, "'.\n"))
+    message(paste0("  ... reprojecting to '", crs_name, "'."))
     mask <- setCRS(x = mask, crs = target_crs)
-    wc_out <- setCRS(x = wc_out, crs = target_crs, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    theExtent <- getExtent(x = mask)
-    wc_out <- crop(wc_out, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    wc_out <- setCRS(x = wc_out, crs = target_crs)
+    tempExtent <- getExtent(x = mask)
+    wc_out <- crop(wc_out, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
   }
   

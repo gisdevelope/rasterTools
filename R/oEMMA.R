@@ -1,4 +1,4 @@
-#' Obtain data of European mammals.
+#' Obtain data from the Atlas of European Mammals.
 #'
 #' Obtain occurence data of mammals in Europe of the first EMMA
 #' \href{https://www.european-mammals.org/}{dataset}.
@@ -24,7 +24,7 @@
 #'   The dataset \code{\link{meta_emma}} lists all available species.
 #' @return A data-frame of the species of interest occuring in the area outlined
 #'   by \code{mask}.
-#' @references  Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
+#' @references Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
 #'   P, Spitzenberger F, Stubbe M, Thissen J, Vohralík V and Zima J (1999). The
 #'   Atlas of European Mammals. Academic Press, London
 #' @family obtain operators
@@ -60,24 +60,19 @@
 #' @importFrom rgeos gIntersects gConvexHull
 #' @export
 
-oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
+oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
-  isDFSpecies <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
-  if(isDFSpecies){
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
+  speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
+  if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
     species <- species$original
   } else{
     assertCharacter(species)
   }
-  isVectorSpecies <- testVector(species, strict = TRUE, min.len = 1, any.missing = FALSE)
   assertIntegerish(version, any.missing = FALSE, len = 1)
   assertLogical(inclMeta, any.missing = FALSE, len = 1)
 
@@ -92,7 +87,7 @@ oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
   if(target_crs != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
   }
-
+  
   # this will download the AFE grids and assemble them to an overal european grid
   message(paste0("I am handling the European AFE grid:"))
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
@@ -100,7 +95,7 @@ oEMMA <- function(mask, species, version = 1, inclMeta = FALSE){
                          localPath = rtPaths$emma$local)
   tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
   message("  ... done\n")
-  if(existsGeom){
+  if(maskIsGeom){
     mask <- gToSp(mask)
   }
 
