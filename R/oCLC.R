@@ -32,21 +32,19 @@
 #' }
 #' @importFrom checkmate testClass assertIntegerish assertTRUE
 #' @importFrom sp spTransform proj4string
-#' @importFrom raster stack crop projectRaster colortable
+#' @importFrom raster stack crop projectRaster colortable unique
 #' @export
 
 oCLC <- function(mask = NULL, years = NULL){
 
   # check arguments
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
+  
+  labels <- meta_clc
 
   # transform crs of the mask to the dataset crs
   target_crs <- getCRS(x = mask)
@@ -54,7 +52,7 @@ oCLC <- function(mask = NULL, years = NULL){
     mask <- setCRS(x = mask, crs = projs$laea)
   }
   theExtent <- getExtent(x = mask)
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
 
@@ -66,7 +64,7 @@ oCLC <- function(mask = NULL, years = NULL){
     message(paste0("I am handling the clc datasets of the year '", years[i], "':"))
     fileName <- paste0( "g100_", substr(years[i], start = nchar(years[i])-1, stop = nchar(years[i])), ".tif")
     tempObject <- loadData(files = fileName, dataset = "clc")
-    cols <- colortable(tempObject)[-1]
+    outCols <- colortable(tempObject)[-1]
 
     history <- c(history, paste0(tempObject@history, " for the year ", years[i], ""))
 
@@ -83,9 +81,14 @@ oCLC <- function(mask = NULL, years = NULL){
       tempObject <- setCRS(x = tempObject, crs = target_crs, method = "ngb")
       history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
     }
-
-    # set colourtable
-    tempObject@legend@colortable <- cols
+    
+    # create and set RAT table
+    tempObject@data@isfactor <- TRUE
+    ids <- unique(tempObject)
+    tempObject@data@attributes <- list(data.frame(id = ids, labels[ids,]))
+    
+    # set colortable
+    tempObject@legend@colortable <- outCols
 
     # add up all upcoming years
     clc_out <- stack(clc_out, tempObject)

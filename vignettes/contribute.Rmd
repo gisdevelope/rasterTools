@@ -22,10 +22,7 @@ Many of the code-chunks of this documentation are written in so-called pseudocod
 
 `rasterTools` builds largely on the framework of the [`checkmate`](https://cran.r-project.org/web/packages/checkmate/index.html) package so that arguments are properly tested. This makes the source code very verbose but helps to maintain consistency.
 
-# Generate spatial patterns
-*Coming soon*
-
-# Obtain spatial datasets
+# Build the operator
 ## *tl;dr*
 - use `checkmate`
 - take proper care of the projection, `mask` provides the target projection, after loading and cropping the data reproject to this projection.
@@ -40,37 +37,32 @@ Each operator for the `obtain()`-function has at least the argument `mask` but m
 ```{r, eval=FALSE}
 oDATASET <- function(mask, ARG){
   
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSpatial <- assert(testClass(mask, classes = "SpatialPolygon"),
-                          testClass(mask, classes = "SpatialPolygonsDataFrame"))
-  # existsSF <- testClass(mask, classes = "...") for a "simple features" object
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSpatial <- testClass(mask, classes = "Spatial")
+  assert(maskIsGeom, maskIsSpatial)
   assertXZY(ARG)
-  # assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
 ```
 
-The arguments would typically reflect characteristics of the dataset, which could be seen as the distinctive for the subsets of this dataset. This is, for instance, the 'year' in case of the Corine land-cover dataset, which provides a distinct map for each of the years 1990, 2000, 2006 and 2012, or the 'product' and 'layer' in case of a MODIS dataset. You can define as many of these arguments as needed.
+The arguments would typically reflect characteristics of the dataset, which could be seen as distinctive for the subsets of this dataset. This is, for instance, the 'year' in case of the Corine land-cover dataset or the 'product' and 'layer' in case of a MODIS dataset. You can define as many of these arguments as needed.
 
 ## Handle projection
 We must handle the projection of the involved files, to avoid accidently building on spatial objects with the wrong coordinate reference system. Controlling the projection is crucial, as problems with the projection of one out of many files may already lead to problems that are hard to trace back. `rasterTools` comes with various functions that are able to handle more than one class, socalled generic functions and class specific methods. One pair of such functions is `getCRS()` and `setCRS()`, which can handle both `Spatial*` and `geom` objects (and in the future also `sf`). This means that we can use simple code statements and can avoid the "diverse beauty" of the various spatial packages that are recently out there.
 
-The object defined in `mask` provides the target projection the user wants to work with, so we take the `target_crs` from this mask. However, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. `rasterTools` includes the dataset `projs` in which some of the most frequent projections are stored, but you can of course use any other [proj4](http://proj4.org/) string.
+The object defined in `mask` provides the target projection the user wants to work with, so we take `targetCrs` and `targetExtent` from this mask. Next, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. `rasterTools` includes the dataset `projs` in which some of the most frequent projections are stored, but you can of course use any other [proj4](http://proj4.org/) string.
 
 ```{r, eval=FALSE}
-  target_crs <- getCRS(x = mask)
-  if(target_crs != projs$laea){
-    mask <- setCRS(x = mask, crs = projs$laea)
-  }
-  theExtent <- getExtent(x = mask)
-```
-
-In case the mask is not of class `geom`, we want to create this class:
-
-```{r, eval=FALSE}
-  if(existsSpatial){
+  if(maskIsSpatial){
     mask <- gFrom(input = mask)
+  }
+  targetCRS <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
+  
+  if(targetCRS != projs$laea){
+    mask <- setCRS(x = mask, crs = projs$laea)
+    targetExtent <- setCRS(theExtent, crs = projs$laea)
+  } else{
+    targetExtent <- theExtent
   }
 ```
 
@@ -128,20 +120,21 @@ Once we have determined the spatial subset of the data we are interested in, we 
 ```
 
 ## Load and crop raster
-As some of the spatial operations may take up a large quantity of time, `rasterTools` is designed so that it always gives feedback about what it is doing at the moment. For that purpose the `message()` function is employed throughout in combination with `paste0()` (a slightly more efficient wrapper of `paste()` with `sep = ''` on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise. Again, the `oGFC()`  function handles this in the following way
+As some of the spatial operations may take up a large quantity of time, `rasterTools` is designed so that it always gives feedback about what it is doing at the moment. For that purpose the `message()` function is employed throughout in combination with `paste0()` (a slightly more efficient wrapper of `paste()` with `sep = ''` on default). The feedback should of course not overload the user but give informative feedback, so be brief and concise. Again, the `oGFC()`  function handles this in the following way.
 
 ```{r, eval=FALSE}
-message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':\n"))
-tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
+    message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':\n"))
+    tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
 ```
 
-Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. The function `loadData()` is comparable to the four core functions in that it is a wrapper that calls other functions depending on its input. In the case of the GFC dataset, the spatial data are stored in the *tif* format. `loadData()` calls the file-type specific loaders, for instance `load_tif()`, which contains all the code logic that is required to load the respective format. In case you want to handle a format or which such a function is not yet defined, see [below](#loaders).
+Feedback for an action should always come directly before the action is carried out. This assures that no other, maybe time-costly, operation interfers with it. The function `loadData()` is comparable to the four core functions in that it is a wrapper that calls other functions depending on its input. In the case of the GFC dataset, the spatial data are stored in the *tif* format. `loadData()` calls the file-type specific loaders, for instance `load_tif()`, which contains all the code logic that is required to load the respective format. In case you want to handle a format of which such a function is not yet defined, see [below](#loaders).
 
-In most cases you want to crop the overall dataset to `mask`, or actually its extent. The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.
+In most cases you want to crop the overall dataset to `mask`, or actually the extent of mask (`targetExtent`). The smaller the spatial objects, the faster computation involving them can be carried out. It is no problem to overwrite a object with a cropped version of itself, since the original object usually has no other purpose other than selecting a subset of it. Overwriting these potentially large spatial files is thus a memory friendly option of which you should take advantage.
 
 ```{r, eval=FALSE}
-message("  ... cropping to targeted study area.\n")
-tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+    targetExtent <- getExtent(x = targetExtent)
+    message("  ... cropping to targeted study area.\n")
+    tempObject <- crop(tempObject, targetExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
 ```
 
 ## Merge multiple tiles
@@ -153,13 +146,17 @@ tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format
 
 
 ## Reproject
-As a final step of operations on the spatial data you should reproject the output. If a user wants to include various different datasets in one analysis, all the datasets should have the same projection. `rasterTools` assumes that this is the projection the initial `mask` had. Hence, `tDATASET` should be reprojected to this crs.
+As a final step of operations on the spatial data you should reproject the output. If a user wants to include various different datasets in one analysis, all the datasets should have the same projection. `rasterTools` assumes that this is the projection of the initial `mask`. Hence, `tempObject` should be reprojected to `targetCRS`.
 
 ```{r, eval=FALSE}
-            if(proj4string(mask) != target_crs){
-              cat(paste0("reprojecting tDATASET to '", strsplit(target_crs, " ")[[1]][1], "'\n"))
-              tDATASET <- projectRaster(tDATASET, crs = target_crs, ...)
-            }
+    if(getCRS(mask) != targetCRS){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      message(paste0("  ... reprojecting to '", crs_name))
+      tempObject <- setCRS(x = tempObject, crs = targetCRS)
+      theExtent <- getExtent(x = theExtent)
+      tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
+    }
 ```
 
 ## Postprocessing
@@ -171,64 +168,9 @@ As a final step of operations on the spatial data you should reproject the outpu
 
 ```
 
+# Loading the data into R {#loaders}
 
-# Modify gridded objects
-*wip*
-
-Each operator that modifies a raster has at least the argument `obj`, which denotes the raster that shall be modified. Most computations in `rasterTools` are performed on matrix objects and thus the first thing is to define a matrix from the raster. Often, also the values of this raster are of interest and in that case you would assign them to a variable early on.
-
-    rMODIFY <- function(obj, ARG){
-      mat <- as.matrix(obj)
-      vals <- values(obj)
-      
-Next, a computation is carried out. In case the computation is based on a specifically formated raster, for example a binarised one, this should be tested and a respective error should be thrown. In most cases it is preferable to interrupt a computation that has not been strictly outlined over wasting time on deriving flawed results.
-
-      if(!isBinaryC(mat)){
-        stop("spatial object is not binary, please run 'rBinarise()' initially.")
-      }
-      temp <- ...
-
-As you have carried out the computations with a matrix, you have to transfer the matrix back to a `raster`. You would use the spatial information of `obj` to reconstruct the exact dimensions and coordinate reference system (CRS). In very rare cases the new raster's dimensions have changed and in this case also the extent and CRS must be adapted computationally.
-
-      out <- raster(temp)
-      extent(out) <- extent(obj)
-      sp::proj4string(out) <- sp::proj4string(obj)
-
-Each `raster` object has the slot `@history` and `rasterTools` takes advantage of that. This slot is recently not used by the raster package and hence you can fill it with information. `rasterTools` expects here a list of all the operations that have been carried out with the raster. So you would either specify here that the raster was just loaded from the memory, which is the default that needs to be assigned to any raster that has an unknown history (in the eyes of `rasterTools`, that is). Otherwise, extract the `@history` slot and concatenate an informative but concise sentence about what your algorithm has done to the raster.
-
-The `visualise()` function has been conceptualised so that it can print the history of a raster. This may be a rather helpful tool when putting together complex spatial operations or when reporting the procedure according to which a raster has been created. Moreover, to increase the awareness of the user with which raster one deals, you should also assign a `SHORT_NAME` to the raster. This will be printed as panel name by `visualise()`.
-
-      if(length(obj@history)==0){
-        history <- list(paste0("object loaded from memory"))
-      } else{
-        history <- obj@history
-      }
-      out@history <- c(history, list(paste0("THIS HAS BEEN DONE")))
-
-      names(out) <- paste0("SHORT_NAME")
-      
-Finally the raster would be returned.
-
-      return(out)
-    }
-
-
-# Measure gridded objects
-All the generic metrics already come with `rasterTools` so there is no need to contribute, other than suggesting bug fixes or requesting new features.
-
-That being said, derived metrics are deliberately constructed so that everybody can easiy contribute and write their own "function". In that case, however, mathematical functions. A derived landscape metric in `rasterTools` is nothing more than the mathematical equation that relates several properties of the raster, which are measured by generic metrics (terms). Hence, one simply has to define the terms and outline the equation that shall be used to compute the metric.
-
-```{r, eval=FALSE}
-list(term1 = list(operator = "mArea", scale = "patch"),
-     term2 = list(operator = "mArea", scale = "window"),
-     newMetric = "term1 / term2 * 100")
-```
-         
-If you want to contribute to the collection of derived metrics listed in the [landscape metrics](articles/landscape_metrics.html) vignette, simply edit that file and create a pull request, or let the author of `rasterTools` know about your addition via E-Mail.
-
-# Loading spatial data into R {#loaders}
-
-Also `loadData()` is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function `loadData()` contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective `load*` and `download*` functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into `R` can be handled by `loadData()`, given the respective wrapper has been defined.
+`loadData()` is designed in a modular way to provide flexibility, in case other dataset formats should become important in the (near) future. The function is designed so that it determines the files that should be loaded, based on what is specified in its arguments. The function `loadData()` contains all the logic that is needed to handle a file without having to determine the actual format. All the logic that depends on the structure of files with that format or other requirements that come with the format is then outsourced to the respective `load*` and `download*` functions. These classes can, however, be very slim wrappers around the actual function that loads the format. In the end this means that virtually any file format that can be loaded into `R` can be handled by `loadData()`, given the respective wrapper has been defined.
 
 ## `load*`
 Each class should be able to take an argument `path`, the exact location of the file to load. Optionally, for instance when the file is saved in the `shp` format, the argument `layer` declares these details.
@@ -308,4 +250,4 @@ if(is.null(getOption("bibliography"))){
 }
 ```
 
-This will ensure that the algorithm your function is based upon is properly included when it is used in a computation that should be published.
+This will ensure that the dataset your function is based upon is properly included when it is used in a computation that should be published.
