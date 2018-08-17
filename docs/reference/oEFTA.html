@@ -90,9 +90,6 @@ Atlas of Forest Tree Species" />
     <li>
       <a href="../articles/landscape_metrics.html">Landscape metrics</a>
     </li>
-    <li>
-      <a href="../articles/contribute.html">Best practices to contribute</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -161,8 +158,8 @@ Atlas of Forest Tree Species</a></p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>SpatialPolygon*</code>]<br /> spatial object of which
-the extent is the area of interest.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object of which the
+extent is the area of interest.</p></td>
     </tr>
     <tr>
       <th>species</th>
@@ -192,9 +189,15 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
-  https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre</p>  
-<p>mention that values are integers and not "probabilities" between 0 and 1)</p>
+    <p>The object provided in <code>mask</code> is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.</p>
+<p>The values in this dataset are originally stored as values in the
+  range of 0 and 1 (the probability of presence). Here they are transformed
+  to integer factors from 0 to 100.</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
@@ -229,8 +232,9 @@ supposed to be stored (i.e. on your harddisc).</p></td>
 
 <span class='co'># extract data for the derived mask</span>
 <span class='no'>myTrees</span> <span class='kw'>&lt;-</span> <span class='fu'>oEFTA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
-                 <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Quercus robur"</span>, <span class='st'>"Alnus incana"</span>, <span class='st'>"Betula sp"</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myTrees</span>$<span class='no'>`Betula sp`</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+                 <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Quercus robur"</span>, <span class='st'>"Alnus incana"</span>,
+                             <span class='st'>"Pinus sylvestris"</span>, <span class='st'>"Betula sp"</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myTrees</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

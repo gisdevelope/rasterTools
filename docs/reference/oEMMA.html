@@ -153,8 +153,8 @@ dataset." />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>SpatialPolygon*</code>]<br /> spatial object of which
-the extent is the area of interest.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object of which the
+extent is the area of interest.</p></td>
     </tr>
     <tr>
       <th>species</th>
@@ -201,7 +201,13 @@ grid be stored (<code>FALSE</code>, default)?</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The website <a href='http://www.european-mammals.org/'>Societas
+    <p>The object provided in <code>mask</code> is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.</p>
+<p>The website <a href='http://www.european-mammals.org/'>Societas
   Europaea Mammalogica</a> kindly offers maps of the ocurrence of all mammals in
   Europe, which are parsed by <code>oEMMA</code>. See <code><a href='load_svg.html'>load_svg</a></code> for a
   technical explanation.</p>

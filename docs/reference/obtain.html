@@ -156,8 +156,7 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>SpatialPolygon*</code>]<br /> spatial object of which
-the extent is the area of interest.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /></p></td>
     </tr>
     </table>
     
@@ -184,12 +183,17 @@ the extent is the area of interest.</p></td>
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in <code>rtPaths</code> (see
   <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
-<p>Recently supported datasets are:</p><ul>
-<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover data (European)</p></li>
-<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Occurence data of the <em>Atlas of European Mammals</em></p></li>
-<li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change dataset</p></li>
+<p>Recently supported datasets are</p><ul>
+<li><p>Global:</p><ul>
+<li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change</p></li>
 <li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS products</p></li>
-<li><p><code><a href='oWCLIM.html'>oWCLIM</a></code>: Worldclim dataset</p></li>
+<li><p><code><a href='oWCLIM.html'>oWCLIM</a></code>: Worldclim</p></li>
+</ul></li>
+<li><p>European:</p><ul>
+<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover</p></li>
+<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Mammal occurence in the <em>Atlas of European Mammals</em></p></li>
+<li><p><code><a href='oEFTA.html'>oEFTA</a></code>: Tree presence and habitat suitability in the <em>European Atlas of Forest Tree Species</em></p></li>
+</ul></li>
 </ul>
     
 
