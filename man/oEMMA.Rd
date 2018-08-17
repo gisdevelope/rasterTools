@@ -11,8 +11,8 @@ downloadEMMA(file = NULL, localPath = NULL, getGrids = NULL,
   keepGrids = FALSE)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
+extent is the area of interest.}
 
 \item{species}{[\code{character(.)}]\cr name(s) of species to get occurrence
 for. Can be abbreviated if a \code{\link{catalog}} is provided.}
@@ -45,6 +45,13 @@ Obtain occurence data of mammals in Europe of the first EMMA
 \href{https://www.european-mammals.org/}{dataset}.
 }
 \details{
+The object provided in \code{mask} is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to \code{\link{obtain}}, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.
+
 The website \href{http://www.european-mammals.org/}{Societas
   Europaea Mammalogica} kindly offers maps of the ocurrence of all mammals in
   Europe, which are parsed by \code{oEMMA}. See \code{\link{load_svg}} for a

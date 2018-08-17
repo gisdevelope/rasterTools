@@ -11,8 +11,8 @@ oWCLIM(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5,
 downloadWCLIM(file = NULL, localPath = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
+extent is the area of interest.}
 
 \item{variable}{[\code{character(.)}]\cr the climatic variable of interest;
 see Details to find which variables are available in which version.}
@@ -37,6 +37,13 @@ Obtain data from the 'worldclim' \href{http://worldclim.org/}{dataset}
 \href{https://doi.org/10.1002/joc.5086}{paper2}).
 }
 \details{
+The object provided in \code{mask} is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to \code{\link{obtain}}, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.
+
 \itemize{\item Version 1.4 includes the variables:\itemize{ \item
   \code{"tmin"}: average monthly minimum temperature [°C * 10], \item
   \code{"tmax"}: average monthly maximum temperature [°C * 10], \item

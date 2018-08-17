@@ -11,8 +11,7 @@ obtain(data = NULL, mask = NULL)
 spatial datasets are specified. Each \code{operator} is a list iteself and
 includes the operator name and its arguments as sub-elements; see Examples.}
 
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr}
 }
 \value{
 A list of objects that is organised according to the stratification
@@ -40,12 +39,17 @@ and online resources.
   might be necessary to specify new paths in \code{rtPaths} (see
   \code{\link{updatePaths}}).
 
-  Recently supported datasets are: \itemize{
-    \item \code{\link{oCLC}}: Corine Land Cover data (European)
-    \item \code{\link{oEMMA}}: Occurence data of the \emph{Atlas of European Mammals}
-    \item \code{\link{oGFC}}: Global Forest Change dataset
-    \item \code{\link{oMODIS}}: MODIS products
-    \item \code{\link{oWCLIM}}: Worldclim dataset
+  Recently supported datasets are \itemize{
+  \item Global: \itemize{
+     \item \code{\link{oGFC}}: Global Forest Change
+     \item \code{\link{oMODIS}}: MODIS products
+     \item \code{\link{oWCLIM}}: Worldclim
+  }
+  \item European: \itemize{
+     \item \code{\link{oCLC}}: Corine Land Cover
+     \item \code{\link{oEMMA}}: Mammal occurence in the \emph{Atlas of European Mammals}
+     \item \code{\link{oEFTA}}: Tree presence and habitat suitability in the \emph{European Atlas of Forest Tree Species}
+  }
   }
 }
 \examples{

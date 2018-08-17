@@ -12,8 +12,8 @@ downloadMODIS(file = NULL, localPath = NULL, getDates = NULL,
   getFiles = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
+extent is the area of interest.}
 
 \item{period}{[\code{integerish(.)}]\cr year of interest (YYYY), optionally
 concatenated to day of the year (DDD), which must be between \code{001} and
@@ -58,6 +58,13 @@ A \code{RasterLayer} or \code{RasterStack} of MODIS data.
 Obtain data from various MODIS \href{https://modis.gsfc.nasa.gov/}{datasets}.
 }
 \details{
+The object provided in \code{mask} is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to \code{\link{obtain}}, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.
+
 The period can either be given as a single value if only one year is
   of interest, or as two values, the start and end date. If you do not
   specify DDD, it will be set to "001" and "366" for start and end year

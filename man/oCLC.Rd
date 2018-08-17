@@ -7,8 +7,8 @@
 oCLC(mask = NULL, years = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
+extent is the area of interest.}
 
 \item{years}{[\code{integerish(.)}]\cr year(s) for which CLC data should be
 extracted; see Details.}
@@ -22,6 +22,13 @@ Obtain data from the 'Corine Land Cover'
 (currently you have to download it manually).
 }
 \details{
+The object provided in \code{mask} is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to \code{\link{obtain}}, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.
+
 The CLC data dataset is available for the years 1990, 2000, 2006 and
   2012. It covers 45 land cover classes for many European countries. It was
   compiled by the European Environmental Agency.

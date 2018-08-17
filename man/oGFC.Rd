@@ -10,8 +10,8 @@ oGFC(mask = NULL, years = NULL, keepRaw = FALSE)
 downloadGFC(file = NULL, localPath = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{SpatialPolygon*}]\cr spatial object of which
-the extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
+extent is the area of interest.}
 
 \item{years}{[\code{integerish(.)}]\cr year(s) for which GFC data should be
 extracted; see Details.}
@@ -34,6 +34,13 @@ Obtain data from the 'Global Forest Change'
 (\href{https://doi.org/10.1126/science.1244693}{paper}).
 }
 \details{
+The object provided in \code{mask} is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to \code{\link{obtain}}, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.
+
 The GFC dataset is based on a time-series analysis of Landsat images
   characterizing forest extent and change.
 

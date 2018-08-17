@@ -17,10 +17,11 @@
 #'   information on forest tree species. In: San-Miguel-Ayanz, J., de Rigo, D.,
 #'   Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of
 #'   Forest Tree Species. Publ. Off. EU, Luxembourg, pp.
-#' @details https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/*
-#'   https://w3id.org/mtv/FISE/map-data-RPP/v0-3-2/internet/Acer-campestre
-#'   
-#'   mention that values are integers and not "probabilities" between 0 and 1)
+#' @details The values in this dataset are originally stored as values in the
+#'   range of 0 and 1 (the probability of presence). Here they are transformed
+#'   to integer values from 0 to 100. Moreover, the values are turned into
+#'   factors and the output is assigned a colourtable that reflects these
+#'   factors. Each output raster thus contains a attribute table
 #' @family obtain operators
 #' @examples
 #' \dontrun{
@@ -36,7 +37,7 @@
 #' # extract data for the derived mask
 #' myTrees <- oEFTA(mask = myMask,
 #'                  species = c("Quercus robur", "Alnus incana", "Betula sp"))
-#' visualise(gridded = myTrees$`Betula sp`, trace = TRUE)
+#' visualise(gridded = myTrees, trace = TRUE)
 #' }
 #' @importFrom checkmate testClass
 #' @importFrom raster crop unique
