@@ -19,9 +19,7 @@
 #'   Forest Tree Species. Publ. Off. EU, Luxembourg, pp.
 #' @details The values in this dataset are originally stored as values in the
 #'   range of 0 and 1 (the probability of presence). Here they are transformed
-#'   to integer values from 0 to 100. Moreover, the values are turned into
-#'   factors and the output is assigned a colourtable that reflects these
-#'   factors. Each output raster thus contains a attribute table
+#'   to integer factors from 0 to 100.
 #' @family obtain operators
 #' @examples
 #' \dontrun{
@@ -36,7 +34,8 @@
 #'
 #' # extract data for the derived mask
 #' myTrees <- oEFTA(mask = myMask,
-#'                  species = c("Quercus robur", "Alnus incana", "Betula sp"))
+#'                  species = c("Quercus robur", "Alnus incana", 
+#'                              "Pinus sylvestris", "Betula sp"))
 #' visualise(gridded = myTrees, trace = TRUE)
 #' }
 #' @importFrom checkmate testClass
@@ -131,6 +130,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
     } else{
       tempObject@data@attributes <- list(data.frame(id = ids, suitability = labels[ids+1]))
     }
+    tempObject@history <- history
     
     # set colortable
     tempObject@legend@colortable <- outCols

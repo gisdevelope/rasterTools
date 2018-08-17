@@ -42,6 +42,10 @@ The object provided in \code{mask} is treated as a single mask,
   area of interest. This is in contrast to \code{\link{obtain}}, where a mask
   may consist of several features, each of which are treated as seperate
   mask.
+
+The values in this dataset are originally stored as values in the
+  range of 0 and 1 (the probability of presence). Here they are transformed
+  to integer factors from 0 to 100.
 }
 \section{Functions}{
 \itemize{
@@ -61,7 +65,8 @@ myMask <- loadData(files = "aWindow.csv",
 
 # extract data for the derived mask
 myTrees <- oEFTA(mask = myMask,
-                 species = c("Quercus robur", "Alnus incana", "Betula sp"))
+                 species = c("Quercus robur", "Alnus incana", 
+                             "Pinus sylvestris", "Betula sp"))
 visualise(gridded = myTrees, trace = TRUE)
 }
 }
