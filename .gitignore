@@ -35,4 +35,8 @@ inst/doc
 ToDo.txt
 myBib.bib
 ToDo_functions.R
+
+# stuff that gets created while testing
 tests/testthatmyBib.bib
+tests/testthat/Rplots.pdf
+tests/testthat/myBib.bib
