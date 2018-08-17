@@ -40,7 +40,7 @@
 #' visualise(gridded = myTrees, trace = TRUE)
 #' }
 #' @importFrom checkmate testClass
-#' @importFrom raster crop unique
+#' @importFrom raster crop unique stack
 #' @export
 
 oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
@@ -99,7 +99,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   }
   
   # go through 'species' to extract data
-  efta_out <- NULL
+  efta_out <- stack()
   for(i in seq_along(species)){
     thisSpecies <- species[i]
     fileName <- paste0(sub(thisSpecies, pattern = " ", replacement  = "-"), "_", type, ".tif")
@@ -136,7 +136,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
     tempObject@legend@colortable <- outCols
     
     names(tempObject) <- sub(thisSpecies, pattern = " ", replacement = "_")
-    efta_out <- c(efta_out, setNames(list(tempObject), thisSpecies))
+    efta_out <- stack(efta_out, tempObject)
   }
 
   # manage the bibliography entry
