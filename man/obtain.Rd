@@ -53,13 +53,11 @@ and online resources.
   }
 }
 \examples{
-\dontrun{
 require(magrittr)
 require(rgeos)
 
-# specify the datasets from which you want to get data
-myDatasets <- list(list(operator = "oCLC", years = 2006),
-                   list(operator = "oGFC", years = c(2005:2007)),
+# specify the datasets for which you want to get data
+myDatasets <- list(list(operator = "oGFC", years = c(2005:2007)),
                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
                         layer = 2))
 
@@ -70,6 +68,8 @@ myMask <- gGroup(geom = myLocations, distance = 10000) \%>\%
   geomRectangle() \%>\%
   gToSp(crs = projs$laea) \%>\%
   gBuffer(width = 1000, byid = TRUE)
+
+\dontrun{
 
 # grab the data
 myData <- obtain(data = myDatasets, mask = myMask)

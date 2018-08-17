@@ -2,6 +2,7 @@
 #' @importFrom utils packageVersion data globalVariables
 
 .onLoad <- function(...) {
+  require(raster)
   packageDataPath <- paste0(.libPaths()[1], "/rasterTools/data/")
   pathFile <- paste0(packageDataPath, "rtPaths.rda")
 

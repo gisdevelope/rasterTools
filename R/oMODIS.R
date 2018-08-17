@@ -75,7 +75,6 @@
 #' reference(style = "bibtex")
 #' }
 #' @importFrom sp proj4string spTransform bbox
-#' @importFrom rgeos gIntersects gConvexHull gBuffer
 #' @importFrom raster values setValues crop projectRaster stack mosaic
 #' @export
 
