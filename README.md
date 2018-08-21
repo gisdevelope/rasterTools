@@ -66,6 +66,8 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
 
 - more `Rcpp` and parallelisation.
 
+- You are encouraged to [participate](articles/contribute.html) as well by writing for instance an obtain operator for your favourite dataset.
+
 ## Acknowledgements
 I am grateful for financial support from the PROFOUND Cost-action, which gave me the opportunity to work in a concentrated effort a large part of the functionality. This package has been developed in support of the [FunBo Project](https://www.researchgate.net/project/Do-small-mammals-think-big-The-multiscale-ecology-of-small-mammals-and-their-functional-role-for-Borrelia-burgdorferi-FunBo), which was made possible by the Grünewald-Zuberbier Scholarship handed out by the University of Freiburg.
 

@@ -185,9 +185,8 @@ load_csv <- function(path){
 
   assertFile(path, access = "r", extension = "csv")
   out <- read.csv(path, stringsAsFactors = FALSE)
-  assertDataFrame(out, types = "numeric", min.cols = 3)
   colnames(out) <- tolower(colnames(out))
-  assertNames(names(out), permutation.of = c("x", "y", "id"))
+  assertNames(names(out), must.include = c("x", "y", "id"))
 
   out <- new(Class = "geom",
              type = "point",

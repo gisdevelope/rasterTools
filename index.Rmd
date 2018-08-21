@@ -92,6 +92,8 @@ Planned for future versions
 
 - more `Rcpp` and parallelisation.
 
+- You are encouraged to [participate](articles/contribute.html) as well by writing for instance an obtain operator for your favourite dataset.
+
 ___________________________________________
 
 

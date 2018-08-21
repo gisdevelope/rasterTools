@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this document you can find an outline of the default design of the operators employed in the core-functions of `rasterTools` and other "best practices". In case you want to write a new operator that is readily compatible with `rasterTools`, it is recommended that you stick to the design which is suggested here. I do my best to keep this document updated, but as the development of `rasterTools` and other packages progresses, one or the other thing here may be outdate, so don't be too frustrated if something does not work ad-hoc. If you want the operator you wrote to be part of `rasterTools`, create a pull-request and when everything is running smoothly, I will include you as author of that function, if you want that.
+In this document you can find an outline of a standardised design of obtain operators and other "best practices". In case you want to write a new operator that is readily compatible with `rasterTools`, it is recommended that you stick to the design which is suggested here. I do my best to keep this document updated, but as the development of `rasterTools` and other packages progresses, one or the other thing here may be outdate, so don't be too frustrated if something does not work ad-hoc, let's get in contact if you encounter major difficulties or need additional pointers. If you want the operator you wrote to be part of `rasterTools`, create a pull-request and when everything is running smoothly, I will include you as author of that function, if you want that.
 
 Many of the code-chunks of this documentation are written in so-called pseudocode, which is a placeholder or variable, which would be replaced in an actual function. Pseudocode elements are written in CAPITAL LETTERS and typically have a rather self-explanatory name.
 
-`rasterTools` builds largely on the framework of the [`checkmate`](https://cran.r-project.org/web/packages/checkmate/index.html) package so that arguments are properly tested. This makes the source code very verbose but helps to maintain consistency.
+`rasterTools` builds largely on the framework of the [`checkmate`](https://cran.r-project.org/web/packages/checkmate/index.html) package so that arguments are properly tested. This makes the source code rather verbose but helps to maintain consistency.
 
 # Build the operator
 ## *tl;dr*
@@ -41,14 +41,16 @@ oDATASET <- function(mask, ARG){
   maskIsSpatial <- testClass(mask, classes = "Spatial")
   assert(maskIsGeom, maskIsSpatial)
   assertXZY(ARG)
+  
+  datasetCRS <- projs$longlat
 ```
 
 The arguments would typically reflect characteristics of the dataset, which could be seen as distinctive for the subsets of this dataset. This is, for instance, the 'year' in case of the Corine land-cover dataset or the 'product' and 'layer' in case of a MODIS dataset. You can define as many of these arguments as needed.
 
 ## Handle projection
-We must handle the projection of the involved files, to avoid accidently building on spatial objects with the wrong coordinate reference system. Controlling the projection is crucial, as problems with the projection of one out of many files may already lead to problems that are hard to trace back. `rasterTools` comes with various functions that are able to handle more than one class, socalled generic functions and class specific methods. One pair of such functions is `getCRS()` and `setCRS()`, which can handle both `Spatial*` and `geom` objects (and in the future also `sf`). This means that we can use simple code statements and can avoid the "diverse beauty" of the various spatial packages that are recently out there.
+We must handle the projection of the involved files, to avoid accidently building on spatial objects with the wrong coordinate reference system. Controlling the projection is crucial, as problems with the projection of one out of many files may already lead to problems that are hard to trace back. `rasterTools` comes with various functions that are able to handle more than one class, socalled generic functions and class specific methods. One pair of such functions is `getCRS()` and `setCRS()`, which can handle both `Spatial*` and `geom` objects (and in the future also `sf`). This means that we can use simple code statements and can avoid the many different functions in different packages that basically do the same thing, only on different objects. This intends to make intentions clear more quickly and hopefully helps to avoid bugs.
 
-The object defined in `mask` provides the target projection the user wants to work with, so we take `targetCrs` and `targetExtent` from this mask. Next, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. `rasterTools` includes the dataset `projs` in which some of the most frequent projections are stored, but you can of course use any other [proj4](http://proj4.org/) string.
+The object defined in `mask` provides the target projection the user wants to work with, so we take `targetCRS` and `targetExtent` from this mask. Next, the mask has to be set to the same projection as the dataset we want to handle in our function, in this case the Lambert Azimuthal Equal-Area Projection. `rasterTools` includes the dataset `projs` in which some of the most frequent projections are stored, but you can of course use any other [proj4](http://proj4.org/) string.
 
 ```{r, eval=FALSE}
   if(maskIsSpatial){
@@ -58,9 +60,9 @@ The object defined in `mask` provides the target projection the user wants to wo
   theExtent <- geomRectangle(anchor = getExtent(x = mask))
   theExtent <- setCRS(x = theExtent, crs = targetCRS)
   
-  if(targetCRS != projs$laea){
-    mask <- setCRS(x = mask, crs = projs$laea)
-    targetExtent <- setCRS(theExtent, crs = projs$laea)
+  if(targetCRS != datasetCRS){
+    mask <- setCRS(x = mask, crs = datasetCRS)
+    targetExtent <- setCRS(theExtent, crs = datasetCRS)
   } else{
     targetExtent <- theExtent
   }
@@ -72,7 +74,7 @@ Tiles are a set of regularly arranged neighbouring rectangles that represent dif
 ```{r, eval=FALSE}
   aWindow <- data.frame(x = c(-180, 180),
                         y = c(-60, 80))
-  datasetTiles <- geomTiles(window = aWindow, cells = c(36, 14), crs = projs$longlat)
+  datasetTiles <- geomTiles(window = aWindow, cells = c(36, 14), crs = datasetCRS)
 ```
 
 From the object `datasetTiles` we need to determine the subset of rectangles in which the data we are interested in are to be found (this is not ideally solved at the moment and might change in the future):
@@ -136,6 +138,7 @@ In most cases you want to crop the overall dataset to `mask`, or actually the ex
     message("  ... cropping to targeted study area.\n")
     tempObject <- crop(tempObject, targetExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
 ```
+*wip: to handle large datasets, loading them into the environment of R is not wise, as it takes a lot of time. I am atm outlining a standardised workflow mostly based on gdalUtils to ease these problems, which I will include here as soon as it's done.*
 
 ## Merge multiple tiles
 *wip*
@@ -205,7 +208,7 @@ It is important to note, that neither the functions called by `loadData()` nor `
 # Be informative
 `rasterTools` intends to be as transparent as possible and this ensues that error messages or relevant warnings are easy to understand and appear whenever a problem occurs. This is where the checkmate package comes in, which `rasterTools` heavily utilizes. Thus many of the recommendations with regard to error management derive from `checkmate`s directives. 
 
-Also, since several of the functions here can be quite time-consuming, a message that informs the user about the currently processing step can be helpful. This includes a progressbar, which indicates the progress of a iterative computation. For example, the `catalog()` function builds an index based on all the files that are found in a certain directory. This index can be useful when a project is meant to deal with a large number of files in some directory (for instance in "./myProject/myDataset/aLargeNumberOfFiles.tif") that need to be accessed arbitrarily, i.e. not all of them at a time or only a subset according to the current conditions. Hence, it might not be required to load all the files into the global environment of R but instead it would be useful to provide a simple key, according to which the files can be loaded. Think, for example, about all the different products, tiles, temporal extents and layers of the MODIS dataset. The file-names of the respective files are a long and cumbersome combination of all these information and very timeconsuming to type in; sure, tab-completion is your friend, but with these files you still need tab through several "levels" of file specification, so to speak.
+Also, since several of the functions here can be quite time-consuming, a message that informs the user about the currently processing step can be helpful. This includes a progressbar, which indicates the progress of an iterative computation. For example, the `catalog()` function builds an index based on all the files that are found in a certain directory. This index can be useful when a project is meant to deal with a large number of files in some directory (for instance in "./myProject/myDataset/aLargeNumberOfFiles.tif") that need to be accessed arbitrarily, i.e. not all of them at a time or only a subset according to the current conditions. Hence, it might not be required to load all the files into the global environment of R but instead it would be useful to provide a simple key, according to which the files can be loaded. Think, for example, about all the different products, tiles, temporal extents and layers of the MODIS dataset. The file-names of the respective files are a long and cumbersome combination of all these information and very timeconsuming to type in; sure, tab-completion is your friend, but with these files you still need tab through several "levels" of file specification, so to speak.
 
 Anyway, while `catalog()` is an example of functions that makes `rasterTools` more informative, it utilizes the `txtProgressBar` function in the following way:
 

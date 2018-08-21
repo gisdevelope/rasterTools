@@ -154,8 +154,8 @@ dataset
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>SpatialPolygon*</code>]<br /> spatial object of which
-the extent is the area of interest.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object of which the
+extent is the area of interest.</p></td>
     </tr>
     <tr>
       <th>years</th>
@@ -185,7 +185,13 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The GFC dataset is based on a time-series analysis of Landsat images
+    <p>The object provided in <code>mask</code> is treated as a single mask,
+  irrespective of that object consisting of only one or several features. The
+  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
+  may consist of several features, each of which are treated as seperate
+  mask.</p>
+<p>The GFC dataset is based on a time-series analysis of Landsat images
   characterizing forest extent and change.</p>
 <p>A problem with the GFC dataset is that the gain-layer is calculated for the
   overall period from 2000 to 2014, while the loss-layer contains the loss
