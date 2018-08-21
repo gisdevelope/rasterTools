@@ -49,9 +49,9 @@ task at hand. Code that manages, for instance, "loading the MODIS dataset" is
 outsourced to a separate function (the \code{\link{oMODIS}} operator). New
 operators to all the core functions and to \code{\link{loadData}} can hence
 be devised easily. If you want to contribute, please study the
-\href{https://ehrmanns.github.io/rastertools/articles/contribute.html}{Contribution
+\href{https://ehrmanns.github.io/rasterTools/articles/contribute.html}{Contribution
 Guidelines} or create an issue on
-\href{https://github.com/EhrmannS/rastertools/issues}{github}.
+\href{https://github.com/EhrmannS/rasterTools/issues}{github}.
 }
 \examples{
 \dontrun{
