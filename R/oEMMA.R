@@ -94,6 +94,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   tiles_emma <- loadData(files = "cgrs_europe.kml",
                          localPath = rtPaths$emma$local)
   tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
+
   message("  ... done\n")
   if(maskIsGeom){
     mask <- gToSp(mask)

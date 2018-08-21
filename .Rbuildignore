@@ -10,3 +10,4 @@ index\.Rmd$
 ^docs$
 ^misc$
 ToDo.txt$
+ToDo_functions.R

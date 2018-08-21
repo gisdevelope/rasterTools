@@ -198,13 +198,13 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>require</span>(<span class='no'>magrittr</span>)
-<span class='fu'>require</span>(<span class='no'>rgeos</span>)
-
-<span class='co'># specify the datasets from which you want to get data</span>
-<span class='no'>myDatasets</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oCLC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fl'>2006</span>),
-                   <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oGFC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2005</span>:<span class='fl'>2007</span>)),
+    <pre class="examples"><div class='input'><span class='fu'>require</span>(<span class='no'>magrittr</span>)
+<span class='fu'>require</span>(<span class='no'>rgeos</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: rgeos</span></div><div class='output co'>#&gt; <span class='message'>rgeos version: 0.3-28, (SVN revision 572)</span>
+#&gt; <span class='message'> GEOS runtime version: 3.5.1-CAPI-1.9.1 r4246 </span>
+#&gt; <span class='message'> Linking to sp version: 1.3-1 </span>
+#&gt; <span class='message'> Polygon checking: TRUE </span></div><div class='input'>
+<span class='co'># specify the datasets for which you want to get data</span>
+<span class='no'>myDatasets</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oGFC"</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2005</span>:<span class='fl'>2007</span>)),
                    <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oMODIS"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"mod17a3"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2006</span>,
                         <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>2</span>))
 
@@ -214,8 +214,7 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
 <span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>myLocations</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='fl'>10000</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='gToSp.html'>gToSp</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/rgeos/topics/misc-gBuffer'>gBuffer</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/rgeos/topics/misc-gBuffer'>gBuffer</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><span class='co'># NOT RUN {</span>
 <span class='co'># grab the data</span>
 <span class='no'>myData</span> <span class='kw'>&lt;-</span> <span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>myDatasets</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>)
 <span class='co'># }</span></pre>
