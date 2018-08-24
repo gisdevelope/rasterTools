@@ -5,10 +5,9 @@ context("loadData")
 
 test_that("function loads 'csv' files", {
   output <- loadData(files = c("aWindow.csv", "locations.csv"),
-                     localPath = system.file("csv", package = "rasterTools"),
-                     verbose = TRUE)
-  expect_class(output, "list")
-  expect_class(output[[1]], "geom")
+                     localPath = system.file("csv", package = "rasterTools"))
+  expect_list(output, types = "geom")
+  
 })
 
 test_that("function loads also from a 'catalog'", {
@@ -20,15 +19,26 @@ test_that("function loads also from a 'catalog'", {
                       silent = TRUE)
   
   output <- loadData(files = theFiles,
-                     localPath = system.file("csv", package = "rasterTools"),
-                     verbose = TRUE)
-  expect_class(output, "list")
-  expect_class(output[[1]], "geom")
+                     localPath = system.file("csv", package = "rasterTools"))
+  expect_list(output, types = "geom", len = 3)
+  
 })
 
+test_that("function loads all in a directory", {
+  output <- loadData(localPath = system.file("csv", package = "rasterTools"))
+  expect_list(output, types = "geom", len = 3)
+})
 
-# here come the 'load_*'-methods specific tests
+test_that("function handles files that don't exist properly", {
+  output <- loadData(files = c("aWindow.csv", "anotherWindow.csv"),
+                     localPath = system.file("csv", package = "rasterTools"))
+  
+  expect_character(output[[2]])
+})
+
 test_that("function loads 'kml' files", {
+  # use this to also test layer
+  
   # output <- loadData(files = "cgrs_estonia.kml",
   #                    localPath = system.file("kml", package="rasterTools"))
   # expect_class(output, "SpatialPolygonsDataFrame")
@@ -38,4 +48,11 @@ test_that("function loads 'tif' files", {
   # output <- loadData(files = "cgrs_estonia.kml",
   #                    localPath = system.file("tif", package="rasterTools"))
   # expect_class(output, "raster")
+})
+
+test_that("Error if arguments have wrong value", {
+  expect_error(loadData())
+  expect_error(loadData(dataset = 1))
+  expect_error(loadData(files = list()))
+  expect_error(loadData(localPath = 1))
 })
