@@ -4,35 +4,35 @@
 \alias{loadData}
 \title{Import spatial datasets}
 \usage{
-loadData(files = NULL, dataset = NULL, layer = NULL, localPath = NULL,
+loadData(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
   verbose = FALSE)
 }
 \arguments{
-\item{files}{[\code{character(1)} | \code{list(.)}]\cr the file, as it is
-called in \code{localPath} or \code{onlinePath}. \code{files} can be a list
-to (down)load several files in the same directory/url with one call.
-\code{files} also accepts the (subsetted) output of \code{\link{catalog}},
-i.e. a \code{data.frame} with the two columns \code{original} and
-\code{abbr}.}
+\item{files}{[\code{character(.)} | \code{data.frame(1)}]\cr the files, as
+they are called in \code{localPath}. \code{files} also accepts the
+(subsetted) output of \code{\link{catalog}}, i.e. a \code{data.frame} with
+the two columns \code{original} and \code{abbr}.}
 
-\item{dataset}{[\code{character(1)}]\cr character vector of the data dataset
-for which \code{files} should be imported; if this is given,
-\code{localPath} and \code{onlinePath} are overwritten with the internal
-dataset default (see \code{\link{updatePaths}}).}
+\item{layer}{[\code{character(.)} | \code{integerish(.)}]\cr vetor of the
+same length as \code{files} with name or position of the layer that shall
+be loaded.}
 
-\item{layer}{[\code{character(1)} | \code{integerish(1)}]\cr name or position
-of the layer, other than the \code{\link[rgdal]{readOGR}}-default, that
-should be loaded.}
+\item{dataset}{[\code{character(1)}]\cr character vector of the dataset for
+which \code{files} should be imported (see \code{\link{obtain}} for all
+datasets); in case this is given, \code{localPath} is taken from the
+internal default for the respective dataset (see
+\code{\link{updatePaths}}).}
 
-\item{localPath}{[\code{character(1)}]\cr the local path where files are
-supposed to be stored (i.e. on your harddisc).}
+\item{localPath}{[\code{character(1)}]\cr the local path from where files
+shall be loaded. If the directory does not exist, it is created and the
+missing data are downloaded, given .}
 
 \item{verbose}{[\code{logical(1)}]\cr should additional information be
 printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?}
 }
 \value{
-a (list of) file(s). If there are several files of type
-  \code{Raster*}, they are stacked.
+the file to load. If there is more than one file specified, a list of
+  those files.
 }
 \description{
 Meta function to import, i.e. load or download and unpack spatial datasets
@@ -40,21 +40,20 @@ and other files containing spatial data.
 }
 \details{
 \code{importData} checks whether the required files are available in
-  \code{localPath}. If nothing is found there, it attempts to download the
-  files from \code{onlinePath}. \code{rasterTools} contains a predefined internal
-  index, \code{getOption("rtPaths")}, where the local and online paths of
-  the supported spatial datasets are stored. Please take a look at it and in
-  case an online resource has been altered, you can adapt it here (see
-  \code{\link{updatePaths}}).
+  \code{localPath} and if this is not given, in the working directory. If
+  nothing is found there but a dataset is given, it attempts to download the
+  files from the respective online path (see \code{rtPaths}). Please take a
+  look at it and in case an online resource has been altered, you can adapt
+  it here (see \code{\link{updatePaths}}).
 }
 \examples{
-# load a batch of '.csv'-files containing coordinates into the gloabl environment.
+# load a bunch of '.csv'-files containing coordinates into the gloabl environment.
 myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
-                        localPath = system.file("csv", package="rasterTools"), 
+                        localPath = system.file("csv", package="rasterTools"),
                         verbose = TRUE)
 }
 \seealso{
 The specific load operators: \code{\link{load_kml}},
-  \code{\link{load_csv}}, \code{\link{load_kml}}, \code{\link{load_hdf}},
-  \code{load_tif}, \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
+  \code{\link{load_csv}}, \code{\link{load_hdf}}, \code{load_tif},
+  \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
 }

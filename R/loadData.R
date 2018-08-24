@@ -2,38 +2,38 @@
 #'
 #' Meta function to import, i.e. load or download and unpack spatial datasets
 #' and other files containing spatial data.
-#' @param files [\code{character(1)} | \code{list(.)}]\cr the file, as it is
-#'   called in \code{localPath} or \code{onlinePath}. \code{files} can be a list
-#'   to (down)load several files in the same directory/url with one call.
-#'   \code{files} also accepts the (subsetted) output of \code{\link{catalog}},
-#'   i.e. a \code{data.frame} with the two columns \code{original} and
-#'   \code{abbr}.
-#' @param dataset [\code{character(1)}]\cr character vector of the data dataset
-#'   for which \code{files} should be imported; if this is given,
-#'   \code{localPath} and \code{onlinePath} are overwritten with the internal
-#'   dataset default (see \code{\link{updatePaths}}).
-#' @template localPath
-#' @param layer [\code{character(1)} | \code{integerish(1)}]\cr name or position
-#'   of the layer, other than the \code{\link[rgdal]{readOGR}}-default, that
-#'   should be loaded.
+#' @param files [\code{character(.)} | \code{data.frame(1)}]\cr the files, as
+#'   they are called in \code{localPath}. \code{files} also accepts the
+#'   (subsetted) output of \code{\link{catalog}}, i.e. a \code{data.frame} with
+#'   the two columns \code{original} and \code{abbr}.
+#' @param dataset [\code{character(1)}]\cr character vector of the dataset for
+#'   which \code{files} should be imported (see \code{\link{obtain}} for all
+#'   datasets); in case this is given, \code{localPath} is taken from the
+#'   internal default for the respective dataset (see
+#'   \code{\link{updatePaths}}).
+#' @param layer [\code{character(.)} | \code{integerish(.)}]\cr vetor of the
+#'   same length as \code{files} with name or position of the layer that shall
+#'   be loaded.
+#' @param localPath [\code{character(1)}]\cr the local path from where files
+#'   shall be loaded. If the directory does not exist, it is created and the
+#'   missing data are downloaded, given .
 #' @param verbose [\code{logical(1)}]\cr should additional information be
 #'   printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?
 #' @details \code{importData} checks whether the required files are available in
-#'   \code{localPath}. If nothing is found there, it attempts to download the
-#'   files from \code{onlinePath}. \code{rasterTools} contains a predefined internal
-#'   index, \code{getOption("rtPaths")}, where the local and online paths of
-#'   the supported spatial datasets are stored. Please take a look at it and in
-#'   case an online resource has been altered, you can adapt it here (see
-#'   \code{\link{updatePaths}}).
-#' @return a (list of) file(s). If there are several files of type
-#'   \code{Raster*}, they are stacked.
+#'   \code{localPath} and if this is not given, in the working directory. If
+#'   nothing is found there but a dataset is given, it attempts to download the
+#'   files from the respective online path (see \code{rtPaths}). Please take a
+#'   look at it and in case an online resource has been altered, you can adapt
+#'   it here (see \code{\link{updatePaths}}).
+#' @return the file to load. If there is more than one file specified, a list of
+#'   those files.
 #' @seealso The specific load operators: \code{\link{load_kml}},
-#'   \code{\link{load_csv}}, \code{\link{load_kml}}, \code{\link{load_hdf}},
-#'   \code{load_tif}, \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
+#'   \code{\link{load_csv}}, \code{\link{load_hdf}}, \code{load_tif},
+#'   \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
 #' @examples
-#' # load a batch of '.csv'-files containing coordinates into the gloabl environment.
+#' # load a bunch of '.csv'-files containing coordinates into the gloabl environment.
 #' myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
-#'                         localPath = system.file("csv", package="rasterTools"), 
+#'                         localPath = system.file("csv", package="rasterTools"),
 #'                         verbose = TRUE)
 #' @importFrom checkmate testCharacter testDataFrame assertCharacter assertNames
 #'   testIntegerish assertDirectory assertLogical assertEnvironment assertFile
@@ -44,21 +44,12 @@
 
 # updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial")
 
-loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NULL,
+loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
                      verbose = FALSE){
 
-  if(!is.null(files)){
-    filesIsChar <- testCharacter(files, any.missing = FALSE, min.len = 1)
-    filesIsDF <- testDataFrame(files, types = "character", ncols = 2, col.names = c("original", "abbr"))
-    if(filesIsDF){
-      assertNames(names(files), must.include = c("original", "abbr"))
-      files <- files$original
-    } else{
-      assertCharacter(files)
-    }
-  }
-  assertCharacter(dataset, ignore.case = TRUE, any.missing = FALSE, min.len = 1, null.ok = TRUE)
-  if(!is.null(dataset) & is.null(localPath)){
+  # check arguments
+  assertCharacter(dataset, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
+  if(!is.null(dataset)){
     dataset <- tolower(dataset)
     localPath <- eval(parse(text = paste0("rtPaths$", dataset, "$local")))
   } else{
@@ -67,13 +58,29 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
   if(!testDirectoryExists(localPath)){
     dir.create(localPath)
   }
+  if(!is.null(files)){
+    filesIsChar <- testCharacter(files, any.missing = FALSE, min.len = 1)
+    filesIsDF <- testDataFrame(files, types = "character", ncols = 2)
+    if(filesIsDF){
+      assertNames(names(files), must.include = c("original", "abbr"))
+      files <- files$original
+    } else{
+      assertCharacter(files)
+    }
+  } else{
+    if(!is.null(localPath)){
+      files <- list.files(path = localPath)
+    } else{
+      stop("please specify either 'files' or 'localPath' to load the respective data.")
+    }
+  }
   if(!is.null(layer)){
     layerIsInt <- testIntegerish(layer, len = 1, any.missing = FALSE)
     layerIsChar <- testCharacter(layer, len = 1, any.missing = FALSE)
   }
-  # asser (onlinePath)
   assertLogical(verbose, any.missing = FALSE, len = 1)
 
+  # define function that checks whether 'files' do in fact exist
   testFiles <- function(files, path){
     filesInLocalPath <- list.files(path = path)
     filePaths <- list.files(path = path, full.names = TRUE)
@@ -81,12 +88,9 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
     filePaths <- filePaths[file_test('-f', filePaths)]
 
     if(is.null(files)){
-      # if 'files' is not defined, assume all files in 'localPath'
-      # files <- filesInLocalPath
-      fileExists <- rep(TRUE, times = length(files))
+      fileExists <- rep(TRUE, times = length(filesInLocalPath))
     } else{
       fileExists <- files %in% filesInLocalPath
-      # filePaths <- filePaths[fileExists]
     }
     return(fileExists)
   }
@@ -131,7 +135,7 @@ loadData <- function(files = NULL, dataset = NULL, layer = NULL, localPath = NUL
         args <- list(path = thePath)
       } else{
         args <- list(path =  thePath,
-                     layer = layer)
+                     layer = layer[i])
       }
 
       # and call the file type specific load_* function
@@ -187,10 +191,12 @@ load_csv <- function(path){
   out <- read.csv(path, stringsAsFactors = FALSE)
   colnames(out) <- tolower(colnames(out))
   assertNames(names(out), must.include = c("x", "y", "id"))
+  theData <- data.frame(id = out$id, x = out$x, y = out$y)
+  theData <- cbind(theData, out[which(!colnames(out) %in% c("x", "y", "id"))])
 
   out <- new(Class = "geom",
              type = "point",
-             table = data.frame(x = out$x, y = out$y, id = out$id),
+             table = theData,
              window = data.frame(x = rep(c(min(out$x), max(out$x)), each = 2), y = c(min(out$y), max(out$y), max(out$y), min(out$y))),
              scale = "absolute",
              crs = as.character(NA),
