@@ -50,7 +50,7 @@ test_that("function loads 'tif' files", {
 })
 
 test_that("function loads 'svg' (emma) files", {
-  output <- loadData(files = "Ursus arctos.svg",
+  output <- loadData(files = "Ursus_arctos.svg",
                      layer = "emma",
                      localPath = system.file("test_datasets/emma", package="rasterTools"))
   expect_data_frame(output, any.missing = FALSE, ncols = 3)
