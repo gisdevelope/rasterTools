@@ -49,7 +49,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 
   # check arguments
   assertCharacter(dataset, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
-  if(!is.null(dataset)){
+  if(!is.null(dataset) & is.null(localPath)){
     dataset <- tolower(dataset)
     localPath <- eval(parse(text = paste0("rtPaths$", dataset, "$local")))
   }
@@ -317,7 +317,6 @@ load_svg <- function(path, layer){
   assertFile(path, access = "r", extension = "svg")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE)
 
-  message(paste0("  ... loading the file from '", path, "'\n"))
   txt <- suppressWarnings(readLines(path))
 
   # throw out uninteresting lines

@@ -55,11 +55,14 @@ test_that("function loads 'svg' (emma) files", {
                      localPath = system.file("test_datasets/emma", package="rasterTools"))
   expect_data_frame(output, any.missing = FALSE, ncols = 3)
   expect_names(names(output), must.include = c("species", "square", "year"))
-})
+  })
 
 test_that("Error if arguments have wrong value", {
   expect_error(loadData())
   expect_error(loadData(dataset = 1))
   expect_error(loadData(files = list()))
   expect_error(loadData(localPath = 1))
+  expect_error(loadData(files = "Ursus_arctos.svg",
+                        layer = "bla",
+                        localPath = system.file("test_datasets/emma", package="rasterTools")))
 })
