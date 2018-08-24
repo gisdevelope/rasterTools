@@ -52,12 +52,13 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
   if(!is.null(dataset)){
     dataset <- tolower(dataset)
     localPath <- eval(parse(text = paste0("rtPaths$", dataset, "$local")))
-  } else{
-    if(is.null(localPath)) localPath <- getwd()
   }
-  if(!testDirectoryExists(localPath)){
-    dir.create(localPath)
+  if(!is.null(localPath)){
+    if(!testDirectoryExists(localPath)){
+      dir.create(localPath)
+    }
   }
+
   if(!is.null(files)){
     filesIsChar <- testCharacter(files, any.missing = FALSE, min.len = 1)
     filesIsDF <- testDataFrame(files, types = "character", ncols = 2)
@@ -86,12 +87,8 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
     filePaths <- list.files(path = path, full.names = TRUE)
     filesInLocalPath <- filesInLocalPath[file_test('-f', filePaths)]
     filePaths <- filePaths[file_test('-f', filePaths)]
-
-    if(is.null(files)){
-      fileExists <- rep(TRUE, times = length(filesInLocalPath))
-    } else{
-      fileExists <- files %in% filesInLocalPath
-    }
+    fileExists <- files %in% filesInLocalPath
+    
     return(fileExists)
   }
   out <- list()
@@ -111,10 +108,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
     fileName <- paste0(fileTemp[!fileTemp %in% fileType], collapse = ".")
 
     # if 'file' does not exist, attempt to download it (in case a downloadDATASET method is given)
-    if(!fileExists[i]){
-      if(is.null(dataset)){
-        dataset <- "generic"
-      }
+    if(!fileExists[i] & !is.null(dataset)){
       args <- list(file = files[i], localPath = localPath)
 
       do.call(what = paste0("download", toupper(dataset)),
@@ -153,7 +147,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
       out <- c(out, setNames(list(out_temp), fileName))
 
     } else{
-      out <- c(message("file was not found locally or online"), setNames(list(out_temp), fileName))
+      out <- c(out, setNames(list(paste0("file was not found locally or online")), fileName))
     }
     if(verbose){
       setTxtProgressBar(pb, i)
