@@ -5,7 +5,8 @@ context("loadData")
 
 test_that("function loads 'csv' files", {
   output <- loadData(files = c("aWindow.csv", "locations.csv"),
-                     localPath = system.file("csv", package = "rasterTools"))
+                     localPath = system.file("csv", package = "rasterTools"),
+                     verbose = TRUE)
   expect_list(output, types = "geom")
   
 })
@@ -37,17 +38,23 @@ test_that("function handles files that don't exist properly", {
 })
 
 test_that("function loads 'kml' files", {
-  # use this to also test layer
-  
-  # output <- loadData(files = "cgrs_estonia.kml",
-  #                    localPath = system.file("kml", package="rasterTools"))
-  # expect_class(output, "SpatialPolygonsDataFrame")
+  output <- loadData(files = "cgrs_estonia.kml",
+                     localPath = system.file("test_datasets/kml", package="rasterTools"))
+  expect_class(output, "SpatialPolygonsDataFrame")
 })
 
 test_that("function loads 'tif' files", {
-  # output <- loadData(files = "cgrs_estonia.kml",
-  #                    localPath = system.file("tif", package="rasterTools"))
-  # expect_class(output, "raster")
+  output <- loadData(files = "g100_00.tif",
+                     localPath = system.file("test_datasets/clc", package="rasterTools"))
+  expect_class(output, "RasterLayer")
+})
+
+test_that("function loads 'svg' (emma) files", {
+  output <- loadData(files = "Ursus arctos.svg",
+                     layer = "emma",
+                     localPath = system.file("test_datasets/emma", package="rasterTools"))
+  expect_data_frame(output, any.missing = FALSE, ncols = 3)
+  expect_names(names(output), must.include = c("species", "square", "year"))
 })
 
 test_that("Error if arguments have wrong value", {
