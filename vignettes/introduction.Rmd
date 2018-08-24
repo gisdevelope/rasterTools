@@ -68,13 +68,12 @@ Additionally, several "tools" to modify the `geom` vertices and to transform the
 
 
 # Example workflow
-In the following you will find an example for each of the core functions. Let's start by loading the package
+In the following you will find an example for each of the core functions.
 
 `rasterTools` may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via `updatePaths(root = "/path/to/the/spatial/files")`.
 
-
 ## Generate spatial patterns
-*Coming soon*
+*In the making*
 
 ## Obtain spatial datasets
 An algorithm with which one would obtain information from various spatial data sets could be:
@@ -92,9 +91,9 @@ Typically we only need a (vastly) smaller subset of an earth observation dataset
 ```{r}
 library(magrittr)
 myMask <- loadData(files = "aWindow.csv",
-                    localPath = system.file("csv", package="rasterTools")) %>%
-   geomRectangle() %>%
-   setCRS(crs = projs$laea)
+                   localPath = system.file("csv", package="rasterTools")) %>%
+  geomRectangle() %>%
+  setCRS(crs = projs$laea)
 ```
 
 The collection of datasets for the area of our interest can be obtained by the following code:
