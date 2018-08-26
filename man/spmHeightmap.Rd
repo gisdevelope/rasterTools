@@ -4,18 +4,18 @@
 \alias{spmHeightmap}
 \title{Generate a heightmap}
 \usage{
-spmHeightmap(mat, hurst = NULL, type = "diamondSquare", startDev = 1,
+spmHeightmap(mat, type = "diamondSquare", hurst = NULL, startDev = 1,
   seed = NULL)
 }
 \arguments{
 \item{mat}{[\code{matrix}]\cr object to which the spatial pattern is added.}
 
-\item{hurst}{[\code{numeric(1)}]\cr the Hurst exponent (fBm) or its
-equivalent, the roughness factor (DSa). Bounded between 0 and 1.}
-
 \item{type}{[\code{character(1)}]\cr the model according to which the pattern
 is generated, either \code{"diamondSquare"} (default), \code{"brownian"} or
 \code{"gaussian"}.}
+
+\item{hurst}{[\code{numeric(1)}]\cr the Hurst exponent (fBm) or its
+equivalent, the roughness factor (DSa). Bounded between 0 and 1.}
 
 \item{startDev}{bla (for now)}
 
@@ -41,9 +41,6 @@ dimensional surface (a simulated digitial elevation model).
   average from its three only neighbours and not from the one dimensional
   version of the algorithm (Fournier et al., 1982).}
   \item{Fractional brownian motion}{} \item{Gaussian random field}{} }
-
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \examples{
 mat <- matrix(nrow = 100, ncol = 100, data = 0)

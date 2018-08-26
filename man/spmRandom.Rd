@@ -4,7 +4,7 @@
 \alias{spmRandom}
 \title{Generate a neutral random pattern}
 \usage{
-spmRandom(mat, pattern, seed)
+spmRandom(mat, pattern = "cell", seed = NULL)
 }
 \arguments{
 \item{mat}{[\code{matrix}]\cr object to which the spatial pattern is added.}
@@ -22,13 +22,16 @@ This is largely still work in progress.
 Random values can be applied to different patterns within the landscape
 model.
 
-\itemize{ \item For \code{base = "cell"}, each cell of the resulting
-  LM is assigned a random value. \item For \code{base = "rectangle"}, \item
-  For \code{base = "circle"}, \item For \code{base = "voronoi"}, Gaucherel
-  (2008) \item For \code{base = "cluster"}, Saura & Martínez-Millán (2000) }
+\itemize{ \item For \code{pattern = "cell"}, each cell of the resulting
+  model is assigned a random value. \item For \code{pattern = "rectangle"}, \item
+  For \code{pattern = "circle"}, \item For \code{pattern = "voronoi"}, Gaucherel
+  (2008) \item For \code{pattern = "cluster"}, Saura & Martínez-Millán (2000) }
+}
+\examples{
+mat <- matrix(nrow = 100, ncol = 100, data = 0)
+myRandomPattern <- spmRandom(mat = mat)
+visualise(gridded = myRandomPattern)
 
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \references{
 Gaucherel, C. (2008) Neutral models for polygonal landscapes with

@@ -34,9 +34,6 @@ In case \code{origin} is not given, \code{nlmGradient} constructs
   between 0 and 1 as gradient. Each geometry requires at least the number of
   vertices and their coordinates. In case the required arguments are not
   specified in \code{params = list(...)}, they will be set randomly.
-
-If this function is used in conjunction with \code{\link{generate}},
-  \code{mat} cannot be specified, because \code{generate} assigns it.
 }
 \examples{
 # create a point gradient based on an origin
