@@ -182,7 +182,9 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             }
           }
           tempAlgorithm[[k]]$overlay <- theOverlay
-        } else if(!testClass(tempAlgorithm[[k]]$overlay, "RasterLayer")){
+        } else if(testClass(tempAlgorithm[[k]]$overlay, "RasterLayer")){
+          theOverlay <- tempAlgorithm[[k]]$overlay
+        } else{
           stop(paste0("please provide either the name of a layer in 'input' or a RasterLayer as 'overlay' in operator ", k, " (", tempAlgorithm[[k]]$operator, ")."))
         }
       } else{

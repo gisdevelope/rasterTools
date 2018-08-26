@@ -1590,7 +1590,7 @@ rSkeletonise <- function(obj, method = "hitormiss", kernel = NULL, background = 
     background <- NA
   }
 
-  if(missing(kernel)){
+  if(is.null(kernel)){
     kernel <- shapeKernel(c(3, 3), type="diamond")
   }
 
