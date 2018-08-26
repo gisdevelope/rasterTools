@@ -10,6 +10,16 @@ test_that("output has class RasterLayer", {
   expect_class(output, "RasterLayer")
 })
 
+test_that("dilate also non-binary input/kernel", {
+  input <- rtData$continuous
+  output <- rErode(obj = input)
+  expect_class(output, "RasterLayer")
+  
+  output <- rErode(obj = input,
+                   kernel = matrix(c(1, 1, 1, 1, 6, 1, 1, 1, 1), 3, 3))
+  expect_class(output, "RasterLayer")
+})
+
 test_that("output is named", {
   input <- rtData$continuous
   binarised <- rBinarise(input, thresh = 30)

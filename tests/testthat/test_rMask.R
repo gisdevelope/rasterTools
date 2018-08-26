@@ -46,10 +46,15 @@ test_that("Error if arguments have wrong value", {
   mat <- as.matrix(input)
   m <- matrix(nrow = 56, ncol = 60, data = 0)
   m[c(5:25), c(5:50)] <- 1
+  nonbinary_m <- m
+  nonbinary_m[5, 5] <- 2
+  wrongsize_m <- matrix(nrow = 60, ncol = 60, data = 1)
 
   expect_error(rMask(obj = "bla"))
   expect_error(rMask(obj = mat))
   expect_error(rMask(obj = input, mask = "bla"))
+  expect_error(rMask(obj = input, mask = nonbinary_m))
+  expect_error(rMask(obj = input, mask = wrongsize_m))
   expect_error(rMask(obj = mat, background = 0))
   expect_error(rMask(obj = mat, mask = m, background = 1.1))
 })

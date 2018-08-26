@@ -44,4 +44,9 @@ test_that("history is correct", {
   output <- rOffset(obj = binarised)
   history <- output@history
   expect_list(history, len = 3, types = "character")
+  
+  binarised@history <- list()
+  output <- rOffset(obj = binarised)
+  history <- output@history
+  expect_list(history, len = 2, types = "character")
 })

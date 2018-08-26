@@ -1,5 +1,5 @@
 library(checkmate)
-context("rPermutate")
+context("rPermute")
 
 
 test_that("output has class RasterLayer", {
@@ -12,6 +12,12 @@ test_that("output has class RasterLayer", {
   expect_class(output, "RasterLayer")
 
   output <- rPermute(obj = input, type = "cycle", by = 10)
+  expect_class(output, "RasterLayer")
+  
+  output <- rPermute(obj = input, type = "descending")
+  expect_class(output, "RasterLayer")
+  
+  output <- rPermute(obj = input, type = "ascending")
   expect_class(output, "RasterLayer")
 })
 

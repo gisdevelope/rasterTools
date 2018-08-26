@@ -64,6 +64,11 @@ test_that("history is correct", {
   output <- rDistance(binarised)
   history <- output@history
   expect_list(history, types = "character", len = 3)
+  
+  binarised@history <- list()
+  output <- rDistance(binarised)
+  history <- output@history
+  expect_list(history, types = "character", len = 2)
 })
 
 test_that("bibliography item has been created", {

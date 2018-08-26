@@ -40,8 +40,13 @@ test_that("Error if arguments have wrong value", {
 
 test_that("history is correct", {
   input <- rtData$continuous
-
+  binarised <- rBinarise(input, thresh = 30)
+  
   output <- rSubstitute(input, old = c(41:47), new = 40)
   history <- output@history
   expect_list(history, len = 2, types = "character")
+  
+  output <- rSubstitute(binarised, old = 1, new = 2)
+  history <- output@history
+  expect_list(history, len = 3, types = "character")
 })

@@ -45,4 +45,25 @@ test_that("history is correct", {
   output <- rRescale(input, factor = 0.5)
   history <- output@history
   expect_list(history, len = 2, types = "character")
+  
+  input@history <- list("this object has a history")
+  output <- rRescale(input, factor = 0.5)
+  history <- output@history
+  expect_list(history, len = 2, types = "character")
+  expect_true(history[[1]] == "this object has a history")
+})
+
+test_that("bibliography item has been created", {
+  input <- rtData$continuous
+  
+  output <- rRescale(input, factor = 0.5)
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
+  expect_list(theBib, len = 1)
+  
+  options(bibliography = NULL)
+  output <- rRescale(input, factor = 0.5)
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
+  expect_list(theBib, len = 1)
 })

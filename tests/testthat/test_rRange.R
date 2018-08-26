@@ -40,4 +40,10 @@ test_that("history is correct", {
   output <- rRange(obj = input, range = c(0, 10))
   history <- output@history
   expect_list(history, len = 2, types = "character")
+  
+  input@history <- list("this object has a history")
+  output <- rRange(obj = input, range = c(0, 10))
+  history <- output@history
+  expect_list(history, len = 2, types = "character")
+  expect_true(history[[1]] == "this object has a history")
 })

@@ -1,4 +1,6 @@
 library(checkmate)
+library(testthat)
+library(raster)
 context("rSegregate")
 
 
@@ -11,7 +13,10 @@ test_that("output has class RasterStack", {
 
   output <- rSegregate(input, by = patches)
   expect_class(output, "RasterStack")
-
+  
+  output <- rSegregate(input, by = as.matrix(patches))
+  expect_class(output, "RasterStack")
+  
   output <- rSegregate(patches, background = 0)
   expect_class(output, "RasterStack")
 })
@@ -70,7 +75,24 @@ test_that("bibliography item has been created", {
   input <- rtData$continuous
   patches <- rPatches(rBinarise(input, thresh = 30))
 
+  options(bibliography = NULL)
   output <- rSegregate(patches)
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
+  expect_list(theBib, len = 1)
+  
+  mybib <- bibentry(bibtype = "Manual",
+           title = "rasterTools: obtain and process earth observation data",
+           author = person(given = "Steffen", family = "Ehrmann",
+                           email = "steffen.rasterTools@funroll-loops.de",
+                           role = c("aut", "cre")),
+           url = "https://ehrmanns.github.io/rasterTools",
+           note = paste0("version ", packageVersion("rasterTools")),
+           year = 2018)
+  
+  options(bibliography = mybib)
+  output <- rSegregate(patches)
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
+  expect_list(theBib, len = 2)
 })

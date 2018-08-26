@@ -55,4 +55,9 @@ test_that("history is correct", {
   output <- rFillNA(patches)
   history <- output@history
   expect_list(history, len = 4, types = "character")
+  
+  patches@history <- list()
+  output <- rFillNA(patches)
+  history <- output@history
+  expect_list(history, types = "character", len = 2)
 })

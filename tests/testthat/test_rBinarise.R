@@ -14,6 +14,8 @@ test_that("output has class RasterLayer", {
   # test for match
   output <- rBinarise(obj = input, match = 1)
   expect_class(output, "RasterLayer")
+  output <- rBinarise(obj = input, match = c(1, 2))
+  expect_class(output, "RasterLayer")
 })
 
 test_that("output is named", {

@@ -1,4 +1,5 @@
 library(checkmate)
+library(testthat)
 context("rGreater")
 
 
@@ -40,6 +41,7 @@ test_that("Error if arguments have wrong value", {
   expect_error(rGreater(obj = "bla", thresh = 50))
   expect_error(rGreater(obj = mat, thresh = 50))
   expect_error(rGreater(obj = input, thresh = 50, background = 1.1))
+  expect_error(rGreater(obj = input, thresh = 101))
 })
 
 test_that("history is correct", {
@@ -48,4 +50,10 @@ test_that("history is correct", {
   output <- rGreater(obj = input, thresh = 50)
   history <- output@history
   expect_list(history, types = "character", len = 2)
+  
+  input@history <- list("this object has a history")
+  output <- rGreater(obj = input, thresh = 50)
+  history <- output@history
+  expect_list(history, types = "character", len = 2)
+  expect_true(history[[1]] == "this object has a history")
 })

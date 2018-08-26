@@ -69,4 +69,10 @@ test_that("history is correct", {
   history <- output@history
   expect_list(history, len = 3)
   expect_equal(history[[3]], "patches have been determined")
+  
+  binarised@history <- list()
+  output <- rPatches(obj = binarised)
+  history <- output@history
+  expect_list(history, len = 2)
+  expect_equal(history[[2]], "patches have been determined")
 })

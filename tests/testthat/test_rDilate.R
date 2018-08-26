@@ -10,8 +10,14 @@ test_that("output has class RasterLayer", {
   expect_class(output, "RasterLayer")
 })
 
-test_that("dilate also non-binary input", {
+test_that("dilate also non-binary input/kernel", {
+  input <- rtData$continuous
+  output <- rDilate(obj = input)
+  expect_class(output, "RasterLayer")
   
+  output <- rDilate(obj = input,
+                    kernel = matrix(c(1, 1, 1, 1, 6, 1, 1, 1, 1), 3, 3))
+  expect_class(output, "RasterLayer")
 })
 
 test_that("output is named", {
