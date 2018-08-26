@@ -59,11 +59,9 @@ test_that("bibliography item has been created", {
   output <- rRescale(input, factor = 0.5)
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
-  expect_list(theBib, len = 1)
-  
+
   options(bibliography = NULL)
   output <- rRescale(input, factor = 0.5)
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
-  expect_list(theBib, len = 1)
 })
