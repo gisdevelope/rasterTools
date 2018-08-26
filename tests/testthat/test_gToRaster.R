@@ -28,7 +28,7 @@ test_that("output has proper coordinate reference system", {
   aGeom <- geomPolygon(anchor = input)
   aRaster <- gToRaster(geom = aGeom, crs = projs$laea, res = c(1000, 1000))
   expect_equal(aRaster@crs@projargs, projs$laea)
-  
+
   aGeom <- geomPolygon(anchor = input)
   aGeom <- setCRS(x = aGeom, crs = projs$laea)
   aRaster <- gToRaster(geom = aGeom, crs = projs$laea, res = c(1000, 1000))

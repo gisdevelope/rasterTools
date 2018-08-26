@@ -394,21 +394,21 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   assertNumeric(res, len = 2, finite = TRUE)
   assertCharacter(crs, fixed = "+proj", null.ok = TRUE)
   if(!is.null(crs)){
-    target_crs <- crs
+    targetCRS <- crs
   } else{
-    target_crs <- as.character(NA)
+    targetCRS <- NA
   }
   if(!is.na(geom@crs)){
-    source_crs <- geom@crs
+    sourceCRS <- geom@crs
   } else{
-    source_crs <- as.character(NA)
+    sourceCRS <- NA
   }
   
   theWindow <- getWindow(geom)
-  extCols <- round(c(min(theWindow$x), max(theWindow$x))/res[1])
-  outCols <- round(max(extCols) - min(extCols))
-  extRows <- round(c(min(theWindow$y), max(theWindow$y))/res[2])
-  outRows <- round(max(extRows) - min(extRows))
+  extCols <- round(c(min(theWindow$x, na.rm = TRUE), max(theWindow$x, na.rm = TRUE))/res[1])
+  outCols <- round(max(extCols, na.rm = TRUE) - min(extCols, na.rm = TRUE))
+  extRows <- round(c(min(theWindow$y, na.rm = TRUE), max(theWindow$y, na.rm = TRUE))/res[2])
+  outRows <- round(max(extRows, na.rm = TRUE) - min(extRows, na.rm = TRUE))
   
   temp <- matrix(data = 0, ncol = outCols, nrow = outRows)
   coords <- geom@table[c("x", "y")]
@@ -416,25 +416,23 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   coords[,2] <- round(coords[,2]/res[2])
   vertices <- as.matrix(coords)
   if(!any(theWindow$x == 0)){
-    vertices[,1] <- vertices[,1] - min(vertices[,1])
+    vertices[,1] <- vertices[,1] - min(vertices[,1], na.rm = TRUE)
   }
   if(!any(theWindow$y == 0)){
-    vertices[,2] <- vertices[,2] - min(vertices[,2])
+    vertices[,2] <- vertices[,2] - min(vertices[,2], na.rm = TRUE)
   }
   if(any(coords[dim(coords)[1],] != coords[1,])){
     vertices <- rbind(vertices, vertices[1,])
   }
   geomRaster <- cellInGeom(mat = temp, coords = vertices, negative = negative)
   # out <- raster(geomRaster, xmn = min(coords[,1])*res[1], xmx = max(coords[,1])*res[1], ymn = min(coords[,2])*res[2], ymx = max(coords[,2])*res[2], crs = CRS(theCRS))
-  out <- raster(geomRaster, xmn = 0, xmx = outCols, ymn = 0, ymx = outRows, crs = CRS(source_crs))
+  out <- raster(geomRaster, xmn = 0, xmx = outCols, ymn = 0, ymx = outRows, crs = as.character(sourceCRS))
   extent(out) <- extent(extCols[1]*res[1], extCols[2]* res[1], extRows[1]*res[2], extRows[2]*res[2])
 
   out@history <- c(geom@history, list(paste0("geometry was transformed to a raster")))
 
-  if(is.na(source_crs)){
-    proj4string(out) <- target_crs
-  } else{
-    out <- projectRaster(from = out, crs = target_crs)
+  if(!is.na(targetCRS)){
+    out <- setCRS(x = out, crs = targetCRS)
   }
 
   return(out)
