@@ -374,12 +374,32 @@ rCentroid <- function(obj, output = "raster", background = NULL){
 
 #' Morphologically dilate foreground patches in a raster
 #'
-#' The morphological operation 'dilate' adds cells at the boundary of a patch in
-#' a binarised raster.
+#' The morphological operation 'dilate' increases the value of cells along a
+#' gradient of values.
 #' @template obj
-#' @template kernel1
-#' @return A \code{RasterLayer} of the same dimension as \code{obj}, where the
-#'   boundaries of the binary raster have been enlarged by the given kernel.
+#' @param kernel [\code{matrix(1)}]\cr scan the raster with this kernel (default
+#'   is a 3 by 3 cells diamond kernel).
+#' @details A morphological dilation changes the values in a raster after
+#'   comparing each value to a kernel that moves systematically across the
+#'   raster. A kernel is any 2D array with an odd number of cells in each
+#'   dimension and a focal cell in the middle. The cells of a kernel can have
+#'   four categories of values: 0, 1, NA and any value > 1. When the kernel
+#'   values match the values of the input raster, the input raster cell covered
+#'   by the focal kernel cell is modified according to a specific operation, for
+#'   instance the smallest value covered by the kernel is assigned.
+#'
+#'   Rasters are either binary or non-binary (greyscale) rasters. \itemize{
+#'   \item For binary rasters the kernel cells with values 0 and 1 are matched
+#'   accurately in the input raster. Cells with value NA will be ignored, i.e.
+#'   "it does not matter what value is there". \item For a non-binary raster the
+#'   value 0 does not have any meaning and every 0 is turned into an NA. In case
+#'   a non-binary kernel is defined to dilate a non-binary (greyscale) raster,
+#'   each value of the input raster that is currently covered by the kernel is
+#'   summarised with the focal kernel value and the maximum of this set of
+#'   values is assigned to the input raster cell covered by the focal kernel
+#'   cell.}
+#' @return A \code{RasterLayer} of the same dimension as \code{obj}, where a
+#'   dilation has been performed.
 #' @family operators to morphologically modify a raster
 #' @examples
 #' input <- rtData$continuous
@@ -389,6 +409,9 @@ rCentroid <- function(obj, output = "raster", background = NULL){
 #' # use another kernel
 #' (myKernel <- matrix(1, 3, 3))
 #' visualise(rDilate(binarised, kernel = myKernel), new = TRUE)
+#' 
+#' # dilate also non-binary rasters
+#' visualise(raster::stack(input, rDilate(obj = input)))
 #' @importFrom checkmate assertClass assertMatrix
 #' @importFrom raster as.matrix raster extent crs crs<-
 #' @export
@@ -402,17 +425,21 @@ rDilate <- function(obj, kernel = NULL){
 
   mat <- as.matrix(obj)
   blend <- 1 # morphC::blendIdentity
-  values <- c(0)
   if(!isBinaryC(mat)){
-    values <- NULL
+    vals <- values(obj)
+    values <- vals[!duplicated(vals) & vals!=0]
     if(!isBinaryC(kernel)){
       blend <- 5 # morphC::blendPlus
     }
+  } else{
+    values <- c(0)
   }
 
   kernel[kernel==0] <- NA
-  temp <- morphC(mat = mat, kernel = kernel, value = values, blend = blend,
-                 merge = 2, rotateKernel = FALSE, strictKernel = FALSE)
+  temp <- morphC(mat = mat, kernel = kernel, 
+                 value = values, blend = blend,
+                 merge = 2, # morphC::mergeMax
+                 rotateKernel = FALSE, strictKernel = FALSE)
 
   out <- raster(temp)
   extent(out) <- extent(obj)
@@ -535,9 +562,29 @@ rDistance <- function(obj, method = "euclidean"){
 #' The morphological operation 'erode' removes cells at the boundary of a
 #' foreground patch in a binarised raster.
 #' @template obj
-#' @template kernel1
-#' @return A \code{RasterLayer} of the same dimension as \code{obj}, where the
-#'   boundaries of the binary raster have been eroded away by the given kernel.
+#' @param kernel [\code{matrix(1)}]\cr scan the raster with this kernel (default
+#'   is a 3 by 3 cells diamond kernel).
+#' @details A morphological dilation changes the values in a raster after
+#'   comparing each value to a kernel that moves systematically across the
+#'   raster. A kernel is any 2D array with an odd number of cells in each
+#'   dimension and a focal cell in the middle. The cells of a kernel can have
+#'   four categories of values: 0, 1, NA and any value > 1. When the kernel
+#'   values match the values of the input raster, the input raster cell covered
+#'   by the focal kernel cell is modified according to a specific operation, for
+#'   instance the smallest value covered by the kernel is assigned.
+#'
+#'   Rasters are either binary or non-binary (greyscale) rasters. \itemize{
+#'   \item For binary rasters the kernel cells with values 0 and 1 are matched
+#'   accurately in the input raster. Cells with value NA will be ignored, i.e.
+#'   "it does not matter what value is there". \item For a non-binary raster the
+#'   value 0 does not have any meaning and every 0 is turned into an NA. In case
+#'   a non-binary kernel is defined to erode a non-binary (greyscale) raster,
+#'   from each value of the input raster that is currently covered by the kernel
+#'   is the focal kernel value is subtracted and the minimum of this set of
+#'   values is assigned to the input raster cell covered by the focal kernel
+#'   cell.}
+#' @return A \code{RasterLayer} of the same dimension as \code{obj}, where an
+#'   erosion has been performed.
 #' @family operators to morphologically modify a raster
 #' @examples
 #' # use as standalone
@@ -548,6 +595,9 @@ rDistance <- function(obj, method = "euclidean"){
 #' # use another kernel
 #' (myKernel <- matrix(1, 3, 3))
 #' visualise(rErode(binarised, kernel = myKernel), new = TRUE)
+#' 
+#' # dilate also non-binary rasters
+#' visualise(raster::stack(input, rErode(obj = input)))
 #' @importFrom checkmate assertClass assertMatrix
 #' @importFrom raster as.matrix raster extent crs crs<-
 #' @export
@@ -561,19 +611,21 @@ rErode <- function(obj, kernel = NULL){
 
   mat <- as.matrix(obj)
   blend <- 1 # morphC::blendIdentity
-  values <- c(1)
   if(!isBinaryC(mat)){
     vals <- values(obj)
     values <- vals[!duplicated(vals) & vals!=0]
     if(!isBinaryC(kernel)){
       blend <- 6 # morphC::blendMinus
-      values <- NULL
     }
+  } else{
+    values <- c(1)
   }
 
   kernel[kernel==0] <- NA
-  temp <- morphC(mat = mat, kernel = kernel, value = values, blend = blend,
-                 merge = 1, rotateKernel = FALSE, strictKernel = FALSE)
+  temp <- morphC(mat = mat, kernel = kernel, 
+                 value = values, blend = blend,
+                 merge = 1, # morphC::mergeMin
+                 rotateKernel = FALSE, strictKernel = FALSE)
 
   out <- raster(temp)
   extent(out) <- extent(obj)
@@ -981,7 +1033,8 @@ rOffset <- function(obj, value = 1){
 #' via other cells in a binarised raster and which should hence be treated as
 #' distinct objects.
 #' @template obj
-#' @template kernel1
+#' @param kernel [\code{matrix(1)}]\cr scan the raster with this kernel (default
+#'   is a 3 by 3 cells diamond kernel).
 #' @template background
 #' @return A \code{RasterLayer} of the same dimension as \code{obj}, in which
 #'   neighbouring cells of the foreground have been assigned the same value,
@@ -1422,7 +1475,7 @@ rSegregate <- function(obj, by = NULL, flatten = FALSE, background = NULL){
 
   # check arguments
   assertClass(obj, "RasterLayer")
-  existsBy <- !testNull(by)
+  existsBy <- !is.null(by)
   if(existsBy){
     isRaster <- testClass(by, "RasterLayer")
     isMatrix <- testClass(by, "matrix")
@@ -1505,7 +1558,8 @@ rSegregate <- function(obj, by = NULL, flatten = FALSE, background = NULL){
 #' @param method [\code{character(1)}]\cr the method to determine the skeleton.
 #'   Either \code{"hitormiss"} (default), \code{"lantuejoul"} or
 #'   \code{"beucher"}.
-#' @template kernel1
+#' @param kernel [\code{matrix(1)}]\cr scan the raster with this kernel (default
+#'   is a 3 by 3 cells diamond kernel).
 #' @template background
 #' @return a \code{RasterLayer} of the same dimensions as \code{obj}, in which
 #'   foreground patches have been transformed into their morphological

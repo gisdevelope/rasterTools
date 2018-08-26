@@ -9,8 +9,8 @@ rPatches(obj, kernel = NULL, background = NULL)
 \arguments{
 \item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
 
-\item{kernel}{[\code{matrix(1)}]\cr scan the raster with this kernel
-(default is a 3 by 3 cells diamond kernel).}
+\item{kernel}{[\code{matrix(1)}]\cr scan the raster with this kernel (default
+is a 3 by 3 cells diamond kernel).}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
@@ -26,9 +26,13 @@ via other cells in a binarised raster and which should hence be treated as
 distinct objects.
 }
 \details{
-The cells of a kernel can have the values 0, 1 and NA. The kernel
-  cells with values 0 and 1 are matched accurately in the input raster. The
-  kernel cells with value NA will be ignored.
+The cells of a kernel can have four categories of values 0, 1 and NA
+  and any value > 1. For binary rasters the kernel cells with values 0 and 1
+  are matched accurately in the input raster and cells with value NA will be
+  ignored, i.e. "it does not matter what value is there". For a non-binary
+  rasters the value 0 does not have any meaning and every 0 is turned into an
+  NA. Moreover, if a non-binary kernel is defined to dilate a
+  non-binary raster, the respective value will be
 }
 \examples{
 input <- rtData$continuous
