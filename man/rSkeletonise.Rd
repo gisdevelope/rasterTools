@@ -29,14 +29,6 @@ The morphological skeleton of a patch is a binary skeletal remnant that
 preserves the extent and connectivity (i.e. the topology) of the patch.
 }
 \details{
-The cells of a kernel can have four categories of values 0, 1 and NA
-  and any value > 1. For binary rasters the kernel cells with values 0 and 1
-  are matched accurately in the input raster and cells with value NA will be
-  ignored, i.e. "it does not matter what value is there". For a non-binary
-  rasters the value 0 does not have any meaning and every 0 is turned into an
-  NA. Moreover, if a non-binary kernel is defined to dilate a
-  non-binary raster, the respective value will be
-
 For details, refer to \code{\link[mmand]{skeletonise}} of which
   \code{rSkeletonise} is a wrapper.
 }

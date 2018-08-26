@@ -25,15 +25,6 @@ A \code{RasterLayer} of the same dimension as \code{obj}, in which
 via other cells in a binarised raster and which should hence be treated as
 distinct objects.
 }
-\details{
-The cells of a kernel can have four categories of values 0, 1 and NA
-  and any value > 1. For binary rasters the kernel cells with values 0 and 1
-  are matched accurately in the input raster and cells with value NA will be
-  ignored, i.e. "it does not matter what value is there". For a non-binary
-  rasters the value 0 does not have any meaning and every 0 is turned into an
-  NA. Moreover, if a non-binary kernel is defined to dilate a
-  non-binary raster, the respective value will be
-}
 \examples{
 input <- rtData$continuous
 binarised <- rBinarise(input, thresh = 30)
