@@ -133,6 +133,66 @@ setMethod(f = "getCRS",
             as.character(x@proj4string)
           })
 
+#' @describeIn setCRS set the coordinate reference system of a \code{geom}
+#' @export
+
+setMethod(f = "setCRS",
+          signature = "geom",
+          definition = function(x, crs){
+            if(is.na(x@crs)){
+              x@crs <- crs
+            } else{
+              theCoords <- x@table[which(names(x@table) %in% c("x", "y"))]
+              theWindow <- x@window
+              if(x@crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
+                geographic <- rgdal::project(as.matrix(theCoords), proj = as.character(x@crs), inv = TRUE)
+                geoWin <- rgdal::project(as.matrix(theWindow), proj = as.character(x@crs), inv = TRUE)
+              } else{
+                geographic <- as.matrix(theCoords)
+                geoWin <- as.matrix(theWindow)
+              }
+              if(crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
+                projected <- rgdal::project(geographic, proj = as.character(crs))
+                proWin <- rgdal::project(geoWin, proj = as.character(crs))
+              } else{
+                projected <- geographic
+                proWin <- geoWin
+              }
+              x@table <- data.frame(projected, x@table[which(!names(x@table) %in% c("x", "y"))])
+              x@crs <- crs
+              x@window <- data.frame(proWin)
+            }
+            return(x)
+          })
+
+#' @describeIn setCRS set the coordinate reference system of a \code{Raster*} object
+#' @export
+
+setMethod(f = "setCRS",
+          signature = "Raster",
+          definition = function(x, crs, ...){
+            if(is.na(x@crs)){
+              x@crs <- crs(crs)
+            } else{
+              x <- projectRaster(from = x, crs = crs, ...)
+            }
+            return(x)
+          })
+
+#' @describeIn setCRS set the coordinate reference system of a \code{Spatial*} object
+#' @export
+
+setMethod(f = "setCRS",
+          signature = "Spatial",
+          definition = function(x, crs){
+            if(is.na(x@proj4string)){
+              x@proj4string <- crs(crs)
+            } else{
+              x <- spTransform(x, CRSobj = crs(crs))
+            }
+            return(x)
+          })
+
 #' @describeIn getRow get a row of a \code{geom} based on a numeric
 #' @export
 
@@ -198,66 +258,6 @@ setMethod(f = "getColumn",
             x@table[,which(column)]
           })
 
-#' @describeIn setCRS set the coordinate reference system of a \code{geom}
-#' @export
-
-setMethod(f = "setCRS",
-          signature = "geom",
-          definition = function(x, crs){
-            if(is.na(x@crs)){
-              x@crs <- crs
-            } else{
-              theCoords <- x@table[which(names(x@table) %in% c("x", "y"))]
-              theWindow <- x@window
-              if(x@crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
-                geographic <- rgdal::project(as.matrix(theCoords), proj = as.character(x@crs), inv = TRUE)
-                geoWin <- rgdal::project(as.matrix(theWindow), proj = as.character(x@crs), inv = TRUE)
-              } else{
-                geographic <- as.matrix(theCoords)
-                geoWin <- as.matrix(theWindow)
-              }
-              if(crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
-                projected <- rgdal::project(geographic, proj = as.character(crs))
-                proWin <- rgdal::project(geoWin, proj = as.character(crs))
-              } else{
-                projected <- geographic
-                proWin <- geoWin
-              }
-              x@table <- data.frame(projected, x@table[which(!names(x@table) %in% c("x", "y"))])
-              x@crs <- crs
-              x@window <- data.frame(proWin)
-            }
-            return(x)
-          })
-
-#' @describeIn setCRS set the coordinate reference system of a \code{Raster*} object
-#' @export
-
-setMethod(f = "setCRS",
-          signature = "Raster",
-          definition = function(x, crs, ...){
-            if(is.na(x@crs)){
-              x@crs <- crs(crs)
-            } else{
-              x <- projectRaster(from = x, crs = crs, ...)
-            }
-            return(x)
-          })
-
-#' @describeIn setCRS set the coordinate reference system of a \code{Spatial*} object
-#' @export
-
-setMethod(f = "setCRS",
-          signature = "Spatial",
-          definition = function(x, crs){
-            if(is.na(x@proj4string)){
-              x@proj4string <- crs(crs)
-            } else{
-              x <- spTransform(x, CRSobj = crs(crs))
-            }
-            return(x)
-          })
-
 # res <- .Call("transform", proj4string(x), slot(CRSobj, "projargs"), n,
 #              as.double(crds[,1]), as.double(crds[,2]), as.double(crds[,3]),
 #              PACKAGE="rgdal")
@@ -268,4 +268,39 @@ setMethod(f = "getHistory",
           signature = "geom",
           definition = function(x){
             x@history
+          })
+
+#' @describeIn getHistory get the history of a \code{RasterLayer}
+#' @export
+
+setMethod(f = "getHistory",
+          signature = "RasterLayer",
+          definition = function(x){
+            x@history
+          })
+
+#' @describeIn getHistory get the history of a \code{RasterBrick}
+#' @export
+
+setMethod(f = "getHistory",
+          signature = "RasterBrick",
+          definition = function(x){
+            hist <- list()
+            for(i in 1:dim(x)[3]){
+              hist <- c(hist, x[[i]]@history)
+            }
+            return(hist)
+          })
+
+#' @describeIn getHistory get the history of a \code{RasterStack}
+#' @export
+
+setMethod(f = "getHistory",
+          signature = "RasterStack",
+          definition = function(x){
+            hist <- list()
+            for(i in 1:dim(x)[3]){
+              hist <- c(hist, x[[i]]@history)
+            }
+            return(hist)
           })

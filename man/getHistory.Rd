@@ -4,11 +4,20 @@
 \name{getHistory}
 \alias{getHistory}
 \alias{getHistory,geom-method}
+\alias{getHistory,RasterLayer-method}
+\alias{getHistory,RasterBrick-method}
+\alias{getHistory,RasterStack-method}
 \title{Get the history (generic)}
 \usage{
 getHistory(x, ...)
 
 \S4method{getHistory}{geom}(x)
+
+\S4method{getHistory}{RasterLayer}(x)
+
+\S4method{getHistory}{RasterBrick}(x)
+
+\S4method{getHistory}{RasterStack}(x)
 }
 \arguments{
 \item{x}{the object from which to derive the history.}
@@ -21,5 +30,11 @@ Get the history (generic)
 \section{Methods (by class)}{
 \itemize{
 \item \code{geom}: get the history of a \code{geom}
+
+\item \code{RasterLayer}: get the history of a \code{RasterLayer}
+
+\item \code{RasterBrick}: get the history of a \code{RasterBrick}
+
+\item \code{RasterStack}: get the history of a \code{RasterStack}
 }}
 
