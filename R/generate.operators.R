@@ -84,7 +84,10 @@ spmGradient <- function(mat, origin = NULL, type = "planar", ...){
       
       if(type == "planar"){
         # planar gradient is a gradient where a linear line through the plot window is layed and moved orthogonally until it touches the plot boundary in only one value        
+
+        
       } else{
+        # put together the call from 'type' and 'theArgs' and 'newArgs'
 
         
       }
@@ -143,12 +146,6 @@ spmGradient <- function(mat, origin = NULL, type = "planar", ...){
   return(out)
 }
 
-bla <- function(x, y, ...){
-  args <- listArgs()
-  args
-}
-
-
 #' Generate a neutral random pattern
 #'
 #' This is largely still work in progress.
@@ -160,25 +157,31 @@ bla <- function(x, y, ...){
 #'   \code{"cell"}, \code{"rectangle"}, \code{"circle"}, \code{"voronoi"} or
 #'   \code{"cluster"}; see Details.
 #' @param seed specify a seed for the random creation of numbers.
-#' @details \itemize{ \item For \code{base = "cell"}, each cell of the resulting
-#'   LM is assigned a random value. \item For \code{base = "rectangle"}, \item
-#'   For \code{base = "circle"}, \item For \code{base = "voronoi"}, Gaucherel
-#'   (2008) \item For \code{base = "cluster"}, Saura & Martínez-Millán (2000) }
+#' @details \itemize{ \item For \code{pattern = "cell"}, each cell of the resulting
+#'   model is assigned a random value. \item For \code{pattern = "rectangle"}, \item
+#'   For \code{pattern = "circle"}, \item For \code{pattern = "voronoi"}, Gaucherel
+#'   (2008) \item For \code{pattern = "cluster"}, Saura & Martínez-Millán (2000) }
 #' @references Gaucherel, C. (2008) Neutral models for polygonal landscapes with
 #'   linear networks. Ecological Modelling, 219, 39 - 48. Saura, S.,
 #'   Martínez-Millán, J. (2000) Landscape patterns simulation with a modified
 #'   random clusters method. Landscape Ecology 15, 661–678.
+#' @examples 
+#' mat <- matrix(nrow = 100, ncol = 100, data = 0)
+#' myRandomPattern <- spmRandom(mat = mat)
+#' visualise(gridded = myRandomPattern)
+#' 
 #' @importFrom raster raster
 #' @export
 
-spmRandom <- function(mat, pattern, seed){
+spmRandom <- function(mat, pattern = "cell", seed = NULL){
 
   # https://en.wikipedia.org/wiki/Centroidal_Voronoi_tessellation
 
 
-  pattern <- match.arg(arg = pattern, choices = c("cell", "rectangle", "circle", "voronoi", "cluster"))
-
-  if(!missing(seed)){
+  patterns <- c("cell", "rectangle", "circle", "voronoi", "cluster")
+  assertSubset(pattern, choices = patterns)
+  
+  if(!is.null(seed)){
     set.seed(seed)
   }
 
@@ -187,9 +190,9 @@ spmRandom <- function(mat, pattern, seed){
     mat[] <- values
   } else if(pattern == "rectangle"){
 
-  } else if(pattern =="circle"){
+  } else if(pattern == "circle"){
 
-  } else{
+  } else if(pattern == "voronoi"){
 
   }
 
@@ -260,7 +263,7 @@ spmRandom <- function(mat, pattern, seed){
 #' @importFrom raster raster
 #' @export
 
-spmHeightmap <- function(mat, hurst = NULL, type = "diamondSquare", startDev = 1,
+spmHeightmap <- function(mat, type = "diamondSquare", hurst = NULL, startDev = 1,
                          seed = NULL){
 
   # https://en.wikipedia.org/wiki/Brownian_surface
@@ -313,20 +316,21 @@ spmHeightmap <- function(mat, hurst = NULL, type = "diamondSquare", startDev = 1
     )
     
   } else if(type == "brownian"){
-    
-    bib <- bibentry(bibtype = "Article",
-                    author = c(person(given = "J M J", family = "Travis"),
-                               person(given = "C", family = "Dytham")),
-                    title = "A method for simulating patterns of habitat availability at static and dynamic range margins",
-                    pages = "410-416",
-                    year = 2004,
-                    journal = "Oikos",
-                    volume = 104,
-                    issue = 2
-                    )
-    
+    stop("type = 'brownian' is not yet supported.")
+    #   
+  #   bib <- bibentry(bibtype = "Article",
+  #                   author = c(person(given = "J M J", family = "Travis"),
+  #                              person(given = "C", family = "Dytham")),
+  #                   title = "A method for simulating patterns of habitat availability at static and dynamic range margins",
+  #                   pages = "410-416",
+  #                   year = 2004,
+  #                   journal = "Oikos",
+  #                   volume = 104,
+  #                   issue = 2
+  #                   )
+  #   
   } else if(type == "gaussian"){
-    
+    stop("type = 'gaussian' is not yet supported.")
   }
   
   mat_out <- scaleVals(mat_out, c(0, 1))
