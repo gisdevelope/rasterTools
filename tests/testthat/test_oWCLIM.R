@@ -27,16 +27,16 @@ test_that(("oWCLIM works with Spatial* mask (that has another crs than the datas
 })
 
 test_that("Error if arguments have wrong value", {
-  # myMask <- loadData(files = "aWindow.csv",
-  #                    localPath = system.file("csv", package="rasterTools")) %>%
-  #   geomRectangle() %>%
-  #   setCRS(crs = projs$laea)
-  # 
-  # expect_error(oWCLIM(mask = "myMask"))
-  # expect_error(oWCLIM(mask = myMask, variable = 1))
-  # expect_error(oWCLIM(mask = myMask, variable = "tmin", month = "bla"))
-  # expect_error(oWCLIM(mask = myMask, variable = "tmin", resolution = "bla"))
-  # expect_error(oWCLIM(mask = myMask, variable = "tmin", version = "bla"))
+  myMask <- loadData(files = "aWindow.csv",
+                     localPath = system.file("csv", package="rasterTools")) %>%
+    geomRectangle() %>%
+    setCRS(crs = projs$laea)
+
+  expect_error(oWCLIM(mask = "myMask"))
+  expect_error(oWCLIM(mask = myMask, variable = 1))
+  expect_error(oWCLIM(mask = myMask, variable = "tmin", month = "bla"))
+  expect_error(oWCLIM(mask = myMask, variable = "tmin", resolution = "bla"))
+  expect_error(oWCLIM(mask = myMask, variable = "tmin", version = "bla"))
 })
 
 test_that("bibliography item has been created", {

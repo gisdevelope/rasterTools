@@ -60,7 +60,15 @@ test_that("bibliography item has been created", {
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
 
-  options(bibliography = NULL)
+  mybib <- bibentry(bibtype = "Manual",
+                    title = "rasterTools: obtain and process earth observation data",
+                    author = person(given = "Steffen", family = "Ehrmann",
+                                    email = "steffen.rasterTools@funroll-loops.de",
+                                    role = c("aut", "cre")),
+                    url = "https://ehrmanns.github.io/rasterTools",
+                    note = paste0("version ", packageVersion("rasterTools")),
+                    year = 2018)
+  options(bibliography = mybib)
   output <- rRescale(input, factor = 0.5)
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")

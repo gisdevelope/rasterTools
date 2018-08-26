@@ -89,7 +89,6 @@ test_that("bibliography item has been created", {
            url = "https://ehrmanns.github.io/rasterTools",
            note = paste0("version ", packageVersion("rasterTools")),
            year = 2018)
-  
   options(bibliography = mybib)
   output <- rSegregate(patches)
   theBib <- getOption("bibliography")

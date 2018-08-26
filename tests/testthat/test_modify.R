@@ -80,18 +80,23 @@ test_that("rBlend is properly handled", {
   expect_class(output, "RasterStack")
   
   # # test that an overlay can be taken from the global environment (this seems to create some problem atm)
-  # points <- rMatch(obj = skeleton,
-  #                  kernel = matrix(c(NA, 0, 0, NA, 1, 0, NA, 0, 0), 3, 3),
-  #                  background = 0)
-  # getMetasSkel <- list(list(operator = "rBlend", overlay = "points"))
-  # output <- modify(input = skeleton, by = getMetasSkel)
-  # expect_class(output, "RasterLayer")
+  thePoints <<- rMatch(obj = skeleton,
+                   kernel = matrix(c(NA, 0, 0, NA, 1, 0, NA, 0, 0), 3, 3),
+                   background = 0)
+  getMetasSkel <- list(list(operator = "rBlend", overlay = "thePoints"))
+  output <- modify(input = skeleton, by = getMetasSkel)
+  expect_class(output, "RasterLayer")
+  
+  aStack <<- raster::stack(thePoints, binarised)
+  getMetasSkel <- list(list(operator = "rBlend", overlay = "aStack"))
+  output <- modify(input = skeleton, by = getMetasSkel)
+  expect_class(output, "RasterLayer")
 })
 
 test_that("rMask is properly handled", {
   input <- rtData$continuous
   binarised <<- rBinarise(input, thresh = 30)
-  aStack <- raster::stack()
+  aStack <<- raster::stack(binarised, input)
   
   # test that a mask can be taken from the current algorithm
   getMedialAxis <- list(skeleton = list(operator = "rSkeletonise", background = 0),
@@ -115,14 +120,23 @@ test_that("rMask is properly handled", {
   patchValues <- list(list(operator = "rMask", mask = "binarised"))
   output <- modify(input = input, by = patchValues)
   expect_class(output, "RasterLayer")
+  patchValues <- list(list(operator = "rMask", mask = "aStack"))
+  output <- modify(input = input, by = patchValues)
+  expect_class(output, "RasterLayer")
 })
 
 test_that("rSegregate and rReduce is properly handled", {
   input <- rtData$continuous
-  patches <- rPatches(rBinarise(input, thresh = 30), background = 0)
+  thePatches <<- rPatches(rBinarise(input, thresh = 30), background = 0)
   dim1 <- dim(input)
   
-  getPatchValues <- list(list(operator = "rSegregate", by = patches))
+  getPatchValues <- list(thePatches = list(operator = "rBinarise", thresh = 30),
+                         thePatches = list(operator = "rPatches", background = 0),
+                         segregated = list(operator = "rSegregate", by = "thePatches"))
+  output <- modify(input, by = getPatchValues)
+  expect_list(output, len = 2)
+  
+  getPatchValues <- list(list(operator = "rSegregate", by = "thePatches"))
   output <- modify(input, by = getPatchValues)
   expect_class(output, "RasterStack")
   

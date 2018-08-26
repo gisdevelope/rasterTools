@@ -10,6 +10,9 @@ test_that("output has class RasterLayer", {
 
   output <- rReduce(myPatches)
   expect_class(output, "RasterLayer")
+  
+  output <- rReduce(myPatches, weights = 1, direction = "left")
+  expect_class(output, "RasterLayer")
 })
 
 test_that("output has class RasterStack", {
@@ -87,4 +90,9 @@ test_that("history is correct", {
   output <- rReduce(myPatches)
   history <- output@history
   expect_list(history, len = 5, types = "character")
+  
+  myPatches@history <- list()
+  output <- rReduce(myPatches)
+  history <- output@history
+  expect_list(history, len = 2, types = "character")
 })
