@@ -37,12 +37,12 @@ test_that("function handles files that don't exist properly", {
   expect_character(output[[2]])
 })
 
-test_that("function loads 'kml' files", {
-  output <- loadData(files = "cgrs_estonia.kml",
-                     localPath = system.file("test_datasets/kml", package="rasterTools"))
-  expect_class(output, "SpatialPolygonsDataFrame")
-})
-
+# test_that("function loads 'kml' files", {
+#   output <- loadData(files = "cgrs_estonia.kml",
+#                      localPath = system.file("test_datasets/kml", package="rasterTools"))
+#   expect_class(output, "SpatialPolygonsDataFrame")
+# })
+# 
 test_that("function loads 'tif' files", {
   output <- loadData(files = "g100_00.tif",
                      localPath = system.file("test_datasets/clc", package="rasterTools"))
