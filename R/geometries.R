@@ -286,7 +286,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   anchorIsDF <- testDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
   if(anchorIsDF){
     colnames(anchor) <- tolower(colnames(anchor))
-    assertNames(names(anchor), must.include = c("x", "y"))
+    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "id"))
     if("id" %in% names(anchor)){
       features <- length(unique(anchor$id))
     } else{

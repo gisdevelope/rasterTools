@@ -49,7 +49,7 @@ The values in this dataset are originally stored as values in the
 }
 \section{Functions}{
 \itemize{
-\item \code{downloadEFTA}: function to download data related to the EMMA dataset
+\item \code{downloadEFTA}: function to download data related to the EFTA dataset
 }}
 
 \examples{
