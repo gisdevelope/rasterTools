@@ -337,7 +337,17 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      ...),
                            name = "aGrob")
     
-    # } else if(featureType == "line"){
+  } else if(featureType == "line"){
+    
+    geomGrob <- polylineGrob(x = coords$x,
+                          y = coords$y,
+                          id = coords$id,
+                          gp = gpar(col = theme$par$colour$geom,
+                                    fill = theme$par$fill$geom,
+                                    lty = theme$par$linetype$geom,
+                                    lwd = theme$par$linewidth$geom,
+                                    ...),
+                          name = "aGrob")
     
   } else if(featureType %in% c("polygon")){
     
@@ -601,6 +611,7 @@ gFrom <- function(input, window = NULL){
 
       nData <- rep(1, length(input))
       theTable <- data.frame(input@coords, id = seq_along(input@coords[,1]))
+      colnames(theTable) <- c("x", "y", "id")
 
     } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
       type <- "point"
