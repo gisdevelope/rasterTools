@@ -1,11 +1,27 @@
 library(checkmate)
+library(raster)
 context("visualise")
 
 
-test_that("visualise a gridded object", {
+test_that("visualise a Raster* object", {
   continuous <- rtData$continuous
   
   output <- visualise(gridded = continuous)
+  expect_class(output, "recordedplot")
+})
+
+test_that("visualise a matrix", {
+  continuous <- raster::as.matrix(rtData$continuous)
+  
+  output <- visualise(gridded = continuous)
+  expect_class(output, "recordedplot")
+})
+
+test_that("visualise an image", {
+  continuous <- rtData$continuous
+  input <- RGB(continuous)
+  
+  output <- visualise(gridded = input, image = TRUE)
   expect_class(output, "recordedplot")
 })
 
