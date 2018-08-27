@@ -1,41 +1,104 @@
 library(checkmate)
 library(testthat)
+library(sp)
 context("gFrom")
 
 
-test_that("output has class Spatial*", {
-  # input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
-  #                          5234735, 5281527, 5189955, 5041066),
-  #                          Y = c(3977612, 3971119, 4028167, 3997230,
-  #                          4060164, 4117856, 4118207, 4062838),
-  #                          id = c(1:8))
-  #
-  # pointsGeom <- geomPoints(anchor = input)
-  # spPoints <- gToSp(geom = pointsGeom, crs = projs$laea)
-  # expect_class(spPoints, "SpatialPoints")
-  #
-  # # linesGeom <- geomCurve(anchor = somePoints, show = FALSE)
-  # # spLines <- gToSp(geom = linesGeom, crs = LAEA)
-  # # expect_class(spPoints, "SpatialLines")
-  #
-  # pointsGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8)))
-  # polyGeom <- geomPolygon(anchor = pointsGeom)
-  # spPolygon <- gToSp(geom = polyGeom, crs = projs$laea)
-  # expect_class(spPolygon, "SpatialPolygons")
+test_that("transform from 'Spatial*", {
+  
+  # test 'SpatialPoints'
+  input <- SpatialPoints(data.frame(c(1,2,3,4,5), 
+                                    c(3,2,5,1,4)))
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "point")
+  
+  # test 'SpatialPointsDataFrame'
+  pts = cbind(1:5, 1:5)
+  dimnames(pts)[[1]] = letters[1:5]
+  df = data.frame(a = 1:5)
+  row.names(df) = letters[5:1]
+  input <- SpatialPointsDataFrame(pts, df, match.ID = TRUE)
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "point")
+  
+  # test 'SpatialMultiPoints'
+  cl1 <- cbind(rnorm(3, 10), rnorm(3, 10))
+  cl2 <- cbind(rnorm(5, 10), rnorm(5,  0))
+  cl3 <- cbind(rnorm(7,  0), rnorm(7, 10))
+  input <- SpatialMultiPoints(list(cl1, cl2, cl3))
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "point")
+  expect_true(length(unique(output@table$id)) == 3)
+  
+  # test 'SpatialMultiPointsDataFrame'
+  input <- SpatialMultiPointsDataFrame(list(cl1, cl2, cl3), data = data.frame(a = 1:3))
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "point")
+  expect_data_frame(getTable(output), ncols = 4)
+  
+  # test 'SpatialLines'
+  input <- SpatialLines(list(Lines(list(Line(cbind(c(1, 2, 3), c(3, 2, 2)))), ID = "a"), 
+                             Lines(list(Line(cbind(c(1, 2, 3), c(1, 1.5, 1)))), ID = "b")))
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "line")
+  expect_true(length(unique(output@table$id)) == 2)
+  
+  # test 'SpatialLinesDataFrame'
+  input <- SpatialLinesDataFrame(input, data = data.frame(a = 1:2), match.ID = FALSE)
+  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "line")
+  expect_data_frame(getTable(output), ncols = 4)
+  
+  # test 'SpatialPolygons'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
+  
+  # test 'SpatialPolygonsDataFrame'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
+  
+  # test 'SpatialGrid'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
+  
+  # test 'SpatialGridDataFrame'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
+  
+  # test 'SpatialPixels'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
+  
+  # test 'SpatialPixelsDataFrame'
+  
+  # output <- gFrom(input)
+  # expect_class(output, "geom")
+  # expect_true(output@type == "")
 })
 
-test_that("output has correct length", {
-  # input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
-  #                           5234735, 5281527, 5189955, 5041066),
-  #                     Y = c(3977612, 3971119, 4028167, 3997230,
-  #                           4060164, 4117856, 4118207, 4062838),
-  #                     id = c(1, 1, 2, 2, 2, 2, 1, 1))
-  # polyGeom <- geomPolygon(anchor = input)
-  # spPolygon <- gToSp(geom = polyGeom, crs = projs$laea)
-  # expect_equal(length(spPolygon), 2)
-})
-
-test_that("output has coordinate reference system if set", {
+test_that("output has coordinate reference system, if set", {
   # input <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
   #                           5234735, 5281527, 5189955, 5041066),
   #                     Y = c(3977612, 3971119, 4028167, 3997230,
