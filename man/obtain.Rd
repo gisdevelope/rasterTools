@@ -11,7 +11,9 @@ obtain(data = NULL, mask = NULL)
 spatial datasets are specified. Each \code{operator} is a list iteself and
 includes the operator name and its arguments as sub-elements; see Examples.}
 
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr}
+\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object. The extent of
+vertices that are part of the same group is used to subset the spatial
+information.}
 }
 \value{
 A list of objects that is organised according to the stratification
@@ -38,7 +40,7 @@ and online resources.
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in \code{rtPaths} (see
   \code{\link{updatePaths}}).
-
+  
   Recently supported datasets are \itemize{
   \item Global: \itemize{
      \item \code{\link{oGFC}}: Global Forest Change

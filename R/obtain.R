@@ -5,7 +5,9 @@
 #' @param data [\code{list(.)}]\cr algorithm in which the operators to load
 #'   spatial datasets are specified. Each \code{operator} is a list iteself and
 #'   includes the operator name and its arguments as sub-elements; see Examples.
-#' @param mask [\code{geom} | \code{Spatial*}]\cr 
+#' @param mask [\code{geom} | \code{Spatial*}]\cr spatial object. The extent of
+#'   vertices that are part of the same group is used to subset the spatial
+#'   information.
 #' @details \code{obtain} expects a root directory in which an individual
 #'   directory for each dataset dwells, where in turn all the files of this
 #'   particular dataset are located. \code{rasterTools} provides a list of paths
@@ -17,7 +19,7 @@
 #'   nevertheless for those who are interested. In case an error occurs, it
 #'   might be necessary to specify new paths in \code{rtPaths} (see
 #'   \code{\link{updatePaths}}).
-#'
+#'   
 #'   Recently supported datasets are \itemize{
 #'   \item Global: \itemize{
 #'      \item \code{\link{oGFC}}: Global Forest Change
