@@ -72,9 +72,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   assertCharacter(variable, any.missing = FALSE, min.len = 1)
   assertSubset(variable, choices = c("tmean", "tavg", "tmin", "tmax", "prec", "bio", "alt"))
   assertIntegerish(month, lower = 1, upper = 12, any.missing = FALSE, min.len = 1)
-  assertNumeric(resolution, any.missing = FALSE, finite = TRUE, len = 1)
   assertSubset(resolution, choices = c(0.5, 2.5, 5, 10))
-  assertNumeric(version, any.missing = FALSE, finite = TRUE, len = 1)
   assertSubset(version, choices = c(1.4, 2))
   
   if(version == 1.4){

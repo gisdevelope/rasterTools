@@ -173,7 +173,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   
 }
 
-#' @describeIn oEFTA function to download data related to the EMMA dataset
+#' @describeIn oEFTA function to download data related to the EFTA dataset
 #' @param file [\code{character(1)}]\cr the name of the file to download.
 #' @template localPath
 #' @importFrom httr GET write_disk progress
