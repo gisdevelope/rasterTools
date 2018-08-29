@@ -85,6 +85,13 @@ visualise(gridded = myGFC$treecover_2002, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")
+
+# the gfc tiles
+gfcWindow <- data.frame(x = c(-180, 180),
+                        y = c(-60, 80))
+tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), 
+                       crs = projs$longlat)
+visualise(geom = tiles_gfc)
 }
 }
 \references{

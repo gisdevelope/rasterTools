@@ -59,9 +59,11 @@
 visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # bla <- matrix(0:109, 11, 11)
-  # gridded = gfc_out$treecover2000; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
-  
+  # new ideas: 
+  # 1. automatically detect which is gridded and which is geom
+  # 2. Rcpp for the gScale and gToGrob functions
+  # 3. enable colouring of geom based on its values
+    
   # check arguments
   isRaster <- testClass(gridded, "Raster")
   isRasterStackBrick <- testClass(gridded, "RasterStackBrick")
@@ -203,11 +205,10 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
     # scale it to relative, if it's not
     if(geom@scale == "absolute"){
-      geom <- gScale(geom, to = "relative")
+      geom <- gScale(geom = geom, to = "relative")
     }
 
     geomGrob <- gToGrob(geom = geom, theme = theme, ...)
-
   }
 
   # checkup concerning plot size

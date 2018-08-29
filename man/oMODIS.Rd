@@ -122,6 +122,13 @@ visualise(gridded = modEvi, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")
+
+# the modis tiles
+modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
+                        y = c(-10007554.677, 10007554.677))
+tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18),
+                         crs = projs$sinu)
+visualise(geom = tiles_modis)
 }
 }
 \seealso{
