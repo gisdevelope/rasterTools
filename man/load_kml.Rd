@@ -4,12 +4,15 @@
 \alias{load_kml}
 \title{Load \code{kml} files}
 \usage{
-load_kml(path, layer)
+load_kml(path, layer, driver = "rt")
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the local path of the file to load.}
 
 \item{layer}{[\code{character(1)}]\cr the layer name.}
+
+\item{driver}{[\code{chacter(1)}]\cr the driver used to load the 'kml' file,
+either \code{"ogr"} (default) or \code{"rt"}.}
 }
 \value{
 the \code{readOGR} standard for kml files.

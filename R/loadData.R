@@ -19,6 +19,7 @@
 #'   missing data are downloaded, given .
 #' @param verbose [\code{logical(1)}]\cr should additional information be
 #'   printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?
+#' @param ... [various]\cr other arguments of the load operators.
 #' @details \code{importData} checks whether the required files are available in
 #'   \code{localPath} and if this is not given, in the working directory. If
 #'   nothing is found there but a dataset is given, it attempts to download the
@@ -45,7 +46,7 @@
 # updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial")
 
 loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
-                     verbose = FALSE){
+                     verbose = FALSE, ...){
 
   # check arguments
   assertCharacter(dataset, ignore.case = TRUE, any.missing = FALSE, len = 1, null.ok = TRUE)
@@ -129,7 +130,8 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
         args <- list(path = thePath)
       } else{
         args <- list(path =  thePath,
-                     layer = layer[i])
+                     layer = layer[i],
+                     ...)
       }
 
       # and call the file type specific load_* function
@@ -190,7 +192,8 @@ load_csv <- function(path){
 
   out <- new(Class = "geom",
              type = "point",
-             table = theData,
+             coords = theData,
+             attr = data.frame(id = unique(theData$id)),
              window = data.frame(x = rep(c(min(out$x), max(out$x)), each = 2), y = c(min(out$y), max(out$y), max(out$y), min(out$y))),
              scale = "absolute",
              crs = as.character(NA),
@@ -208,20 +211,68 @@ load_csv <- function(path){
 #' its own.
 #' @template path
 #' @param layer [\code{character(1)}]\cr the layer name.
+#' @param driver [\code{chacter(1)}]\cr the driver used to load the 'kml' file,
+#'   either \code{"ogr"} (default) or \code{"rt"}.
 #' @return the \code{readOGR} standard for kml files.
 #' @family loaders
 #' @importFrom rgdal readOGR
+#' @importFrom stringr str_extract str_replace str_split
 #' @export
 
-load_kml <- function(path, layer){
+load_kml <- function(path, layer, driver = "rt"){
 
   assertFile(path, access = "r", extension = "kml")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE)
+  assertSubset(driver, choices = c("ogr", "rt"))
 
-  readOGR(dsn = path,
-          layer = layer,
-          verbose = FALSE)
-
+  if(driver == "ogr"){
+    out <- readOGR(dsn = path,
+                   layer = layer,
+                   verbose = FALSE)
+    
+  } else{
+    txt <- suppressWarnings(readLines(path))
+    txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]
+    
+    # get ids
+    id <- str_extract(string = txt, pattern = "<name>.*?<\\/name>")
+    id <- str_replace(string = id, pattern = "<name>", replacement = "")
+    id <- str_replace(string = id, pattern = "</name>", replacement = "")
+    
+    # get coordinates
+    coords <- str_extract(string = txt, pattern = "<coordinates>.*?<\\/coordinates>")
+    coords <- str_replace(string = coords, pattern = "<coordinates>", replacement = "")
+    coords <- str_replace(string = coords, pattern = "</coordinates>", replacement = "")
+    coords <- str_split(string = coords, pattern = " ")
+    nIds <- lengths(coords)
+    coords <- unlist(coords)
+    nCoords <- length(coords)
+    coords <- as.numeric(unlist(str_split(coords, ",")))
+    coords <- data.frame(rep(id, nIds), matrix(coords, nrow = nCoords, byrow = T), stringsAsFactors = FALSE)
+    colnames(coords) <- c("id", "x", "y")
+    
+    # what feature type is it?
+    if(all(grepl("Point", txt))){
+      type <- "point"
+    } else if(all(grepl("LineString", txt))){
+      type <- "line"
+    } else if(all(grepl("Polygon", txt))){
+      type <- "polygon"
+    } else{
+      stop("I was not able to determine the feature type of this 'kml'.")
+    }
+    
+    out <- new(Class = "geom",
+               type = type,
+               coords = coords,
+               attr = data.frame(id = unique(coords$id)),
+               window = data.frame(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
+               scale = "absolute",
+               crs = as.character(NA),
+               history = list(paste0("geom has been loaded from ", path)))
+  }
+  
+  return(out)
 }
 
 #' Load \code{hdf} files

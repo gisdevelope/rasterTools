@@ -5,7 +5,7 @@
 \title{Import spatial datasets}
 \usage{
 loadData(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
-  verbose = FALSE)
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{files}{[\code{character(.)} | \code{data.frame(1)}]\cr the files, as
@@ -29,6 +29,8 @@ missing data are downloaded, given .}
 
 \item{verbose}{[\code{logical(1)}]\cr should additional information be
 printed (\code{TRUE}) or should it be suppressed (\code{FALSE}, default)?}
+
+\item{...}{[various]\cr other arguments of the load operators.}
 }
 \value{
 the file to load. If there is more than one file specified, a list of
