@@ -29,13 +29,13 @@ test_that("output has different values (id) than input", {
   aGeom <- geomPolygon(anchor = input, extent = extent)
   
   groupedGeom <- gGroup(geom = aGeom, distance = 40)
-  expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
+  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
   
   groupedGeom <- gGroup(geom = aGeom, index = c(1, 1, 1, 1, 2, 2, 2, 2))
-  expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
+  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
   
   groupedGeom <- gGroup(geom = aGeom, clusters = 2)
-  expect_false(all(aGeom@table[3] == groupedGeom@table[3]))
+  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
 })
 
 test_that("Error if arguments have wrong value", {

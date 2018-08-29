@@ -351,7 +351,8 @@ rCentroid <- function(obj, output = "raster", background = NULL){
     names(theMeans) <- c("x", "y", "id")
     out <- new(Class = "geom",
                type = "point",
-               table = theMeans,
+               coords = theMeans,
+               attr = data.frame(id = unique(theMeans$id)),
                window = data.frame(x = rep(c(min(theMeans$x), max(theMeans$x)), each = 2), y = c(min(theMeans$y), max(theMeans$y), max(theMeans$y), min(theMeans$y))),
                scale = "absolute",
                crs = as.character(NA),

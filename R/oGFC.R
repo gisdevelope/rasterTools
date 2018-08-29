@@ -55,6 +55,13 @@
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
+#' 
+#' # the gfc tiles
+#' gfcWindow <- data.frame(x = c(-180, 180),
+#'                         y = c(-60, 80))
+#' tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), 
+#'                        crs = projs$longlat)
+#' visualise(geom = tiles_gfc)
 #' }
 #' @importFrom sp proj4string spTransform bbox
 #' @importFrom raster crop mosaic projectRaster stack
@@ -109,10 +116,9 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
                           y = c(-60, 80))
   tiles_gfc <- geomTiles(window = gfcWindow, cells = c(36, 14), crs = projs$longlat)
 
-
   # determine tiles of interest
-  tabGFC <- getTable(x = tiles_gfc)
-  tabMask <- getTable(x = mask)
+  tabGFC <- getCoords(x = tiles_gfc)
+  tabMask <- getCoords(x = mask)
   ids <- unique(tabGFC$id)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -126,7 +132,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   layerNames <- c("treecover2000", "loss", "gain", "lossyear", "datamask")
   allObjects <- NULL
 
-  tabTiles <- getTable(x = myTiles)
+  tabTiles <- getCoords(x = myTiles)
   # go through all selected tiles and subset them with the mask
   for (i in unique(tabTiles$id)){
     min_x <- min(tabTiles$x[tabTiles$id == i])

@@ -5,7 +5,7 @@
 setMethod(f = "length",
           signature = "geom",
           definition = function(x){
-            dim(x@table)[1]
+            dim(x@coords)[1]
           })
 
 #' Print geom in the console
@@ -15,14 +15,14 @@ setMethod(f = "length",
 setMethod(f = "show",
           signature = "geom",
           definition = function(object){
-            cat("class        : ", class(object), "\n", sep = "")
-            cat("feature type : ", object@type, "\n", sep = "")
-            cat("features     : ", length(unique(object@table$id)), "  (", length(object), " vertices)\n", sep = "")
-            cat("window       : ", min(object@window$x), ", ", max(object@window$x), ", ", min(object@window$y), ", ", max(object@window$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
-            cat("extent       : ", min(object@table$x), ", ", max(object@table$x), ", ", min(object@table$y), ", ", max(object@table$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
-            cat("scale        : ", object@scale, "\n", sep = "")
-            cat("coord. ref.  : ", object@crs, "\n", sep = "")
-            cat("variables    : ", length(object@table)-2, "  (", paste0(names(object@table)[!names(object@table) %in% c("x", "y")], collapse = ", "), ")\n", sep = "")
+            cat("class      : ", class(object), "\n", sep = "")
+            cat("type       : ", object@type, "\n", sep = "")
+            cat("features   : ", length(unique(object@coords$id)), "  (", length(object), " vertices)\n", sep = "")
+            cat("window     : ", min(object@window$x), ", ", max(object@window$x), ", ", min(object@window$y), ", ", max(object@window$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
+            cat("extent     : ", min(object@coords$x), ", ", max(object@coords$x), ", ", min(object@coords$y), ", ", max(object@coords$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
+            cat("scale      : ", object@scale, "\n", sep = "")
+            cat("crs        : ", object@crs, "\n", sep = "")
+            cat("attributes : ", length(object@attr), "  (", paste0(names(object@attr)[!names(object@attr) %in% c("x", "y")], collapse = ", "), ")\n", sep = "")
           })
 
 #' @describeIn getTable get the attribute table (including coordinates) of a \code{geom}
@@ -31,7 +31,7 @@ setMethod(f = "show",
 setMethod(f = "getTable",
           signature = "geom",
           definition = function(x){
-            x@table
+            x@attr
           })
 
 #' @describeIn getTable get the attribute table (including coordinates) of a \code{RasterLayer}
@@ -45,6 +45,15 @@ setMethod(f = "getTable",
             } else{
               x@data@attributes[[1]]
             }
+          })
+
+#' @describeIn getCoords get the table of coordinates of a \code{geom}
+#' @export
+
+setMethod(f = "getCoords",
+          signature = "geom",
+          definition = function(x){
+            x@coords
           })
 
 #' @describeIn getWindow get the reference window of a \code{geom}
@@ -68,8 +77,8 @@ setMethod(f = "getWindow",
 setMethod(f = "getExtent",
           signature = "geom",
           definition = function(x){
-            data.frame(x = c(min(x@table$x), max(x@table$x)),
-                       y = c(min(x@table$y), max(x@table$y)))
+            data.frame(x = c(min(x@coords$x), max(x@coords$x)),
+                       y = c(min(x@coords$y), max(x@coords$y)))
           })
 
 #' @describeIn getExtent get the bounding box of a \code{Raster*} object
@@ -104,6 +113,26 @@ setMethod(f = "getExtent",
           definition = function(x){
             data.frame(x = c(0, ncol(x)),
                        y = c(0, nrow(x)))
+          })
+
+#' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a numeric
+#' @export
+
+setMethod(f = "getSubset",
+          signature = c("geom", "numeric"),
+          definition = function(x, subset){
+            x@coords <- x@coords[subset,]
+            return(x)
+          })
+
+#' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a logical
+#' @export
+
+setMethod(f = "getSubset",
+          signature = c("geom", "logical"),
+          definition = function(x, subset){
+            x@coords <- x@coords[which(subset),]
+            return(x)
           })
 
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
@@ -142,7 +171,7 @@ setMethod(f = "setCRS",
             if(is.na(x@crs)){
               x@crs <- crs
             } else{
-              theCoords <- x@table[which(names(x@table) %in% c("x", "y"))]
+              theCoords <- x@coords[which(names(x@coords) %in% c("x", "y"))]
               theWindow <- x@window
               if(x@crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
                 geographic <- rgdal::project(as.matrix(theCoords), proj = as.character(x@crs), inv = TRUE)
@@ -158,7 +187,7 @@ setMethod(f = "setCRS",
                 projected <- geographic
                 proWin <- geoWin
               }
-              x@table <- data.frame(projected, x@table[which(!names(x@table) %in% c("x", "y"))])
+              x@coords <- data.frame(projected, x@coords[which(!names(x@coords) %in% c("x", "y"))])
               x@crs <- crs
               x@window <- data.frame(proWin)
             }
@@ -193,74 +222,6 @@ setMethod(f = "setCRS",
             return(x)
           })
 
-#' @describeIn getRow get a row of a \code{geom} based on a numeric
-#' @export
-
-setMethod(f = "getRow",
-          signature = c("geom", "numeric"),
-          definition = function(x, row){
-            x@table[row,]
-          })
-
-#' @describeIn getRow get a row of a \code{geom} based on a logical
-#' @export
-
-setMethod(f = "getRow",
-          signature = c("geom", "logical"),
-          definition = function(x, row){
-            x@table[which(row),]
-          })
-
-#' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a numeric
-#' @export
-
-setMethod(f = "getSubset",
-          signature = c("geom", "numeric"),
-          definition = function(x, subset){
-            x@table <- x@table[subset,]
-            return(x)
-          })
-
-#' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a logical
-#' @export
-
-setMethod(f = "getSubset",
-          signature = c("geom", "logical"),
-          definition = function(x, subset){
-            x@table <- x@table[which(subset),]
-            return(x)
-          })
-
-#' @describeIn getColumn get a column of the table of a \code{geom} base on a numeric
-#' @export
-
-setMethod(f = "getColumn",
-          signature = c("geom", "numeric"),
-          definition = function(x, column){
-            x@table[,column]
-          })
-
-#' @describeIn getColumn get a column of the table of a \code{geom} base on a character
-#' @export
-
-setMethod(f = "getColumn",
-          signature = c("geom", "character"),
-          definition = function(x, column){
-            x@table[,which(colnames(x@table) == column)]
-          })
-
-#' @describeIn getColumn get a column of the table of a \code{geom} base on a logical
-#' @export
-
-setMethod(f = "getColumn",
-          signature = c("geom", "logical"),
-          definition = function(x, column){
-            x@table[,which(column)]
-          })
-
-# res <- .Call("transform", proj4string(x), slot(CRSobj, "projargs"), n,
-#              as.double(crds[,1]), as.double(crds[,2]), as.double(crds[,3]),
-#              PACKAGE="rgdal")
 #' @describeIn getHistory get the history of a \code{geom}
 #' @export
 

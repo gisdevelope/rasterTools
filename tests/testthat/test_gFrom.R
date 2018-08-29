@@ -34,7 +34,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "point")
-  expect_true(length(unique(output@table$id)) == 3)
+  expect_true(length(unique(output@coords$id)) == 3)
   
   # test 'SpatialMultiPointsDataFrame'
   input <- SpatialMultiPointsDataFrame(list(cl1, cl2, cl3), data = data.frame(a = 1:3))
@@ -42,7 +42,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "point")
-  expect_data_frame(getTable(output), ncols = 4)
+  expect_data_frame(getTable(output), nrows = 3)
   
   # test 'SpatialLines'
   input <- SpatialLines(list(Lines(list(Line(cbind(c(1, 2, 3), c(3, 2, 2)))), ID = "a"), 
@@ -51,7 +51,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "line")
-  expect_true(length(unique(output@table$id)) == 2)
+  expect_true(length(unique(output@coords$id)) == 2)
   
   # test 'SpatialLinesDataFrame'
   input <- SpatialLinesDataFrame(input, data = data.frame(a = 1:2), match.ID = FALSE)
@@ -59,7 +59,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "line")
-  expect_data_frame(getTable(output), ncols = 4)
+  expect_data_frame(getTable(output), nrows = 2)
   
   # test 'SpatialPolygons'
   

@@ -73,6 +73,13 @@
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
+#' 
+#' # the modis tiles
+#' modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
+#'                         y = c(-10007554.677, 10007554.677))
+#' tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18),
+#'                          crs = projs$sinu)
+#' visualise(geom = tiles_modis)
 #' }
 #' @importFrom sp proj4string spTransform bbox
 #' @importFrom raster values setValues crop projectRaster stack mosaic
@@ -192,8 +199,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18), crs = projs$sinu)
   
   # determine tiles of interest
-  tabMODIS <- getTable(tiles_modis)
-  tabMask <- getTable(mask)
+  tabMODIS <- getCoords(tiles_modis)
+  tabMask <- getCoords(mask)
   ids <- unique(tabMODIS$id)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -214,7 +221,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   colnames(nameMat) <- c(0:35); rownames(nameMat) <- c(0:17)
   
   modis <- list()
-  tabTiles <- getTable(myTiles)
+  tabTiles <- getCoords(myTiles)
   # go through all tiles
   for(i in seq_along(unique(tabTiles$id))){
     
@@ -529,8 +536,8 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
 #   tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18), crs = projs$sinu)
 #   
 #   # determine tiles of interest
-#   tabMODIS <- getTable(tiles_modis)
-#   tabMask <- getTable(mask)
+#   tabMODIS <- getCoords(tiles_modis)
+#   tabMask <- getCoords(mask)
 #   ids <- unique(tabMODIS$id)
 #   xMatch <- yMatch <- NULL
 #   for(i in seq_along(ids)){
@@ -551,7 +558,7 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
 #   colnames(nameMat) <- c(0:35); rownames(nameMat) <- c(0:17)
 #   
 #   modis <- list()
-#   tabTiles <- getTable(myTiles)
+#   tabTiles <- getCoords(myTiles)
 #   # go through all dates
 #   for(i in seq_along(validDates)){
 #     

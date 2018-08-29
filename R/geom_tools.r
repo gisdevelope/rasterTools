@@ -45,7 +45,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
     source_crs <- as.character(NA)
   }
   
-  coords <- geom@table
+  coords <- geom@coords
   toGroup <- coords[c("x", "y")]
   
   if(!is.null(index)){
@@ -65,7 +65,8 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
   
   out <- new(Class = "geom",
              type = geom@type,
-             table = temp,
+             coords = temp,
+             attr = data.frame(id = unique(temp$id)),
              window = geom@window,
              scale = geom@scale,
              crs = as.character(source_crs),
@@ -131,7 +132,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
     source_crs <- as.character(NA)
   }
   
-  coords <- geom@table
+  coords <- geom@coords
   ids <- unique(coords$id)
   if(existsID){
     doRotate <- ids %in% id
@@ -178,7 +179,8 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   }
   out <- new(Class = "geom",
              type = geom@type,
-             table = temp,
+             coords = temp,
+             attr = data.frame(id = unique(temp$id)),
              window = geom@window,
              scale = geom@scale,
              crs = as.character(source_crs),
@@ -235,41 +237,41 @@ gScale <- function(geom, range = NULL, to = "relative"){
     source_crs <- as.character(NA)
   }
   
-  coords <- geom@table
+  coords <- geom@coords
   window <- geom@window
+  theIds <- as.numeric(as.factor(coords$id))
   
   out <- NULL
-  for(i in 1:max(coords$id)){
-    if(to == "relative"){
-      if(existsRange){
-        rangeX <- range$x
-        rangeY <- range$y
-      } else{
-        rangeX <- c(0, 1)
-        rangeY <- c(0, 1)
-      }
-      minX <- min(window$x)
-      maxX <- max(window$x)
-      minY <- min(window$y)
-      maxY <- max(window$y)
+  if(to == "relative"){
+    if(existsRange){
+      rangeX <- range$x
+      rangeY <- range$y
     } else{
-      rangeX <- c(min(window$x), max(window$x))
-      rangeY <- c(min(window$y), max(window$y))
-      minX <- 0
-      maxX <- 1
-      minY <- 0
-      maxY <- 1
+      rangeX <- c(0, 1)
+      rangeY <- c(0, 1)
     }
-    
-    temp <- coords[coords$id == i,]
-    for(j in seq_along(temp$x)){
-      temp$x[j] <- (temp$x[j] - minX) * (rangeX[2] - rangeX[1]) / (maxX - minX) + rangeX[1]
-    }
-    for(j in seq_along(temp$y)){
-      temp$y[j] <- (temp$y[j] - minY) * (rangeY[2] - rangeY[1]) / (maxY - minY) + rangeY[1]
-    }
-    out <- rbind(out, temp)
+    minX <- min(window$x)
+    maxX <- max(window$x)
+    minY <- min(window$y)
+    maxY <- max(window$y)
+  } else{
+    rangeX <- c(min(window$x), max(window$x))
+    rangeY <- c(min(window$y), max(window$y))
+    minX <- 0
+    maxX <- 1
+    minY <- 0
+    maxY <- 1
   }
+  
+  temp <- coords
+  for(j in seq_along(temp$x)){
+    temp$x[j] <- (temp$x[j] - minX) * (rangeX[2] - rangeX[1]) / (maxX - minX) + rangeX[1]
+  }
+  for(j in seq_along(temp$y)){
+    temp$y[j] <- (temp$y[j] - minY) * (rangeY[2] - rangeY[1]) / (maxY - minY) + rangeY[1]
+  }
+  out <- rbind(out, temp)
+  
   
   if(existsRange){
     window <- as.data.frame(range)
@@ -277,7 +279,8 @@ gScale <- function(geom, range = NULL, to = "relative"){
   }
   out <- new(Class = "geom",
              type = geom@type,
-             table = out,
+             coords = out,
+             attr = data.frame(id = unique(out$id)),
              window = window,
              scale = to,
              crs = as.character(source_crs),
@@ -322,7 +325,8 @@ gToGrob <- function(geom, theme = NULL, ...){
   }
   
   featureType <- geom@type
-  coords <- geom@table
+  coords <- geom@coords
+  theIds <- as.numeric(as.factor(coords$id))
   
   if(featureType %in% c("point")){
     
@@ -340,20 +344,20 @@ gToGrob <- function(geom, theme = NULL, ...){
   } else if(featureType == "line"){
     
     geomGrob <- polylineGrob(x = coords$x,
-                          y = coords$y,
-                          id = coords$id,
-                          gp = gpar(col = theme$par$colour$geom,
-                                    fill = theme$par$fill$geom,
-                                    lty = theme$par$linetype$geom,
-                                    lwd = theme$par$linewidth$geom,
-                                    ...),
-                          name = "aGrob")
+                             y = coords$y,
+                             id = theIds,
+                             gp = gpar(col = theme$par$colour$geom,
+                                       fill = theme$par$fill$geom,
+                                       lty = theme$par$linetype$geom,
+                                       lwd = theme$par$linewidth$geom,
+                                       ...),
+                             name = "aGrob")
     
   } else if(featureType %in% c("polygon")){
     
     geomGrob <- polygonGrob(x = coords$x,
                             y = coords$y,
-                            id = coords$id,
+                            id = theIds,
                             gp = gpar(
                               col = theme$par$colour$geom,
                               fill = theme$par$fill$geom,
@@ -362,7 +366,6 @@ gToGrob <- function(geom, theme = NULL, ...){
                               ...
                             ),
                             name = "aGrob")
-    
   }
   return(geomGrob)
 }
@@ -421,7 +424,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   outRows <- round(max(extRows, na.rm = TRUE) - min(extRows, na.rm = TRUE))
   
   temp <- matrix(data = 0, ncol = outCols, nrow = outRows)
-  coords <- geom@table[c("x", "y")]
+  coords <- geom@coords[c("x", "y")]
   coords[,1] <- round(coords[,1]/res[1])
   coords[,2] <- round(coords[,2]/res[2])
   vertices <- as.matrix(coords)
@@ -495,14 +498,14 @@ gToSp <- function(geom, crs = NULL){
   }
 
   featureType <- geom@type
-  coords <- geom@table
+  coords <- geom@coords
   id <- unique(coords$id)
 
   if(featureType %in% c("point")){
 
     temp <- coords[c("x", "y")]
     geomSp <- SpatialPoints(temp, proj4string = CRS(source_crs))
-    geomSp <- SpatialPointsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)))
+    geomSp <- SpatialPointsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
 
   # } else if(featureType %in% c("line")){
   #
@@ -519,7 +522,7 @@ gToSp <- function(geom, crs = NULL){
   #   }
   #
   #   geomSp <- SpatialLines(temp, proj4string = CRS(theCRS))
-  #   geomSp <- SpatialLinesDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)))
+  #   geomSp <- SpatialLinesDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
 
   } else if(featureType %in% c("polygon")){
 
@@ -537,7 +540,7 @@ gToSp <- function(geom, crs = NULL){
 
     # make a SpatialPolygon out of that
     geomSp <- SpatialPolygons(temp, proj4string = CRS(source_crs))
-    geomSp <- SpatialPolygonsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)))
+    geomSp <- SpatialPolygonsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
 
   }
 
@@ -705,7 +708,8 @@ gFrom <- function(input, window = NULL){
 
   theGeom <- new(Class = "geom",
                  type = type,
-                 table = theTable,
+                 coords = theTable,
+                 attr = data.frame(id = unique(theTable$id)),
                  window = theWindow,
                  scale = "absolute",
                  crs = as.character(sourceCrs),

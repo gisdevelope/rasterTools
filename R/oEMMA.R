@@ -92,8 +92,9 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   message(paste0("I am handling the European AFE grid:"))
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
   tiles_emma <- loadData(files = "cgrs_europe.kml",
-                         localPath = rtPaths$emma$local)
-  tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
+                         localPath = rtPaths$emma$local,
+                         driver = "ogr")
+  tiles_emma <- setCRS(x = tiles_emma, crs = projs$laea)
 
   message("  ... done\n")
   if(maskIsGeom){
@@ -204,6 +205,9 @@ downloadEMMA <- function(file = NULL, localPath = NULL, getGrids = NULL,
         substr(line, pos, pos-1+attr(pos, "match.length"))
       }))
       entries <- entries[entries != ""]
+      if(length(grep("slovakia", entries)) == 0){
+        entries <- c(entries, "http://www.helsinki.fi/~rlampine/gmap/cgrs_slovakia.kml")
+      }
 
       message("  ... downloading/processing the country grids\n")
       grids <- c('<?xml version="1.0" encoding="UTF-8"?>', '<kml xmlns="http://earth.google.com/kml/2.0">', '<Document>', '')

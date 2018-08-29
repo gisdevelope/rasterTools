@@ -31,8 +31,11 @@ when plotting.
 \item{\code{type}}{[\code{character(1)}]\cr the type of feature, recently either
 \code{"point"}, \code{"line"} or \code{"polygon"}.}
 
-\item{\code{table}}{[\code{data.frame(1)}]\cr the \code{x} and \code{y} coordinates
-of the vertex and additional columns of properties, such as the \code{id}.}
+\item{\code{coords}}{[\code{data.frame(1)}]\cr the \code{id}, \code{x} and \code{y}
+coordinates per vertex.}
+
+\item{\code{attr}}{[\code{data.frame(1)}]\cr arbitrary number of attributes per
+unique id in \code{coords}}
 
 \item{\code{window}}{[\code{data.frame(1)}]\cr the minimum and maximum value in x and
 y dimension of the reference window in which the \code{geom} dwells.}
@@ -51,8 +54,7 @@ notation.}
  So far the following methods have been defined: \itemize{
   \item Getters: \cr \code{length}, \code{subset}, \code{show},
   \code{\link{getWindow}}, \code{\link{getExtent}}, \code{\link{getCRS}},
-  \code{\link{getTable}}, \code{\link{getRow}}, \code{\link{getColumn}},
-  \code{\link{getSubset}}, \code{\link{getHistory}}, \item Setters: \cr
-  \code{\link{setCRS}} }
+  \code{\link{getTable}}, \code{\link{getSubset}}, \code{\link{getHistory}},
+  \item Setters: \cr \code{\link{setCRS}} }
 }
 

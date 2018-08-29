@@ -47,8 +47,8 @@ oCLC <- function(mask = NULL, years = NULL){
   labels <- meta_clc
 
   # transform crs of the mask to the dataset crs
-  target_crs <- getCRS(x = mask)
-  if(target_crs != projs$laea){
+  targetCRS <- getCRS(x = mask)
+  if(targetCRS != projs$laea){
     mask <- setCRS(x = mask, crs = projs$laea)
   }
   theExtent <- getExtent(x = mask)
@@ -75,10 +75,10 @@ oCLC <- function(mask = NULL, years = NULL){
     names(tempObject) <- paste0("landcover_", years[i])
     history <-  c(history, list(paste0("object has been cropped")))
 
-    if(getCRS(mask) != target_crs){
-      crs_name <- strsplit(target_crs, " ")[[1]][1]
+    if(getCRS(mask) != targetCRS){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
       message(paste0("  ... reprojecting target CLC to '",crs_name))
-      tempObject <- setCRS(x = tempObject, crs = target_crs, method = "ngb")
+      tempObject <- setCRS(x = tempObject, crs = targetCRS, method = "ngb")
       history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
     }
     

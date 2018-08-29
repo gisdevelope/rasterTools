@@ -17,7 +17,7 @@ test_that("output is valid geometry", {
   expect_class(rotGeom2, classes = "geom")
 })
 
-test_that("output has different values than input", {
+test_that("output has different coordinates than input", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
                        id = 1)
@@ -26,7 +26,7 @@ test_that("output has different values than input", {
   aGeom <- geomPolygon(anchor = coords, extent = extent)
   rotGeom <- gRotate(geom = aGeom, angle = 45, about = c(50, 30))
   
-  expect_false(all(aGeom@table[c(1, 2)] == rotGeom@table[c(1, 2)]))
+  expect_false(all(getCoords(aGeom)[c(1, 2)] == getCoords(rotGeom)[c(1, 2)]))
 })
 
 test_that("Error if arguments have wrong value", {

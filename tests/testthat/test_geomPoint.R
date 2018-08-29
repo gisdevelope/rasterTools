@@ -23,7 +23,7 @@ test_that("output has the correct number of vertices", {
                        y = c(0, 80))
 
   output <- geomPoint(anchor = coords, window = window)
-  expect_true(length(output@table$id) == 2)
+  expect_true(length(output@coords$id) == 2)
 })
 
 test_that("Error if arguments have wrong value", {

@@ -22,8 +22,7 @@ to keep.}
 \item{...}{other arguments.}
 }
 \description{
-Similar to \code{\link{getRow}}, \code{getSubset} returns the subsetted
-\code{geom} and not only the selected rows.
+\code{getSubset} returns the subsetted \code{geom}.
 }
 \section{Methods (by class)}{
 \itemize{

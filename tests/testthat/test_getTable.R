@@ -13,8 +13,8 @@ test_that("getTable of a 'geom'", {
   aGeom <- geomPolygon(anchor = coords, window = window)
   output <- getTable(aGeom)
   
-  expect_data_frame(output, any.missing = FALSE, nrows = 4, ncols = 3)
-  expect_names(names(output), identical.to = c("x", "y", "id"))
+  expect_data_frame(output, any.missing = FALSE, nrows = 1, ncols = 1)
+  expect_names(names(output), identical.to = c("id"))
 })
 
 test_that("getTable of a 'RasterLayer'", {

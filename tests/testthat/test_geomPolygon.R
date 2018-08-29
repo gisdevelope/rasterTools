@@ -22,7 +22,7 @@ test_that("output has the correct number of vertices", {
                        y = c(0, 80))
 
   output <- geomPolygon(anchor = coords, window = window, regular = TRUE, vertices = 6)
-  expect_true(length(output@table$id) == 6)
+  expect_true(length(output@coords$id) == 6)
 })
 
 test_that("Error if arguments have wrong value", {

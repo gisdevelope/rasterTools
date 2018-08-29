@@ -113,7 +113,8 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   anchor <- anchor[c("x", "y", "id")]
   out <- new(Class = "geom",
              type = "point",
-             table = anchor,
+             coords = anchor,
+             attr = data.frame(id = unique(anchor$id)),
              window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -295,7 +296,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   }
   anchorIsGeom <- testClass(anchor, classes = "geom")
   if(anchorIsGeom){
-    features <- length(unique(anchor@table$id))
+    features <- length(unique(anchor@coords$id))
   }
   windowExists <- !testNull(window)
   if(windowExists){
@@ -365,7 +366,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       if(!windowExists){
         window <- anchor@window
       }
-      tempAnchor <- anchor@table[anchor@table$id == i,]
+      tempAnchor <- anchor@coords[anchor@coords$id == i,]
     } else if(anchorIsDF){
       if(!windowExists){
         window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
@@ -390,7 +391,8 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
 
       temp <- new(Class = "geom",
                   type = "polygon",
-                  table = theNodes,
+                  coords = theNodes,
+                  attr = data.frame(id = unique(theNodes$id)),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -410,7 +412,8 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
 
       temp <- new(Class = "geom",
                   type = "polygon",
-                  table = theNodes,
+                  coords = theNodes,
+                  attr = data.frame(id = unique(theNodes$id)),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -425,7 +428,8 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   }
   out <- new(Class = "geom",
              type = "polygon",
-             table = nodes,
+             coords = nodes,
+             attr = data.frame(id = unique(nodes$id)),
              window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -491,7 +495,7 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
                          regular = TRUE,
                          show = FALSE)
 
-  centroid <- colMeans(theGeom@table[c(1, 2)])
+  centroid <- colMeans(theGeom@coords[c(1, 2)])
   rotGeom <- gRotate(geom = theGeom,
                      angle = 45,
                      about = centroid)
@@ -521,7 +525,7 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
   assertLogical(show)
 
   if(anchorIsGeom){
-    anchors <- anchor@table
+    anchors <- anchor@coords
     window <- anchor@window
   } else{
     anchors <- anchor
@@ -666,7 +670,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   
   theGeom <- new(Class = "geom",
                  type = outType,
-                 table = anchor,
+                 coords = anchor,
                  window = window,
                  scale = "relative",
                  crs = as.character(NA),
@@ -800,7 +804,8 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
 
   theTiles <- new(Class = "geom",
                   type = theType,
-                  table = nodes,
+                  coords = nodes,
+                  attr = data.frame(id = unique(nodes$id)),
                   window = window,
                   scale = "absolute",
                   crs = as.character(projection),

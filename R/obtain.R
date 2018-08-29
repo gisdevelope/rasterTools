@@ -115,7 +115,7 @@ obtain <- function(data = NULL, mask = NULL){
 
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
-  tabMasks <- getTable(x = theMasks)
+  tabMasks <- getCoords(x = theMasks)
   maskElements <- unique(tabMasks$id)
   for(i in maskElements){
     tempMask <- getSubset(x = theMasks, subset = tabMasks$id == i)
