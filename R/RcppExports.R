@@ -25,6 +25,10 @@ diamondSquareC <- function(mat, stepSize, roughness, startDev) {
     .Call('_rasterTools_diamondSquareC', PACKAGE = 'rasterTools', mat, stepSize, roughness, startDev)
 }
 
+getValuesMatC <- function(mat) {
+    .Call('_rasterTools_getValuesMatC', PACKAGE = 'rasterTools', mat)
+}
+
 isBinaryC <- function(mat) {
     .Call('_rasterTools_isBinaryC', PACKAGE = 'rasterTools', mat)
 }
@@ -39,6 +43,10 @@ morphC <- function(mat, kernel, value, blend, merge, rotateKernel, strictKernel)
 
 reduceMatrixC <- function(lMat, f) {
     .Call('_rasterTools_reduceMatrixC', PACKAGE = 'rasterTools', lMat, f)
+}
+
+scaleMatrixC <- function(mat, range) {
+    .Call('_rasterTools_scaleMatrixC', PACKAGE = 'rasterTools', mat, range)
 }
 
 subNumNumC <- function(mat, replace, with) {
