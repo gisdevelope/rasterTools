@@ -264,14 +264,9 @@ gScale <- function(geom, range = NULL, to = "relative"){
   }
   
   temp <- coords
-  for(j in seq_along(temp$x)){
-    temp$x[j] <- (temp$x[j] - minX) * (rangeX[2] - rangeX[1]) / (maxX - minX) + rangeX[1]
-  }
-  for(j in seq_along(temp$y)){
-    temp$y[j] <- (temp$y[j] - minY) * (rangeY[2] - rangeY[1]) / (maxY - minY) + rangeY[1]
-  }
+  temp$x <- (temp$x - minX) * (rangeX[2] - rangeX[1]) / (maxX - minX) + rangeX[1]
+  temp$y <- (temp$y - minY) * (rangeY[2] - rangeY[1]) / (maxY - minY) + rangeY[1]
   out <- rbind(out, temp)
-  
   
   if(existsRange){
     window <- as.data.frame(range)
@@ -311,7 +306,7 @@ gScale <- function(geom, range = NULL, to = "relative"){
 #' aGrob <- gToGrob(geom = aGeom)
 #' str(aGrob)
 #' @importFrom checkmate assertNames assertSubset assertList
-#' @importFrom grid gpar unit pointsGrob polygonGrob
+#' @importFrom grid gpar unit pointsGrob polygonGrob polylineGrob
 #' @export
 
 gToGrob <- function(geom, theme = NULL, ...){
@@ -339,7 +334,7 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      lty = theme$par$linetype$geom,
                                      lwd = theme$par$linewidth$geom,
                                      ...),
-                           name = "aGrob")
+                           name = "aPointGrob")
     
   } else if(featureType == "line"){
     
@@ -351,13 +346,13 @@ gToGrob <- function(geom, theme = NULL, ...){
                                        lty = theme$par$linetype$geom,
                                        lwd = theme$par$linewidth$geom,
                                        ...),
-                             name = "aGrob")
+                             name = "aPolylineGrob")
     
   } else if(featureType %in% c("polygon")){
     
     geomGrob <- polygonGrob(x = coords$x,
                             y = coords$y,
-                            id = theIds,
+                            id = as.numeric(paste0(coords$id, coords$element)),
                             gp = gpar(
                               col = theme$par$colour$geom,
                               fill = theme$par$fill$geom,
@@ -365,7 +360,7 @@ gToGrob <- function(geom, theme = NULL, ...){
                               lwd = theme$par$linewidth$geom,
                               ...
                             ),
-                            name = "aGrob")
+                            name = "aPolygonGrob")
   }
   return(geomGrob)
 }
@@ -594,7 +589,8 @@ gFrom <- function(input, window = NULL){
 
   if(existsSp){
 
-    theTable <- NULL
+    theCoords <- NULL
+    theData <- NULL
     sourceClass <- class(input)[1]
 
     # in case we deal with an "exotic" class, transform to the nearest "normal" class
@@ -613,15 +609,15 @@ gFrom <- function(input, window = NULL){
       type <- "point"
 
       nData <- rep(1, length(input))
-      theTable <- data.frame(input@coords, id = seq_along(input@coords[,1]))
-      colnames(theTable) <- c("x", "y", "id")
+      theCoords <- data.frame(input@coords, id = seq_along(input@coords[,1]))
+      colnames(theCoords) <- c("x", "y", "id")
 
     } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
       type <- "point"
 
       nData <- rep(0, length(input@coords))
       for(i in seq_along(input@coords)){
-        theTable <- rbind(theTable, data.frame(x = input@coords[[i]][,1],
+        theCoords <- rbind(theCoords, data.frame(x = input@coords[[i]][,1],
                                                y = input@coords[[i]][,2],
                                                id = i))
         nData[i] <- nData[i] + length(input@coords[[i]][,1])
@@ -639,52 +635,32 @@ gFrom <- function(input, window = NULL){
           itsId <- id
           id <- id+1
 
-          theTable <- rbind(theTable, data.frame(x = theLine@coords[,1],
+          theCoords <- rbind(theCoords, data.frame(x = theLine@coords[,1],
                                                  y = theLine@coords[,2],
                                                  id = itsId))
           nData[i] <- nData[i] + length(theLine@coords[,1])
         }
       }
-      theTable <- theTable[order(theTable$id),]
+      theCoords <- theCoords[order(theCoords$id),]
+      theData <- data.frame()
 
     } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")){
 
       type <- "polygon"
-      nData <- rep(0, length(input))
       for(i in seq_along(input)){
         thePolys <- input@polygons[[i]]
-        itsId <- input@plotOrder[i]
-        for(j in seq_along(thePolys@Polygons)){
+        # itsId <- input@plotOrder[i]
+        nElements <-  length(thePolys@Polygons)
+        for(j in 1:nElements){
           thePoly <- thePolys@Polygons[[j]]
-          theTable <- rbind(theTable, data.frame(x = thePoly@coords[,1],
+          theCoords <- rbind(theCoords, data.frame(x = thePoly@coords[,1],
                                                  y = thePoly@coords[,2],
-                                                 id = itsId))
-          nData[i] <- nData[i] + length(thePoly@coords[,1])
+                                                 id = i,
+                                                 element = j))
+          theData <- rbind(theData, data.frame(id = i, input@data[i,]))
         }
       }
-      theTable <- theTable[order(theTable$id),]
 
-    }
-
-    if(sourceClass %in% c("SpatialPointsDataFrame", "SpatialMultiPointsDataFrame", "SpatialLinesDataFrame",
-                          "SpatialPolygonsDataFrame", "SpatialGridDataFrame", "SpatialPixelsDataFrame")){
-      theData <- input@data
-      dataNames <- names(theData)
-      # set a name other than "x" or "y" for colnames of data
-      if(any(dataNames %in% c("x"))){
-        dataNames[dataNames %in% c("x")] <- "xAttr"
-      }
-      if(any(dataNames %in% c("y"))){
-        dataNames[dataNames %in% c("y")] <- "yAttr"
-      }
-      if(any(dataNames %in% c("id"))){
-        theData <- theData[-which(dataNames=="id")]
-        dataNames <- dataNames[-which(dataNames=="id")]
-      }
-      theData <- theData[rep(seq_len(nrow(theData)), nData),]
-      rownames(theData) <- NULL
-      theTable <- cbind(theTable, theData)
-      colnames(theTable) <- c("x", "y", "id", dataNames)
     }
 
     sourceCrs <- proj4string(input)
@@ -708,8 +684,8 @@ gFrom <- function(input, window = NULL){
 
   theGeom <- new(Class = "geom",
                  type = type,
-                 coords = theTable,
-                 attr = data.frame(id = unique(theTable$id)),
+                 coords = theCoords,
+                 attr = theData,
                  window = theWindow,
                  scale = "absolute",
                  crs = as.character(sourceCrs),
