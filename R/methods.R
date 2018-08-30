@@ -65,11 +65,29 @@ setMethod(f = "getWindow",
             x@window
           })
 
-# setMethod(f = "setWindow",
-#           signature = "geom",
-#           definition = function(x){
-#
-#           })
+#' @describeIn setWindow se the reference window of a \code{geom}
+#' @export
+
+setMethod(f = "setWindow",
+          signature = "geom",
+          definition = function(x, from, to){
+            if(is.numeric(to)){
+              stopifnot(length(from) == 2)
+              x@window <- data.frame(x = c(from[1], to[1], to[1], from[1]),
+                                     y = c(from[2], from[2], to[2], to[2]))
+            } else if(is.data.frame(to)){
+              stopifnot(all(colnames(to) %in% c("x", "y")))
+              if(nrow(to) == 4){
+                x@window <- to[c("x", "y")]
+              } else if(nrow(to) == 2){
+                x@window <- data.frame(x = rep(to$x, each = 2),
+                                       y = c(to$y, rev(to$y)))
+              } else{
+                stop("no suitable window provided.")
+              }
+            }
+            return(x)
+          })
 
 #' @describeIn getExtent get the bounding box of a \code{geom}
 #' @export
@@ -134,7 +152,6 @@ setMethod(f = "getSubset",
             x@coords <- x@coords[which(subset),]
             return(x)
           })
-
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
 #' @export
 
@@ -163,6 +180,7 @@ setMethod(f = "getCRS",
           })
 
 #' @describeIn setCRS set the coordinate reference system of a \code{geom}
+#' @importFrom stringr str_split
 #' @export
 
 setMethod(f = "setCRS",
@@ -172,24 +190,19 @@ setMethod(f = "setCRS",
               x@crs <- crs
             } else{
               theCoords <- x@coords[which(names(x@coords) %in% c("x", "y"))]
-              theWindow <- x@window
-              if(x@crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
+              if(!all(c("+proj=longlat", "+ellps=WGS84") %in% str_split(x@crs, " ")[[1]])){
                 geographic <- rgdal::project(as.matrix(theCoords), proj = as.character(x@crs), inv = TRUE)
-                geoWin <- rgdal::project(as.matrix(theWindow), proj = as.character(x@crs), inv = TRUE)
               } else{
                 geographic <- as.matrix(theCoords)
-                geoWin <- as.matrix(theWindow)
               }
               if(crs != "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"){
                 projected <- rgdal::project(geographic, proj = as.character(crs))
-                proWin <- rgdal::project(geoWin, proj = as.character(crs))
               } else{
                 projected <- geographic
-                proWin <- geoWin
               }
               x@coords <- data.frame(projected, x@coords[which(!names(x@coords) %in% c("x", "y"))])
               x@crs <- crs
-              x@window <- data.frame(proWin)
+              x <- setWindow(x = x, to = getExtent(x))
             }
             return(x)
           })
