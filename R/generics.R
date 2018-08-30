@@ -28,6 +28,22 @@ setGeneric(name = "getWindow",
              standardGeneric("getWindow")
            })
 
+#' Set the reference window (generic)
+#' @param x the object from which to set the reference window.
+#' @param from [\code{numeric(2)}]\cr x and y value of a coordinate.
+#' @param to [\code{numeric(2)} | \code{data.frame(1)}]\cr - either x and y value
+#'   of a coordinate at the oposing end of a rectangle with \code{from}\cr - or
+#'   \code{data.frame} that contains either the two oposing corners or all four
+#'   corners of the rectangle.
+#' @param ... other arguments.
+#' @export
+
+setGeneric(name = "setWindow",
+           def = function(x, from, to, ...){
+             standardGeneric("setWindow")
+           })
+
+
 #' Get the extent (generic)
 #' @param x the object from which to derive the extent.
 #' @param ... other arguments.
