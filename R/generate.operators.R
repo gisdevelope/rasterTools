@@ -108,7 +108,7 @@ spmGradient <- function(mat, origin = NULL, type = "planar", ...){
   temp <- sqrt(meijsterDistanceC(theMask, method = "euclidean"))
 
   # scale between 0 and 1
-  temp <- scaleVals(temp, c(0, 1))
+  temp <- scaleMat(temp, c(0, 1))
 
   out <- raster(temp, xmn = 0, xmx = ncol(temp), ymn = 0, ymx = nrow(temp))
 
@@ -333,7 +333,7 @@ spmHeightmap <- function(mat, type = "diamondSquare", hurst = NULL, startDev = 1
     stop("type = 'gaussian' is not yet supported.")
   }
   
-  mat_out <- scaleVals(mat_out, c(0, 1))
+  mat_out <- scaleMat(mat_out, c(0, 1))
   obj <- raster(mat_out, xmn = 0, xmx = ext, ymn = 0, ymx = ext)
 
   # # manage the bibliography entry (diamong-square algo or other)

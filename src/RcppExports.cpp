@@ -77,6 +77,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getValuesMatC
+NumericVector getValuesMatC(NumericMatrix& mat);
+RcppExport SEXP _rasterTools_getValuesMatC(SEXP matSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type mat(matSEXP);
+    rcpp_result_gen = Rcpp::wrap(getValuesMatC(mat));
+    return rcpp_result_gen;
+END_RCPP
+}
 // isBinaryC
 bool isBinaryC(NumericMatrix mat);
 RcppExport SEXP _rasterTools_isBinaryC(SEXP matSEXP) {
@@ -129,6 +140,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// scaleMatrixC
+NumericMatrix scaleMatrixC(NumericMatrix mat, NumericVector range);
+RcppExport SEXP _rasterTools_scaleMatrixC(SEXP matSEXP, SEXP rangeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type range(rangeSEXP);
+    rcpp_result_gen = Rcpp::wrap(scaleMatrixC(mat, range));
+    return rcpp_result_gen;
+END_RCPP
+}
 // subNumNumC
 NumericMatrix subNumNumC(NumericMatrix& mat, NumericVector& replace, NumericVector with);
 RcppExport SEXP _rasterTools_subNumNumC(SEXP matSEXP, SEXP replaceSEXP, SEXP withSEXP) {
@@ -176,10 +199,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rasterTools_countEdgesC", (DL_FUNC) &_rasterTools_countEdgesC, 1},
     {"_rasterTools_countAdjacenciesC", (DL_FUNC) &_rasterTools_countAdjacenciesC, 2},
     {"_rasterTools_diamondSquareC", (DL_FUNC) &_rasterTools_diamondSquareC, 4},
+    {"_rasterTools_getValuesMatC", (DL_FUNC) &_rasterTools_getValuesMatC, 1},
     {"_rasterTools_isBinaryC", (DL_FUNC) &_rasterTools_isBinaryC, 1},
     {"_rasterTools_meijsterDistanceC", (DL_FUNC) &_rasterTools_meijsterDistanceC, 2},
     {"_rasterTools_morphC", (DL_FUNC) &_rasterTools_morphC, 7},
     {"_rasterTools_reduceMatrixC", (DL_FUNC) &_rasterTools_reduceMatrixC, 2},
+    {"_rasterTools_scaleMatrixC", (DL_FUNC) &_rasterTools_scaleMatrixC, 2},
     {"_rasterTools_subNumNumC", (DL_FUNC) &_rasterTools_subNumNumC, 3},
     {"_rasterTools_subNumChrC", (DL_FUNC) &_rasterTools_subNumChrC, 3},
     {"_rasterTools_subChrIntC", (DL_FUNC) &_rasterTools_subChrIntC, 3},

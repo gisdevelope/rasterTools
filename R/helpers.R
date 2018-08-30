@@ -84,18 +84,13 @@ doyToDate <- function(year, doy){
 #' @return a matrix of scaled values
 #' @export
 
-scaleVals <- function(mat, range){
-
-  if(length(range) != 2) stop("please provide a range of two valid values.")
-  vals <- unique(as.vector(mat))
-
+scaleMat <- function(mat, range = NULL){
+  
+  assertMatrix(mat)
+  assertNumeric(range, any.missing = FALSE, len = 2)
+  
   # scale to range
-  if(length(vals) != 1){
-    out <- (mat - min(mat, na.rm = TRUE)) * (range[2] - range[1]) / (max(mat, na.rm = TRUE) - min(mat, na.rm = TRUE)) + range[1]
-  } else{
-    message("'mat' did not contain at least two distinct values, hence I return the original matrix.")
-    out <- mat
-  }
+  out <- scaleMatrixC(mat, range)
 
   return(out)
 }
