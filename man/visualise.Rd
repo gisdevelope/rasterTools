@@ -2,24 +2,24 @@
 % Please edit documentation in R/visualise.R
 \name{visualise}
 \alias{visualise}
-\title{Visualise gridded objects and geometries}
+\title{Visualise raster and geom objects}
 \usage{
-visualise(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
+visualise(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
   image = FALSE, new = TRUE, ...)
 }
 \arguments{
-\item{gridded}{[\code{Raster*} | \code{matrix}]\cr Gridded object.}
+\item{raster}{[\code{Raster*} | \code{matrix}]\cr raster object to plot.}
 
-\item{geom}{[\code{geom}]\cr Object of class \code{\link{geom}}.}
+\item{geom}{[\code{geom}]\cr geom to plot.}
 
 \item{theme}{[\code{list(7)}]\cr Visualising options; see
 \code{\link{setTheme}} for details.}
 
-\item{trace}{[\code{logical(1)}]\cr Print the gridded object's history (i.e.
+\item{trace}{[\code{logical(1)}]\cr Print the raster object's history (i.e.
 the process according to which it has been created) (\code{TRUE}), or
 simply plot the object (\code{FALSE}, default).}
 
-\item{image}{[\code{logical(1)}]\cr Does \code{gridded} have the channels
+\item{image}{[\code{logical(1)}]\cr Does \code{raster} have the channels
 \code{red}, \code{green} and \code{blue}, i.e. is it an "image"
 (\code{TRUE}) or is this not the case (\code{FALSE}, default)?}
 
@@ -32,21 +32,21 @@ Returns invisibly an object of class \code{recordedplot}, see
   \code{\link{recordPlot}} for details (and warnings).
 }
 \description{
-Visualise gridded objects and geometries
+Visualise raster and geom objects
 }
 \details{
 To create a plot with your own style, design it with
   \code{\link{setTheme}} and use it in \code{theme}.
 
-  In case you want to plot an image (simiar to \code{\link[raster]{plotRGB}}),
-  you have to provide a \code{RasterStack} or \code{RasterBrick} with the
-  three layers \code{red}, \code{green} and \code{blue} and set \code{image =
-  TRUE}.
+  In case you want to plot an image (simiar to
+  \code{\link[raster]{plotRGB}}), you have to provide a \code{RasterStack} or
+  \code{RasterBrick} with the three layers \code{red}, \code{green} and
+  \code{blue} and set \code{image = TRUE}.
 }
 \examples{
 input <- rtData$continuous
 binarised <- rBinarise(input, thresh = 40)
-visualise(gridded = rDistance(binarised), trace = TRUE)
+visualise(raster = rDistance(binarised), trace = TRUE)
 
 # visualise also RasterBrick/-Stack objects
 getDistances <- list(disEuc = list(operator = "rDistance"),
@@ -68,7 +68,7 @@ window <- data.frame(x = c(0, 80),
 
 # if plotted on top of an existing plot, the relative coordinate values
 # will be used to construct the grob.
-visualise(gridded = input, geom = aGeom)
+visualise(raster = input, geom = aGeom)
 visualise(geom = aGeom, new = TRUE)
 
 }

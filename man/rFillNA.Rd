@@ -7,9 +7,9 @@
 rFillNA(obj, with = 0)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
-
 \item{with}{[\code{integerish(1)}]\cr value with which NA should be replaced.}
+
+\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 a \code{RasterLayer} of the same dimension as \code{obj}, where value

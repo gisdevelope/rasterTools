@@ -7,13 +7,13 @@
 rBinarise(obj, thresh = NULL, match = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
-
 \item{thresh}{[\code{integerish(1)}]\cr Value above which the cell will be set
 to 1, below which it will be set to 0.}
 
 \item{match}{[\code{integerish(.)}]\cr One or more values which will be set to
 1, while the remaining values will be set to 0.}
+
+\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A binary \code{RasterLayer} of the same dimension as \code{obj}.

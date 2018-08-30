@@ -7,8 +7,6 @@
 rSkeletonise(obj, method = "hitormiss", kernel = NULL, background = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
-
 \item{method}{[\code{character(1)}]\cr the method to determine the skeleton.
 Either \code{"hitormiss"} (default), \code{"lantuejoul"} or
 \code{"beucher"}.}
@@ -18,6 +16,8 @@ is a 3 by 3 cells diamond kernel).}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
+
+\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 a \code{RasterLayer} of the same dimensions as \code{obj}, in which

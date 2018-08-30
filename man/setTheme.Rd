@@ -13,54 +13,58 @@ setTheme(from = NULL, plot = NULL, labels = NULL, bins = NULL,
 \item{from}{[\code{theme}]\cr the theme that serves as basis for
 modifications, by default \code{theme_rt}.}
 
-\item{plot}{[\code{list(logical)}]\cr which elements (not) to plot:
+\item{plot}{[\code{named list(logical)}]\cr which elements (not) to plot:
 \code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid},
 \code{minorGrid} and \code{commonScale}.}
 
-\item{labels}{[\code{list(character)}]\cr the labels of: \code{xAxis} and
-\code{yAxis}.}
+\item{labels}{[\code{named list(character)}]\cr the labels of: \code{xAxis}
+and \code{yAxis}.}
 
-\item{bins}{[\code{list(integerish)}]\cr how many sections for: \code{yAxis},
-\code{xAxis} and \code{legend} and how many \code{yDigits} and
-\code{xDigits}.}
+\item{bins}{[\code{named list(integerish)}]\cr how many sections for:
+\code{yAxis}, \code{xAxis} and \code{legend} and how many \code{yDigits}
+and \code{xDigits}.}
 
-\item{margin}{[\code{list(numeric)}]\cr the margin proportion for:
+\item{margin}{[\code{named list(numeric)}]\cr the margin proportion for:
 \code{yAxis} and \code{xAxis}.}
 
-\item{scale}{[\code{list(.)}]\cr at least two \code{colours}, a \code{bias},
-the colour \code{space} and how to \code{interpolate} the values; see
-arguments to \code{\link[grDevices]{colorRampPalette}}.}
+\item{scale}{[\code{named list(.)}]\cr at least two \code{colours}, a
+\code{bias}, the colour \code{space} and how to \code{interpolate} the
+values; see arguments to \code{\link[grDevices]{colorRampPalette}}.}
 
-\item{legend}{[\code{list(.)}]\cr whether or not to \code{interpolate} the
-legend, whehter or not to sort the legend values \code{ascending}, the
-legend \code{position} and the \code{sizeRatio} of legend:grid.}
+\item{legend}{[\code{named list(.)}]\cr whehter or not to sort the legend
+values \code{ascending}, the legend \code{position} and the
+\code{sizeRatio} of legend:grid.}
 
-\item{fontsize}{[\code{named integerish(.)}]\cr the fontsize of:
+\item{fontsize}{[\code{named list(numeric)}]\cr the fontsize of:
 \code{title}, \code{y/xAxisTitle}, \code{y/xAxisTicks} and \code{legend}.}
 
-\item{colour}{[named \code{character(.)}]\cr the colour of: \code{title},
+\item{colour}{[ \code{named list(character)}]\cr the colour of: \code{title},
 \code{y/xAxisTitle}, \code{y/xAxisTicks}, \code{legend} and \code{geom}.}
 
-\item{rotation}{[\code{named numeric(.)}]\cr the rotation of:
+\item{rotation}{[\code{named list(numeric)}]\cr the rotation of:
 \code{y/xAxisTitle} and \code{y/xAxisTicks}}
 
-\item{fill}{[\code{character(.)}]\cr (only \code{geom}) colour for filling
-geometries.}
+\item{fill}{[\code{named list(character)}]\cr (only \code{geom}) colour for
+filling geometries.}
 
-\item{linetype}{[\code{named character(.)}]\cr (only \code{geom}) line type;
-see \code{\link[graphics]{par}}.}
+\item{linetype}{[\code{named list(character)}]\cr (only \code{geom}) line
+type; see \code{\link[graphics]{par}}.}
 
-\item{linewidth}{[\code{named integerish(.)}]\cr (only \code{geom}) line
+\item{linewidth}{[\code{named list(numeric)}]\cr (only \code{geom}) line
 width; see \code{\link[graphics]{par}}.}
 
-\item{pointsize}{[\code{named integerish(.)}]\cr (only \code{geom}) the size
+\item{pointsize}{[\code{named list(numeric)}]\cr (only \code{geom}) the size
 of point geometries; see \code{\link[grid]{grid.points}}.}
 
-\item{pointsymbol}{[\code{named integerish(.)}]\cr (only \code{geom}) point
-symbol; see \code{\link[graphics]{points}}.}
+\item{pointsymbol}{[\code{named list(integerish)}]\cr (only \code{geom})
+point symbol; see \code{\link[graphics]{points}}.}
 }
 \description{
 To see the default settings, type \code{str(theme_rt)}.
+}
+\details{
+In case a colourtable is defined in a raster, this overrides the
+'scale'.
 }
 \examples{
 input <- rtData$continuous
@@ -71,5 +75,7 @@ myTheme <- setTheme(theme_rt,
                     fontsize = list(yAxisTitle = 10, xAxisTicks = 10),
                     colour = list(yAxisTitle = "darkgrey", xAxisTitle = "#A9A9A9"),
                     rotation = list(yAxisTitle = 0))
+
+myTheme <- setTheme(plot = list(title = FALSE))
 visualise(input, theme = myTheme)
 }

@@ -7,8 +7,6 @@
 rBlend(obj, overlay, patches = FALSE, weight = 1)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
-
 \item{overlay}{[\code{RasterLayer(1)} | \code{matrix(1)}]\cr the raster that
 should be blended with the primary raster (obj); has to have the same
 dimension as the primary raster.}
@@ -20,6 +18,8 @@ default).}
 
 \item{weight}{[\code{numeric(1)}]\cr the weight the overlay raster should
 have as multiple (or fraction) of the primary raster.}
+
+\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{primary}, in

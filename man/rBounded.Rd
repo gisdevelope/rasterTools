@@ -7,13 +7,13 @@
 rBounded(obj, range = NULL, background = NULL)
 }
 \arguments{
-\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
-
 \item{range}{[\code{numeric(2)}]\cr minimum and maximum value between which
 the values will be selected.}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
+
+\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, where the
