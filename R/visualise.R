@@ -1,12 +1,13 @@
-#' Visualise gridded objects and geometries
+#' Visualise raster and geom objects
 #'
-#' @template gridded
-#' @template geom
-#' @template theme
-#' @param trace [\code{logical(1)}]\cr Print the gridded object's history (i.e.
+#' @param raster [\code{Raster*} | \code{matrix}]\cr raster object to plot.
+#' @param geom [\code{geom}]\cr geom to plot.
+#' @param theme [\code{list(7)}]\cr Visualising options; see
+#'   \code{\link{setTheme}} for details.
+#' @param trace [\code{logical(1)}]\cr Print the raster object's history (i.e.
 #'   the process according to which it has been created) (\code{TRUE}), or
 #'   simply plot the object (\code{FALSE}, default).
-#' @param image [\code{logical(1)}]\cr Does \code{gridded} have the channels
+#' @param image [\code{logical(1)}]\cr Does \code{raster} have the channels
 #'   \code{red}, \code{green} and \code{blue}, i.e. is it an "image"
 #'   (\code{TRUE}) or is this not the case (\code{FALSE}, default)?
 #' @param new [\code{logical(1)}]\cr force a new plot (\code{TRUE}, default).
@@ -14,16 +15,16 @@
 #' @details To create a plot with your own style, design it with
 #'   \code{\link{setTheme}} and use it in \code{theme}.
 #'
-#'   In case you want to plot an image (simiar to \code{\link[raster]{plotRGB}}),
-#'   you have to provide a \code{RasterStack} or \code{RasterBrick} with the
-#'   three layers \code{red}, \code{green} and \code{blue} and set \code{image =
-#'   TRUE}.
+#'   In case you want to plot an image (simiar to
+#'   \code{\link[raster]{plotRGB}}), you have to provide a \code{RasterStack} or
+#'   \code{RasterBrick} with the three layers \code{red}, \code{green} and
+#'   \code{blue} and set \code{image = TRUE}.
 #' @return Returns invisibly an object of class \code{recordedplot}, see
 #'   \code{\link{recordPlot}} for details (and warnings).
 #' @examples
 #' input <- rtData$continuous
 #' binarised <- rBinarise(input, thresh = 40)
-#' visualise(gridded = rDistance(binarised), trace = TRUE)
+#' visualise(raster = rDistance(binarised), trace = TRUE)
 #'
 #' # visualise also RasterBrick/-Stack objects
 #' getDistances <- list(disEuc = list(operator = "rDistance"),
@@ -45,36 +46,39 @@
 #'
 #' # if plotted on top of an existing plot, the relative coordinate values
 #' # will be used to construct the grob.
-#' visualise(gridded = input, geom = aGeom)
+#' visualise(raster = input, geom = aGeom)
 #' visualise(geom = aGeom, new = TRUE)
 #'
 #' @importFrom checkmate testClass testList assertNames assertList assertLogical
 #'   testCharacter testIntegerish
 #' @importFrom grid grid.newpage pushViewport viewport grid.rect grid.raster
-#'   unit grid.draw grid.grill upViewport grid.text gpar convertX downViewport
+#'   grid.clip unit grid.draw grid.grill upViewport grid.text gpar convertX
+#'   downViewport
 #' @importFrom grDevices colorRampPalette as.raster recordPlot rgb
 #' @importFrom raster nlayers values as.matrix ncol nrow
 #' @export
 
-visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
+visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
+  # raster = NULL; geom = ger; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  
   # new ideas: 
-  # 1. automatically detect which is gridded and which is geom
+  # 1. automatically detect which is raster and which is geom
   # 2. Rcpp for the gScale and gToGrob functions
   # 3. enable colouring of geom based on its values
     
   # check arguments
-  isRaster <- testClass(gridded, "Raster")
-  isRasterStackBrick <- testClass(gridded, "RasterStackBrick")
-  isMatrix <- testClass(gridded, "matrix")
+  isRaster <- testClass(raster, "Raster")
+  isRasterStackBrick <- testClass(raster, "RasterStackBrick")
+  isMatrix <- testClass(raster, "matrix")
   existsGridded <- ifelse(c(isRaster | isMatrix), TRUE, FALSE)
   existsGeom <- testClass(geom, classes = "geom")
   if(!existsGeom & !is.null(geom)){
     stop("please provide a valid 'geom' object to plot.")
   }
   if(!existsGridded & !existsGeom){
-    stop("please provide either a gridded object or a geometry to plot.")
+    stop("please provide either a raster object or a geometry to plot.")
   }
   assertList(theme, len = 7, null.ok = TRUE)
   if(is.null(theme)){
@@ -97,38 +101,38 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
     isOpenPlot <- FALSE
   }
 
-  # turn gridded into a list of matrixes and extract meta-data
+  # turn raster into an array and extract meta-data
   if(existsGridded){
     if(isRaster){
 
-      plotLayers <- nlayers(gridded)
-      griddedNames <- names(gridded)
+      plotLayers <- nlayers(raster)
+      griddedNames <- names(raster)
       vals <- lapply(1:plotLayers, function(x){
-        as.vector(gridded[[x]])
+        as.vector(raster[[x]])
       })
       uniqueVals <- lapply(1:plotLayers, function(x){
         sort(unique(vals[[x]], na.rm = TRUE))
       })
-      dims <- dim(gridded[[1]])
-      ext <- extent(gridded[[1]])
+      dims <- dim(raster[[1]])
+      ext <- extent(raster[[1]])
       panelExt <- c(xMin = ext@xmin, xMax = ext@xmax, yMin = ext@ymin, yMax = ext@ymax)
       hasColourTable <- lapply(1:plotLayers, function(x){
-        ifelse(length(gridded[[x]]@legend@colortable) > 0, TRUE, FALSE)
+        ifelse(length(raster[[x]]@legend@colortable) > 0, TRUE, FALSE)
       })
 
     } else if(isMatrix){
 
       plotLayers <- 1
       griddedNames <- "layer"
-      vals <- list(as.vector(gridded))
+      vals <- list(getValuesMatC(raster))
       uniqueVals <- list(sort(unique(vals[[1]], na.rm = TRUE)))
-      dims <- dim(gridded)
-      panelExt <- c(xMin = 0, xMax = ncol(gridded), yMin = 0, yMax = nrow(gridded))
+      dims <- dim(raster)
+      panelExt <- c(xMin = 0, xMax = ncol(raster), yMin = 0, yMax = nrow(raster))
       hasColourTable <- FALSE
       
     }
     
-    # checks in case gridded is supposed to be an "image"
+    # checks in case raster is supposed to be an "image"
     if(image){
       assertNames(griddedNames, permutation.of = c("red", "green", "blue"))
       assertIntegerish(plotLayers, lower = 3, upper = 3)
@@ -140,7 +144,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
   if(isOpenPlot){
     if(existsGridded){
       # if both are given, check whether their names are the same. If not, prepare
-      # to plot gridded
+      # to plot raster
       if(!all(panelNames == griddedNames)){
         isOpenPlot <- FALSE
         panelNames <- griddedNames
@@ -171,13 +175,19 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
     isGeomInPlot <-FALSE
   }
 
+  # override legend in some cases
   if(isGeomInPlot & !isRasterInPlot | image){
     theme$plot$legend <- FALSE
   }
 
   # turn 'geom' into a grob that can be plotted
   if(existsGeom){
-
+    
+    # scale it to relative, if it's not
+    if(geom@scale == "absolute"){
+      geom <- gScale(geom = geom, to = "relative")
+    }
+    
     if(isOpenPlot){
       # if a plot is already open, we want to get it's extent so that the
       # relative coordinates of geom can be calculated correctly.
@@ -197,15 +207,12 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
         options(digits = d)
     } else{
-      panelExt <- c(xMin = min(geom@window$x), xMax = max(geom@window$x),
-                    yMin = min(geom@window$y), yMax = max(geom@window$y))
-      plotLayers <- 1
-      panelNames <- geom@type
-    }
-
-    # scale it to relative, if it's not
-    if(geom@scale == "absolute"){
-      geom <- gScale(geom = geom, to = "relative")
+      if(!existsGridded){
+        panelExt <- c(xMin = min(geom@window$x), xMax = max(geom@window$x),
+                      yMin = min(geom@window$y), yMax = max(geom@window$y))
+        plotLayers <- 1
+        panelNames <- geom@type
+      }
     }
 
     geomGrob <- gToGrob(geom = geom, theme = theme, ...)
@@ -265,12 +272,9 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
           nrColours <- 256
         }
         if(hasColourTable[[x]]){
-          gridded[[x]]@legend@colortable[tempVals]
+          raster[[x]]@legend@colortable[tempVals]
         } else{
-          colorRampPalette(colors = theme$scale$colours,
-                           bias = theme$scale$bias,
-                           space = theme$scale$space,
-                           interpolate = theme$scale$interpolate)(nrColours)
+          colorRampPalette(colors = theme$scale$raster$colours)(nrColours)
         }
       })
       
@@ -548,6 +552,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
         pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
                               height = unit(1, "npc") - unit(2*margin$y, "native"),
                               name = "geom"))
+        grid.clip()
         grid.draw(geomGrob)
         upViewport() # exit geom
       }
@@ -574,6 +579,7 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
         downViewport("geom")
       }
 
+      grid.clip()
       grid.draw(geomGrob)
       upViewport(4)
     }
@@ -588,20 +594,20 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
   if(trace){
     if(isRasterStackBrick){
-      theHistory <- lapply(seq_along(names(gridded)), function(x){
-        temp <- unlist(gridded[[x]]@history)
+      theHistory <- lapply(seq_along(names(raster)), function(x){
+        temp <- unlist(raster[[x]]@history)
       })
       if(!is.null(unlist(theHistory))){
-        histMsg <- lapply(seq_along(names(gridded)), function(x){
-          paste0("the layer '", names(gridded)[x], "' has the following history:\n -> ", paste0(theHistory[[x]], collapse = "\n -> "))
+        histMsg <- lapply(seq_along(names(raster)), function(x){
+          paste0("the layer '", names(raster)[x], "' has the following history:\n -> ", paste0(theHistory[[x]], collapse = "\n -> "))
         })
-        names(histMsg) <- names(gridded)
+        names(histMsg) <- names(raster)
         plotHistory <- TRUE
       } else{
         plotHistory <- FALSE
       }
     } else if(isRaster){
-      theHistory <- unlist(gridded@history)
+      theHistory <- unlist(raster@history)
       if(!is.null(theHistory)){
         histMsg <- paste0("this object has the following history:\n -> ", paste0(theHistory, collapse = "\n -> "))
         plotHistory <- TRUE
@@ -624,38 +630,40 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #' To see the default settings, type \code{str(theme_rt)}.
 #' @param from [\code{theme}]\cr the theme that serves as basis for
 #'   modifications, by default \code{theme_rt}.
-#' @param plot [\code{list(logical)}]\cr which elements (not) to plot:
+#' @param plot [\code{named list(logical)}]\cr which elements (not) to plot:
 #'   \code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid},
 #'   \code{minorGrid} and \code{commonScale}.
-#' @param labels [\code{list(character)}]\cr the labels of: \code{xAxis} and
-#'   \code{yAxis}.
-#' @param bins [\code{list(integerish)}]\cr how many sections for: \code{yAxis},
-#'   \code{xAxis} and \code{legend} and how many \code{yDigits} and
-#'   \code{xDigits}.
-#' @param margin [\code{list(numeric)}]\cr the margin proportion for:
+#' @param labels [\code{named list(character)}]\cr the labels of: \code{xAxis}
+#'   and \code{yAxis}.
+#' @param bins [\code{named list(integerish)}]\cr how many sections for:
+#'   \code{yAxis}, \code{xAxis} and \code{legend} and how many \code{yDigits}
+#'   and \code{xDigits}.
+#' @param margin [\code{named list(numeric)}]\cr the margin proportion for:
 #'   \code{yAxis} and \code{xAxis}.
-#' @param scale [\code{list(.)}]\cr at least two \code{colours}, a \code{bias},
-#'   the colour \code{space} and how to \code{interpolate} the values; see
-#'   arguments to \code{\link[grDevices]{colorRampPalette}}.
-#' @param legend [\code{list(.)}]\cr whether or not to \code{interpolate} the
-#'   legend, whehter or not to sort the legend values \code{ascending}, the
-#'   legend \code{position} and the \code{sizeRatio} of legend:grid.
-#' @param fontsize [\code{named integerish(.)}]\cr the fontsize of:
+#' @param scale [\code{named list(.)}]\cr at least two \code{colours}, a
+#'   \code{bias}, the colour \code{space} and how to \code{interpolate} the
+#'   values; see arguments to \code{\link[grDevices]{colorRampPalette}}.
+#' @param legend [\code{named list(.)}]\cr whehter or not to sort the legend
+#'   values \code{ascending}, the legend \code{position} and the
+#'   \code{sizeRatio} of legend:grid.
+#' @param fontsize [\code{named list(numeric)}]\cr the fontsize of:
 #'   \code{title}, \code{y/xAxisTitle}, \code{y/xAxisTicks} and \code{legend}.
-#' @param colour [named \code{character(.)}]\cr the colour of: \code{title},
+#' @param colour [ \code{named list(character)}]\cr the colour of: \code{title},
 #'   \code{y/xAxisTitle}, \code{y/xAxisTicks}, \code{legend} and \code{geom}.
-#' @param rotation [\code{named numeric(.)}]\cr the rotation of:
+#' @param rotation [\code{named list(numeric)}]\cr the rotation of:
 #'   \code{y/xAxisTitle} and \code{y/xAxisTicks}
-#' @param fill [\code{character(.)}]\cr (only \code{geom}) colour for filling
-#'   geometries.
-#' @param linetype [\code{named character(.)}]\cr (only \code{geom}) line type;
-#'   see \code{\link[graphics]{par}}.
-#' @param linewidth [\code{named integerish(.)}]\cr (only \code{geom}) line
+#' @param fill [\code{named list(character)}]\cr (only \code{geom}) colour for
+#'   filling geometries.
+#' @param linetype [\code{named list(character)}]\cr (only \code{geom}) line
+#'   type; see \code{\link[graphics]{par}}.
+#' @param linewidth [\code{named list(numeric)}]\cr (only \code{geom}) line
 #'   width; see \code{\link[graphics]{par}}.
-#' @param pointsize [\code{named integerish(.)}]\cr (only \code{geom}) the size
+#' @param pointsize [\code{named list(numeric)}]\cr (only \code{geom}) the size
 #'   of point geometries; see \code{\link[grid]{grid.points}}.
-#' @param pointsymbol [\code{named integerish(.)}]\cr (only \code{geom}) point
-#'   symbol; see \code{\link[graphics]{points}}.
+#' @param pointsymbol [\code{named list(integerish)}]\cr (only \code{geom})
+#'   point symbol; see \code{\link[graphics]{points}}.
+#' @details In case a colourtable is defined in a raster, this overrides the
+#' 'scale'.
 #' @examples
 #' input <- rtData$continuous
 #' myTheme <- setTheme(theme_rt,
@@ -665,6 +673,8 @@ visualise <- function(gridded = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #'                     fontsize = list(yAxisTitle = 10, xAxisTicks = 10),
 #'                     colour = list(yAxisTitle = "darkgrey", xAxisTitle = "#A9A9A9"),
 #'                     rotation = list(yAxisTitle = 0))
+#'
+#' myTheme <- setTheme(plot = list(title = FALSE))
 #' visualise(input, theme = myTheme)
 #' @importFrom checkmate assertList assertLogical assertNames
 #' @export
@@ -676,7 +686,8 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
 
   assertList(from, len = 7, null.ok = TRUE)
   if(!is.null(from)){
-    assertNames(names(from), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
+    assertNames(names(from), permutation.of = c("plot", "labels", "bins", "margin", "scale", 
+                                                "legend", "par"))
   } else{
     from <- theme_rt
   }
@@ -688,6 +699,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvPlot) %in% names(plot)
     out$plot[matched] <- plot
   }
+  
   assertList(labels, any.missing = FALSE, types = c("character"), null.ok = TRUE)
   if(!is.null(labels)){
     assertNames(names(labels), subset.of = c("yAxis", "xAxis"))
@@ -695,6 +707,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvBins) %in% names(labels)
     out$labels[matched] <- labels
   }
+  
   assertList(bins, any.missing = FALSE, types = c("integerish"), null.ok = TRUE)
   if(!is.null(bins)){
     assertNames(names(bins), subset.of = c("yAxis", "xAxis", "legend", "yDigits", "xDigits"))
@@ -702,29 +715,41 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvBins) %in% names(bins)
     out$bins[matched] <- bins
   }
+  
   assertList(margin, any.missing = FALSE, null.ok = TRUE)
   if(!is.null(margin)){
     assertNames(names(margin), subset.of = c("yAxis", "xAxis"))
-    assertNumeric(margin$yAxis, lower = 0, upper = 1)
-    assertNumeric(margin$xAxis, lower = 0, upper = 1)
-    prvBins <- from[which(names(from) == "margin")]$margin
-    matched <- names(prvBins) %in% names(margin)
+    assertNumeric(margin$yAxis, lower = 0, upper = 1, null.ok = TRUE)
+    assertNumeric(margin$xAxis, lower = 0, upper = 1, null.ok = TRUE)
+    prvMargin <- from[which(names(from) == "margin")]$margin
+    matched <- names(prvMargin) %in% names(margin)
     out$margin[matched] <- margin
   }
+  
   assertList(scale, any.missing = FALSE, null.ok = TRUE)
-  if(!is.null(scale)){
-    assertNames(names(scale), subset.of = c("colours", "bias", "space", "interpolate"))
-    assertCharacter(scale$colours, null.ok = TRUE)
-    assertNumeric(scale$bias, null.ok = TRUE)
-    assertCharacter(scale$space, null.ok = TRUE)
-    assertCharacter(scale$interpolate, null.ok = TRUE)
-    prvScale <- from[which(names(from) == "scale")]$scale
-    matched <- names(prvScale) %in% names(scale)
-    out$scale[matched] <- scale
+  assertNames(names(scale), subset.of = c("raster", "geom"))
+  if(!is.null(scale$raster)){
+    assertNames(names(scale$raster), subset.of = c("colours", "variable"))
+    assertCharacter(scale$raster$colours, null.ok = TRUE)
+    assertCharacter(scale$raster$variable, null.ok = TRUE)
+    
+    prvScale <- from[which(names(from) == "scale")]$scale$raster
+    matched <- names(prvScale) %in% names(scale$raster)
+    out$scale$raster[matched] <- scale$raster
   }
+  if(!is.null(scale$geom)){
+    assertNames(names(scale$geom), subset.of = c("colours", "variable"))
+    assertCharacter(scale$geom$colours, null.ok = TRUE)
+    assertCharacter(scale$geom$variable, null.ok = TRUE)
+    
+    prvScale <- from[which(names(from) == "scale")]$scale$geom
+    matched <- names(prvScale) %in% names(scale$geom)
+    out$scale$geom[matched] <- scale$geom
+  }
+  
   assertList(legend, any.missing = FALSE, null.ok = TRUE)
   if(!is.null(legend)){
-    assertNames(names(legend), subset.of = c("ascending", "position", "ratio"))
+    assertNames(names(legend), subset.of = c("ascending", "position", "sizeRatio"))
     assertLogical(legend$ascending, null.ok = TRUE)
     assertLogical(legend$interpolate, null.ok = TRUE)
     assertCharacter(legend$position, null.ok = TRUE)
@@ -733,20 +758,23 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvScale) %in% names(legend)
     out$legend[matched] <- legend
   }
+  
   assertList(fontsize, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
   if(!is.null(fontsize)){
-    assertNames(names(fontsize), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks"))
+    assertNames(names(fontsize), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks", "legend"))
     prvFontsize <- from$par[which(names(from$par) == "fontsize")]$fontsize
     matched <- names(prvFontsize) %in% names(fontsize)
     out$par$fontsize[matched] <- fontsize
   }
+  
   assertList(colour, any.missing = FALSE, types = c("character"), null.ok = TRUE)
   if(!is.null(colour)){
-    assertNames(names(colour), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks", "geom"))
+    assertNames(names(colour), subset.of = c("title", "yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks", "legend", "geom"))
     prvColour <- from$par[which(names(from$par) == "colour")]$colour
     matched <- names(prvColour) %in% names(colour)
     out$par$colour[matched] <- colour
   }
+  
   assertList(rotation, any.missing = FALSE, types = c("numeric"),null.ok = TRUE)
   if(!is.null(rotation)){
     assertNames(names(rotation), subset.of = c("yAxisTitle", "yAxisTicks", "xAxisTitle", "xAxisTicks"))
@@ -754,13 +782,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvPRotation) %in% names(rotation)
     out$par$rotation[matched] <- rotation
   }
-  assertList(pointsize, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
-  if(!is.null(pointsize)){
-    assertNames(names(pointsize), subset.of = c("geom"))
-    prvPointsize <- from$par[which(names(from$par) == "pointsize")]$pointsize
-    matched <- names(prvPointsize) %in% names(pointsize)
-    out$par$pointsize[matched] <- pointsize
-  }
+  
   assertList(fill, any.missing = FALSE, types = c("character"), null.ok = TRUE)
   if(!is.null(fill)){
     assertNames(names(fill), subset.of = c("geom"))
@@ -768,6 +790,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvFill) %in% names(fill)
     out$par$fill[matched] <- fill
   }
+  
   assertList(linetype, any.missing = FALSE, types = c("character"), null.ok = TRUE)
   if(!is.null(linetype)){
     assertNames(names(linetype), subset.of = c("geom"))
@@ -775,6 +798,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvLinetype) %in% names(linetype)
     out$par$linetype[matched] <- linetype
   }
+  
   assertList(linewidth, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
   if(!is.null(linewidth)){
     assertNames(names(linewidth), subset.of = c("geom"))
@@ -782,6 +806,15 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     matched <- names(prvLinewidth) %in% names(linewidth)
     out$par$linewidth[matched] <- linewidth
   }
+  
+  assertList(pointsize, any.missing = FALSE, types = c("numeric"), null.ok = TRUE)
+  if(!is.null(pointsize)){
+    assertNames(names(pointsize), subset.of = c("geom"))
+    prvPointsize <- from$par[which(names(from$par) == "pointsize")]$pointsize
+    matched <- names(prvPointsize) %in% names(pointsize)
+    out$par$pointsize[matched] <- pointsize
+  }
+  
   assertList(pointsymbol, any.missing = FALSE, types = c("integerish"), null.ok = TRUE)
   if(!is.null(pointsymbol)){
     assertNames(names(pointsymbol), subset.of = c("geom"))
