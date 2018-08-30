@@ -7,10 +7,10 @@
 rOffset(obj, value = 1)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{value}{[\code{integerish(1)}]\cr the value by which to offset all
 values in the raster (can also be negative).}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, in which

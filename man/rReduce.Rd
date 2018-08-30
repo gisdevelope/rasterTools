@@ -8,6 +8,8 @@ rReduce(obj, by = NULL, fun = function(x) sum(x, na.rm = TRUE),
   weights = NULL, direction = "right")
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{by}{[\code{list(.)}]\cr the cell values by which the layers shall be
 aggregated; see Details.}
 
@@ -20,8 +22,6 @@ each layer are multiplied before applying \code{fun}.}
 \item{direction}{[\code{character(1)}]\cr the direction into which the
 \code{RasterLayer}s of \code{obj} are supposed to be combine. Either
 \code{"right"} (default) or \code{"left"}; see Details.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 a \code{RasterLayer} or \code{RasterStack} of the same dimensions as

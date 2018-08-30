@@ -7,11 +7,11 @@
 rDistance(obj, method = "euclidean")
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{method}{[\code{character(1)}]\cr the distance measure to be calculated.
 Either \code{"euclidean"} (default), \code{"manhatten"} or
 \code{"chessboard"} distance.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, where the

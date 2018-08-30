@@ -7,11 +7,11 @@
 rSubstitute(obj, old = NULL, new = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{old}{[\code{integerish(.)}]\cr values to be substituted.}
 
 \item{new}{[\code{integerish(.)}]\cr  values to substitute with.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimensions as \code{obj}, in which

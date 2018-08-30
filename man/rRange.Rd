@@ -7,10 +7,10 @@
 rRange(obj, range = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{range}{[\code{integer(2)}]\cr vector of minimum and maximum value to
 which the values will be scaled.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, where the

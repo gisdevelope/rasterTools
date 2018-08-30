@@ -7,14 +7,14 @@
 rPermute(obj, type = "invert", by = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{type}{[\code{character(1)}]\cr the type of permutation that should be
 applied. Either \code{"invert"}, \code{"revert"}, \code{"descending"},
 \code{"ascending"} or \code{"cycle"}.}
 
 \item{by}{[\code{integerish(1)}]\cr value by which to apply the permutation;
 recently only for \code{type = "cycle"}.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimensions as \code{obj}, in which

@@ -7,12 +7,12 @@
 rCategorise(obj, breaks = NULL, n = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{breaks}{[\code{integerish(.)}]\cr the values, where categories should
 be delimited.}
 
 \item{n}{[\code{integerish(1)}]\cr number of categories.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, in which

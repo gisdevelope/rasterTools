@@ -7,10 +7,10 @@
 rErode(obj, kernel = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{kernel}{[\code{matrix(1)}]\cr scan the raster with this kernel (default
 is a 3 by 3 cells diamond kernel).}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} of the same dimension as \code{obj}, where an

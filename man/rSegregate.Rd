@@ -7,6 +7,8 @@
 rSegregate(obj, by = NULL, flatten = FALSE, background = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{by}{[\code{RasterLayer(1)} | \code{matrix(1)}]\cr additional object by
 which \code{obj} should be segregated. If left empty, the distinct values
 of \code{obj} will be taken.}
@@ -17,8 +19,6 @@ of \code{obj} will be taken.}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 a \code{RasterLayer} stack of the same dimensions as \code{obj}, in

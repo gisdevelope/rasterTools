@@ -7,14 +7,14 @@
 rRescale(obj, factor = NULL, kernelFunction = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{factor}{[\code{integer(1)} | \code{numeric(1)}]\cr an integer for
 up-scaling and a fraction for down-scaling (see Details).}
 
 \item{kernelFunction}{[\code{kernelFunction}]\cr A kernel function to
 determine new values of the rescaled raster, defaulting to
 \code{boxKernel()}; see Details.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} with a dimension that has been up or down-scaled

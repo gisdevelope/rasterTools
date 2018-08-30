@@ -7,13 +7,13 @@
 rCentroid(obj, output = "raster", background = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{output}{[\code{character(1)}]\cr the type in which the output should be
 returned. Either \code{"raster"} (default) or \code{"geom"}.}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 Depending on \code{output}, either \enumerate{ \item a

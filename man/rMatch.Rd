@@ -7,6 +7,8 @@
 rMatch(obj, kernel = NULL, rotate = TRUE, background = NULL)
 }
 \arguments{
+\item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
+
 \item{kernel}{[\code{matrix(., .)} | \code{list(.)} thereof]\cr scan the
 raster with this kernel (default is a 3 by 3 cells diamond kernel).}
 
@@ -16,8 +18,6 @@ as is (\code{FALSE})?}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
-
-\item{ras}{[\code{RasterLayer(1)}]\cr The object to modify.}
 }
 \value{
 A \code{RasterLayer} or \code{RasterStack} of the same dimension as
