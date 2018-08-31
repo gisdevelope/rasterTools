@@ -15,7 +15,7 @@
 #' @param raw [\code{logical(1)}]\cr should the complete statistics about the
 #'   clicks be returned (\code{TRUE}), or should only the basic output be
 #'   returned (\code{FALSE}, default)?
-#' @param silent [\code{logical(1)}]\cr should all messages but errors be
+#' @param silent [\code{logical(1)}]\cr should all messages except errors be
 #'   suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
 #'   default)?
 #' @param show [\code{logical(1)}]\cr should information about the selected

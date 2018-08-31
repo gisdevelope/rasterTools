@@ -28,7 +28,7 @@ selected, "real" value (\code{FALSE}, default)?}
 clicks be returned (\code{TRUE}), or should only the basic output be
 returned (\code{FALSE}, default)?}
 
-\item{silent}{[\code{logical(1)}]\cr should all messages but errors be
+\item{silent}{[\code{logical(1)}]\cr should all messages except errors be
 suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
 default)?}
 

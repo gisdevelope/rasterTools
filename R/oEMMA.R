@@ -11,6 +11,7 @@
 #' @param inclMeta [\code{logical(1)}]\cr output merely the occurence data
 #'   (\code{FALSE}, default), or output additionally metadata on the species
 #'   (\code{TRUE})?
+#' @param ... [various]\cr other arguments.
 #' @details The website \href{http://www.european-mammals.org/}{Societas
 #'   Europaea Mammalogica} kindly offers maps of the ocurrence of all mammals in
 #'   Europe, which are parsed by \code{oEMMA}. See \code{\link{load_svg}} for a
@@ -60,7 +61,7 @@
 #' @importFrom rgeos gIntersects gConvexHull
 #' @export
 
-oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
+oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ...){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -69,15 +70,15 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
-    species <- species$original
+    species <- species$species
   } else{
     assertCharacter(species)
   }
   assertIntegerish(version, any.missing = FALSE, len = 1)
   assertLogical(inclMeta, any.missing = FALSE, len = 1)
 
-  species_dropout <- species[!species %in% meta_emma$original]
-  species <- species[species %in% meta_emma$original]
+  species_dropout <- species[!species %in% meta_emma$species]
+  species <- species[species %in% meta_emma$species]
   if(length(species_dropout) != 0){
     warning(paste0("species '", species_dropout, "' does not exist."))
   }
@@ -89,12 +90,14 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   }
   
   # this will download the AFE grids and assemble them to an overal european grid
-  message(paste0("I am handling the European AFE grid:"))
+  if(!silent){
+    message(paste0("I am handling the European AFE grid:"))
+  }
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
   tiles_emma <- loadData(files = "cgrs_europe.kml",
                          localPath = rtPaths$emma$local,
                          driver = "ogr")
-  tiles_emma <- setCRS(x = tiles_emma, crs = projs$laea)
+  tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
 
   message("  ... done\n")
   if(maskIsGeom){
@@ -110,11 +113,11 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE){
   emma <- NULL
   for(i in seq_along(species)){
 
-    message(paste0("I am handling the species '", species[i], "':"))
+    blablabla(paste0("I am handling the species '", species[i]), ...)
     # check a csv-table already exists for that species. If it exists, we don't
     # have to read it in again and save some time.
     if(file.exists(paste0(rtPaths$emma$local, "/", species[i], ".csv"))){
-      message(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"))
+      blablabla(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"), ...)
       allOcc <- read.csv(paste0(rtPaths$emma$local, "/", species[i], ".csv"))
     } else{
       allOcc <- loadData(files = paste0(species[i], ".svg"),
