@@ -100,7 +100,7 @@
       <h1>Best practices to contribute</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-21</h4>
+            <h4 class="date">2018-08-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/contribute.Rmd"><code>vignettes/contribute.Rmd</code></a></small>
       <div class="hidden name"><code>contribute.Rmd</code></div>
@@ -165,7 +165,7 @@
 <div id="determine-target-tiles" class="section level2">
 <h2 class="hasAnchor">
 <a href="#determine-target-tiles" class="anchor"></a>Determine target tiles</h2>
-<p>Tiles are a set of regularly arranged neighbouring rectangles that represent different “windows” by which a large spatial dataset is subdivided. This approach is being chosen by many of the providers of gridded dataset to make files available in small enough chunks that can easier be handled. <code>rasterTools</code> comes with the function <code><a href="../reference/geomTiles.html">geomTiles()</a></code> that lets you outline tiles with the specific intention that these tiles represent the tiling of the gridded datasets. We first outline the overall extent of the tiles, i.e. their minimum and maximum values in x and y dimension. Then we specify the number of cells/rectangles and the projection:</p>
+<p>Tiles are a set of regularly arranged neighbouring rectangles that represent different “windows” by which a large spatial dataset is subdivided. This approach is being chosen by many of the providers of raster dataset to make files available in small enough chunks that can easier be handled. <code>rasterTools</code> comes with the function <code><a href="../reference/geomTiles.html">geomTiles()</a></code> that lets you outline tiles with the specific intention that these tiles represent the tiling of the raster datasets. We first outline the overall extent of the tiles, i.e. their minimum and maximum values in x and y dimension. Then we specify the number of cells/rectangles and the projection:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  aWindow &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">180</span>, <span class="dv">180</span>),
                         <span class="dt">y =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">60</span>, <span class="dv">80</span>))
   datasetTiles &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomTiles.html">geomTiles</a></span>(<span class="dt">window =</span> aWindow, <span class="dt">cells =</span> <span class="kw">c</span>(<span class="dv">36</span>, <span class="dv">14</span>), <span class="dt">crs =</span> datasetCRS)</code></pre></div>

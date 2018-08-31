@@ -143,70 +143,73 @@ and other files containing spatial data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>loadData</span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dataset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>loadData</span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dataset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>files</th>
-      <td><p>[<code>character(1)</code> | <code>list(.)</code>]<br /> the file, as it is
-called in <code>localPath</code> or <code>onlinePath</code>. <code>files</code> can be a list
-to (down)load several files in the same directory/url with one call.
-<code>files</code> also accepts the (subsetted) output of <code><a href='catalog.html'>catalog</a></code>,
-i.e. a <code>data.frame</code> with the two columns <code>original</code> and
-<code>abbr</code>.</p></td>
-    </tr>
-    <tr>
-      <th>dataset</th>
-      <td><p>[<code>character(1)</code>]<br /> character vector of the data dataset
-for which <code>files</code> should be imported; if this is given,
-<code>localPath</code> and <code>onlinePath</code> are overwritten with the internal
-dataset default (see <code><a href='updatePaths.html'>updatePaths</a></code>).</p></td>
+      <td><p>[<code>character(.)</code> | <code>data.frame(1)</code>]<br /> the files, as
+they are called in <code>localPath</code>. <code>files</code> also accepts the
+(subsetted) output of <code><a href='catalog.html'>catalog</a></code>, i.e. a <code>data.frame</code> with
+the two columns <code>original</code> and <code>abbr</code>.</p></td>
     </tr>
     <tr>
       <th>layer</th>
-      <td><p>[<code>character(1)</code> | <code>integerish(1)</code>]<br /> name or position
-of the layer, other than the <code><a href='http://www.rdocumentation.org/packages/rgdal/topics/readOGR'>readOGR</a></code>-default, that
-should be loaded.</p></td>
+      <td><p>[<code>character(.)</code> | <code>integerish(.)</code>]<br /> vetor of the
+same length as <code>files</code> with name or position of the layer that shall
+be loaded.</p></td>
+    </tr>
+    <tr>
+      <th>dataset</th>
+      <td><p>[<code>character(1)</code>]<br /> character vector of the dataset for
+which <code>files</code> should be imported (see <code><a href='obtain.html'>obtain</a></code> for all
+datasets); in case this is given, <code>localPath</code> is taken from the
+internal default for the respective dataset (see
+<code><a href='updatePaths.html'>updatePaths</a></code>).</p></td>
     </tr>
     <tr>
       <th>localPath</th>
-      <td><p>[<code>character(1)</code>]<br /> the local path where files are
-supposed to be stored (i.e. on your harddisc).</p></td>
+      <td><p>[<code>character(1)</code>]<br /> the local path from where files
+shall be loaded. If the directory does not exist, it is created and the
+missing data are downloaded, given .</p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>[<code>logical(1)</code>]<br /> should additional information be
 printed (<code>TRUE</code>) or should it be suppressed (<code>FALSE</code>, default)?</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>[various]<br /> other arguments of the load operators.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a (list of) file(s). If there are several files of type
-  <code>Raster*</code>, they are stacked.</p>
+    <p>the file to load. If there is more than one file specified, a list of
+  those files.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>importData</code> checks whether the required files are available in
-  <code>localPath</code>. If nothing is found there, it attempts to download the
-  files from <code>onlinePath</code>. <code>rasterTools</code> contains a predefined internal
-  index, <code>getOption("rtPaths")</code>, where the local and online paths of
-  the supported spatial datasets are stored. Please take a look at it and in
-  case an online resource has been altered, you can adapt it here (see
-  <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
+  <code>localPath</code> and if this is not given, in the working directory. If
+  nothing is found there but a dataset is given, it attempts to download the
+  files from the respective online path (see <code>rtPaths</code>). Please take a
+  look at it and in case an online resource has been altered, you can adapt
+  it here (see <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>The specific load operators: <code><a href='load_kml.html'>load_kml</a></code>,
-  <code><a href='load_csv.html'>load_csv</a></code>, <code><a href='load_kml.html'>load_kml</a></code>, <code><a href='load_hdf.html'>load_hdf</a></code>,
-  <code>load_tif</code>, <code>load_dbf</code>, <code>load_shp</code>, <code><a href='load_svg.html'>load_svg</a></code></p></div>
+  <code><a href='load_csv.html'>load_csv</a></code>, <code><a href='load_hdf.html'>load_hdf</a></code>, <code>load_tif</code>,
+  <code>load_dbf</code>, <code>load_shp</code>, <code><a href='load_svg.html'>load_svg</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># load a batch of '.csv'-files containing coordinates into the gloabl environment.</span>
+    <pre class="examples"><div class='input'><span class='co'># load a bunch of '.csv'-files containing coordinates into the gloabl environment.</span>
 <span class='no'>myLocations</span> <span class='kw'>&lt;-</span> <span class='fu'>loadData</span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"aWindow.csv"</span>, <span class='st'>"locations.csv"</span>),
                         <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>),
                         <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;   |                                                                          |                                                                  |   0%  |                                                                          |&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;                                 |  50%  |                                                                          |&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;| 100%</div></pre>

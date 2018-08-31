@@ -141,7 +141,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>gridded</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>identify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>raster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>identify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>snap</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -152,8 +152,8 @@
       <td><p>[<code>integerish(1)</code>]<br /> the number of clicks.</p></td>
     </tr>
     <tr>
-      <th>gridded</th>
-      <td><p>[<code>Raster*</code> | <code>matrix</code>]<br /> the gridded object in
+      <th>raster</th>
+      <td><p>[<code>Raster*</code> | <code>matrix</code>]<br /> the raster object in
 which to locate.</p></td>
     </tr>
     <tr>
@@ -211,14 +211,14 @@ created when <code>show = TRUE</code>.</p></td>
 <span class='no'>patches</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rPatches.html'>rPatches</a></span>(<span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>input</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>30</span>))
 
 <span class='co'># locate from a not yet plotted object</span>
-<span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"green"</span>)
+<span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"green"</span>)
 
 <span class='co'># or from one that is already plotted</span>
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>patches</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>patches</span>)
 <span class='fu'>locate</span>(<span class='kw'>identify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>snap</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># with several panels, specify a target</span>
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>input</span>, <span class='no'>patches</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>input</span>, <span class='no'>patches</span>))
 <span class='fu'>locate</span>(<span class='kw'>samples</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='st'>"patches"</span>, <span class='kw'>identify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># }</span></pre>
   </div>

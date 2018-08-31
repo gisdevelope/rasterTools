@@ -32,7 +32,9 @@
 
 <meta property="og:title" content="Create a new theme — setTheme" />
 
-<meta property="og:description" content="To see the default settings, type str(theme_rt)." />
+<meta property="og:description" content="This is merely a tentative workaround which I will improve with respect to
+usability in the future. To see the default settings, type
+str(theme_rt)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -137,7 +139,9 @@
 
     <div class="ref-description">
     
-    <p>To see the default settings, type <code>str(theme_rt)</code>.</p>
+    <p>This is merely a tentative workaround which I will improve with respect to
+usability in the future. To see the default settings, type
+<code>str(theme_rt)</code>.</p>
     
     </div>
 
@@ -156,79 +160,84 @@ modifications, by default <code>theme_rt</code>.</p></td>
     </tr>
     <tr>
       <th>plot</th>
-      <td><p>[<code>list(logical)</code>]<br /> which elements (not) to plot:
+      <td><p>[<code>named list(logical)</code>]<br /> which elements (not) to plot:
 <code>title</code>, <code>legend</code>, <code>yAxis</code>, <code>xAxis</code>, <code>grid</code>,
 <code>minorGrid</code> and <code>commonScale</code>.</p></td>
     </tr>
     <tr>
       <th>labels</th>
-      <td><p>[<code>list(character)</code>]<br /> the labels of: <code>xAxis</code> and
-<code>yAxis</code>.</p></td>
+      <td><p>[<code>named list(character)</code>]<br /> the labels of: <code>xAxis</code>
+and <code>yAxis</code>.</p></td>
     </tr>
     <tr>
       <th>bins</th>
-      <td><p>[<code>list(integerish)</code>]<br /> how many sections for: <code>yAxis</code>,
-<code>xAxis</code> and <code>legend</code> and how many <code>yDigits</code> and
-<code>xDigits</code>.</p></td>
+      <td><p>[<code>named list(integerish)</code>]<br /> how many sections for:
+<code>yAxis</code>, <code>xAxis</code> and <code>legend</code> and how many <code>yDigits</code>
+and <code>xDigits</code>.</p></td>
     </tr>
     <tr>
       <th>margin</th>
-      <td><p>[<code>list(numeric)</code>]<br /> the margin proportion for:
+      <td><p>[<code>named list(numeric)</code>]<br /> the margin proportion for:
 <code>yAxis</code> and <code>xAxis</code>.</p></td>
     </tr>
     <tr>
       <th>scale</th>
-      <td><p>[<code>list(.)</code>]<br /> at least two <code>colours</code>, a <code>bias</code>,
-the colour <code>space</code> and how to <code>interpolate</code> the values; see
-arguments to <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></code>.</p></td>
+      <td><p>[<code>named list(.)</code>]<br /> at least two <code>colours</code>, a
+<code>bias</code>, the colour <code>space</code> and how to <code>interpolate</code> the
+values; see arguments to <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></code>.</p></td>
     </tr>
     <tr>
       <th>legend</th>
-      <td><p>[<code>list(.)</code>]<br /> whether or not to <code>interpolate</code> the
-legend, whehter or not to sort the legend values <code>ascending</code>, the
-legend <code>position</code> and the <code>sizeRatio</code> of legend:grid.</p></td>
+      <td><p>[<code>named list(.)</code>]<br /> whehter or not to sort the legend
+values <code>ascending</code>, the legend <code>position</code> and the
+<code>sizeRatio</code> of legend:grid.</p></td>
     </tr>
     <tr>
       <th>fontsize</th>
-      <td><p>[<code>named integerish(.)</code>]<br /> the fontsize of:
+      <td><p>[<code>named list(numeric)</code>]<br /> the fontsize of:
 <code>title</code>, <code>y/xAxisTitle</code>, <code>y/xAxisTicks</code> and <code>legend</code>.</p></td>
     </tr>
     <tr>
       <th>colour</th>
-      <td><p>[named <code>character(.)</code>]<br /> the colour of: <code>title</code>,
+      <td><p>[ <code>named list(character)</code>]<br /> the colour of: <code>title</code>,
 <code>y/xAxisTitle</code>, <code>y/xAxisTicks</code>, <code>legend</code> and <code>geom</code>.</p></td>
     </tr>
     <tr>
       <th>rotation</th>
-      <td><p>[<code>named numeric(.)</code>]<br /> the rotation of:
+      <td><p>[<code>named list(numeric)</code>]<br /> the rotation of:
 <code>y/xAxisTitle</code> and <code>y/xAxisTicks</code></p></td>
     </tr>
     <tr>
       <th>fill</th>
-      <td><p>[<code>character(.)</code>]<br /> (only <code>geom</code>) colour for filling
-geometries.</p></td>
+      <td><p>[<code>named list(character)</code>]<br /> (only <code>geom</code>) colour for
+filling geometries.</p></td>
     </tr>
     <tr>
       <th>linetype</th>
-      <td><p>[<code>named character(.)</code>]<br /> (only <code>geom</code>) line type;
-see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>.</p></td>
+      <td><p>[<code>named list(character)</code>]<br /> (only <code>geom</code>) line
+type; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>.</p></td>
     </tr>
     <tr>
       <th>linewidth</th>
-      <td><p>[<code>named integerish(.)</code>]<br /> (only <code>geom</code>) line
+      <td><p>[<code>named list(numeric)</code>]<br /> (only <code>geom</code>) line
 width; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>.</p></td>
     </tr>
     <tr>
       <th>pointsize</th>
-      <td><p>[<code>named integerish(.)</code>]<br /> (only <code>geom</code>) the size
+      <td><p>[<code>named list(numeric)</code>]<br /> (only <code>geom</code>) the size
 of point geometries; see <code><a href='http://www.rdocumentation.org/packages/grid/topics/grid.points'>grid.points</a></code>.</p></td>
     </tr>
     <tr>
       <th>pointsymbol</th>
-      <td><p>[<code>named integerish(.)</code>]<br /> (only <code>geom</code>) point
-symbol; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/points'>points</a></code>.</p></td>
+      <td><p>[<code>named list(integerish)</code>]<br /> (only <code>geom</code>)
+point symbol; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/points'>points</a></code>.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>In case a colourtable is defined in a raster, this overrides the
+  'scale'.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -240,13 +249,17 @@ symbol; see <code><a href='http://www.rdocumentation.org/packages/graphics/topic
                     <span class='kw'>fontsize</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>xAxisTicks</span> <span class='kw'>=</span> <span class='fl'>10</span>),
                     <span class='kw'>colour</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='st'>"darkgrey"</span>, <span class='kw'>xAxisTitle</span> <span class='kw'>=</span> <span class='st'>"#A9A9A9"</span>),
                     <span class='kw'>rotation</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='fl'>0</span>))
+
+<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>input</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='no'>myTheme</span>)</div><div class='img'><img src='setTheme-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#details">Details</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

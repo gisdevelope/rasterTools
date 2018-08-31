@@ -156,7 +156,9 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /></p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object. The extent of
+vertices that are part of the same group is used to subset the spatial
+information.</p></td>
     </tr>
     </table>
     
@@ -182,7 +184,7 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
   specific <code>download*</code> functions manually, they are documented
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in <code>rtPaths</code> (see
-  <code><a href='updatePaths.html'>updatePaths</a></code>).</p>
+  <code><a href='updatePaths.html'>updatePaths</a></code>).</p>  
 <p>Recently supported datasets are</p><ul>
 <li><p>Global:</p><ul>
 <li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change</p></li>

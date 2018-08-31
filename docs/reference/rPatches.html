@@ -156,8 +156,8 @@ distinct objects.</p>
     </tr>
     <tr>
       <th>kernel</th>
-      <td><p>[<code>matrix(1)</code>]<br /> scan the raster with this kernel
-(default is a 3 by 3 cells diamond kernel).</p></td>
+      <td><p>[<code>matrix(1)</code>]<br /> scan the raster with this kernel (default
+is a 3 by 3 cells diamond kernel).</p></td>
     </tr>
     <tr>
       <th>background</th>
@@ -171,12 +171,6 @@ should have.</p></td>
     <p>A <code>RasterLayer</code> of the same dimension as <code>obj</code>, in which
   neighbouring cells of the foreground have been assigned the same value,
   forming patches.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The cells of a kernel can have the values 0, 1 and NA. The kernel
-  cells with values 0 and 1 are matched accurately in the input raster. The
-  kernel cells with value NA will be ignored.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -195,8 +189,6 @@ should have.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

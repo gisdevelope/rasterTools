@@ -180,16 +180,17 @@ specific graphic parameters (see <code>gpar</code>) separately.</p></td>
 <span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
 
 <span class='no'>aGrob</span> <span class='kw'>&lt;-</span> <span class='fu'>gToGrob</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)
-<span class='fu'>str</span>(<span class='no'>aGrob</span>)</div><div class='output co'>#&gt; List of 7
-#&gt;  $ x         :Class 'unit'  atomic [1:4] 40 70 70 50
+<span class='fu'>str</span>(<span class='no'>aGrob</span>)</div><div class='output co'>#&gt; List of 8
+#&gt;  $ x         :Class 'unit'  atomic [1:4] 0.5 0.875 0.875 0.625
 #&gt;   .. ..- attr(*, "valid.unit")= int 0
 #&gt;   .. ..- attr(*, "unit")= chr "npc"
-#&gt;  $ y         :Class 'unit'  atomic [1:4] 40 40 60 70
+#&gt;  $ y         :Class 'unit'  atomic [1:4] 0.5 0.5 0.75 0.875
 #&gt;   .. ..- attr(*, "valid.unit")= int 0
 #&gt;   .. ..- attr(*, "unit")= chr "npc"
 #&gt;  $ id        : int [1:4] 1 1 1 1
 #&gt;  $ id.lengths: NULL
-#&gt;  $ name      : chr "aGrob"
+#&gt;  $ rule      : chr "evenodd"
+#&gt;  $ name      : chr "aPathGrob"
 #&gt;  $ gp        :List of 4
 #&gt;   ..$ col : chr "black"
 #&gt;   ..$ fill: logi NA
@@ -197,7 +198,7 @@ specific graphic parameters (see <code>gpar</code>) separately.</p></td>
 #&gt;   ..$ lwd : num 3
 #&gt;   ..- attr(*, "class")= chr "gpar"
 #&gt;  $ vp        : NULL
-#&gt;  - attr(*, "class")= chr [1:3] "polygon" "grob" "gDesc"</div></pre>
+#&gt;  - attr(*, "class")= chr [1:3] "pathgrob" "grob" "gDesc"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

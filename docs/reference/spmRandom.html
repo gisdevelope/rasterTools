@@ -141,7 +141,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>spmRandom</span>(<span class='no'>mat</span>, <span class='no'>pattern</span>, <span class='no'>seed</span>)</pre>
+    <pre class="usage"><span class='fu'>spmRandom</span>(<span class='no'>mat</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"cell"</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,16 +167,14 @@
     <p>Random values can be applied to different patterns within the landscape
 model.</p>
 <ul>
-<li><p>For <code>base = "cell"</code>, each cell of the resulting
-  LM is assigned a random value.</p></li>
-<li><p>For <code>base = "rectangle"</code>,</p></li>
-<li><p>For <code>base = "circle"</code>,</p></li>
-<li><p>For <code>base = "voronoi"</code>, Gaucherel
+<li><p>For <code>pattern = "cell"</code>, each cell of the resulting
+  model is assigned a random value.</p></li>
+<li><p>For <code>pattern = "rectangle"</code>,</p></li>
+<li><p>For <code>pattern = "circle"</code>,</p></li>
+<li><p>For <code>pattern = "voronoi"</code>, Gaucherel
   (2008)</p></li>
-<li><p>For <code>base = "cluster"</code>, Saura &amp; Martínez-Millán (2000)</p></li>
+<li><p>For <code>pattern = "cluster"</code>, Saura &amp; Martínez-Millán (2000)</p></li>
 </ul>
-    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
-  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -186,6 +184,11 @@ model.</p>
   random clusters method. Landscape Ecology 15, 661–678.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='no'>myRandomPattern</span> <span class='kw'>&lt;-</span> <span class='fu'>spmRandom</span>(<span class='kw'>mat</span> <span class='kw'>=</span> <span class='no'>mat</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>myRandomPattern</span>)</div><div class='img'><img src='spmRandom-1.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -195,7 +198,9 @@ model.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

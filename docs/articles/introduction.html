@@ -100,7 +100,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-08-21</h4>
+            <h4 class="date">2018-08-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -145,14 +145,14 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
                      <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))
 (aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<pre><code>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</code></pre>
+<pre><code>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</code></pre>
 <p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> funciton. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
 <p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to and from other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
 </div>
@@ -160,12 +160,12 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 <div id="example-workflow" class="section level1">
 <h1 class="hasAnchor">
 <a href="#example-workflow" class="anchor"></a>Example workflow</h1>
-<p>In the following you will find an example for each of the core functions. Let’s start by loading the package</p>
+<p>In the following you will find an example for each of the core functions.</p>
 <p><code>rasterTools</code> may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via <code><a href="../reference/updatePaths.html">updatePaths(root = "/path/to/the/spatial/files")</a></code>.</p>
 <div id="generate-spatial-patterns" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-spatial-patterns" class="anchor"></a>Generate spatial patterns</h2>
-<p><em>Coming soon</em></p>
+<p><em>In the making</em></p>
 </div>
 <div id="obtain-spatial-datasets" class="section level2">
 <h2 class="hasAnchor">
@@ -183,9 +183,9 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     extract</span>
 myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> <span class="st">"aWindow.csv"</span>,
-                    <span class="dt">localPath =</span> <span class="kw">system.file</span>(<span class="st">"csv"</span>, <span class="dt">package=</span><span class="st">"rasterTools"</span>)) <span class="op">%&gt;%</span>
-<span class="st">   </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>() <span class="op">%&gt;%</span>
-<span class="st">   </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">crs =</span> projs<span class="op">$</span>laea)</code></pre></div>
+                   <span class="dt">localPath =</span> <span class="kw">system.file</span>(<span class="st">"csv"</span>, <span class="dt">package=</span><span class="st">"rasterTools"</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">crs =</span> projs<span class="op">$</span>laea)</code></pre></div>
 <p>The collection of datasets for the area of our interest can be obtained by the following code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</code></pre></div>
 <p>(output here not shown as it may download the datasets, if you do not have them yet)</p>

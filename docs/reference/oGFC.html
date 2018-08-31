@@ -249,6 +249,13 @@ supposed to be stored (i.e. on your harddisc).</p></td>
 
 <span class='co'># get the (updated) bibliography</span>
 <span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)
+
+<span class='co'># the gfc tiles</span>
+<span class='no'>gfcWindow</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>180</span>, <span class='fl'>180</span>),
+                        <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>60</span>, <span class='fl'>80</span>))
+<span class='no'>tiles_gfc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomTiles.html'>geomTiles</a></span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>gfcWindow</span>, <span class='kw'>cells</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>36</span>, <span class='fl'>14</span>),
+                       <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>longlat</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>tiles_gfc</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

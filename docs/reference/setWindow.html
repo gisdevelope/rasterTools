@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Determine the centroid of patches in a raster — rCentroid • rasterTools</title>
+<title>Set the reference window (generic) — setWindow • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Determine the centroid of patches in a raster — rCentroid" />
+<meta property="og:title" content="Set the reference window (generic) — setWindow" />
 
-<meta property="og:description" content="The centroid is the average location of all cells of a foreground patch." />
+<meta property="og:description" content="Set the reference window (generic)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,76 +130,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Determine the centroid of patches in a raster</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/modify.operators.R'><code>R/modify.operators.R</code></a></small>
-    <div class="hidden name"><code>rCentroid.Rd</code></div>
+    <h1>Set the reference window (generic)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/generics.R'><code>R/generics.R</code></a>, <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
+    <div class="hidden name"><code>setWindow.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The centroid is the average location of all cells of a foreground patch.</p>
+    <p>Set the reference window (generic)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>rCentroid</span>(<span class='no'>obj</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"raster"</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>from</span>, <span class='no'>to</span>, <span class='no'>...</span>)
+
+<span class='co'># S4 method for geom</span>
+<span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>from</span>, <span class='no'>to</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>obj</th>
-      <td><p>[<code>RasterLayer(1)</code>]<br /> The object to modify.</p></td>
+      <th>x</th>
+      <td><p>the object from which to set the reference window.</p></td>
     </tr>
     <tr>
-      <th>output</th>
-      <td><p>[<code>character(1)</code>]<br /> the type in which the output should be
-returned. Either <code>"raster"</code> (default) or <code>"geom"</code>.</p></td>
+      <th>from</th>
+      <td><p>[<code>numeric(2)</code>]<br /> x and y value of a coordinate.</p></td>
     </tr>
     <tr>
-      <th>background</th>
-      <td><p>[<code>integerish(1)</code>]<br /> the value any cell with value NA
-should have.</p></td>
+      <th>to</th>
+      <td><p>[<code>numeric(2)</code> | <code>data.frame(1)</code>]<br /> - either x and y value
+of a coordinate at the oposing end of a rectangle with <code>from</code><br /> - or
+<code>data.frame</code> that contains either the two oposing corners or all four
+corners of the rectangle.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other arguments.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
-    <p>Depending on <code>output</code>, either</p><ol>
-<li><p>a
-  <code>RasterLayer</code> of the same dimension as <code>obj</code>, in which the
-  centroid of each foreground patch has the value of the patch-number
-  identified with <code><a href='rPatches.html'>rPatches</a></code> and where the remaining cells of
-  each foreground patch have the value NA or</p></li>
-<li><p>a geometry object
-  of the centroids.</p></li>
-</ol>
-
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other operators to determine objects: <code><a href='rPatches.html'>rPatches</a></code>,
-  <code><a href='rSkeletonise.html'>rSkeletonise</a></code></p></div>
+    <ul>
+<li><p><code>geom</code>: se the reference window of a <code>geom</code></p></li>
+</ul>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
-<span class='no'>patches</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rPatches.html'>rPatches</a></span>(<span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>input</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>30</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rCentroid</span>(<span class='no'>patches</span>))</div><div class='img'><img src='rCentroid-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># get centroid coordinates</span>
-<span class='no'>centroid_coords</span> <span class='kw'>&lt;-</span> <span class='fu'>rCentroid</span>(<span class='no'>patches</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"geom"</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>patches</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>centroid_coords</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='rCentroid-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+      <li><a href="#methods-by-class-">Methods (by class)</a></li>
+          </ul>
 
   </div>
 </div>

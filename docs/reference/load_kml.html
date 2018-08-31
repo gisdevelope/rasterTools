@@ -143,7 +143,7 @@ XML format; this is a simple wrapper around readOGR." />
     
     </div>
 
-    <pre class="usage"><span class='fu'>load_kml</span>(<span class='no'>path</span>, <span class='no'>layer</span>)</pre>
+    <pre class="usage"><span class='fu'>load_kml</span>(<span class='no'>path</span>, <span class='no'>layer</span>, <span class='kw'>driver</span> <span class='kw'>=</span> <span class='st'>"rt"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,6 +155,11 @@ XML format; this is a simple wrapper around readOGR." />
     <tr>
       <th>layer</th>
       <td><p>[<code>character(1)</code>]<br /> the layer name.</p></td>
+    </tr>
+    <tr>
+      <th>driver</th>
+      <td><p>[<code>chacter(1)</code>]<br /> the driver used to load the 'kml' file,
+either <code>"ogr"</code> (default) or <code>"rt"</code>.</p></td>
     </tr>
     </table>
     

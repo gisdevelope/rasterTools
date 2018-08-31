@@ -263,24 +263,24 @@ the two given opposing corners.</p></li>
 <span class='no'>window</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>),
                      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>))
 <span class='co'># if no window is set, the bounding box (i.e. min/max values) will be set as window</span>
-(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'>geomPolygon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>))</div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'>
+(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'>geomPolygon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>))</div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'>
 <span class='co'># the vertices are plottet relative to the window</span>
 <span class='no'>aTriangle</span> <span class='kw'>&lt;-</span> <span class='fu'>geomPolygon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>vertices</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-                         <span class='kw'>regular</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"darkorange"</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='input'>(<span class='fu'>geomHexagon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='img'><img src='geomPolygon-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (6 vertices)
-#&gt; window       : 14.01924, 65.98076, 10, 70  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 14.01924, 65.98076, 10, 70  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'>
+                         <span class='kw'>regular</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"darkorange"</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='input'>(<span class='fu'>geomHexagon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='img'><img src='geomPolygon-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (6 vertices)
+#&gt; window     : 14.01924, 65.98076, 10, 70  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 14.01924, 65.98076, 10, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'>
 <span class='co'># if a geom is used in 'anchor', its properties (e.g. 'window') are passed on</span>
 <span class='kw pkg'>grid</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/grid/topics/grid.newpage'>grid.newpage</a></span>()
 <span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'>geomPolygon</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='input'><span class='no'>anExtent</span> <span class='kw'>&lt;-</span> <span class='fu'>geomRectangle</span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='geomPolygon-2.png' alt='' width='700' height='433' /></div><div class='input'>

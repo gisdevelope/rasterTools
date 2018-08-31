@@ -179,29 +179,29 @@ ignored in case <code>range != NULL</code>.</p></td>
 <span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
 
 <span class='co'># change to relative scale and back to absolute</span>
-(<span class='no'>relCoords</span> <span class='kw'>&lt;-</span> <span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"relative"</span>))</div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 0.5, 0.875, 0.5, 0.875  (xmin, xmax, ymin, ymax)
-#&gt; scale        : relative
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'><span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>relCoords</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"absolute"</span>)</div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'>
-<span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>100</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>10</span>, <span class='fl'>90</span>)))</div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 0, 100, 10, 90  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 50, 87.5, 50, 80  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'>
+(<span class='no'>relCoords</span> <span class='kw'>&lt;-</span> <span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"relative"</span>))</div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 0.5, 0.875, 0.5, 0.875  (xmin, xmax, ymin, ymax)
+#&gt; scale      : relative
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'><span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>relCoords</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"absolute"</span>)</div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 40, 70, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'>
+<span class='fu'>gScale</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>range</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>100</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>10</span>, <span class='fl'>90</span>)))</div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 0, 100, 10, 90  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 50, 87.5, 50, 80  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

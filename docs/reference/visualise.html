@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Visualise gridded objects and geometries — visualise • rasterTools</title>
+<title>Visualise raster and geom objects — visualise • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Visualise gridded objects and geometries — visualise" />
+<meta property="og:title" content="Visualise raster and geom objects — visualise" />
 
-<meta property="og:description" content="Visualise gridded objects and geometries" />
+<meta property="og:description" content="Visualise raster and geom objects" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,30 +130,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Visualise gridded objects and geometries</h1>
+    <h1>Visualise raster and geom objects</h1>
     <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/visualise.R'><code>R/visualise.R</code></a></small>
     <div class="hidden name"><code>visualise.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Visualise gridded objects and geometries</p>
+    <p>Visualise raster and geom objects</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>visualise</span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>visualise</span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>image</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>gridded</th>
-      <td><p>[<code>Raster*</code> | <code>matrix</code>]<br /> Gridded object.</p></td>
+      <th>raster</th>
+      <td><p>[<code>Raster*</code> | <code>matrix</code>]<br /> raster object to plot.</p></td>
     </tr>
     <tr>
       <th>geom</th>
-      <td><p>[<code>geom</code>]<br /> Object of class <code><a href='geom-class.html'>geom</a></code>.</p></td>
+      <td><p>[<code>geom</code>]<br /> geom to plot.</p></td>
     </tr>
     <tr>
       <th>theme</th>
@@ -162,13 +162,13 @@
     </tr>
     <tr>
       <th>trace</th>
-      <td><p>[<code>logical(1)</code>]<br /> Print the gridded object's history (i.e.
+      <td><p>[<code>logical(1)</code>]<br /> Print the raster object's history (i.e.
 the process according to which it has been created) (<code>TRUE</code>), or
 simply plot the object (<code>FALSE</code>, default).</p></td>
     </tr>
     <tr>
       <th>image</th>
-      <td><p>[<code>logical(1)</code>]<br /> Does <code>gridded</code> have the channels
+      <td><p>[<code>logical(1)</code>]<br /> Does <code>raster</code> have the channels
 <code>red</code>, <code>green</code> and <code>blue</code>, i.e. is it an "image"
 (<code>TRUE</code>) or is this not the case (<code>FALSE</code>, default)?</p></td>
     </tr>
@@ -191,16 +191,16 @@ simply plot the object (<code>FALSE</code>, default).</p></td>
 
     <p>To create a plot with your own style, design it with
   <code><a href='setTheme.html'>setTheme</a></code> and use it in <code>theme</code>.</p>
-<p>In case you want to plot an image (simiar to <code><a href='http://www.rdocumentation.org/packages/raster/topics/plotRGB'>plotRGB</a></code>),
-  you have to provide a <code>RasterStack</code> or <code>RasterBrick</code> with the
-  three layers <code>red</code>, <code>green</code> and <code>blue</code> and set <code>image =
-  TRUE</code>.</p>
+<p>In case you want to plot an image (simiar to
+  <code><a href='http://www.rdocumentation.org/packages/raster/topics/plotRGB'>plotRGB</a></code>), you have to provide a <code>RasterStack</code> or
+  <code>RasterBrick</code> with the three layers <code>red</code>, <code>green</code> and
+  <code>blue</code> and set <code>image = TRUE</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
 <span class='no'>binarised</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>input</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-<span class='fu'>visualise</span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='fu'><a href='rDistance.html'>rDistance</a></span>(<span class='no'>binarised</span>), <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>this object has the following history:</span>
+<span class='fu'>visualise</span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='fu'><a href='rDistance.html'>rDistance</a></span>(<span class='no'>binarised</span>), <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>this object has the following history:</span>
 #&gt; <span class='message'> -&gt; the object was loaded from memory</span>
 #&gt; <span class='message'> -&gt; the values have been binarised</span>
 #&gt; <span class='message'> -&gt; distance values have been calculated according to the euclidean distance</span></div><div class='img'><img src='visualise-1.png' alt='' width='700' height='433' /></div><div class='input'>
@@ -219,17 +219,17 @@ simply plot the object (<code>FALSE</code>, default).</p></td>
                      <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>window</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>),
                      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>80</span>))
-(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>))</div><div class='output co'>#&gt; class        : geom
-#&gt; feature type : polygon
-#&gt; features     : 1  (4 vertices)
-#&gt; window       : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
-#&gt; extent       : 30, 60, 40, 70  (xmin, xmax, ymin, ymax)
-#&gt; scale        : absolute
-#&gt; coord. ref.  : NA
-#&gt; variables    : 1  (id)</div><div class='input'>
+(<span class='no'>aGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>(<span class='kw'>anchor</span> <span class='kw'>=</span> <span class='no'>coords</span>, <span class='kw'>window</span> <span class='kw'>=</span> <span class='no'>window</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>))</div><div class='output co'>#&gt; class      : geom
+#&gt; type       : polygon
+#&gt; features   : 1  (4 vertices)
+#&gt; window     : 0, 80, 0, 80  (xmin, xmax, ymin, ymax)
+#&gt; extent     : 30, 60, 40, 70  (xmin, xmax, ymin, ymax)
+#&gt; scale      : absolute
+#&gt; crs        : NA
+#&gt; attributes : 2  (id, n)</div><div class='input'>
 <span class='co'># if plotted on top of an existing plot, the relative coordinate values</span>
 <span class='co'># will be used to construct the grob.</span>
-<span class='fu'>visualise</span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)</div><div class='img'><img src='visualise-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualise</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='visualise-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>visualise</span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>)</div><div class='img'><img src='visualise-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>visualise</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>aGeom</span>, <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='visualise-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

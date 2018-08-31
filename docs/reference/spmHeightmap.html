@@ -141,7 +141,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>spmHeightmap</span>(<span class='no'>mat</span>, <span class='kw'>hurst</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"diamondSquare"</span>, <span class='kw'>startDev</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+    <pre class="usage"><span class='fu'>spmHeightmap</span>(<span class='no'>mat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"diamondSquare"</span>, <span class='kw'>hurst</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>startDev</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -152,15 +152,15 @@
       <td><p>[<code>matrix</code>]<br /> object to which the spatial pattern is added.</p></td>
     </tr>
     <tr>
-      <th>hurst</th>
-      <td><p>[<code>numeric(1)</code>]<br /> the Hurst exponent (fBm) or its
-equivalent, the roughness factor (DSa). Bounded between 0 and 1.</p></td>
-    </tr>
-    <tr>
       <th>type</th>
       <td><p>[<code>character(1)</code>]<br /> the model according to which the pattern
 is generated, either <code>"diamondSquare"</code> (default), <code>"brownian"</code> or
 <code>"gaussian"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>hurst</th>
+      <td><p>[<code>numeric(1)</code>]<br /> the Hurst exponent (fBm) or its
+equivalent, the roughness factor (DSa). Bounded between 0 and 1.</p></td>
     </tr>
     <tr>
       <th>startDev</th>
@@ -190,8 +190,6 @@ dimensional surface (a simulated digitial elevation model).</p>
   average from its three only neighbours and not from the one dimensional
   version of the algorithm (Fournier et al., 1982).</p></dd>
   <dt>Fractional brownian motion</dt><dd><p></p></dd> <dt>Gaussian random field</dt><dd><p></p></dd> </dl>
-    <p>If this function is used in conjunction with <code><a href='generate.html'>generate</a></code>,
-  <code>mat</code> cannot be specified, because <code>generate</code> assigns it.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

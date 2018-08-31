@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Morphologically dilate foreground patches in a raster — rDilate" />
 
-<meta property="og:description" content="The morphological operation 'dilate' adds cells at the boundary of a patch in
-a binarised raster." />
+<meta property="og:description" content="The morphological operation 'dilate' increases the value of cells along a
+gradient of values." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -138,8 +138,8 @@ a binarised raster." />
 
     <div class="ref-description">
     
-    <p>The morphological operation 'dilate' adds cells at the boundary of a patch in
-a binarised raster.</p>
+    <p>The morphological operation 'dilate' increases the value of cells along a
+gradient of values.</p>
     
     </div>
 
@@ -154,21 +154,38 @@ a binarised raster.</p>
     </tr>
     <tr>
       <th>kernel</th>
-      <td><p>[<code>matrix(1)</code>]<br /> scan the raster with this kernel
-(default is a 3 by 3 cells diamond kernel).</p></td>
+      <td><p>[<code>matrix(1)</code>]<br /> scan the raster with this kernel (default
+is a 3 by 3 cells diamond kernel).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>RasterLayer</code> of the same dimension as <code>obj</code>, where the
-  boundaries of the binary raster have been enlarged by the given kernel.</p>
+    <p>A <code>RasterLayer</code> of the same dimension as <code>obj</code>, where a
+  dilation has been performed.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The cells of a kernel can have the values 0, 1 and NA. The kernel
-  cells with values 0 and 1 are matched accurately in the input raster. The
-  kernel cells with value NA will be ignored.</p>
+    <p>A morphological dilation changes the values in a raster after
+  comparing each value to a kernel that moves systematically across the
+  raster. A kernel is any 2D array with an odd number of cells in each
+  dimension and a focal cell in the middle. The cells of a kernel can have
+  four categories of values: 0, 1, NA and any value &gt; 1. When the kernel
+  values match the values of the input raster, the input raster cell covered
+  by the focal kernel cell is modified according to a specific operation, for
+  instance the smallest value covered by the kernel is assigned.</p>
+<p>Rasters are either binary or non-binary (greyscale) rasters.</p><ul>
+<li><p>For binary rasters the kernel cells with values 0 and 1 are matched
+  accurately in the input raster. Cells with value NA will be ignored, i.e.
+  "it does not matter what value is there".</p></li>
+<li><p>For a non-binary raster the
+  value 0 does not have any meaning and every 0 is turned into an NA. In case
+  a non-binary kernel is defined to dilate a non-binary (greyscale) raster,
+  each value of the input raster that is currently covered by the kernel is
+  summarised with the focal kernel value and the maximum of this set of
+  values is assigned to the input raster cell covered by the focal kernel
+  cell.</p></li>
+</ul>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -183,7 +200,9 @@ a binarised raster.</p>
 (<span class='no'>myKernel</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>))</div><div class='output co'>#&gt;      [,1] [,2] [,3]
 #&gt; [1,]    1    1    1
 #&gt; [2,]    1    1    1
-#&gt; [3,]    1    1    1</div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rDilate</span>(<span class='no'>binarised</span>, <span class='kw'>kernel</span> <span class='kw'>=</span> <span class='no'>myKernel</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='rDilate-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; [3,]    1    1    1</div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rDilate</span>(<span class='no'>binarised</span>, <span class='kw'>kernel</span> <span class='kw'>=</span> <span class='no'>myKernel</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='rDilate-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># dilate also non-binary rasters</span>
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='fu'>rDilate</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>input</span>)))</div><div class='img'><img src='rDilate-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
