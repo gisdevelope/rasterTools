@@ -33,7 +33,7 @@ visualise(rCentroid(patches))
 
 # get centroid coordinates
 centroid_coords <- rCentroid(patches, output = "geom")
-visualise(gridded = patches, geom = centroid_coords, col = "red")
+visualise(raster = patches, geom = centroid_coords, col = "red")
 }
 \seealso{
 Other operators to determine objects: \code{\link{rPatches}},

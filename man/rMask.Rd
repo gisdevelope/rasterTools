@@ -42,7 +42,7 @@ visualise(rMask(input, mask = m))
 mask <- geomPolygon(template = input, vertices = 5, show = T, col = "deeppink")
 mask <- gToRaster(mask)
 
-visualise(gridded = rMask(obj = input, mask = mask))
+visualise(raster = rMask(obj = input, mask = mask))
 }
 }
 \seealso{

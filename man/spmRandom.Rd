@@ -30,7 +30,7 @@ model.
 \examples{
 mat <- matrix(nrow = 100, ncol = 100, data = 0)
 myRandomPattern <- spmRandom(mat = mat)
-visualise(gridded = myRandomPattern)
+visualise(raster = myRandomPattern)
 
 }
 \references{

@@ -69,7 +69,7 @@ The object defined in `mask` provides the target projection the user wants to wo
 ```
 
 ## Determine target tiles
-Tiles are a set of regularly arranged neighbouring rectangles that represent different "windows" by which a large spatial dataset is subdivided. This approach is being chosen by many of the providers of gridded dataset to make files available in small enough chunks that can easier be handled. `rasterTools` comes with the function `geomTiles()` that lets you outline tiles with the specific intention that these tiles represent the tiling of the gridded datasets. We first outline the overall extent of the tiles, i.e. their minimum and maximum values in x and y dimension. Then we specify the number of cells/rectangles and the projection:
+Tiles are a set of regularly arranged neighbouring rectangles that represent different "windows" by which a large spatial dataset is subdivided. This approach is being chosen by many of the providers of raster dataset to make files available in small enough chunks that can easier be handled. `rasterTools` comes with the function `geomTiles()` that lets you outline tiles with the specific intention that these tiles represent the tiling of the raster datasets. We first outline the overall extent of the tiles, i.e. their minimum and maximum values in x and y dimension. Then we specify the number of cells/rectangles and the projection:
 
 ```{r, eval=FALSE}
   aWindow <- data.frame(x = c(-180, 180),

@@ -307,7 +307,7 @@ rCategorise <- function(obj, breaks = NULL, n = NULL){
 #'
 #' # get centroid coordinates
 #' centroid_coords <- rCentroid(patches, output = "geom")
-#' visualise(gridded = patches, geom = centroid_coords, col = "red")
+#' visualise(raster = patches, geom = centroid_coords, col = "red")
 #' @importFrom checkmate assertClass
 #' @importFrom raster values rasterToPoints rasterize crs
 #' @export
@@ -823,7 +823,7 @@ rLess <- function(obj, thresh, background = NULL){
 #' mask <- geomPolygon(template = input, vertices = 5, show = T, col = "deeppink")
 #' mask <- gToRaster(mask)
 #'
-#' visualise(gridded = rMask(obj = input, mask = mask))
+#' visualise(raster = rMask(obj = input, mask = mask))
 #' }
 #' @importFrom checkmate assertClass
 #' @importFrom raster as.matrix raster extent crs crs<-

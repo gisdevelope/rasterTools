@@ -40,7 +40,7 @@ In case \code{origin} is not given, \code{nlmGradient} constructs
 mat <- matrix(nrow = 100, ncol = 100, data = 0)
 origin <- mat; origin[5000] <- 1
 myPointGradient <- spmGradient(mat = mat, origin = origin)
-visualise(gridded = myPointGradient)
+visualise(raster = myPointGradient)
 
 # create a geometry object
 #coords <- data.frame(x = c(0.4, 0.45, 0.7, 0.5),
@@ -59,5 +59,5 @@ visualise(gridded = myPointGradient)
 # create a completely random gradient
 #RandGrad <- spmGradient(mat = mat, type = "random")
 
-#visualise(gridded = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
+#visualise(raster = raster::stack(NLMPolyGrad, NLMPointGrad, RandGrad))
 }
