@@ -171,8 +171,12 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 #'
 #' csv is the short form of \emph{Comma Separated Values}, which represents
 #' simple tables of systematically delimited information. The files loaded with
-#' this function should have the columns \code{x} and \code{y} and potentially
-#' other columns that represent the attributes of these coordinates.
+#' this function should have the columns \code{x}, \code{y} and \code{id} and
+#' potentially other columns that represent the attributes of these coordinates.
+#'
+#' A column \code{fid} can have a deviating value than \code{id} when several
+#' features are part of the same object, such as multiple line features or holes
+#' in polygons.
 #'
 #' This is a helper to \code{\link{loadData}} and is not intended to be used on
 #' its own.
@@ -186,14 +190,20 @@ load_csv <- function(path){
   assertFile(path, access = "r", extension = "csv")
   out <- read.csv(path, stringsAsFactors = FALSE)
   colnames(out) <- tolower(colnames(out))
-  assertNames(names(out), must.include = c("x", "y", "id"))
-  theData <- data.frame(id = out$id, x = out$x, y = out$y)
-  theData <- cbind(theData, out[which(!colnames(out) %in% c("x", "y", "id"))])
+  assertNames(names(out), must.include = c("x", "y", "id"), subset.of = c("x", "y", "id", "fid"))
+  if("fid" %in% names(out)){
+    theData <- data.frame(id = out$id, fid = out$fid, x = out$x, y = out$y)
+  } else{
+    theData <- data.frame(id = out$id, fid = out$id, x = out$x, y = out$y)
+  }
+  theData <- cbind(theData, out[which(!colnames(out) %in% c("x", "y", "id", "fid"))])
+  theAttr <- data.frame(id = unique(theData$id),
+                        n = sapply(seq_along(unique(theData$id)), function(x) length(unique(theData$fid[theData$id == x]))))
 
   out <- new(Class = "geom",
              type = "point",
              coords = theData,
-             attr = data.frame(id = unique(theData$id)),
+             attr = theAttr,
              window = data.frame(x = rep(c(min(out$x), max(out$x)), each = 2), y = c(min(out$y), max(out$y), max(out$y), min(out$y))),
              scale = "absolute",
              crs = as.character(NA),
@@ -248,8 +258,8 @@ load_kml <- function(path, layer, driver = "rt"){
     coords <- unlist(coords)
     nCoords <- length(coords)
     coords <- as.numeric(unlist(str_split(coords, ",")))
-    coords <- data.frame(rep(id, nIds), matrix(coords, nrow = nCoords, byrow = T), stringsAsFactors = FALSE)
-    colnames(coords) <- c("id", "x", "y")
+    coords <- data.frame(rep(id, nIds), fid = rep(id, nIds), matrix(coords, nrow = nCoords, byrow = T), stringsAsFactors = FALSE)
+    colnames(coords) <- c("id", "fid", "x", "y")
     
     # what feature type is it?
     if(all(grepl("Point", txt))){
@@ -265,7 +275,7 @@ load_kml <- function(path, layer, driver = "rt"){
     out <- new(Class = "geom",
                type = type,
                coords = coords,
-               attr = data.frame(id = unique(coords$id)),
+               attr = data.frame(id = unique(coords$id), n = 1),
                window = data.frame(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
                scale = "absolute",
                crs = as.character(NA),
@@ -385,13 +395,17 @@ load_svg <- function(path, layer){
     txt <- sub('[[:space:]]?/>', "", txt)
     txt <- gsub(' = ', "=", txt)
 
-    # make a proper data.frame out of the mess.
-    allOcc <- strsplit(txt, " ")
-    allOcc <- as.data.frame(do.call(rbind, allOcc))[-c(2:3)] # these values which look like coordinates are merely values needed to render the svg file.
-    allOcc <- cbind(species, allOcc)
-    colnames(allOcc) <- c("species", "square", "year")
-
+    if(length(txt) != 0){
+      # make a proper data.frame out of the mess.
+      allOcc <- strsplit(txt, " ")
+      allOcc <- as.data.frame(do.call(rbind, allOcc))[-c(2:3)] # these values which look like coordinates are merely values needed to render the svg file.
+      allOcc <- cbind(species, allOcc)
+      colnames(allOcc) <- c("species", "square", "year")
+    } else{
+      allOcc <- data.frame(species = species, square = 0, year = 0)
+    }
     return(allOcc)
+    
   } else{
     stop("loading svg files other than from the EMMA dataset has not been programmed yet...")
   }

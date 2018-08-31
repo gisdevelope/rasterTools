@@ -15,10 +15,14 @@ a \code{point geometry} of the coordinates
 \description{
 csv is the short form of \emph{Comma Separated Values}, which represents
 simple tables of systematically delimited information. The files loaded with
-this function should have the columns \code{x} and \code{y} and potentially
-other columns that represent the attributes of these coordinates.
+this function should have the columns \code{x}, \code{y} and \code{id} and
+potentially other columns that represent the attributes of these coordinates.
 }
 \details{
+A column \code{fid} can have a deviating value than \code{id} when several
+features are part of the same object, such as multiple line features or holes
+in polygons.
+
 This is a helper to \code{\link{loadData}} and is not intended to be used on
 its own.
 }
