@@ -4,13 +4,13 @@
 \alias{locate}
 \title{Locate (and identify) clicks}
 \usage{
-locate(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
+locate(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
   snap = FALSE, raw = FALSE, silent = FALSE, show = FALSE, ...)
 }
 \arguments{
 \item{samples}{[\code{integerish(1)}]\cr the number of clicks.}
 
-\item{gridded}{[\code{Raster*} | \code{matrix}]\cr the gridded object in
+\item{raster}{[\code{Raster*} | \code{matrix}]\cr the raster object in
 which to locate.}
 
 \item{panel}{[\code{character(1)}]\cr the panel in which to locate (i.e. the
@@ -53,14 +53,14 @@ input <- rtData$continuous
 patches <- rPatches(rBinarise(input, thresh = 30))
 
 # locate from a not yet plotted object
-locate(samples = 3, gridded = input, show = TRUE, col = "green")
+locate(samples = 3, raster = input, show = TRUE, col = "green")
 
 # or from one that is already plotted
-visualise(gridded = patches)
+visualise(raster = patches)
 locate(identify = TRUE, snap = TRUE)
 
 # with several panels, specify a target
-visualise(gridded = raster::brick(input, patches))
+visualise(raster = raster::brick(input, patches))
 locate(samples = 4, panel = "patches", identify = TRUE)
 }
 }

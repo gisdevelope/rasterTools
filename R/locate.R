@@ -2,7 +2,7 @@
 #'
 #' Click into a plot to get the location or identify values
 #' @param samples [\code{integerish(1)}]\cr the number of clicks.
-#' @param gridded [\code{Raster*} | \code{matrix}]\cr the gridded object in
+#' @param raster [\code{Raster*} | \code{matrix}]\cr the raster object in
 #'   which to locate.
 #' @param panel [\code{character(1)}]\cr the panel in which to locate (i.e. the
 #'   title shown over the plot). Does not have to be accurate, as it matches
@@ -32,14 +32,14 @@
 #' patches <- rPatches(rBinarise(input, thresh = 30))
 #'
 #' # locate from a not yet plotted object
-#' locate(samples = 3, gridded = input, show = TRUE, col = "green")
+#' locate(samples = 3, raster = input, show = TRUE, col = "green")
 #'
 #' # or from one that is already plotted
-#' visualise(gridded = patches)
+#' visualise(raster = patches)
 #' locate(identify = TRUE, snap = TRUE)
 #'
 #' # with several panels, specify a target
-#' visualise(gridded = raster::brick(input, patches))
+#' visualise(raster = raster::brick(input, patches))
 #' locate(samples = 4, panel = "patches", identify = TRUE)
 #' }
 #' @importFrom grDevices dev.list
@@ -48,15 +48,15 @@
 #' @importFrom raster as.matrix
 #' @export
 
-locate <- function(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
+locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
                    snap = FALSE, raw = FALSE, silent = FALSE, show = FALSE, ...){
 
-  # samples = 3; gridded = NULL; panel = NULL; identify = TRUE; snap = TRUE; silent = FALSE; show = TRUE
+  # samples = 3; raster = NULL; panel = NULL; identify = TRUE; snap = TRUE; silent = FALSE; show = TRUE
   
   # check arguments
   assertIntegerish(samples, lower = 1, max.len = 1)
-  isRaster <- testClass(gridded, "Raster")
-  isMatrix <- testClass(gridded, "matrix")
+  isRaster <- testClass(raster, "Raster")
+  isMatrix <- testClass(raster, "matrix")
   existsGridded <- ifelse(c(isRaster | isMatrix), TRUE, FALSE)
   assertCharacter(panel, ignore.case = TRUE, len = 1, null.ok = TRUE)
   assertLogical(identify, len = 1)
@@ -80,23 +80,23 @@ locate <- function(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
     if(existsGridded){
       # if both are given, check whether their names are the same. If not, prepare
       # to plot obj
-      if(!all(names(gridded) == panelNames)){
-        panelNames <- names(gridded)
-        visualise(gridded = gridded)
+      if(!all(names(raster) == panelNames)){
+        panelNames <- names(raster)
+        visualise(raster = raster)
       }
     } else{
       isLegendInPlot <- !identical(grid.grep("legend", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
       isRasterInPlot <- !identical(grid.grep("raster", grobs = FALSE, viewports = TRUE, grep = TRUE), character(0))
       if(identify & (!isLegendInPlot & !isRasterInPlot)){
-        stop("to identify values, please provide either a legend or 'gridded'.")
+        stop("to identify values, please provide either a legend or 'raster'.")
       }
     }
   } else{
     if(!existsGridded){
-      stop("please either provide 'gridded' or create a plot with rasterTools::visualise().")
+      stop("please either provide 'raster' or create a plot with rasterTools::visualise().")
     } else{
-      panelNames <- names(gridded)
-      visualise(gridded = gridded)
+      panelNames <- names(raster)
+      visualise(raster = raster)
     }
   }
 
@@ -116,8 +116,10 @@ locate <- function(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
   }
 
   # find the correct viewport to limit actions to this area of the plot
-  panelvpPath <- grid.grep(paste0(panel, "::plot::grid::raster"), grobs = FALSE, viewports = TRUE, grep = TRUE)
-  seekViewport(panelvpPath)
+  rasterVpPath <- grid.grep(paste0(panel, "::plot::grid::raster"), grobs = FALSE, viewports = TRUE, grep = TRUE)
+  # geomVpPath <- grid.grep(paste0(panel, "::plot::grid::geom"), grobs = FALSE, viewports = TRUE, grep = TRUE)
+  # tryCatch(seekViewport(rasterVpPath), error = function(x) seekViewport(geomVpPath))
+  seekViewport(rasterVpPath)
 
   metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
   if(length(panelNames) > 1){
@@ -148,9 +150,9 @@ locate <- function(samples = 1, gridded = NULL, panel = NULL, identify = FALSE,
 
     } else{
       if(isRaster){
-        matVal <- as.matrix(eval(parse(text = paste0("gridded$", panel))))
+        matVal <- as.matrix(eval(parse(text = paste0("raster$", panel))))
       } else{
-        matVal <- gridded
+        matVal <- raster
       }
     }
   }
