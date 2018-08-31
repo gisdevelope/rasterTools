@@ -61,9 +61,9 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = NULL; geom = ger; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # raster = NULL; geom = someGeom; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
   
-  # new ideas: 
+  # new ideas:
   # 1. automatically detect which is raster and which is geom
   # 2. Rcpp for the gScale and gToGrob functions
   # 3. enable colouring of geom based on its values
@@ -182,11 +182,6 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
   # turn 'geom' into a grob that can be plotted
   if(existsGeom){
-    
-    # scale it to relative, if it's not
-    if(geom@scale == "absolute"){
-      geom <- gScale(geom = geom, to = "relative")
-    }
     
     if(isOpenPlot){
       # if a plot is already open, we want to get it's extent so that the
@@ -549,10 +544,10 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
       # the geom viewport
       if(existsGeom){
+        grid.clip()
         pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
                               height = unit(1, "npc") - unit(2*margin$y, "native"),
                               name = "geom"))
-        grid.clip()
         grid.draw(geomGrob)
         upViewport() # exit geom
       }
@@ -570,6 +565,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         pushViewport(viewport(xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
                               yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
                               name = "grid"))
+        grid.clip()
         pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
                               height = unit(1, "npc") - unit(2*margin$y, "native"),
                               name = "geom"))
@@ -579,7 +575,6 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         downViewport("geom")
       }
 
-      grid.clip()
       grid.draw(geomGrob)
       upViewport(4)
     }
@@ -627,7 +622,9 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
 #' Create a new theme
 #'
-#' To see the default settings, type \code{str(theme_rt)}.
+#' This is merely a tentative workaround which I will improve with respect to
+#' usability in the future. To see the default settings, type
+#' \code{str(theme_rt)}.
 #' @param from [\code{theme}]\cr the theme that serves as basis for
 #'   modifications, by default \code{theme_rt}.
 #' @param plot [\code{named list(logical)}]\cr which elements (not) to plot:
@@ -663,7 +660,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #' @param pointsymbol [\code{named list(integerish)}]\cr (only \code{geom})
 #'   point symbol; see \code{\link[graphics]{points}}.
 #' @details In case a colourtable is defined in a raster, this overrides the
-#' 'scale'.
+#'   'scale'.
 #' @examples
 #' input <- rtData$continuous
 #' myTheme <- setTheme(theme_rt,
@@ -683,7 +680,78 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
                      scale = NULL, legend = NULL, fontsize = NULL, colour = NULL,
                      rotation = NULL, fill = NULL, linetype = NULL, linewidth = NULL,
                      pointsize = NULL, pointsymbol = NULL){
-
+  
+  
+  # theme <- list(title <- list(plot = TRUE,
+  #                             fontsize = 16,
+  #                             colour = "black"),
+  #               box <- list(plot  = FALSE,
+  #                           linewidth = 3,
+  #                           linetype = "solid",
+  #                           colour = "black"),
+  #               xAxis <- list(plot = TRUE,
+  #                             bins = 4,
+  #                             margin = 0.05,
+  #                             label = list(
+  #                               title = "x",
+  #                               fontsize = 12,
+  #                               colour = "black",
+  #                               rotation = 0,
+  #                               digits = 1),
+  #                             ticks = list(
+  #                               fontsize = 10,
+  #                               colour = "black")),
+  #               yAxis <- list(plot = TRUE,
+  #                             bins = 4,
+  #                             margin = 0.05,
+  #                             label = list(
+  #                               title = "x",
+  #                               fontsize = 12,
+  #                               colour = "black",
+  #                               rotation = 0,
+  #                               digits = 1),
+  #                             ticks = list(
+  #                               fontsize = 10,
+  #                               colour = "black")),
+  #               grid <- list(plot = TRUE,
+  #                            minor = TRUE,
+  #                            colour = "grey",
+  #                            linetype = "solid",
+  #                            linewidth = 3),
+  #               legend <- list(plot = TRUE,
+  #                              common = FALSE,
+  #                              bins = 5,
+  #                              ascending = TRUE,
+  #                              position = "left",
+  #                              sizeRatio = 0.6,
+  #                              title = list(
+  #                                fontsize = 10,
+  #                                colour = "black"),
+  #                              label = list(
+  #                                fontsize = 10,
+  #                                colour = "black"),
+  #                              ticks = list(
+  #                                fontsize = 10,
+  #                                colour = "black"),
+  #                              box = list(
+  #                                linetype = "solid",
+  #                                linewidth = 1,
+  #                                colour = "black")),
+  #              geom <- list(scale = list(x = "fill", to = "id"),
+  #                           line = theme_rt$scale$geom$colours,
+  #                           fill = theme_rt$scale$geom$colours,
+  #                           linetype = "solid",
+  #                           linewidth = 3,
+  #                           pointsize = 1,
+  #                           pointsymbol = 4),
+  #               raster <- list(scale = "id",
+  #                              colours = theme_rt$scale$raster$colours))
+  # 
+  # visualise(geom = test, 
+  #           theme = setTheme(geom = list(scale = c(x = "line", to = "id"), 
+  #                                        fill = NA, 
+  #                                        line = c('#FFFFFF', '#000000')))))
+  
   assertList(from, len = 7, null.ok = TRUE)
   if(!is.null(from)){
     assertNames(names(from), permutation.of = c("plot", "labels", "bins", "margin", "scale", 
@@ -727,8 +795,8 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
   }
   
   assertList(scale, any.missing = FALSE, null.ok = TRUE)
-  assertNames(names(scale), subset.of = c("raster", "geom"))
   if(!is.null(scale$raster)){
+    assertNames(names(scale), subset.of = c("raster", "geom"))
     assertNames(names(scale$raster), subset.of = c("colours", "variable"))
     assertCharacter(scale$raster$colours, null.ok = TRUE)
     assertCharacter(scale$raster$variable, null.ok = TRUE)
@@ -738,6 +806,7 @@ setTheme <- function(from = NULL, plot = NULL, labels = NULL, bins = NULL, margi
     out$scale$raster[matched] <- scale$raster
   }
   if(!is.null(scale$geom)){
+    assertNames(names(scale), subset.of = c("raster", "geom"))
     assertNames(names(scale$geom), subset.of = c("colours", "variable"))
     assertCharacter(scale$geom$colours, null.ok = TRUE)
     assertCharacter(scale$geom$variable, null.ok = TRUE)

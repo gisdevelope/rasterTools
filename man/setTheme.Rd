@@ -60,11 +60,13 @@ of point geometries; see \code{\link[grid]{grid.points}}.}
 point symbol; see \code{\link[graphics]{points}}.}
 }
 \description{
-To see the default settings, type \code{str(theme_rt)}.
+This is merely a tentative workaround which I will improve with respect to
+usability in the future. To see the default settings, type
+\code{str(theme_rt)}.
 }
 \details{
 In case a colourtable is defined in a raster, this overrides the
-'scale'.
+  'scale'.
 }
 \examples{
 input <- rtData$continuous
