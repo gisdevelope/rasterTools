@@ -1,6 +1,6 @@
 #' Group geometries
 #'
-#' \code{gGroup} assigns the vertices of a \code{geom} into groups.
+#' \code{gGroup} assigns the vertices of a \code{geom} into groups of features.
 #' @template geom
 #' @param index [\code{integerish(.)}]\cr a vector with a value for each vertex,
 #'   according to which to group.
@@ -14,6 +14,10 @@
 #' @details Only one of the three arguments \code{index}, \code{distance} or
 #'   \code{clusters} need to be set, as grouping is only carried out by one of
 #'   them.
+#'
+#'   In case the geom had an attribute table, this has to be redefined by
+#'   default because it is impossible to determine how these attributes should
+#'   be reattributed without external information.
 #' @return \code{geom} with grouped coordinates.
 #' @examples
 #' coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
@@ -39,11 +43,6 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
   if(is.null(distance) & is.null(index) & is.null(clusters)){
     stop("please provide either 'distance', 'index' or 'clusters'.")
   }
-  if(!is.na(geom@crs)){
-    source_crs <- geom@crs
-  } else{
-    source_crs <- as.character(NA)
-  }
   
   coords <- geom@coords
   toGroup <- coords[c("x", "y")]
@@ -61,15 +60,15 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
     newId <- temp$cluster
   }
   
-  temp <- cbind(toGroup, id = newId)
+  temp <- cbind(toGroup, id = newId, fid = newId)
   
   out <- new(Class = "geom",
              type = geom@type,
              coords = temp,
-             attr = data.frame(id = unique(temp$id)),
+             attr = data.frame(id = unique(newId), n = 1),
              window = geom@window,
              scale = geom@scale,
-             crs = as.character(source_crs),
+             crs = geom@crs,
              history = list(paste0("geometry values were regrouped")))
   
   return(out)
@@ -126,11 +125,6 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
     angle <- list(angle)
   }
   existsID <- !is.null(id)
-  if(!is.na(geom@crs)){
-    source_crs <- geom@crs
-  } else{
-    source_crs <- as.character(NA)
-  }
   
   coords <- geom@coords
   ids <- unique(coords$id)
@@ -180,10 +174,10 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   out <- new(Class = "geom",
              type = geom@type,
              coords = temp,
-             attr = data.frame(id = unique(temp$id)),
+             attr = geom@attr,
              window = geom@window,
              scale = geom@scale,
-             crs = as.character(source_crs),
+             crs = geom@crs,
              history = list(paste0("geometry was rotated")))
   
   return(out)
@@ -231,16 +225,10 @@ gScale <- function(geom, range = NULL, to = "relative"){
   } else{
     to <- match.arg(to, c("relative", "absolute"))
   }
-  if(!is.na(geom@crs)){
-    source_crs <- geom@crs
-  } else{
-    source_crs <- as.character(NA)
-  }
-  
+
   coords <- geom@coords
   window <- geom@window
-  theIds <- as.numeric(as.factor(coords$id))
-  
+
   out <- NULL
   if(to == "relative"){
     if(existsRange){
@@ -275,10 +263,10 @@ gScale <- function(geom, range = NULL, to = "relative"){
   out <- new(Class = "geom",
              type = geom@type,
              coords = out,
-             attr = data.frame(id = unique(out$id)),
+             attr = geom@attr,
              window = window,
              scale = to,
-             crs = as.character(source_crs),
+             crs = geom@crs,
              history = list(paste0("geometry values were scaled to '", to, "'")))
   
   return(out)
@@ -306,7 +294,7 @@ gScale <- function(geom, range = NULL, to = "relative"){
 #' aGrob <- gToGrob(geom = aGeom)
 #' str(aGrob)
 #' @importFrom checkmate assertNames assertSubset assertList
-#' @importFrom grid gpar unit pointsGrob polygonGrob polylineGrob
+#' @importFrom grid gpar unit pointsGrob pathGrob polylineGrob clipGrob
 #' @export
 
 gToGrob <- function(geom, theme = NULL, ...){
@@ -319,11 +307,33 @@ gToGrob <- function(geom, theme = NULL, ...){
     assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
   }
   
-  featureType <- geom@type
-  coords <- geom@coords
-  theIds <- as.numeric(as.factor(coords$id))
+  # scale it to relative, if it's not
+  if(geom@scale == "absolute"){
+    outGeom <- gScale(geom = geom, to = "relative")
+  } else{
+    outGeom <- geom
+  }
   
+  featureType <- geom@type
+  coords <- outGeom@coords
+
   if(featureType %in% c("point")){
+    
+    # attr <- getCoords(x = geom)
+    # scaleTo <- eval(parse(text = paste0(theme$geom$scale$to)), envir = attr)
+    # pars <- setParameters(scale = theme$geom$scale$x,
+    #                       to = scaleTo,
+    #                       theme = theme)
+    # 
+    # geomGrob <- pointsGrob(x = coords$x,
+    #                        y = coords$y,
+    #                        pch = pars$pointsymbol,
+    #                        size = pars$pointsize,
+    #                        gp = gpar(
+    #                          col = pars$line,
+    #                          fill = pars$fill,
+    #                          ...),
+    #                        name = "aPointsGrob")
     
     geomGrob <- pointsGrob(x = coords$x,
                            y = coords$y,
@@ -334,33 +344,55 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      lty = theme$par$linetype$geom,
                                      lwd = theme$par$linewidth$geom,
                                      ...),
-                           name = "aPointGrob")
+                           name = "aPointsGrob")
     
-  } else if(featureType == "line"){
+  } else if(featureType %in% "line"){
+    
+    # geomGrob <- polylineGrob(x = coords$x,
+    #                          y = coords$y,
+    #                          id = as.numeric(as.factor(coords$fid)),
+    #                          gp = gpar(col = pars$line,
+    #                                    fill = pars$fill,
+    #                                    lty = pars$linetype,
+    #                                    lwd = pars$linewidth,
+    #                                    ...),
+    #                          name = "apolylineGrob")
     
     geomGrob <- polylineGrob(x = coords$x,
                              y = coords$y,
-                             id = theIds,
+                             id = as.numeric(as.factor(coords$fid)),
                              gp = gpar(col = theme$par$colour$geom,
                                        fill = theme$par$fill$geom,
                                        lty = theme$par$linetype$geom,
                                        lwd = theme$par$linewidth$geom,
                                        ...),
-                             name = "aPolylineGrob")
+                             name = "apolylineGrob")
     
   } else if(featureType %in% c("polygon")){
     
-    geomGrob <- polygonGrob(x = coords$x,
-                            y = coords$y,
-                            id = as.numeric(paste0(coords$id, coords$element)),
-                            gp = gpar(
-                              col = theme$par$colour$geom,
-                              fill = theme$par$fill$geom,
-                              lty = theme$par$linetype$geom,
-                              lwd = theme$par$linewidth$geom,
-                              ...
-                            ),
-                            name = "aPolygonGrob")
+    # geomGrob <- pathGrob(x = coords$x,
+    #                      y = coords$y,
+    #                      id = as.numeric(as.factor(coords$fid)),
+    #                      rule = "evenodd",
+    #                      gp = gpar(
+    #                        col = pars$line,
+    #                        fill = pars$fill,
+    #                        lty = pars$linetype,
+    #                        lwd = pars$linewidth,
+    #                        ...),
+    #                      name = "aPathGrob")
+    
+    geomGrob <- pathGrob(x = coords$x,
+                         y = coords$y,
+                         id = as.numeric(as.factor(coords$fid)),
+                         rule = "evenodd",
+                         gp = gpar(
+                           col = theme$par$colour$geom,
+                           fill = theme$par$fill$geom,
+                           lty = theme$par$linetype$geom,
+                           lwd = theme$par$linewidth$geom,
+                           ...),
+                         name = "aPathGrob")
   }
   return(geomGrob)
 }
@@ -432,7 +464,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
   if(any(coords[dim(coords)[1],] != coords[1,])){
     vertices <- rbind(vertices, vertices[1,])
   }
-  geomRaster <- cellInGeom(mat = temp, coords = vertices, negative = negative)
+  geomRaster <- matInGeomC(mat = temp, geom = vertices, negative = negative)
   # out <- raster(geomRaster, xmn = min(coords[,1])*res[1], xmx = max(coords[,1])*res[1], ymn = min(coords[,2])*res[2], ymx = max(coords[,2])*res[2], crs = CRS(theCRS))
   out <- raster(geomRaster, xmn = 0, xmx = outCols, ymn = 0, ymx = outRows, crs = as.character(sourceCRS))
   extent(out) <- extent(extCols[1]*res[1], extCols[2]* res[1], extRows[1]*res[2], extRows[2]*res[2])
@@ -592,7 +624,8 @@ gFrom <- function(input, window = NULL){
     theCoords <- NULL
     theData <- NULL
     sourceClass <- class(input)[1]
-
+    prev <- 0
+    
     # in case we deal with an "exotic" class, transform to the nearest "normal" class
     if(sourceClass %in% c("SpatialGrid")){
       input <- as(input, "SpatialPolygons")
@@ -608,59 +641,101 @@ gFrom <- function(input, window = NULL){
     if(sourceClass %in% c("SpatialPoints", "SpatialPointsDataFrame")){
       type <- "point"
 
-      nData <- rep(1, length(input))
-      theCoords <- data.frame(input@coords, id = seq_along(input@coords[,1]))
-      colnames(theCoords) <- c("x", "y", "id")
-
+      if(sourceClass %in% "SpatialPointsDataFrame"){
+        theData <- data.frame(id = seq_along(input@coords[,1]))
+        theData <- cbind(theData, input@data)
+      } else{
+        theData <- data.frame(id = seq_along(input@coords[,1]))
+      }
+      theCoords <- data.frame(id = seq_along(input@coords[,1]), input@coords)
+      colnames(theCoords) <- c("id", "x", "y")
+      rownames(theData) <- NULL
+      
     } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
       type <- "point"
-
-      nData <- rep(0, length(input@coords))
+      
       for(i in seq_along(input@coords)){
-        theCoords <- rbind(theCoords, data.frame(x = input@coords[[i]][,1],
-                                               y = input@coords[[i]][,2],
-                                               id = i))
-        nData[i] <- nData[i] + length(input@coords[[i]][,1])
+        tempCoords <- data.frame(id = i,
+                                 fid = prev + seq_along(input@coords[[i]][,1]),
+                                 x = input@coords[[i]][,1],
+                                 y = input@coords[[i]][,2])
+        theCoords <- rbind(theCoords, tempCoords)
+        
+        if(sourceClass %in% "SpatialMultiPointsDataFrame"){
+          tempData <- data.frame(i, length(input@coords[[i]][,1]), input@data[i,])
+          theData <- rbind(theData, tempData)
+          otherNames <- colnames(input@data)
+        } else{
+          tempData <- data.frame(i, length(input@coords[[i]][,1]))
+          theData <- rbind(theData, tempData)
+          otherNames <- NULL
+        }
+        prev <- prev + length(input@coords[[i]][,1])
       }
-
+      colnames(theData) <- c("id", "n", otherNames)
+      rownames(theData) <- NULL
+      
     } else if(sourceClass %in% c("SpatialLines", "SpatialLinesDataFrame")){
-
       type <- "line"
-      id <- 1
-      nData <- rep(0, length(input))
-      for(i in seq_along(input)){
+      
+      for(i in seq_along(input@lines)){
         theLines <- input@lines[[i]]
         for(j in seq_along(theLines@Lines)){
           theLine <- theLines@Lines[[j]]
-          itsId <- id
-          id <- id+1
-
-          theCoords <- rbind(theCoords, data.frame(x = theLine@coords[,1],
-                                                 y = theLine@coords[,2],
-                                                 id = itsId))
-          nData[i] <- nData[i] + length(theLine@coords[,1])
+          
+          tempCoords <- data.frame(id = i,
+                                   fid = prev + j,
+                                   x = theLine@coords[,1],
+                                   y = theLine@coords[,2])
+          theCoords <- rbind(theCoords, tempCoords)
         }
+        
+        if(sourceClass %in% "SpatialLinesDataFrame"){
+          tempData <- data.frame(i, length(theLines@Lines), input@data[i,])
+          theData <- rbind(theData, tempData)
+          otherNames <- colnames(input@data)
+        } else{
+          theData <- rbind(theData, data.frame(i, length(theLines@Lines)))
+          otherNames <- NULL
+        }
+        prev <- prev + length(theLines@Lines)
       }
-      theCoords <- theCoords[order(theCoords$id),]
-      theData <- data.frame()
-
+      colnames(theData) <- c("id", "n", otherNames)
+      rownames(theData) <- NULL
+      
     } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")){
-
       type <- "polygon"
-      for(i in seq_along(input)){
+      
+      for(i in seq_along(input@polygons)){
         thePolys <- input@polygons[[i]]
-        # itsId <- input@plotOrder[i]
-        nElements <-  length(thePolys@Polygons)
-        for(j in 1:nElements){
+        for(j in seq_along(thePolys@Polygons)){
           thePoly <- thePolys@Polygons[[j]]
-          theCoords <- rbind(theCoords, data.frame(x = thePoly@coords[,1],
-                                                 y = thePoly@coords[,2],
-                                                 id = i,
-                                                 element = j))
-          theData <- rbind(theData, data.frame(id = i, input@data[i,]))
+          
+          if(thePoly@hole){
+            fidID <- j-1
+          } else{
+            fidID <- j
+          }
+          tempCoords <- data.frame(id = i,
+                                   fid = prev + j,
+                                   x = thePoly@coords[,1],
+                                   y = thePoly@coords[,2])
+          theCoords <- rbind(theCoords, tempCoords)
         }
+        
+        if(sourceClass %in% "SpatialPolygonsDataFrame"){
+          tempData <- data.frame(i, length(thePolys@Polygons), input@data[i,])
+          theData <- rbind(theData, tempData)
+          otherNames <- colnames(input@data)
+        } else{
+          theData <- rbind(theData, data.frame(i, length(thePolys@Polygons)))
+          otherNames <- NULL
+        }
+        prev <- prev + length(thePolys@Polygons)
       }
-
+      colnames(theData) <- c("id", "n", otherNames)
+      rownames(theData) <- NULL
+      
     }
 
     sourceCrs <- proj4string(input)

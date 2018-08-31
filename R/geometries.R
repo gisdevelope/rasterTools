@@ -95,7 +95,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   # if anchor does not exists, make it
   if(!anchorExists){
     message("please click the ", vertices, " vertices.")
-    coords <- locate(gridded = template, samples = vertices, panel = tempName, silent = TRUE, show = FALSE)
+    coords <- locate(raster = template, samples = vertices, panel = tempName, silent = TRUE, show = FALSE, ...)
     window <- data.frame(x = c(0, dims[2]),
                          y = c(0, dims[1]))
     anchor <- data.frame(x = coords$x,
@@ -107,14 +107,17 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
     }
   }
 
-  if(!"id" %in% names(anchor)){
-    anchor <- cbind(anchor, id = 1)
+  if(!"fid" %in% names(anchor)){
+    anchor <- cbind(fid = 1, anchor)
   }
-  anchor <- anchor[c("x", "y", "id")]
+  if(!"id" %in% names(anchor)){
+    anchor <- cbind(id = 1, anchor)
+  }
+  anchor <- anchor[c("x", "y", "id", "fid")]
   out <- new(Class = "geom",
              type = "point",
              coords = anchor,
-             attr = data.frame(id = unique(anchor$id)),
+             attr = data.frame(id = unique(anchor$id), n = 1),
              window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -356,7 +359,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
         message(paste0("please click the ", vertices[i], " vertices."))
         clicks <- vertices[i]
       }
-      theClicks <- locate(gridded = template, samples = clicks, panel = tempName, silent = TRUE, show = FALSE)
+      theClicks <- locate(raster = template, samples = clicks, panel = tempName, silent = TRUE, show = FALSE, ...)
       window <- data.frame(x = c(0, dims[2]),
                            y = c(0, dims[1]))
       tempAnchor <- data.frame(x = theClicks$x,
@@ -384,7 +387,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       radius <- dist(tempAnchor[c(1:2),])
       cx <- tempAnchor$x[1] + radius*cos(rad(angles))
       cy <- tempAnchor$y[1] + radius*sin(rad(angles))
-      theNodes <- data.frame(cbind(x = cx, y = cy, id = i))
+      theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
       if(any(theNodes$x < min(window$x)) | any(theNodes$x > max(window$x)) | any(theNodes$y < min(window$y)) | any(theNodes$y > max(window$y))){
         window <- data.frame(x = c(min(theNodes$x), max(theNodes$x)), y = c(min(theNodes$y), max(theNodes$y)))
       }
@@ -392,7 +395,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       temp <- new(Class = "geom",
                   type = "polygon",
                   coords = theNodes,
-                  attr = data.frame(id = unique(theNodes$id)),
+                  attr = data.frame(id = unique(theNodes$id), n = 1),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -405,15 +408,19 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
 
     } else{
 
-      if(!"id" %in% names(tempAnchor)){
-        tempAnchor <- cbind(tempAnchor, id = i)
+      if(!"fid" %in% names(tempAnchor)){
+        tempAnchor <- cbind(fid = i, tempAnchor)
       }
-      theNodes <- tempAnchor[c("x", "y", "id")]
+      if(!"id" %in% names(tempAnchor)){
+        tempAnchor <- cbind(id = i, tempAnchor)
+      }
+
+      theNodes <- tempAnchor[c("id", "fid", "x", "y")]
 
       temp <- new(Class = "geom",
                   type = "polygon",
-                  coords = theNodes,
-                  attr = data.frame(id = unique(theNodes$id)),
+                  coords = cbind(theNodes, fid = theNodes$id),
+                  attr = data.frame(id = unique(theNodes$id), n = 1),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -429,7 +436,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   out <- new(Class = "geom",
              type = "polygon",
              coords = nodes,
-             attr = data.frame(id = unique(nodes$id)),
+             attr = data.frame(id = unique(nodes$id), n = 1),
              window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -642,9 +649,10 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
       vertices <- 1
     }
     outType  <- type
-    anchor <- data.frame(x = runif(vertices),
-                         y = runif(vertices),
-                         id = 1:vertices)
+    anchor <- data.frame(id = 1:vertices,
+                         fid = 1:vertices,
+                         x = runif(vertices),
+                         y = runif(vertices))
   # } else if(type %in% c("line", "spline")){
   #   if(is.null(vertices)){
   #     vertices <- 2
@@ -654,11 +662,12 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   } else{
     if(is.null(vertices)){
       vertices <- 3
-    }    
+    }
     outType <- "polygon"
-    anchor <- data.frame(x = runif(vertices),
-                         y = runif(vertices),
-                         id = 1)
+    anchor <- data.frame(id = 1,
+                         fid = 1,
+                         x = runif(vertices),
+                         y = runif(vertices))
   }
 
   if(existsTemplate){
@@ -671,6 +680,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   theGeom <- new(Class = "geom",
                  type = outType,
                  coords = anchor,
+                 attr = data.frame(id = unique(anchor$id), n = 1),
                  window = window,
                  scale = "relative",
                  crs = as.character(NA),
@@ -751,9 +761,9 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     # determine centroids
     xCentroids <- seq(min(window$x) + xDist/2, max(window$x), xDist)
     yCentroids <- seq(min(window$y) + yDist/2, max(window$y), yDist)
-    cntrds <- data.frame(x = rep(xCentroids, times = length(yCentroids)),
-                         y = rep(yCentroids, each = length(xCentroids)),
-                         id = seq(1:(cells[1]*cells[2])))
+    cntrds <- data.frame(id = seq(1:(cells[1]*cells[2])),
+                         x = rep(xCentroids, times = length(yCentroids)),
+                         y = rep(yCentroids, each = length(xCentroids)))
 
     angle <- 360/4
     angles <- seq(from = 45, to = 360-angle+45, by = angle)
@@ -774,9 +784,9 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     yC1 <- seq(min(window$y), max(window$y), by = height)
     yC2 <- seq(min(window$y) + height/2, max(window$y), by = height)
 
-    cntrds <- data.frame(x = c(rep(xC1, times = length(yC1)), rep(xC2, times = length(yC2))),
-                         y = c(rep(yC1, each = length(xC1)), rep(yC2, each = length(xC2))),
-                         id = seq(1:(length(yC1)*length(xC1) + length(yC2)*length(xC2))))
+    cntrds <- data.frame(id = seq(1:(length(yC1)*length(xC1) + length(yC2)*length(xC2))),
+                         x = c(rep(xC1, times = length(yC1)), rep(xC2, times = length(yC2))),
+                         y = c(rep(yC1, each = length(xC1)), rep(yC2, each = length(xC2))))
 
     angle <- 360/6
     angles <- seq(from = 0, to = 360-angle, by = angle)
@@ -790,7 +800,7 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     for(i in seq_along(cntrds$id)){
       cx <- cntrds$x[i] + radius*cos(rad(angles))
       cy <- cntrds$y[i] + radius*sin(rad(angles))
-      theNodes <- data.frame(cbind(x = cx, y = cy, id = i))
+      theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
       nodes <- rbind(nodes, theNodes)
     }
     theType <- "polygon"
@@ -805,7 +815,7 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
   theTiles <- new(Class = "geom",
                   type = theType,
                   coords = nodes,
-                  attr = data.frame(id = unique(nodes$id)),
+                  attr = data.frame(id = unique(nodes$id), n = 1),
                   window = window,
                   scale = "absolute",
                   crs = as.character(projection),
