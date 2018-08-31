@@ -115,6 +115,20 @@ setParameters <- function(scale = NULL, to = NULL, theme = NULL){
   
 }
 
+#' Print messages
+#'
+#' This is a wrapper around \code{\link{message}}.
+#' @param msg [\code{character(1)}]\cr the message.
+#' @param silent [\code{logical(1)}]\cr should all messages except errors be
+#'   suppressed (\code{TRUE}), or should all messages be printed (\code{FALSE},
+#'   default)?
+#' @export
+
+blablabla <- function(msg, silent = FALSE){
+  if(!silent){
+    message(msg)
+  }
+}
 
 #' Transform degree to radians
 #' @param degree [\code{numeric(1)}]\cr the degree value to transform.
