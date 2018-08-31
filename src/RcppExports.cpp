@@ -5,19 +5,6 @@
 
 using namespace Rcpp;
 
-// cellInGeom
-NumericMatrix cellInGeom(NumericMatrix& mat, NumericMatrix& coords, bool negative);
-RcppExport SEXP _rasterTools_cellInGeom(SEXP matSEXP, SEXP coordsSEXP, SEXP negativeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix& >::type coords(coordsSEXP);
-    Rcpp::traits::input_parameter< bool >::type negative(negativeSEXP);
-    rcpp_result_gen = Rcpp::wrap(cellInGeom(mat, coords, negative));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cellToPointsC
 DataFrame cellToPointsC(NumericMatrix mat);
 RcppExport SEXP _rasterTools_cellToPointsC(SEXP matSEXP) {
@@ -191,9 +178,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matInGeomC
+NumericMatrix matInGeomC(NumericMatrix& mat, NumericMatrix& geom, bool negative);
+RcppExport SEXP _rasterTools_matInGeomC(SEXP matSEXP, SEXP geomSEXP, SEXP negativeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type geom(geomSEXP);
+    Rcpp::traits::input_parameter< bool >::type negative(negativeSEXP);
+    rcpp_result_gen = Rcpp::wrap(matInGeomC(mat, geom, negative));
+    return rcpp_result_gen;
+END_RCPP
+}
+// isCoordsInGeomC
+LogicalVector isCoordsInGeomC(NumericMatrix& coords, NumericMatrix& geom);
+RcppExport SEXP _rasterTools_isCoordsInGeomC(SEXP coordsSEXP, SEXP geomSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type coords(coordsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type geom(geomSEXP);
+    rcpp_result_gen = Rcpp::wrap(isCoordsInGeomC(coords, geom));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rasterTools_cellInGeom", (DL_FUNC) &_rasterTools_cellInGeom, 3},
     {"_rasterTools_cellToPointsC", (DL_FUNC) &_rasterTools_cellToPointsC, 1},
     {"_rasterTools_countCellsC", (DL_FUNC) &_rasterTools_countCellsC, 1},
     {"_rasterTools_countEdgesC", (DL_FUNC) &_rasterTools_countEdgesC, 1},
@@ -208,6 +219,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rasterTools_subNumNumC", (DL_FUNC) &_rasterTools_subNumNumC, 3},
     {"_rasterTools_subNumChrC", (DL_FUNC) &_rasterTools_subNumChrC, 3},
     {"_rasterTools_subChrIntC", (DL_FUNC) &_rasterTools_subChrIntC, 3},
+    {"_rasterTools_matInGeomC", (DL_FUNC) &_rasterTools_matInGeomC, 3},
+    {"_rasterTools_isCoordsInGeomC", (DL_FUNC) &_rasterTools_isCoordsInGeomC, 2},
     {NULL, NULL, 0}
 };
 
