@@ -6,14 +6,14 @@ context("visualise")
 test_that("visualise a Raster* object", {
   continuous <- rtData$continuous
   
-  output <- visualise(gridded = continuous)
+  output <- visualise(raster = continuous)
   expect_class(output, "recordedplot")
 })
 
 test_that("visualise a matrix", {
   continuous <- raster::as.matrix(rtData$continuous)
   
-  output <- visualise(gridded = continuous)
+  output <- visualise(raster = continuous)
   expect_class(output, "recordedplot")
 })
 
@@ -21,7 +21,7 @@ test_that("visualise an image", {
   continuous <- rtData$continuous
   input <- RGB(continuous)
   
-  output <- visualise(gridded = input, image = TRUE)
+  output <- visualise(raster = input, image = TRUE)
   expect_class(output, "recordedplot")
 })
 
@@ -41,7 +41,7 @@ test_that("visualise an object with NA values", {
                       list(operator = "rPatches"))
   myPatches <- modify(input = continuous, by = get_patches, sequential = TRUE)
   
-  output <- visualise(gridded = myPatches)
+  output <- visualise(raster = myPatches)
   expect_class(output, "recordedplot")
 })
 
@@ -56,9 +56,9 @@ test_that("Error if arguments have wrong value", {
   # anImage <- system.file()
   
   expect_error(visualise())
-  expect_error(visualise(gridded = "bla"))
-  expect_error(visualise(gridded = continuous, geom = "bla"))
-  expect_error(visualise(gridded = continuous, theme = "bla"))
-  expect_error(visualise(gridded = continuous, trace = 1))
-  expect_error(visualise(gridded = continuous, image = 0))
+  expect_error(visualise(raster = "bla"))
+  expect_error(visualise(raster = continuous, geom = "bla"))
+  expect_error(visualise(raster = continuous, theme = "bla"))
+  expect_error(visualise(raster = continuous, trace = 1))
+  expect_error(visualise(raster = continuous, image = 0))
 })

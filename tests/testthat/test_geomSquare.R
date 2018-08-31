@@ -21,7 +21,7 @@ test_that("output has the correct number of vertices", {
                        y = c(0, 80))
 
   output <- geomSquare(anchor = coords, extent = extent)
-  expect_data_frame(output@coords, any.missing = FALSE, nrows = 4, ncols = 3)
+  expect_data_frame(output@coords, any.missing = FALSE, nrows = 4, ncols = 4)
 
 })
 

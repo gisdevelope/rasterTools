@@ -15,7 +15,7 @@ test_that("output is valid geometry", {
 
 test_that("output has the correct number of vertices", {
   output <- geomRand(type = "polygon", vertices = 4)
-  expect_data_frame(output@coords, any.missing = FALSE, nrows = 4, ncols = 3)
+  expect_data_frame(output@coords, any.missing = FALSE, nrows = 4, ncols = 4)
 })
 
 test_that("Error if arguments have wrong value", {

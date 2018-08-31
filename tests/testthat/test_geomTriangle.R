@@ -21,7 +21,7 @@ test_that("output has the correct number of vertices", {
                        y = c(0, 80))
 
   output <- geomTriangle(anchor = coords, extent = extent)
-  expect_data_frame(output@coords, any.missing = FALSE, nrows = 3, ncols = 3)
+  expect_data_frame(output@coords, any.missing = FALSE, nrows = 3, ncols = 4)
 })
 
 test_that("Error if arguments have wrong value", {

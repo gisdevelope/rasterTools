@@ -42,7 +42,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "point")
-  expect_data_frame(getTable(output), nrows = 3)
+  expect_data_frame(getTable(output), nrows = 3, ncols = 3)
   
   # test 'SpatialLines'
   input <- SpatialLines(list(Lines(list(Line(cbind(c(1, 2, 3), c(3, 2, 2)))), ID = "a"), 
@@ -59,14 +59,23 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "line")
-  expect_data_frame(getTable(output), nrows = 2)
+  expect_data_frame(getTable(output), nrows = 2, ncols = 3)
   
   # test 'SpatialPolygons'
+  Sr1 = Polygon(cbind(c(2,4,4,1,2),c(2,3,5,4,2)))
+  Sr2 = Polygon(cbind(c(5,4,2,5),c(2,3,2,2)))
+  Sr3 = Polygon(cbind(c(4,4,5,10,4),c(5,3,2,5,5)))
+  Sr4 = Polygon(cbind(c(5,6,6,5,5),c(4,4,3,3,4)), hole = TRUE)
   
-  # output <- gFrom(input)
-  # expect_class(output, "geom")
-  # expect_true(output@type == "")
+  Srs1 = Polygons(list(Sr1), "s1")
+  Srs2 = Polygons(list(Sr2), "s2")
+  Srs3 = Polygons(list(Sr3, Sr4), "s3/4")
+  input = SpatialPolygons(list(Srs1,Srs2,Srs3), 1:3)
   
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "polygon")
+
   # test 'SpatialPolygonsDataFrame'
   
   # output <- gFrom(input)
