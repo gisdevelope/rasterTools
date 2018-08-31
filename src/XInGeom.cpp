@@ -10,12 +10,12 @@ using namespace Rcpp;
 // Users of this code must verify correctness for their application.
 
 // [[Rcpp::export]]
-NumericMatrix cellInGeom(NumericMatrix &mat, NumericMatrix &coords, bool negative){
+NumericMatrix matInGeomC(NumericMatrix &mat, NumericMatrix &geom, bool negative){
   int mRows = mat.nrow(), mCols = mat.ncol();
-  int cRows = coords.nrow();
+  int cRows = geom.nrow();
   int isLeft, inside, outside;
   NumericMatrix out = clone(mat);
-  NumericMatrix vert = clone(coords);
+  NumericMatrix vert = clone(geom);
   vert(_, 0) = vert(_, 0);
   vert(_, 1) = mRows - vert(_, 1);
   if(negative){
@@ -38,7 +38,7 @@ NumericMatrix cellInGeom(NumericMatrix &mat, NumericMatrix &coords, bool negativ
   for(int x = 0; x < mCols; x++){
     for(int y = 0; y < mRows; y++){
 
-      // if the coordinate is within the bounding box, proceed, otherwise values is definitely 0
+      // if the coordinate is within the bounding box, proceed, otherwise value is definitely 0
       if(x < xMax & x > xMin & y < yMax & y > yMin){
         int wn = 0;                            // the  winding number counter
 
@@ -74,5 +74,67 @@ NumericMatrix cellInGeom(NumericMatrix &mat, NumericMatrix &coords, bool negativ
     }
   }
 
+  return(out);
+}
+
+// [[Rcpp::export]]
+LogicalVector isCoordsInGeomC(NumericMatrix &coords, NumericMatrix &geom){
+  int nCoords = coords.nrow();
+  int cRows = geom.nrow();
+  int isLeft, inside, outside;
+  LogicalVector out(nCoords);
+  NumericMatrix vert = clone(geom);
+  // Rcout << vert << std::endl;
+
+  // get bounding box of geom
+  int xMin = min(vert(_, 0)), xMax = max(vert(_, 0));
+  int yMin = min(vert(_, 1)), yMax = max(vert(_, 1));
+  // Rcout << xMin << ", " << xMax << ", " << yMin << ", " << yMax << ", " << std::endl;
+  
+  // warning if first and last coordinate are not the same
+  if(any(vert(0, _) != vert(cRows-1, _)).is_true()){
+    stop("first and last cooridnate are not the same!");
+  }
+  
+  for(int z = 0; z < nCoords; z++){
+    double x = coords(z, 0);
+    double y = coords(z, 1);
+    // Rcout << x << ", " << y << std::endl;
+
+    // if the coordinate is within the bounding box, proceed, otherwise value is definitely 0
+    if(x < xMax & x > xMin & y < yMax & y > yMin){
+      int wn = 0;                            // the  winding number counter
+      
+      // loop through all edges of the polygon and find wn
+      for (int i = 0; i < cRows-1; i++){
+        
+        if (y >= vert(i, 1)){
+          if (y < vert(i+1, 1)){             // an upward crossing
+            isLeft = (vert(i+1, 0) - vert(i, 0)) * (y - vert(i, 1)) - (x -  vert(i, 0)) * (vert(i+1, 1) - vert(i, 1));
+            if(isLeft > 0){                  // P left of edge
+              ++wn;                          // have  a valid up intersect
+            }
+          }
+        } else {
+          if (y >= vert(i+1, 1)){            // a downward crossing
+            isLeft = (vert(i+1, 0) - vert(i, 0)) * (y - vert(i, 1)) - (x -  vert(i, 0)) * (vert(i+1, 1) - vert(i, 1));
+            if(isLeft < 0){                  // P right of edge
+              --wn;                          // have  a valid down intersect
+            }
+          }
+        }
+        
+      }
+      
+      if(wn == 0){
+        out(z) = 0;
+      } else{
+        out(z) = 1;
+      }
+    } else{
+      out(z) = 0;
+    }
+  }
+  
   return(out);
 }
