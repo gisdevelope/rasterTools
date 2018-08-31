@@ -26,12 +26,16 @@ range of \code{extent}.}
 \code{geom} with grouped coordinates.
 }
 \description{
-\code{gGroup} assigns the vertices of a \code{geom} into groups.
+\code{gGroup} assigns the vertices of a \code{geom} into groups of features.
 }
 \details{
 Only one of the three arguments \code{index}, \code{distance} or
   \code{clusters} need to be set, as grouping is only carried out by one of
   them.
+
+  In case the geom had an attribute table, this has to be redefined by
+  default because it is impossible to determine how these attributes should
+  be reattributed without external information.
 }
 \examples{
 coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
