@@ -14,15 +14,14 @@ getSubset(x, subset, ...)
 \S4method{getSubset}{geom,logical}(x, subset)
 }
 \arguments{
-\item{x}{[\code{geom}]\cr object to \code{subset}.}
+\item{x}{object to \code{subset}.}
 
-\item{subset}{[\code{integerish(.)} | \code{logical(.)}]\cr elements or rows
-to keep.}
+\item{subset}{[\code{integerish(.)} | \code{logical(.)}]\cr rows to keep.}
 
 \item{...}{other arguments.}
 }
 \description{
-\code{getSubset} returns the subsetted \code{geom}.
+\code{getSubset} returns the subsetted object.
 }
 \section{Methods (by class)}{
 \itemize{

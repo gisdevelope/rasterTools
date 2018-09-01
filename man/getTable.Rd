@@ -23,8 +23,8 @@ Get the table (generic)
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{geom}: get the attribute table (including coordinates) of a \code{geom}
+\item \code{geom}: get the attribute table of a \code{geom}
 
-\item \code{RasterLayer}: get the attribute table (including coordinates) of a \code{RasterLayer}
+\item \code{RasterLayer}: get the attribute table of a \code{RasterLayer}
 }}
 

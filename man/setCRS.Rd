@@ -19,7 +19,8 @@ setCRS(x, crs, ...)
 \arguments{
 \item{x}{the object for which to set the coordinate reference system.}
 
-\item{crs}{the coordinate reference system to set for this object.}
+\item{crs}{[\code{character(1)}]\cr the coordinate reference system to set
+for this object.}
 
 \item{...}{other arguments.}
 }
