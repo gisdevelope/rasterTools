@@ -63,16 +63,12 @@ categorical <- rtData$categorical
 visualise(raster::stack(continuous, categorical))
 ```
 
-Moreover, we need to create two frequently occurring derivations thereof, a raster where classes are assigned to distinct patches and a binarised raster, where some class(es) have been set as focal class. Here we derive them from the categorical raster, but this could as well be done from the continuous raster.
+Moreover, we need to create a frequently occurring derivations thereof, a binarised raster, where some class(es) have been set as focal class. Here we derive them from the categorical raster, but this could as well be done from the continuous raster.
 
 ```{r, fig.width=7, out.width='100%'}
-catPatchesObj <- rSubstitute(obj = categorical, 
-                             old = sort(base::unique(raster::values(categorical))),
-                             new = c(1, 2, 3, 4, 3, 4, 5, 5, 5))
-
 binarised <- rBinarise(categorical, match = c(41, 44, 47))
 
-visualise(raster::stack(catPatchesObj, binarised))
+visualise(binarised)
 ```
 
 </br>
