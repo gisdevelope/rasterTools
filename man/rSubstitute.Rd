@@ -11,18 +11,18 @@ rSubstitute(obj, old = NULL, new = NULL)
 
 \item{old}{[\code{integerish(.)}]\cr values to be substituted.}
 
-\item{new}{[\code{integerish(.)}]\cr  values to substitute with.}
+\item{new}{[\code{integerish(1)}]\cr value to substitute with.}
 }
 \value{
 A \code{RasterLayer} of the same dimensions as \code{obj}, in which
-  \code{old} values have been replaced by \code{new} values.
+  \code{old} values have been replaced by the \code{new} value.
 }
 \description{
 Substitute values in a raster
 }
 \examples{
 input <- rtData$categorical
-substituted <- rSubstitute(input, old = c(41:47), new = 40)
+substituted <- rSubstitute(input, old = c(41, 44, 47), new = 40)
 visualise(raster::brick(input, substituted))
 }
 \seealso{

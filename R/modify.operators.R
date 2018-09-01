@@ -1642,13 +1642,13 @@ rSkeletonise <- function(obj, method = "hitormiss", kernel = NULL, background = 
 #'
 #' @template obj
 #' @param old [\code{integerish(.)}]\cr values to be substituted.
-#' @param new [\code{integerish(.)}]\cr  values to substitute with.
+#' @param new [\code{integerish(1)}]\cr value to substitute with.
 #' @return A \code{RasterLayer} of the same dimensions as \code{obj}, in which
-#'   \code{old} values have been replaced by \code{new} values.
+#'   \code{old} values have been replaced by the \code{new} value.
 #' @family operators to modify cell values
 #' @examples
 #' input <- rtData$categorical
-#' substituted <- rSubstitute(input, old = c(41:47), new = 40)
+#' substituted <- rSubstitute(input, old = c(41, 44, 47), new = 40)
 #' visualise(raster::brick(input, substituted))
 #' @importFrom checkmate assertClass
 #' @importFrom raster values as.matrix extent<- crs crs<-
@@ -1658,19 +1658,31 @@ rSubstitute <- function(obj, old = NULL, new = NULL){
 
   # check arguments
   assertClass(obj, "RasterLayer")
+  isFactor <- obj@data@isfactor
   assertIntegerish(old, any.missing = FALSE, min.len = 1)
   assertIntegerish(new, any.missing = FALSE, min.len = 1)
 
   if(length(old)!=length(new)){
-    new <- rep(new, length.out = length(old))
+    newValues <- rep(new, length.out = length(old))
+  } else{
+    newValues <- new
   }
 
   mat <- as.matrix(obj)
-  temp <- subNumNumC(mat = mat, replace = old, with = new)
+  temp <- subNumNumC(mat = mat, replace = old, with = newValues)
 
   out <- raster(temp)
   extent(out) <- extent(obj)
   crs(out) <- crs(obj)
+  
+  if(isFactor){
+    attr <- obj@data@attributes[[1]]
+    attr <- attr[-which(attr$id %in% old),]
+    attr <- rbind(attr, c(new, rep(NA, length(names(obj@data@attributes[[1]]))-1)))
+    out <- ratify(out)
+    out@data@attributes[[1]] <- attr
+    message("please make sure that the new value has properly specified attributes.")
+  }
 
   if(length(obj@history)==0){
     history <- list(paste0("the object was loaded from memory"))
