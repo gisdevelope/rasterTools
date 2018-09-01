@@ -8,6 +8,17 @@ setGeneric(name = "getTable",
              standardGeneric("getTable")
            })
 
+#' Set the table (generic)
+#' @param x the object to which to assign \code{table}.
+#' @param table [\code{data.frame(.)}]\cr the attribute table.
+#' @param ... other arguments.
+#' @export
+
+setGeneric(name = "setTable",
+           def = function(x, table, ...){
+             standardGeneric("setTable")
+           })
+
 #' Get the table of coordinates
 #' @param x the object from which to extract the coordinates
 #' @param ... other arguments.
@@ -56,10 +67,9 @@ setGeneric(name = "getExtent",
 
 #' Get subset (generic)
 #'
-#' \code{getSubset} returns the subsetted \code{geom}.
-#' @param x [\code{geom}]\cr object to \code{subset}.
-#' @param subset [\code{integerish(.)} | \code{logical(.)}]\cr elements or rows
-#'   to keep.
+#' \code{getSubset} returns the subsetted object.
+#' @param x object to \code{subset}.
+#' @param subset [\code{integerish(.)} | \code{logical(.)}]\cr rows to keep.
 #' @param ... other arguments.
 #' @export
 
@@ -87,7 +97,8 @@ setGeneric(name = "getCRS",
 #' transformation to the new crs will be carried out. The transformation is
 #' computed with the standard defined in the \code{rgdal} package.
 #' @param x the object for which to set the coordinate reference system.
-#' @param crs the coordinate reference system to set for this object.
+#' @param crs [\code{character(1)}]\cr the coordinate reference system to set
+#'   for this object.
 #' @param ... other arguments.
 #' @seealso \code{\link{getCRS}}
 #' @export

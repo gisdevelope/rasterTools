@@ -25,7 +25,7 @@ setMethod(f = "show",
             cat("attributes : ", length(object@attr), "  (", paste0(names(object@attr)[!names(object@attr) %in% c("x", "y")], collapse = ", "), ")\n", sep = "")
           })
 
-#' @describeIn getTable get the attribute table (including coordinates) of a \code{geom}
+#' @describeIn getTable get the attribute table of a \code{geom}
 #' @export
 
 setMethod(f = "getTable",
@@ -34,7 +34,7 @@ setMethod(f = "getTable",
             x@attr
           })
 
-#' @describeIn getTable get the attribute table (including coordinates) of a \code{RasterLayer}
+#' @describeIn getTable get the attribute table of a \code{RasterLayer}
 #' @export
 
 setMethod(f = "getTable",
@@ -45,6 +45,35 @@ setMethod(f = "getTable",
             } else{
               x@data@attributes[[1]]
             }
+          })
+
+#' @describeIn setTable set the attribute table of a \code{geom}
+#' @export
+
+setMethod(f = "setTable",
+          signature = "geom",
+          definition = function(x, table){
+            stopifnot(is.data.frame(table))
+            stopifnot(any(names(table) %in% "id"))
+            nIDs <- length(x@attr$id)
+            stopifnot(dim(table)[1] == nIDs)
+            x@attr <- merge(x@attr, table)
+            return(x)
+          })
+
+#' @describeIn setTable set the attribute table of a \code{RasterLayer}
+#' @importFrom raster ratify
+#' @export
+
+setMethod(f = "setTable",
+          signature = "RasterLayer",
+          definition = function(x, table){
+            stopifnot(is.data.frame(table))
+            temp <- ratify(x)
+            nIDs <- length(temp@data@attributes[[1]][,1])
+            stopifnot(dim(table)[1] == nIDs)
+            temp@data@attributes <- list(table)
+            return(temp)
           })
 
 #' @describeIn getCoords get the table of coordinates of a \code{geom}
