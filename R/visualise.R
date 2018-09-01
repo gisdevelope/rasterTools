@@ -61,7 +61,7 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = NULL; geom = someGeom; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # raster = raster::stack(input, substituted); geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
   
   # new ideas:
   # 1. automatically detect which is raster and which is geom
@@ -119,6 +119,9 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       hasColourTable <- lapply(1:plotLayers, function(x){
         ifelse(length(raster[[x]]@legend@colortable) > 0, TRUE, FALSE)
       })
+      isFactor <- lapply(1:plotLayers, function(x){
+        ifelse(raster[[x]]@data@isfactor, TRUE, FALSE)
+      })
 
     } else if(isMatrix){
 
@@ -129,6 +132,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       dims <- dim(raster)
       panelExt <- c(xMin = 0, xMax = ncol(raster), yMin = 0, yMax = nrow(raster))
       hasColourTable <- FALSE
+      isFactor <- FALSE
       
     }
     
@@ -291,6 +295,8 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         
         if(hasColourTable[[x]]){
           breaksTemp <- c(tempVals[1]-1, tempVals)
+        } else if(isFactor[[x]]){
+          breaksTemp <- c(tempVals[1]-1, raster[[x]]@data@attributes[[1]]$id)
         } else{
           breaksTemp <- c(tempVals[1]-1, seq(tempVals[1], tempVals[[length(tempVals)]], length.out = nrColours))
         }
