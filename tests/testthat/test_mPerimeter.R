@@ -10,7 +10,7 @@ test_that("output is data.frame", {
   expect_data_frame(output, ncols = 3, nrows = 26, any.missing = FALSE)
 
   output <- mPerimeter(obj = input, layer = "categorical", scale = "patch")
-  expect_data_frame(output, ncols = 3, nrows = 52, any.missing = FALSE)
+  expect_data_frame(output, ncols = 3, nrows = 48, any.missing = FALSE)
 
   output <- mPerimeter(obj = input, scale = "class")
   expect_data_frame(output, ncols = 2, nrows = 9, any.missing = FALSE)

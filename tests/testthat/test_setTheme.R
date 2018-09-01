@@ -54,4 +54,9 @@ test_that("assigning options works", {
   
   output <- visualise(raster = continuous)
   expect_class(output, "recordedplot")
+  
+  myTheme <- setTheme(plot = list(title = FALSE))
+  output <- visualise(raster = continuous, theme = myTheme)
+  expect_class(output, "recordedplot")
+  
 })
