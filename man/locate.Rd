@@ -56,11 +56,11 @@ patches <- rPatches(rBinarise(input, thresh = 30))
 locate(samples = 3, raster = input, show = TRUE, col = "green")
 
 # or from one that is already plotted
-visualise(raster = patches)
+visualise(raster = input)
 locate(identify = TRUE, snap = TRUE)
 
 # with several panels, specify a target
 visualise(raster = raster::brick(input, patches))
-locate(samples = 4, panel = "patches", identify = TRUE)
+locate(samples = 4, panel = "patches", identify = TRUE, show = TRUE)
 }
 }

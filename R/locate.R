@@ -35,12 +35,12 @@
 #' locate(samples = 3, raster = input, show = TRUE, col = "green")
 #'
 #' # or from one that is already plotted
-#' visualise(raster = patches)
+#' visualise(raster = input)
 #' locate(identify = TRUE, snap = TRUE)
 #'
 #' # with several panels, specify a target
 #' visualise(raster = raster::brick(input, patches))
-#' locate(samples = 4, panel = "patches", identify = TRUE)
+#' locate(samples = 4, panel = "patches", identify = TRUE, show = TRUE)
 #' }
 #' @importFrom grDevices dev.list
 #' @importFrom grid grid.ls grid.grep grid.force seekViewport grid.locator gList
@@ -51,8 +51,6 @@
 locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
                    snap = FALSE, raw = FALSE, silent = FALSE, show = FALSE, ...){
 
-  # samples = 3; raster = NULL; panel = NULL; identify = TRUE; snap = TRUE; silent = FALSE; show = TRUE
-  
   # check arguments
   assertIntegerish(samples, lower = 1, max.len = 1)
   isRaster <- testClass(raster, "Raster")
@@ -133,17 +131,17 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
       
       if(isLegendInPlot){
         metaLegend <- grid.get(gPath("theLegend"), global = TRUE)
-        metaTicks <- grid.get(gPath("legendTicks"), global = TRUE)
+        metaValues <- grid.get(gPath("legendValues"), global = TRUE)
         if(length(panelNames) > 1){
           legend <- metaLegend[which(panel == panelNames)][[1]]$raster
-          ticks <- as.numeric(rev(metaTicks[which(panel == panelNames)][[1]]$label))
+          values <- as.numeric(metaValues[which(panel == panelNames)][[1]]$label)
         } else{
           legend <- metaLegend$raster
-          ticks <- as.numeric(rev(metaTicks$label))
+          values <- as.numeric(metaValues$label)
         } 
         matVal <- subChrIntC(matCol,
                              replace = legend,
-                             with = ticks)
+                             with = values)
       } else{
         matVal <- NULL
       }
