@@ -193,10 +193,10 @@ specify here the layer for which the area of objects shall be calculated
 <span class='fu'>mArea</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   class cells
 #&gt; 1     1    37
 #&gt; 2    11   104
-#&gt; 3    21   281
-#&gt; 4    24   507
+#&gt; 3    21   209
+#&gt; 4    24   914
 #&gt; 5    27   466
-#&gt; 6    31   407
+#&gt; 6    31    72
 #&gt; 7    41   561
 #&gt; 8    44   453
 #&gt; 9    47   544</div><div class='input'>
@@ -205,55 +205,51 @@ specify here the layer for which the area of objects shall be calculated
 #&gt; 1      1     1    37
 #&gt; 2     11     1   104
 #&gt; 3     21     1   209
-#&gt; 4     21     2    72
-#&gt; 5     24     1   296
-#&gt; 6     24     2   173
-#&gt; 7     24     3    38
-#&gt; 8     27     1   293
-#&gt; 9     27     2   173
-#&gt; 10    31     1   259
-#&gt; 11    31     2   108
-#&gt; 12    31     3    40
-#&gt; 13    41     1    41
-#&gt; 14    41     2    59
-#&gt; 15    41     3    82
-#&gt; 16    41     4    16
-#&gt; 17    41     5    48
-#&gt; 18    41     6     2
-#&gt; 19    41     7     1
-#&gt; 20    41     8    18
-#&gt; 21    41     9     1
-#&gt; 22    41    10     1
-#&gt; 23    41    11   136
-#&gt; 24    41    12    62
-#&gt; 25    41    13    94
-#&gt; 26    44     1    38
-#&gt; 27    44     2    16
-#&gt; 28    44     3     1
-#&gt; 29    44     4    96
-#&gt; 30    44     5     1
-#&gt; 31    44     6     2
-#&gt; 32    44     7     5
-#&gt; 33    44     8   163
-#&gt; 34    44     9    99
-#&gt; 35    44    10     2
-#&gt; 36    44    11    12
-#&gt; 37    44    12     2
-#&gt; 38    44    13    10
-#&gt; 39    44    14     6
-#&gt; 40    47     1   124
-#&gt; 41    47     2     2
-#&gt; 42    47     3   136
-#&gt; 43    47     4    27
-#&gt; 44    47     5     1
-#&gt; 45    47     6     1
-#&gt; 46    47     7     1
-#&gt; 47    47     8     1
-#&gt; 48    47     9     1
-#&gt; 49    47    10     1
-#&gt; 50    47    11     1
-#&gt; 51    47    12     7
-#&gt; 52    47    13   241</div><div class='input'>
+#&gt; 4     24     1   836
+#&gt; 5     24     2    78
+#&gt; 6     27     1   293
+#&gt; 7     27     2   173
+#&gt; 8     31     1    72
+#&gt; 9     41     1    41
+#&gt; 10    41     2    59
+#&gt; 11    41     3    82
+#&gt; 12    41     4    16
+#&gt; 13    41     5    48
+#&gt; 14    41     6     2
+#&gt; 15    41     7     1
+#&gt; 16    41     8    18
+#&gt; 17    41     9     1
+#&gt; 18    41    10     1
+#&gt; 19    41    11   136
+#&gt; 20    41    12    62
+#&gt; 21    41    13    94
+#&gt; 22    44     1    38
+#&gt; 23    44     2    16
+#&gt; 24    44     3     1
+#&gt; 25    44     4    96
+#&gt; 26    44     5     1
+#&gt; 27    44     6     2
+#&gt; 28    44     7     5
+#&gt; 29    44     8   163
+#&gt; 30    44     9    99
+#&gt; 31    44    10     2
+#&gt; 32    44    11    12
+#&gt; 33    44    12     2
+#&gt; 34    44    13    10
+#&gt; 35    44    14     6
+#&gt; 36    47     1   124
+#&gt; 37    47     2     2
+#&gt; 38    47     3   136
+#&gt; 39    47     4    27
+#&gt; 40    47     5     1
+#&gt; 41    47     6     1
+#&gt; 42    47     7     1
+#&gt; 43    47     8     1
+#&gt; 44    47     9     1
+#&gt; 45    47    10     1
+#&gt; 46    47    11     1
+#&gt; 47    47    12     7
+#&gt; 48    47    13   241</div><div class='input'>
 <span class='co'># ...  of certain values</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>match</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>)) <span class='kw'>%&gt;%</span>

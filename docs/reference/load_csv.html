@@ -34,8 +34,8 @@
 
 <meta property="og:description" content="csv is the short form of Comma Separated Values, which represents
 simple tables of systematically delimited information. The files loaded with
-this function should have the columns x and y and potentially
-other columns that represent the attributes of these coordinates." />
+this function should have the columns x, y and id and
+potentially other columns that represent the attributes of these coordinates." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -142,8 +142,8 @@ other columns that represent the attributes of these coordinates." />
     
     <p>csv is the short form of <em>Comma Separated Values</em>, which represents
 simple tables of systematically delimited information. The files loaded with
-this function should have the columns <code>x</code> and <code>y</code> and potentially
-other columns that represent the attributes of these coordinates.</p>
+this function should have the columns <code>x</code>, <code>y</code> and <code>id</code> and
+potentially other columns that represent the attributes of these coordinates.</p>
     
     </div>
 
@@ -164,7 +164,10 @@ other columns that represent the attributes of these coordinates.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is a helper to <code><a href='loadData.html'>loadData</a></code> and is not intended to be used on
+    <p>A column <code>fid</code> can have a deviating value than <code>id</code> when several
+features are part of the same object, such as multiple line features or holes
+in polygons.</p>
+<p>This is a helper to <code><a href='loadData.html'>loadData</a></code> and is not intended to be used on
 its own.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

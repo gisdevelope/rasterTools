@@ -193,10 +193,10 @@ specify here the layer for which the area of objects shall be calculated
 <span class='fu'>mPerimeter</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"class"</span>)</div><div class='output co'>#&gt;   class edges
 #&gt; 1     1    34
 #&gt; 2    11   195
-#&gt; 3    21   187
-#&gt; 4    24   315
+#&gt; 3    21   153
+#&gt; 4    24   468
 #&gt; 5    27   249
-#&gt; 6    31   187
+#&gt; 6    31    34
 #&gt; 7    41   646
 #&gt; 8    44   379
 #&gt; 9    47   426</div><div class='input'>
@@ -205,55 +205,51 @@ specify here the layer for which the area of objects shall be calculated
 #&gt; 1      1     1    34
 #&gt; 2     11     1   195
 #&gt; 3     21     1   153
-#&gt; 4     21     2    34
-#&gt; 5     24     1   160
-#&gt; 6     24     2   130
-#&gt; 7     24     3    25
-#&gt; 8     27     1   135
-#&gt; 9     27     2   114
-#&gt; 10    31     1   114
-#&gt; 11    31     2    41
-#&gt; 12    31     3    32
-#&gt; 13    41     1    34
-#&gt; 14    41     2    84
-#&gt; 15    41     3    76
-#&gt; 16    41     4    34
-#&gt; 17    41     5    66
-#&gt; 18    41     6     6
-#&gt; 19    41     7     4
-#&gt; 20    41     8    38
-#&gt; 21    41     9     4
-#&gt; 22    41    10     4
-#&gt; 23    41    11   134
-#&gt; 24    41    12    82
-#&gt; 25    41    13    80
-#&gt; 26    44     1    20
-#&gt; 27    44     2    28
-#&gt; 28    44     3     4
-#&gt; 29    44     4    64
-#&gt; 30    44     5     4
-#&gt; 31    44     6     6
-#&gt; 32    44     7    12
-#&gt; 33    44     8   124
-#&gt; 34    44     9    49
-#&gt; 35    44    10     6
-#&gt; 36    44    11    24
-#&gt; 37    44    12     6
-#&gt; 38    44    13    18
-#&gt; 39    44    14    14
-#&gt; 40    47     1   104
-#&gt; 41    47     2     6
-#&gt; 42    47     3   102
-#&gt; 43    47     4    26
-#&gt; 44    47     5     4
-#&gt; 45    47     6     4
-#&gt; 46    47     7     4
-#&gt; 47    47     8     4
-#&gt; 48    47     9     4
-#&gt; 49    47    10     4
-#&gt; 50    47    11     4
-#&gt; 51    47    12    12
-#&gt; 52    47    13   148</div><div class='input'>
+#&gt; 4     24     1   413
+#&gt; 5     24     2    55
+#&gt; 6     27     1   135
+#&gt; 7     27     2   114
+#&gt; 8     31     1    34
+#&gt; 9     41     1    34
+#&gt; 10    41     2    84
+#&gt; 11    41     3    76
+#&gt; 12    41     4    34
+#&gt; 13    41     5    66
+#&gt; 14    41     6     6
+#&gt; 15    41     7     4
+#&gt; 16    41     8    38
+#&gt; 17    41     9     4
+#&gt; 18    41    10     4
+#&gt; 19    41    11   134
+#&gt; 20    41    12    82
+#&gt; 21    41    13    80
+#&gt; 22    44     1    20
+#&gt; 23    44     2    28
+#&gt; 24    44     3     4
+#&gt; 25    44     4    64
+#&gt; 26    44     5     4
+#&gt; 27    44     6     6
+#&gt; 28    44     7    12
+#&gt; 29    44     8   124
+#&gt; 30    44     9    49
+#&gt; 31    44    10     6
+#&gt; 32    44    11    24
+#&gt; 33    44    12     6
+#&gt; 34    44    13    18
+#&gt; 35    44    14    14
+#&gt; 36    47     1   104
+#&gt; 37    47     2     6
+#&gt; 38    47     3   102
+#&gt; 39    47     4    26
+#&gt; 40    47     5     4
+#&gt; 41    47     6     4
+#&gt; 42    47     7     4
+#&gt; 43    47     8     4
+#&gt; 44    47     9     4
+#&gt; 45    47    10     4
+#&gt; 46    47    11     4
+#&gt; 47    47    12    12
+#&gt; 48    47    13   148</div><div class='input'>
 <span class='co'># ...  of certain values</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>match</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>)) <span class='kw'>%&gt;%</span>

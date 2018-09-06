@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adjacency of cells — mAdjacency • rasterTools</title>
+<title>Manage the internal paths of rasterTools — setPaths • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Adjacency of cells — mAdjacency" />
+<meta property="og:title" content="Manage the internal paths of rasterTools — setPaths" />
 
-<meta property="og:description" content="Calculate the cell-adjacency matrix for a raster" />
+<meta property="og:description" content="Manage the internal paths of rasterTools" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,97 +130,67 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Adjacency of cells</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/measure.operators.R'><code>R/measure.operators.R</code></a></small>
-    <div class="hidden name"><code>mAdjacency.Rd</code></div>
+    <h1>Manage the internal paths of rasterTools</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/setPaths.R'><code>R/setPaths.R</code></a></small>
+    <div class="hidden name"><code>setPaths.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculate the cell-adjacency matrix for a raster</p>
+    <p>Manage the internal paths of rasterTools</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mAdjacency</span>(<span class='no'>obj</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"like"</span>, <span class='kw'>count</span> <span class='kw'>=</span> <span class='st'>"double"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>setPaths</span>(<span class='kw'>root</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>local</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>obj</th>
-      <td><p>[<code>Raster*(1)</code>]<br /> The object to measure.</p></td>
+      <th>root</th>
+      <td><p>[<code>character(1)</code>]<br /> the root directory where all spatial
+files are already organised or should be saved to.</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>[<code>character(1)</code>]<br /> which type of adjacencies to calculate;
-either <code>"like"</code> adjacencies between cells of the same value,
-adjacencies between <code>"paired"</code> values or the rowsum of the paired
-values (<code>"pairedSum"</code>).</p></td>
+      <th>local</th>
+      <td><p>[<code>list(.)</code>]<br /> a named list pointing to the directory where
+the local resources are located.</p></td>
     </tr>
     <tr>
-      <th>count</th>
-      <td><p>[<code>character(1)</code>]<br /> the cells that should be counted;
-possible values are <code>"single"</code> to count only cells to the right and
-bottom of the focal cell and <code>"double"</code> to count additionally cells to
-the left and top of the focal cell.</p></td>
-    </tr>
-    <tr>
-      <th>layer</th>
-      <td><p>[<code>character(1)</code>]<br /> in case <code>obj</code> has several layers,
-specify here the layer for which the area of objects shall be calculated
-(by default, the first layer).</p></td>
+      <th>remote</th>
+      <td><p>[<code>list(.)</code>]<br /> a named list pointing to the url where the
+remote resources are located.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>data.frame</code> of the frequency of adjacencies of the values in
-  <code>obj</code>.</p>
+    <p>Changes entries of the internal dataset <code>rtPaths</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>In case <code>type = "like"</code>, only the diagonal of the adjacency
-  matrix is returned, in case <code>type = "paired"</code>, the complete adjacency
-  matrix is returned.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other generic metrics: <code><a href='mArea.html'>mArea</a></code>,
-  <code><a href='mNumber.html'>mNumber</a></code>, <code><a href='mPerimeter.html'>mPerimeter</a></code>,
-  <code><a href='mValues.html'>mValues</a></code></p></div>
+    <p>When running the function <code>setPaths</code> the internal object
+  <code><a href='rtPaths.html'>rtPaths</a></code> is update. In case <code>root</code> is given, this
+  directory is searched for folders of all the specified datasets, and their
+  path are assigned in <code>rtPaths</code>. With <code>local</code> or <code>remote</code>,
+  the local or online directory of a specific dataset can be updated.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cat</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
-<span class='no'>bin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>rtData</span>$<span class='no'>continuous</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>40</span>)
+    <pre class="examples"># NOT RUN {
+# run this when starting rasterTools for the first time
+getOption("rtPaths")
+setPaths(root = "/path/to/the/spatial/files")
 
-<span class='co'># double count like adjacencies</span>
-<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>)</div><div class='output co'>#&gt;    class likeAdj
-#&gt; 1      1     114
-#&gt; 11    11     218
-#&gt; 21    21     656
-#&gt; 24    24    3082
-#&gt; 27    27    1568
-#&gt; 31    31     242
-#&gt; 41    41    1586
-#&gt; 44    44    1418
-#&gt; 47    47    1740</div><div class='input'>
-<span class='co'># paired adjacencies</span>
-<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>cat</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"paired"</span>)</div><div class='output co'>#&gt;    class   1  11  21   24   27  31   41   44   47
-#&gt; 1      1 114   0   0    0    0   0   34    0    0
-#&gt; 11    11   0 218   0   57   36   0    2   53   47
-#&gt; 21    21   0   0 656   28    1   0   95   29    0
-#&gt; 24    24   0  57  28 3082   20   1  292   15   55
-#&gt; 27    27   0  36   1   20 1568   0   57   57   78
-#&gt; 31    31   0   0   0    1    0 242    0    0   33
-#&gt; 41    41  34   2  95  292   57   0 1586   89   77
-#&gt; 44    44   0  53  29   15   57   0   89 1418  136
-#&gt; 47    47   0  47   0   55   78  33   77  136 1740</div><div class='input'>
-<span class='co'># adjacencies with single count</span>
-<span class='fu'>mAdjacency</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>bin</span>, <span class='kw'>count</span> <span class='kw'>=</span> <span class='st'>"single"</span>)</div><div class='output co'>#&gt;   class likeAdj
-#&gt; 0     0    3746
-#&gt; 1     1    2144</div><div class='input'>
-</div></pre>
+# in case a dataset is at an exotic locations
+setPaths(local = list(sentinel = "/path/outside/of/root"))
+
+# change the (outdated) url of some datasets
+setPaths(remote = list(sentinel = "https://new_url_to_sentinel/")
+
+getOption("rtPaths")
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -230,8 +200,6 @@ specify here the layer for which the area of objects shall be calculated
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

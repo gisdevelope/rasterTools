@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get subset (generic) — getSubset • rasterTools</title>
+<title>Set the table (generic) — setTable • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Get subset (generic) — getSubset" />
+<meta property="og:title" content="Set the table (generic) — setTable" />
 
-<meta property="og:description" content="getSubset returns the subsetted object." />
+<meta property="og:description" content="Set the table (generic)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,35 +130,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get subset (generic)</h1>
+    <h1>Set the table (generic)</h1>
     <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/generics.R'><code>R/generics.R</code></a>, <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
-    <div class="hidden name"><code>getSubset.Rd</code></div>
+    <div class="hidden name"><code>setTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p><code>getSubset</code> returns the subsetted object.</p>
+    <p>Set the table (generic)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>setTable</span>(<span class='no'>x</span>, <span class='no'>table</span>, <span class='no'>...</span>)
 
-<span class='co'># S4 method for geom,numeric</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)
+<span class='co'># S4 method for geom</span>
+<span class='fu'>setTable</span>(<span class='no'>x</span>, <span class='no'>table</span>)
 
-<span class='co'># S4 method for geom,logical</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)</pre>
+<span class='co'># S4 method for RasterLayer</span>
+<span class='fu'>setTable</span>(<span class='no'>x</span>, <span class='no'>table</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>object to <code>subset</code>.</p></td>
+      <td><p>the object to which to assign <code>table</code>.</p></td>
     </tr>
     <tr>
-      <th>subset</th>
-      <td><p>[<code>integerish(.)</code> | <code>logical(.)</code>]<br /> rows to keep.</p></td>
+      <th>table</th>
+      <td><p>[<code>data.frame(.)</code>]<br /> the attribute table.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -169,8 +169,8 @@
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
     <ul>
-<li><p><code>x = geom,subset = numeric</code>: get a subset of the vertices of a <code>geom</code> based on a numeric</p></li>
-<li><p><code>x = geom,subset = logical</code>: get a subset of the vertices of a <code>geom</code> based on a logical</p></li>
+<li><p><code>geom</code>: set the attribute table of a <code>geom</code></p></li>
+<li><p><code>RasterLayer</code>: set the attribute table of a <code>RasterLayer</code></p></li>
 </ul>
     
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get subset (generic) — getSubset • rasterTools</title>
+<title>Print messages — blablabla • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Get subset (generic) — getSubset" />
+<meta property="og:title" content="Print messages — blablabla" />
 
-<meta property="og:description" content="getSubset returns the subsetted object." />
+<meta property="og:description" content="This is a wrapper around message." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,48 +130,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get subset (generic)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/generics.R'><code>R/generics.R</code></a>, <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
-    <div class="hidden name"><code>getSubset.Rd</code></div>
+    <h1>Print messages</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/helpers.R'><code>R/helpers.R</code></a></small>
+    <div class="hidden name"><code>blablabla.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p><code>getSubset</code> returns the subsetted object.</p>
+    <p>This is a wrapper around <code>message</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>...</span>)
-
-<span class='co'># S4 method for geom,numeric</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)
-
-<span class='co'># S4 method for geom,logical</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)</pre>
+    <pre class="usage"><span class='fu'>blablabla</span>(<span class='no'>msg</span>, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>object to <code>subset</code>.</p></td>
+      <th>msg</th>
+      <td><p>[<code>character(1)</code>]<br /> the message.</p></td>
     </tr>
     <tr>
-      <th>subset</th>
-      <td><p>[<code>integerish(.)</code> | <code>logical(.)</code>]<br /> rows to keep.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>other arguments.</p></td>
+      <th>silent</th>
+      <td><p>[<code>logical(1)</code>]<br /> should all messages except errors be
+suppressed (<code>TRUE</code>), or should all messages be printed (<code>FALSE</code>,
+default)?</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
-
-    <ul>
-<li><p><code>x = geom,subset = numeric</code>: get a subset of the vertices of a <code>geom</code> based on a numeric</p></li>
-<li><p><code>x = geom,subset = logical</code>: get a subset of the vertices of a <code>geom</code> based on a logical</p></li>
-</ul>
     
 
   </div>
@@ -179,9 +164,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#methods-by-class-">Methods (by class)</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

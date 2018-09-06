@@ -205,10 +205,10 @@ created, where the resulting values are associated to the correct ids
 #&gt;   class result
 #&gt; 1     1     37
 #&gt; 2    11    104
-#&gt; 3    21    281
-#&gt; 4    24    507
+#&gt; 3    21    209
+#&gt; 4    24    914
 #&gt; 5    27    466
-#&gt; 6    31    407
+#&gt; 6    31     72
 #&gt; 7    41    561
 #&gt; 8    44    453
 #&gt; 9    47    544
@@ -230,64 +230,60 @@ created, where the resulting values are associated to the correct ids
 #&gt; 1      1     1     37
 #&gt; 2     11     1    104
 #&gt; 3     21     1    209
-#&gt; 4     21     2     72
-#&gt; 5     24     1    296
-#&gt; 6     24     2    173
-#&gt; 7     24     3     38
-#&gt; 8     27     1    293
-#&gt; 9     27     2    173
-#&gt; 10    31     1    259
-#&gt; 11    31     2    108
-#&gt; 12    31     3     40
-#&gt; 13    41     1     41
-#&gt; 14    41     2     59
-#&gt; 15    41     3     82
-#&gt; 16    41     4     16
-#&gt; 17    41     5     48
-#&gt; 18    41     6      2
-#&gt; 19    41     7      1
-#&gt; 20    41     8     18
-#&gt; 21    41     9      1
-#&gt; 22    41    10      1
-#&gt; 23    41    11    136
-#&gt; 24    41    12     62
-#&gt; 25    41    13     94
-#&gt; 26    44     1     38
-#&gt; 27    44     2     16
-#&gt; 28    44     3      1
-#&gt; 29    44     4     96
-#&gt; 30    44     5      1
-#&gt; 31    44     6      2
-#&gt; 32    44     7      5
-#&gt; 33    44     8    163
-#&gt; 34    44     9     99
-#&gt; 35    44    10      2
-#&gt; 36    44    11     12
-#&gt; 37    44    12      2
-#&gt; 38    44    13     10
-#&gt; 39    44    14      6
-#&gt; 40    47     1    124
-#&gt; 41    47     2      2
-#&gt; 42    47     3    136
-#&gt; 43    47     4     27
-#&gt; 44    47     5      1
-#&gt; 45    47     6      1
-#&gt; 46    47     7      1
-#&gt; 47    47     8      1
-#&gt; 48    47     9      1
-#&gt; 49    47    10      1
-#&gt; 50    47    11      1
-#&gt; 51    47    12      7
-#&gt; 52    47    13    241
+#&gt; 4     24     1    836
+#&gt; 5     24     2     78
+#&gt; 6     27     1    293
+#&gt; 7     27     2    173
+#&gt; 8     31     1     72
+#&gt; 9     41     1     41
+#&gt; 10    41     2     59
+#&gt; 11    41     3     82
+#&gt; 12    41     4     16
+#&gt; 13    41     5     48
+#&gt; 14    41     6      2
+#&gt; 15    41     7      1
+#&gt; 16    41     8     18
+#&gt; 17    41     9      1
+#&gt; 18    41    10      1
+#&gt; 19    41    11    136
+#&gt; 20    41    12     62
+#&gt; 21    41    13     94
+#&gt; 22    44     1     38
+#&gt; 23    44     2     16
+#&gt; 24    44     3      1
+#&gt; 25    44     4     96
+#&gt; 26    44     5      1
+#&gt; 27    44     6      2
+#&gt; 28    44     7      5
+#&gt; 29    44     8    163
+#&gt; 30    44     9     99
+#&gt; 31    44    10      2
+#&gt; 32    44    11     12
+#&gt; 33    44    12      2
+#&gt; 34    44    13     10
+#&gt; 35    44    14      6
+#&gt; 36    47     1    124
+#&gt; 37    47     2      2
+#&gt; 38    47     3    136
+#&gt; 39    47     4     27
+#&gt; 40    47     5      1
+#&gt; 41    47     6      1
+#&gt; 42    47     7      1
+#&gt; 43    47     8      1
+#&gt; 44    47     9      1
+#&gt; 45    47    10      1
+#&gt; 46    47    11      1
+#&gt; 47    47    12      7
+#&gt; 48    47    13    241
 #&gt; 
 #&gt; $a_c
 #&gt;   class result
 #&gt; 1     1     37
 #&gt; 2    11    104
-#&gt; 3    21    281
-#&gt; 4    24    507
+#&gt; 3    21    209
+#&gt; 4    24    914
 #&gt; 5    27    466
-#&gt; 6    31    407
+#&gt; 6    31     72
 #&gt; 7    41    561
 #&gt; 8    44    453
 #&gt; 9    47    544
@@ -297,29 +293,28 @@ created, where the resulting values are associated to the correct ids
 #&gt; 1         1   3360
 #&gt; 
 #&gt; $mCPA
-#&gt; [1]  1.10  3.10  8.36 15.09 13.87 12.11 16.70 13.48 16.19
+#&gt; [1]  1.10  3.10  6.22 27.20 13.87  2.14 16.70 13.48 16.19
 #&gt; 
 #&gt; $mLPI
-#&gt; [1] 8.81
+#&gt; [1] 24.88
 #&gt; </div><div class='input'>
 <span class='co'># however, in the above example patches are derived per class, which might</span>
 <span class='co'># not make sense ecologically, or be at best arbitrary. Instead we might</span>
 <span class='co'># want to treat all forest, irrespective of deciduous or coniferous as one</span>
 <span class='co'># patch.</span>
-<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; [[1]]
+<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)</div><div class='output co'>#&gt; <span class='message'>please make sure that the new value has properly specified attributes.</span></div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt;   class  mCPA
 #&gt; 1     1  1.10
 #&gt; 2    11  3.10
-#&gt; 3    21  8.36
-#&gt; 4    24 15.09
+#&gt; 3    21  6.22
+#&gt; 4    24 27.20
 #&gt; 5    27 13.87
-#&gt; 6    31 12.11
+#&gt; 6    31  2.14
 #&gt; 7    40 46.37
 #&gt; 
 #&gt; [[2]]
 #&gt;   landscape  mLPI
-#&gt; 1         1 15.71
+#&gt; 1         1 24.88
 #&gt; </div><div class='input'>
 # set of spatial operations that enables more complex metrics
 # derive 'Disjunct Cores Density', which is a rather complex metric

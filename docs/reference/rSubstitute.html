@@ -156,14 +156,14 @@
     </tr>
     <tr>
       <th>new</th>
-      <td><p>[<code>integerish(.)</code>]<br />  values to substitute with.</p></td>
+      <td><p>[<code>integerish(1)</code>]<br /> value to substitute with.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A <code>RasterLayer</code> of the same dimensions as <code>obj</code>, in which
-  <code>old</code> values have been replaced by <code>new</code> values.</p>
+  <code>old</code> values have been replaced by the <code>new</code> value.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -175,8 +175,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>categorical</span>
-<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'>rSubstitute</span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='rSubstitute-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'>rSubstitute</span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>, <span class='fl'>44</span>, <span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)</div><div class='output co'>#&gt; <span class='message'>please make sure that the new value has properly specified attributes.</span></div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='rSubstitute-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
