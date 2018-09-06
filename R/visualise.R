@@ -61,7 +61,7 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = raster::stack(input, substituted); geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # raster = patches; geom = NULL; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
   
   # new ideas:
   # 1. automatically detect which is raster and which is geom
@@ -294,7 +294,11 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         }
         
         if(hasColourTable[[x]]){
-          breaksTemp <- c(tempVals[1]-1, tempVals)
+          if(tempVals[1] == 0){
+            breaksTemp <- tempVals+1
+          } else{
+            breaksTemp <- c(tempVals[1]-1, tempVals)
+          }
         } else if(isFactor[[x]]){
           breaksTemp <- c(tempVals[1]-1, raster[[x]]@data@attributes[[1]]$id)
         } else{
@@ -353,6 +357,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
     xAxisTicksH <- unit(0, "points")
   }
   xOffset <- ((as.numeric(yAxisTicksW) + as.numeric(yAxisTitleW)) - as.numeric(legendW))/2
+  yOffset <- ((as.numeric(xAxisTicksH) + as.numeric(xAxisTitleH)) - as.numeric(titleH))/2
 
   # determine the number of columns and rows and the position of panels
   if(plotLayers > 1){
@@ -396,6 +401,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       gridWr <- unit(1, "grobheight", "panelGrob")*ratio$x - xAxisTitleH*ratio$x- xAxisTicksH*ratio$x - titleH*ratio$x
 
       pushViewport(viewport(x = unit(0.5, "npc") + unit(xOffset, "points"),
+                            y = unit(0.5, "npc") + unit(yOffset, "points"),
                             height = min(gridH, gridHr),
                             width = min(gridW, gridWr),
                             name = "plot"))
@@ -404,7 +410,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       if(theme$plot$title){
         pushViewport(viewport(name = "title"))
         grid.text(just = "top",
-                  y = unit(1, "npc") + titleH,
+                  y = unit(1, "npc") - unit(3, "points") + titleH,
                   label = plotName,
                   gp = gpar(fontsize = theme$par$fontsize$title,
                             col = theme$par$colour$title))
@@ -427,9 +433,11 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         # order the legend
         if(theme$legend$ascending){
           theLegend <- matrix(data = rev(uniqueColours[[i]]), ncol = 1, nrow = length(uniqueColours[[i]]))
+          theValues <- rev(uniqueVals[[i]])
           valPos <- unit(which(uniqueVals[[i]] %in% tickValues[[i]]), "native")
         } else{
           theLegend <- matrix(data = uniqueColours[[i]], ncol = 1, nrow = length(uniqueColours[[i]]))
+          theValues <- uniqueVals[[i]]
           valPos <- rev(unit(which(uniqueVals[[i]] %in% tickValues[[i]]), "native"))
         }
 
@@ -444,11 +452,14 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                   just = "left",
                   width = unit(1, "grobwidth", "theLegend"),
                   gp = gpar(col = "black", fill = NA, alpha = 1, lwd = 0.2))
+        grid.text(label = theValues,
+                  name = "legendValues",
+                  gp = gpar(col = NA))
         grid.text(label = tickLabels[[i]],
                   x = unit(1, "npc") + unit(1, "grobwidth", "theLegend") + unit(20, "points"),
                   y = valPos,
                   just = c("left"),
-                  name = "legendTicks",
+                  # name = "legendTicks",
                   gp = gpar(fontsize = theme$par$fontsize$legend,
                             col = theme$par$colour$legend))
 
