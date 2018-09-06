@@ -6,7 +6,7 @@ context("oEFTA")
 
 
 test_that("oEFTA loads the correct file", {
-  updatePaths(root = system.file("test_datasets", package="rasterTools"))
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- loadData(files = "aSmallWindow.csv",
                      localPath = system.file("csv", package="rasterTools")) %>%
     geomRectangle() %>%

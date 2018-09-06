@@ -1,5 +1,5 @@
 library(checkmate)
-context("updatePaths")
+context("setPaths")
 
 
 test_that("make tests", {

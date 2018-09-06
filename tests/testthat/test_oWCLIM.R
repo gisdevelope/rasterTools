@@ -4,7 +4,7 @@ context("oWCLIM")
 
 
 test_that("oWCLIM loads the correct file", {
-  # updatePaths(root = system.file("test_datasets", package="rasterTools"))
+  # setPaths(root = system.file("test_datasets", package="rasterTools"))
   # myMask <- loadData(files = "aWindow.csv",
   #                    localPath = system.file("csv", package="rasterTools")) %>%
   #   geomRectangle() %>%

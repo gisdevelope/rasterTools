@@ -18,7 +18,7 @@
 #'   specific \code{download*} functions manually, they are documented
 #'   nevertheless for those who are interested. In case an error occurs, it
 #'   might be necessary to specify new paths in \code{rtPaths} (see
-#'   \code{\link{updatePaths}}).
+#'   \code{\link{setPaths}}).
 #'   
 #'   Recently supported datasets are \itemize{
 #'   \item Global: \itemize{

@@ -5,7 +5,7 @@ context("obtain")
 
 
 test_that("obtain works", {
-  updatePaths(root = system.file("test_datasets", package="rasterTools"))
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- loadData(files = "aWindow.csv",
                      localPath = system.file("csv", package="rasterTools")) %>%
     geomRectangle() %>%
@@ -18,7 +18,7 @@ test_that("obtain works", {
 })
 
 test_that("obtain works also on a list of 'mask'", {
-  updatePaths(root = system.file("test_datasets", package="rasterTools"))
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- loadData(files = "aWindow.csv",
                      localPath = system.file("csv", package="rasterTools")) %>%
     geomRectangle() %>% 

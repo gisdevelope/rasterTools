@@ -21,7 +21,7 @@ be loaded.}
 which \code{files} should be imported (see \code{\link{obtain}} for all
 datasets); in case this is given, \code{localPath} is taken from the
 internal default for the respective dataset (see
-\code{\link{updatePaths}}).}
+\code{\link{setPaths}}).}
 
 \item{localPath}{[\code{character(1)}]\cr the local path from where files
 shall be loaded. If the directory does not exist, it is created and the
@@ -46,7 +46,7 @@ and other files containing spatial data.
   nothing is found there but a dataset is given, it attempts to download the
   files from the respective online path (see \code{rtPaths}). Please take a
   look at it and in case an online resource has been altered, you can adapt
-  it here (see \code{\link{updatePaths}}).
+  it here (see \code{\link{setPaths}}).
 }
 \examples{
 # load a bunch of '.csv'-files containing coordinates into the gloabl environment.

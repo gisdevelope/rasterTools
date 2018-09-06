@@ -4,7 +4,7 @@ context("oGFC")
 
 
 test_that("oGFC loads the correct file", {
-  updatePaths(root = system.file("test_datasets", package="rasterTools"))
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- geomRectangle(data.frame(x = c(5094124, 5096249),
                                      y = c(4060501, 4061961))) %>%
     setCRS(crs = projs$laea)

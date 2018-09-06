@@ -10,7 +10,7 @@
 #'   which \code{files} should be imported (see \code{\link{obtain}} for all
 #'   datasets); in case this is given, \code{localPath} is taken from the
 #'   internal default for the respective dataset (see
-#'   \code{\link{updatePaths}}).
+#'   \code{\link{setPaths}}).
 #' @param layer [\code{character(.)} | \code{integerish(.)}]\cr vetor of the
 #'   same length as \code{files} with name or position of the layer that shall
 #'   be loaded.
@@ -25,7 +25,7 @@
 #'   nothing is found there but a dataset is given, it attempts to download the
 #'   files from the respective online path (see \code{rtPaths}). Please take a
 #'   look at it and in case an online resource has been altered, you can adapt
-#'   it here (see \code{\link{updatePaths}}).
+#'   it here (see \code{\link{setPaths}}).
 #' @return the file to load. If there is more than one file specified, a list of
 #'   those files.
 #' @seealso The specific load operators: \code{\link{load_kml}},
@@ -42,8 +42,6 @@
 #' @importFrom utils file_test
 #' @importFrom raster raster res<- stack
 #' @export
-
-# updatePaths(root = "/media/steffen/36551F673A1E43DF/spatial")
 
 loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
                      verbose = FALSE, ...){
