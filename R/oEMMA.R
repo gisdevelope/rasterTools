@@ -90,9 +90,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ..
   }
   
   # this will download the AFE grids and assemble them to an overal european grid
-  if(!silent){
-    message(paste0("I am handling the European AFE grid:"))
-  }
+  message(paste0("I am handling the European AFE grid:"))
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
   tiles_emma <- loadData(files = "cgrs_europe.kml",
                          localPath = rtPaths$emma$local,

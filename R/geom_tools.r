@@ -316,15 +316,15 @@ gToGrob <- function(geom, theme = NULL, ...){
   
   featureType <- geom@type
   coords <- outGeom@coords
-
+  
+  # attr <- getTable(x = geom)
+  # scaleTo <- eval(parse(text = paste0(theme$geom$scale$to)), envir = attr)
+  # pars <- setParameters(scale = theme$geom$scale$x,
+  #                       to = scaleTo,
+  #                       theme = theme)
+  
   if(featureType %in% c("point")){
-    
-    # attr <- getCoords(x = geom)
-    # scaleTo <- eval(parse(text = paste0(theme$geom$scale$to)), envir = attr)
-    # pars <- setParameters(scale = theme$geom$scale$x,
-    #                       to = scaleTo,
-    #                       theme = theme)
-    # 
+
     # geomGrob <- pointsGrob(x = coords$x,
     #                        y = coords$y,
     #                        pch = pars$pointsymbol,
