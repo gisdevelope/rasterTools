@@ -115,9 +115,9 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
 
   # find the correct viewport to limit actions to this area of the plot
   rasterVpPath <- grid.grep(paste0(panel, "::plot::grid::raster"), grobs = FALSE, viewports = TRUE, grep = TRUE)
-  # geomVpPath <- grid.grep(paste0(panel, "::plot::grid::geom"), grobs = FALSE, viewports = TRUE, grep = TRUE)
-  # tryCatch(seekViewport(rasterVpPath), error = function(x) seekViewport(geomVpPath))
-  seekViewport(rasterVpPath)
+  geomVpPath <- grid.grep(paste0(panel, "::plot::grid::geom"), grobs = FALSE, viewports = TRUE, grep = TRUE)
+  tryCatch(seekViewport(rasterVpPath), error = function(x) seekViewport(geomVpPath))
+  # seekViewport(rasterVpPath)
 
   metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
   if(length(panelNames) > 1){
