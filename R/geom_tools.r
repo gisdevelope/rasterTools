@@ -284,12 +284,17 @@ gScale <- function(geom, range = NULL, to = "relative"){
 #'   \code{\link{linesGrob}}, \code{\link{polylineGrob}} or a
 #'   \code{\link{polygonGrob}}.
 #' @examples
-#' coords <- data.frame(x = c(40, 70, 70, 50),
-#'                      y = c(40, 40, 60, 70),
-#'                      id = 1)
+#' coords <- data.frame(x = c(40, 70, 70, 50, 40, 60, 70, 40, 60, 
+#'                            40, 10, 20, 30, 30, 20, 50, 40, 10, 20),
+#'                      y = c(40, 40, 60, 70, 40, 20, 40, 10, 20, 
+#'                            40, 20, 20, 50, 40, 40, 70, 40, 20, 60),
+#'                      id = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
+#'                             3, 3, 3, 4, 4, 4, 4, 4, 4, 4),
+#'                      fid = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
+#'                              3, 3, 3, 4, 4, 4, 5, 5, 5, 5))
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
-#' aGeom <- geomPolygon(anchor = coords, window = window, col = "blue")
+#' aGeom <- geomPolygon(anchor = coords, window = window)
 #'
 #' aGrob <- gToGrob(geom = aGeom)
 #' str(aGrob)
@@ -300,11 +305,9 @@ gScale <- function(geom, range = NULL, to = "relative"){
 gToGrob <- function(geom, theme = NULL, ...){
   
   assertClass(geom, classes = "geom")
-  assertList(theme, len = 7, null.ok = TRUE)
+  assertClass(x = theme, classes = "rtTheme", null.ok = TRUE)
   if(is.null(theme)){
-    theme <- theme_rt
-  } else{
-    assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
+    theme <- rtTheme
   }
   
   # scale it to relative, if it's not
@@ -317,84 +320,66 @@ gToGrob <- function(geom, theme = NULL, ...){
   featureType <- geom@type
   coords <- outGeom@coords
   
-  # attr <- getTable(x = geom)
-  # scaleTo <- eval(parse(text = paste0(theme$geom$scale$to)), envir = attr)
-  # pars <- setParameters(scale = theme$geom$scale$x,
-  #                       to = scaleTo,
-  #                       theme = theme)
+  attr <- getTable(x = geom)
+  scaleTo <- eval(parse(text = paste0(theme@geom$scale$to)), envir = attr)
+  pars <- scaleParameters(attr = attr, params = theme@geom)
   
   if(featureType %in% c("point")){
 
-    # geomGrob <- pointsGrob(x = coords$x,
-    #                        y = coords$y,
-    #                        pch = pars$pointsymbol,
-    #                        size = pars$pointsize,
-    #                        gp = gpar(
-    #                          col = pars$line,
-    #                          fill = pars$fill,
-    #                          ...),
-    #                        name = "aPointsGrob")
-    
     geomGrob <- pointsGrob(x = coords$x,
                            y = coords$y,
-                           pch = theme$par$pointsymbol$geom,
-                           size = unit(theme$par$pointsize$geom, "char"),
-                           gp = gpar(col = theme$par$colour$geom,
-                                     fill = theme$par$fill$geom,
-                                     lty = theme$par$linetype$geom,
-                                     lwd = theme$par$linewidth$geom,
-                                     ...),
-                           name = "aPointsGrob")
+                           pch = theme@geom$pointsymbol,
+                           size = unit(theme@geom$pointsize, "char"),
+                           gp = gpar(
+                             col = pars$line,
+                             fill = pars$fill,
+                             ...))
     
   } else if(featureType %in% "line"){
     
-    # geomGrob <- polylineGrob(x = coords$x,
-    #                          y = coords$y,
-    #                          id = as.numeric(as.factor(coords$fid)),
-    #                          gp = gpar(col = pars$line,
-    #                                    fill = pars$fill,
-    #                                    lty = pars$linetype,
-    #                                    lwd = pars$linewidth,
-    #                                    ...),
-    #                          name = "apolylineGrob")
-    
     geomGrob <- polylineGrob(x = coords$x,
                              y = coords$y,
-                             id = as.numeric(as.factor(coords$fid)),
-                             gp = gpar(col = theme$par$colour$geom,
-                                       fill = theme$par$fill$geom,
-                                       lty = theme$par$linetype$geom,
-                                       lwd = theme$par$linewidth$geom,
-                                       ...),
-                             name = "apolylineGrob")
+                             id = as.numeric(as.factor(tempCoords$fid)),
+                             gp = gpar(col = pars$line,
+                                       lty = pars$linetype,
+                                       lwd = pars$linewidth,
+                                       ...))
     
   } else if(featureType %in% c("polygon")){
     
-    # geomGrob <- pathGrob(x = coords$x,
-    #                      y = coords$y,
-    #                      id = as.numeric(as.factor(coords$fid)),
-    #                      rule = "evenodd",
-    #                      gp = gpar(
-    #                        col = pars$line,
-    #                        fill = pars$fill,
-    #                        lty = pars$linetype,
-    #                        lwd = pars$linewidth,
-    #                        ...),
-    #                      name = "aPathGrob")
-    
-    geomGrob <- pathGrob(x = coords$x,
-                         y = coords$y,
-                         id = as.numeric(as.factor(coords$fid)),
-                         rule = "evenodd",
-                         gp = gpar(
-                           col = theme$par$colour$geom,
-                           fill = theme$par$fill$geom,
-                           lty = theme$par$linetype$geom,
-                           lwd = theme$par$linewidth$geom,
-                           ...),
-                         name = "aPathGrob")
+    geomGrob <- NULL
+    for(i in seq_along(scaleTo)){
+      tempCoords <- coords[eval(parse(text = paste0("coords$", theme@geom$scale$to))) == scaleTo[i],]
+      if(i == 1){
+        geomGrob <- pathGrob(x = tempCoords$x,
+                             y = tempCoords$y,
+                             id = as.numeric(as.factor(tempCoords$fid)),
+                             rule = "evenodd",
+                             gp = gpar(
+                               col = pars$line[i],
+                               fill = pars$fill[i],
+                               lty = pars$linetype[i],
+                               lwd = pars$linewidth[i],
+                               ...))
+      } else{
+        geomGrob <- gList(geomGrob, 
+                          pathGrob(x = tempCoords$x,
+                                   y = tempCoords$y,
+                                   id = as.numeric(as.factor(tempCoords$fid)),
+                                   rule = "evenodd",
+                                   gp = gpar(
+                                     col = pars$line[i],
+                                     fill = pars$fill[i],
+                                     lty = pars$linetype[i],
+                                     lwd = pars$linewidth[i],
+                                     ...)))
+      }
+
+    }
+
   }
   return(geomGrob)
+  
 }
 
 #' Transform geometry to raster

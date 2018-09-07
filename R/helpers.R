@@ -97,22 +97,35 @@ scaleMat <- function(mat, range = NULL){
 
 #' Set the scale of a plot
 #'
-#' @param scale the property of the plot that shall be scaled
-#' @param to the attribute to which \code{x} shall be scaled.
-#' @param theme the theme from which the graphical parameters are taken.
+#' @param attr [\code{data.frame(1)}]\cr the attribute table from which to
+#'   derive values.
+#' @param params [\code{list(7)}]\cr the parameters of the geom that shall be
+#'   scaled.
 #' @return a list of parameters to a grob.
-#' 
+#' @export
 
-setParameters <- function(scale = NULL, to = NULL, theme = NULL){
+scaleParameters <- function(attr = NULL, params = NULL){
   
-  #check arguments
-  assertList(theme, len = 7, null.ok = TRUE)
-  if(is.null(theme)){
-    theme <- theme_rt
-  } else{
-    assertNames(names(theme), permutation.of = c("plot", "labels", "bins", "margin", "scale", "legend", "par"))
+  # check arguments
+  assertCharacter(params$scale$x, any.missing = FALSE)
+  scaleTo <- eval(parse(text = paste0(params$scale$to)), envir = attr)
+  if(dim(attr)[1] > 1){
+    assertTRUE(length(scaleTo) > 1)
   }
+  assertList(params, len = 7, any.missing = FALSE)
+  pos <- which(names(params) == params$scale$x)
+  notPos <- which(names(params) != params$scale$x)
+  assertTRUE(length(params[[pos]]) >= 2)
+  out <- params
   
+  if(params$scale$x %in% c("line", "fill")){
+    out[[pos]] <- colorRampPalette(colors = params[[pos]])(length(scaleTo))
+    for(i in notPos[-1]){
+      out[[i]] <- rep(out[[i]][[1]], times = length(scaleTo))
+    }
+
+  }
+  return(out)
 }
 
 #' Print messages
