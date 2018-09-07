@@ -247,13 +247,19 @@
     <loc>http://EhrmannS.github.io/rasterTools/reference/rtPaths.html</loc>
   </url>
   <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtTheme-class.html</loc>
+  </url>
+  <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtTheme.html</loc>
+  </url>
+  <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/scaleMat.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rasterTools/reference/setCRS.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/scaleParameters.html</loc>
   </url>
   <url>
-    <loc>http://EhrmannS.github.io/rasterTools/reference/setParameters.html</loc>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/setCRS.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/setPaths.html</loc>
@@ -271,6 +277,9 @@
     <loc>http://EhrmannS.github.io/rasterTools/reference/show-geom-method.html</loc>
   </url>
   <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/show-rtTheme-method.html</loc>
+  </url>
+  <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/spmGradient.html</loc>
   </url>
   <url>
@@ -278,9 +287,6 @@
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/spmRandom.html</loc>
-  </url>
-  <url>
-    <loc>http://EhrmannS.github.io/rasterTools/reference/theme_rt.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/visualise.html</loc>

@@ -34,7 +34,7 @@
 
 <meta property="og:description" content="This is merely a tentative workaround which I will improve with respect to
 usability in the future. To see the default settings, type
-str(theme_rt)." />
+str(rtTheme)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -141,14 +141,13 @@ str(theme_rt)." />
     
     <p>This is merely a tentative workaround which I will improve with respect to
 usability in the future. To see the default settings, type
-<code>str(theme_rt)</code>.</p>
+<code>str(rtTheme)</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>setTheme</span>(<span class='kw'>from</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>bins</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>margin</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fontsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colour</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rotation</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>linewidth</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pointsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pointsymbol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>setTheme</span>(<span class='kw'>from</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>box</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xAxis</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>yAxis</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>raster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,7 +155,13 @@ usability in the future. To see the default settings, type
     <tr>
       <th>from</th>
       <td><p>[<code>theme</code>]<br /> the theme that serves as basis for
-modifications, by default <code>theme_rt</code>.</p></td>
+modifications, by default <code>rtTheme</code>.</p></td>
+    </tr>
+    <tr>
+      <th>legend</th>
+      <td><p>[<code>named list(.)</code>]<br /> whehter or not to sort the legend
+values <code>ascending</code>, the legend <code>position</code> and the
+<code>sizeRatio</code> of legend:grid.</p></td>
     </tr>
     <tr>
       <th>plot</th>
@@ -185,12 +190,6 @@ and <code>xDigits</code>.</p></td>
       <td><p>[<code>named list(.)</code>]<br /> at least two <code>colours</code>, a
 <code>bias</code>, the colour <code>space</code> and how to <code>interpolate</code> the
 values; see arguments to <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>legend</th>
-      <td><p>[<code>named list(.)</code>]<br /> whehter or not to sort the legend
-values <code>ascending</code>, the legend <code>position</code> and the
-<code>sizeRatio</code> of legend:grid.</p></td>
     </tr>
     <tr>
       <th>fontsize</th>
@@ -242,15 +241,7 @@ point symbol; see <code><a href='http://www.rdocumentation.org/packages/graphics
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
-<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='no'>theme_rt</span>,
-                    <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-                    <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>colours</span> <span class='kw'>=</span> <span class='fu'>terrain.colors</span>(<span class='fl'>10</span>), <span class='kw'>bias</span> <span class='kw'>=</span> <span class='fl'>0.5</span>),
-                    <span class='kw'>bins</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxis</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>xAxis</span> <span class='kw'>=</span> <span class='fl'>5</span>),
-                    <span class='kw'>fontsize</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>xAxisTicks</span> <span class='kw'>=</span> <span class='fl'>10</span>),
-                    <span class='kw'>colour</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='st'>"darkgrey"</span>, <span class='kw'>xAxisTitle</span> <span class='kw'>=</span> <span class='st'>"#A9A9A9"</span>),
-                    <span class='kw'>rotation</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>yAxisTitle</span> <span class='kw'>=</span> <span class='fl'>0</span>))
-
-<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='kw'>plot</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
+(<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in lapply(list(...), as.character): object 'symbol' not found</span></div><div class='input'>
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>input</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='no'>myTheme</span>)</div><div class='img'><img src='setTheme-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

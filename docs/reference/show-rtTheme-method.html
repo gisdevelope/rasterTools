@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Geometry class and methods — geom-class • rasterTools</title>
+<title>Print rtTheme in the console — show,rtTheme-method • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,13 +30,9 @@
 
 
 
-<meta property="og:title" content="Geometry class and methods — geom-class" />
+<meta property="og:title" content="Print rtTheme in the console — show,rtTheme-method" />
 
-<meta property="og:description" content="A geom stores the vertices that outline the shape and all additional
-information that characterise a feature. A geom can be spatial, but
-does not have to be. A geom can either have absolute or relative
-values, where relative values specify the vertex position relative to the
-window slot." />
+<meta property="og:description" content="Print rtTheme in the console" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -134,79 +130,36 @@ window slot." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Geometry class and methods</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/classes.R'><code>R/classes.R</code></a></small>
-    <div class="hidden name"><code>geom-class.Rd</code></div>
+    <h1>Print rtTheme in the console</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
+    <div class="hidden name"><code>show-rtTheme-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A <code>geom</code> stores the vertices that outline the shape and all additional
-information that characterise a feature. A <code>geom</code> can be spatial, but
-does not have to be. A <code>geom</code> can either have absolute or relative
-values, where relative values specify the vertex position relative to the
-<code>window</code> slot.</p>
+    <p>Print rtTheme in the console</p>
     
     </div>
 
-        
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>A <code>geom</code> either has the feature type</p><ul>
-<li><p><code>"point"</code>,
-when none of the vertices are connected to other vertices,</p></li>
-<li><p><code>"line"</code>, when vertices with the same id are connected according to
-their order without the line closing in itself and</p></li>
-<li><p><code>"polygon"</code>
-according to the same definition, except that the line closes in itself.</p></li>
-</ul><p>Moreover, a <code>geom</code> does NOT have the slot <em>extent</em>, which
-characterises the minimum and maximum value of the vertex coordinates and
-which is thus derived "on the fly" from the vertices. Instead it has a
-<em>reference window</em>, which is sort of a second extent that may be bigger
-than <code>extent</code> and which determines the relative position of the vertices
-when plotting.</p>
+    <pre class="usage"><span class='co'># S4 method for rtTheme</span>
+<span class='fu'>show</span>(<span class='no'>object</span>)</pre>
     
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
-
-    
-    <dl class='dl-horizontal'>
-<dt><code>type</code></dt><dd><p>[<code>character(1)</code>]<br /> the type of feature, recently either
-<code>"point"</code>, <code>"line"</code> or <code>"polygon"</code>.</p></dd>
-    <dt><code>coords</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> the <code>id</code>, <code>x</code> and <code>y</code>
-coordinates per vertex.</p></dd>
-    <dt><code>attr</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> arbitrary number of attributes per
-unique id in <code>coords</code></p></dd>
-    <dt><code>window</code></dt><dd><p>[<code>data.frame(1)</code>]<br /> the minimum and maximum value in x and
-y dimension of the reference window in which the <code>geom</code> dwells.</p></dd>
-    <dt><code>scale</code></dt><dd><p>[<code>character(1)</code>]<br /> whether the vertex coordinates are
-stored as <code>"absolute"</code> values, or <code>"relative"</code> to <code>window</code>.</p></dd>
-    <dt><code>crs</code></dt><dd><p>[<code>character(1)</code>]<br /> the coordinate reference system in proj4
-notation.</p></dd>
-    <dt><code>history</code></dt><dd><p>[<code>list(.)</code>]<br /> a list of steps taken to derive the
-<code>geom</code> in focus.</p></dd>
-</dl>
-    
-    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
-
-    <p>So far the following methods have been defined:</p><ul>
-<li><p>Getters: <br /> <code>length</code>, <code>subset</code>, <code>show</code>,
-  <code><a href='getWindow.html'>getWindow</a></code>, <code><a href='getExtent.html'>getExtent</a></code>, <code><a href='getCRS.html'>getCRS</a></code>,
-  <code><a href='getTable.html'>getTable</a></code>, <code><a href='getSubset.html'>getSubset</a></code>, <code><a href='getHistory.html'>getHistory</a></code>,</p></li>
-<li><p>Setters: <br /> <code><a href='setCRS.html'>setCRS</a></code></p></li>
-</ul>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>[<code>rtTheme</code>]<br /> object to <code>show</code>.</p></td>
+    </tr>
+    </table>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#slots">Slots</a></li>
-
-      <li><a href="#methods">Methods</a></li>
-          </ul>
+      <li><a href="#arguments">Arguments</a></li>
+                </ul>
 
   </div>
 </div>
