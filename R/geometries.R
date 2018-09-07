@@ -23,7 +23,7 @@
 #'                          5326537, 5027609, 5281527, 5189955), Y = c(3977612,
 #'                          4060164, 3997230, 4117856, 4028167, 3971119, 4118207,
 #'                          4062838))
-#' (pointsGeom <- geomPoint(anchor = somePoints))
+#' (pointsGeom <- geomPoint(anchor = somePoints, col = "darkorange", show = TRUE))
 #'
 #' \dontrun{
 #'
@@ -59,14 +59,14 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
                            y = c(min(anchor$y), max(anchor$y)))
     }
   }
-  existsTemplate <- !testNull(template)
-  if(existsTemplate){
+  templateExists <- !testNull(template)
+  if(templateExists){
     assert(
       testClass(template, "RasterLayer"),
       testClass(template, "matrix")
     )
   }
-  if(!anchorExists & !existsTemplate){
+  if(!anchorExists & !templateExists){
     stop("please provide either 'anchor' or 'template'.")
   }
   assertLogical(show)
@@ -77,7 +77,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   }
 
   # get some raster properties
-  if(existsTemplate){
+  if(templateExists){
     if(testClass(template, "RasterLayer")){
       tempName <- names(template)
       dims <- dim(template)
@@ -124,7 +124,12 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
              history = list(paste0("geometry was created as 'point'")))
 
   if(show){
-    visualise(geom = out, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = out, new = new, ...)
   }
 
   invisible(out)
@@ -241,28 +246,27 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 #' @examples
 #' # create a polygon programmatically
 #' coords <- data.frame(x = c(40, 70, 70, 50),
-#'                      y = c(40, 40, 60, 70),
-#'                      id = 1)
+#'                      y = c(40, 40, 60, 70))
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
-
+#'                      
 #' # if no window is set, the bounding box (i.e. min/max values) will be set as window
 #' (aGeom <- geomPolygon(anchor = coords))
 #'
 #' # the vertices are plottet relative to the window
-#' aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3,
-#'                          regular = TRUE, col = "darkorange", show = TRUE)
-#' (geomHexagon(anchor = coords, col = "green", show = TRUE, new = FALSE))
+#' aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3, regular = TRUE, 
+#'                          fill = "darkorange", show = TRUE)
+#' (geomHexagon(anchor = coords, col = "green", fill = NA, show = TRUE))
 #'
 #' # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 #' grid::grid.newpage()
 #' aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-#' anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE, new = FALSE)
+#' anExtent <- geomRectangle(anchor = aGeom, fill = NA, show = TRUE)
 #'
 #' # geoms with more than one element are treated element-wise
 #' aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))
-#' visualise(geom = aGeom, new = TRUE)
-#' itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE, new = FALSE)
+#' visualise(geom = aGeom)
+#' itsExtent <- geomRectangle(anchor = aGeom, show = TRUE)
 #'
 #' \dontrun{
 #'
@@ -286,16 +290,20 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features = 1,
                         vertices = NULL, regular = FALSE, show = FALSE, ...){
 
+  # anchor = NULL; window = NULL; template = input; features = 2; vertices = c(4, 6); regular = FALSE; show = TRUE
+  
   # check arguments
   anchorIsDF <- testDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
   if(anchorIsDF){
     colnames(anchor) <- tolower(colnames(anchor))
-    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "id"))
-    if("id" %in% names(anchor)){
-      features <- length(unique(anchor$id))
-    } else{
-      features <- 1
+    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c( "id", "fid", "x", "y"))
+    if(!"id" %in% names(anchor)){
+      anchor <- cbind(id = 1, anchor)
     }
+    if(!"fid" %in% names(anchor)){
+      anchor <- cbind(fid = anchor$id, anchor)
+    } 
+    features <- length(unique(anchor$id))
   }
   anchorIsGeom <- testClass(anchor, classes = "geom")
   if(anchorIsGeom){
@@ -307,14 +315,14 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
     colnames(window) <- tolower(colnames(window))
     assertNames(names(window), must.include = c("x", "y"))
   }
-  existsTemplate <- !testNull(template)
-  if(existsTemplate){
+  templateExists <- !testNull(template)
+  if(templateExists){
     assert(
       testClass(template, "RasterLayer"),
       testClass(template, "matrix")
     )
   }
-  if(!anchorIsDF & !anchorIsGeom & !existsTemplate){
+  if(!anchorIsDF & !anchorIsGeom & !templateExists){
     stop("please provide either 'anchor' or 'template'.")
   }
   assertIntegerish(features, len = 1, lower = 1)
@@ -328,9 +336,15 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   } else{
     assertIntegerish(vertices, min.len = 1, lower = 2, any.missing = FALSE, null.ok = TRUE)
   }
+  if(!any(names(listArgs()) == "new")){
+    new <- FALSE
+  } else{
+    new <- new
+  }
+  
 
   # get some raster properties
-  if(existsTemplate){
+  if(templateExists){
     if(testClass(template, "RasterLayer")){
       tempName <- names(template)
       dims <- dim(template)
@@ -346,7 +360,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   }
 
   # build a regular geometry
-  nodes <- NULL
+  nodes <- fids <- NULL
   out <- NULL
   for(i in 1:features){
     # if anchor does not exists, make it
@@ -362,8 +376,10 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       theClicks <- locate(raster = template, samples = clicks, panel = tempName, silent = TRUE, show = FALSE, ...)
       window <- data.frame(x = c(0, dims[2]),
                            y = c(0, dims[1]))
-      tempAnchor <- data.frame(x = theClicks$x,
-                           y = theClicks$y)
+      tempAnchor <- data.frame(id = i, 
+                               fid = i,
+                               x = theClicks$x,
+                               y = theClicks$y)
 
     } else if(anchorIsGeom){
       if(!windowExists){
@@ -402,41 +418,36 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
                   history = list(paste0()))
 
       if(show){
-        visualise(geom = temp, ...)
+        visualise(geom = temp, new = new, ...)
       }
       nodes <- rbind(nodes, theNodes)
-
+      fids <- c(fids, length(unique(theNodes$fid)))
+      
     } else{
-
-      if(!"fid" %in% names(tempAnchor)){
-        tempAnchor <- cbind(fid = i, tempAnchor)
-      }
-      if(!"id" %in% names(tempAnchor)){
-        tempAnchor <- cbind(id = i, tempAnchor)
-      }
 
       theNodes <- tempAnchor[c("id", "fid", "x", "y")]
 
       temp <- new(Class = "geom",
                   type = "polygon",
-                  coords = cbind(theNodes, fid = theNodes$id),
-                  attr = data.frame(id = unique(theNodes$id), n = 1),
+                  coords = theNodes,
+                  attr = data.frame(id = unique(theNodes$id), n = length(unique(theNodes$fid))),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
                   history = list(paste0()))
 
       if(show){
-        visualise(geom = temp, ...)
+        visualise(geom = temp, new = new, ...)
       }
       nodes <- rbind(nodes, theNodes)
+      fids <- c(fids, length(unique(theNodes$fid)))
     }
 
   }
   out <- new(Class = "geom",
              type = "polygon",
              coords = nodes,
-             attr = data.frame(id = unique(nodes$id), n = 1),
+             attr = data.frame(id = unique(nodes$id), n = fids),
              window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -473,7 +484,12 @@ geomTriangle <- function(anchor = NULL, window = NULL, template = NULL,
                          show = FALSE)
 
   if(show){
-    visualise(geom = theGeom, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = theGeom, new = new, ...)
   }
 
   invisible(theGeom)
@@ -502,13 +518,18 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
                          regular = TRUE,
                          show = FALSE)
 
-  centroid <- colMeans(theGeom@coords[c(1, 2)])
+  centroid <- colMeans(theGeom@coords[c("x", "y")])
   rotGeom <- gRotate(geom = theGeom,
                      angle = 45,
                      about = centroid)
 
   if(show){
-    visualise(geom = rotGeom, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = rotGeom, new = new, ...)
   }
 
   invisible(rotGeom)
@@ -564,7 +585,12 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
                          show = FALSE)
 
   if(show){
-    visualise(geom = theGeom, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = theGeom, new = new, ...)
   }
 
   invisible(theGeom)
@@ -593,7 +619,12 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
                          show = FALSE)
 
   if(show){
-    visualise(geom = theGeom, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = theGeom, new = new, ...)
   }
 
   invisible(theGeom)
@@ -633,8 +664,8 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
                      show = FALSE, ...){
   
   assertSubset(type, choices = c("point", "line", "rectangle", "square", "polygon", "spline", "ellipse", "circle", "triangle", "hexagon"))
-  existsTemplate <- !testNull(template)
-  if(existsTemplate){
+  templateExists <- !testNull(template)
+  if(templateExists){
     isRaster <- testClass(template, "RasterLayer")
     isMatrix <- testClass(template, "matrix")
     if(!isRaster & !isMatrix){
@@ -670,7 +701,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
                          y = runif(vertices))
   }
 
-  if(existsTemplate){
+  if(templateExists){
     window <- getExtent(template)
   } else{
     window <- data.frame(x = c(0, 1),
@@ -686,12 +717,17 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
                  crs = as.character(NA),
                  history = list(paste0("geometry was created randomly")))
   
-  if(existsTemplate){
+  if(templateExists){
     theGeom <- gScale(theGeom, to = "absolute")
   }
   
   if(show){
-    visualise(geom = theGeom, ...)
+    if(!any(names(listArgs()) == "new")){
+      new <- FALSE
+    } else{
+      new <- new
+    }
+    visualise(geom = theGeom, new = new, ...)
   }
 
   invisible(theGeom)
