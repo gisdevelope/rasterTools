@@ -92,27 +92,27 @@ the two given opposing corners.
 \examples{
 # create a polygon programmatically
 coords <- data.frame(x = c(40, 70, 70, 50),
-                     y = c(40, 40, 60, 70),
-                     id = 1)
+                     y = c(40, 40, 60, 70))
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
+                     
 # if no window is set, the bounding box (i.e. min/max values) will be set as window
 (aGeom <- geomPolygon(anchor = coords))
 
 # the vertices are plottet relative to the window
-aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3,
-                         regular = TRUE, col = "darkorange", show = TRUE)
-(geomHexagon(anchor = coords, col = "green", show = TRUE, new = FALSE))
+aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3, regular = TRUE, 
+                         fill = "darkorange", show = TRUE)
+(geomHexagon(anchor = coords, col = "green", fill = NA, show = TRUE))
 
 # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 grid::grid.newpage()
 aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-anExtent <- geomRectangle(anchor = aGeom, col = "blue", show = TRUE, new = FALSE)
+anExtent <- geomRectangle(anchor = aGeom, fill = NA, show = TRUE)
 
 # geoms with more than one element are treated element-wise
 aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))
-visualise(geom = aGeom, new = TRUE)
-itsExtent <- geomRectangle(anchor = aGeom, col = c("orange", "blue"), show = TRUE, new = FALSE)
+visualise(geom = aGeom)
+itsExtent <- geomRectangle(anchor = aGeom, show = TRUE)
 
 \dontrun{
 

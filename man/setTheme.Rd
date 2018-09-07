@@ -4,80 +4,40 @@
 \alias{setTheme}
 \title{Create a new theme}
 \usage{
-setTheme(from = NULL, plot = NULL, labels = NULL, bins = NULL,
-  margin = NULL, scale = NULL, legend = NULL, fontsize = NULL,
-  colour = NULL, rotation = NULL, fill = NULL, linetype = NULL,
-  linewidth = NULL, pointsize = NULL, pointsymbol = NULL)
+setTheme(from = NULL, title = NULL, box = NULL, xAxis = NULL,
+  yAxis = NULL, grid = NULL, legend = NULL, geom = NULL,
+  raster = NULL)
 }
 \arguments{
-\item{from}{[\code{theme}]\cr the theme that serves as basis for
-modifications, by default \code{theme_rt}.}
+\item{from}{[\code{theme}]\cr}
 
-\item{plot}{[\code{named list(logical)}]\cr which elements (not) to plot:
-\code{title}, \code{legend}, \code{yAxis}, \code{xAxis}, \code{grid},
-\code{minorGrid} and \code{commonScale}.}
+\item{title}{[\code{named list(.)}]\cr .}
 
-\item{labels}{[\code{named list(character)}]\cr the labels of: \code{xAxis}
-and \code{yAxis}.}
+\item{box}{[\code{named list(.)}]\cr .}
 
-\item{bins}{[\code{named list(integerish)}]\cr how many sections for:
-\code{yAxis}, \code{xAxis} and \code{legend} and how many \code{yDigits}
-and \code{xDigits}.}
+\item{xAxis}{[\code{named list(.)}]\cr .}
 
-\item{margin}{[\code{named list(numeric)}]\cr the margin proportion for:
-\code{yAxis} and \code{xAxis}.}
+\item{yAxis}{[\code{named list(.)}]\cr .}
 
-\item{scale}{[\code{named list(.)}]\cr at least two \code{colours}, a
-\code{bias}, the colour \code{space} and how to \code{interpolate} the
-values; see arguments to \code{\link[grDevices]{colorRampPalette}}.}
+\item{grid}{[\code{named list(.)}]\cr .}
 
-\item{legend}{[\code{named list(.)}]\cr whehter or not to sort the legend
-values \code{ascending}, the legend \code{position} and the
-\code{sizeRatio} of legend:grid.}
+\item{legend}{[\code{named list(.)}]\cr .}
 
-\item{fontsize}{[\code{named list(numeric)}]\cr the fontsize of:
-\code{title}, \code{y/xAxisTitle}, \code{y/xAxisTicks} and \code{legend}.}
+\item{geom}{[\code{named list(.)}]\cr .}
 
-\item{colour}{[ \code{named list(character)}]\cr the colour of: \code{title},
-\code{y/xAxisTitle}, \code{y/xAxisTicks}, \code{legend} and \code{geom}.}
-
-\item{rotation}{[\code{named list(numeric)}]\cr the rotation of:
-\code{y/xAxisTitle} and \code{y/xAxisTicks}}
-
-\item{fill}{[\code{named list(character)}]\cr (only \code{geom}) colour for
-filling geometries.}
-
-\item{linetype}{[\code{named list(character)}]\cr (only \code{geom}) line
-type; see \code{\link[graphics]{par}}.}
-
-\item{linewidth}{[\code{named list(numeric)}]\cr (only \code{geom}) line
-width; see \code{\link[graphics]{par}}.}
-
-\item{pointsize}{[\code{named list(numeric)}]\cr (only \code{geom}) the size
-of point geometries; see \code{\link[grid]{grid.points}}.}
-
-\item{pointsymbol}{[\code{named list(integerish)}]\cr (only \code{geom})
-point symbol; see \code{\link[graphics]{points}}.}
+\item{raster}{[ \code{named list(.)}]\cr .}
 }
 \description{
 This is merely a tentative workaround which I will improve with respect to
 usability in the future. To see the default settings, type
-\code{str(theme_rt)}.
+\code{str(rtTheme)}.
 }
 \details{
-In case a colourtable is defined in a raster, this overrides the
-  'scale'.
+In case a colourtable is defined in a raster, this overrides 'raster@scale'.
 }
 \examples{
 input <- rtData$continuous
-myTheme <- setTheme(theme_rt,
-                    plot = list(title = FALSE),
-                    scale = list(colours = terrain.colors(10), bias = 0.5),
-                    bins = list(yAxis = 4, xAxis = 5),
-                    fontsize = list(yAxisTitle = 10, xAxisTicks = 10),
-                    colour = list(yAxisTitle = "darkgrey", xAxisTitle = "#A9A9A9"),
-                    rotation = list(yAxisTitle = 0))
+(myTheme <- setTheme(title = list(plot = FALSE)))
 
-myTheme <- setTheme(plot = list(title = FALSE))
 visualise(input, theme = myTheme)
 }

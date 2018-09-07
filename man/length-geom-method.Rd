@@ -8,7 +8,7 @@
 \S4method{length}{geom}(x)
 }
 \arguments{
-\item{x}{[\code{geom}]\cr object from which to determine \code{length}}
+\item{x}{[\code{geom}]\cr object from which to determine \code{length}.}
 }
 \description{
 Determin number of vertices
