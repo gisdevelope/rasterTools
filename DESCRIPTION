@@ -27,7 +27,9 @@ Imports: Rcpp (>= 0.12.12),
     checkmate,
     foreign,
     rmarkdown,
-    stringr
+    stringr,
+    crayon,
+    cli
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
 Suggests: testthat,
