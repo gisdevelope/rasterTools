@@ -37,20 +37,16 @@
 #' @slot history [\code{list(.)}]\cr a list of steps taken to derive the
 #'   \code{geom} in focus.
 
-geom <- setClass(
-  Class = "geom",
-  slots = c(
-    type = "character",
-    coords = "data.frame",
-    attr = "data.frame",
-    window = "data.frame",
-    scale = "character",
-    crs = "character",
-    history = "list"
-  )
+geom <- setClass(Class = "geom",
+                 slots = c(type = "character",
+                           coords = "data.frame",
+                           attr = "data.frame",
+                           window = "data.frame",
+                           scale = "character",
+                           crs = "character",
+                           history = "list"
+                 )
 )
-
-
 
 # setValidity("geom", function(){
 
@@ -76,18 +72,25 @@ geom <- setClass(
 #          }
 # )
 
+#' Theme class and methods
+#' @slot title [\code{list(3)}]\cr
+#' @slot box [\code{list(4)}]\cr
+#' @slot xAxis [\code{list(5)}]\cr
+#' @slot yAxis [\code{list(5)}]\cr
+#' @slot grid [\code{list(5)}]\cr
+#' @slot legend [\code{list(10)}]\cr
+#' @slot geom [\code{list(7)}]\cr
+#' @slot raster [\code{list(2)}]\cr
 
-
-
-
-# first see ?setGeneric, then see ?setMethod
-# also https://bioconductor.org/help/course-materials/2013/CSAMA2013/friday/afternoon/S4-tutorial.pdf
-
-# setGeneric("myGeneric", function(x) {
-#   standardGeneric("myGeneric")
-# })
-
-
-
-# generics: subsetting, setExtent, addCoords, editCoords, deleteCoords
+themeClass <- setClass(Class = "rtTheme",
+                    slots = c(title = "list",
+                              box = "list",
+                              xAxis = "list",
+                              yAxis = "list",
+                              grid = "list",
+                              legend = "list",
+                              geom = "list",
+                              raster = "list"
+                    )
+)
 

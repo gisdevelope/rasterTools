@@ -90,4 +90,4 @@
 
 #' Default visualising theme
 #'
-"theme_rt"
+"rtTheme"
