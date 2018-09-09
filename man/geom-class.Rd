@@ -4,7 +4,7 @@
 \name{geom-class}
 \alias{geom-class}
 \alias{geom}
-\title{Geometry class and methods}
+\title{Geometry class (S4) and methods}
 \description{
 A \code{geom} stores the vertices that outline the shape and all additional
 information that characterise a feature. A \code{geom} can be spatial, but
@@ -49,12 +49,4 @@ notation.}
 \item{\code{history}}{[\code{list(.)}]\cr a list of steps taken to derive the
 \code{geom} in focus.}
 }}
-
-\section{Methods}{
- So far the following methods have been defined: \itemize{
-  \item Getters: \cr \code{length}, \code{subset}, \code{show},
-  \code{\link{getWindow}}, \code{\link{getExtent}}, \code{\link{getCRS}},
-  \code{\link{getTable}}, \code{\link{getSubset}}, \code{\link{getHistory}},
-  \item Setters: \cr \code{\link{setCRS}} }
-}
 

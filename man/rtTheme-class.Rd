@@ -4,27 +4,33 @@
 \name{rtTheme-class}
 \alias{rtTheme-class}
 \alias{themeClass}
-\title{Theme class and methods}
+\title{Theme class (S4) and methods}
 \description{
-Theme class and methods
+An rtTheme stores the \code{\link{visualise}} compatible theme to plot
+rasters and geoms. While you can assign values to the slots manually, it
+makes more sense to use \code{\link{setTheme}}, which carries out all the
+checks and makes sure that names of the parameters are properly matched.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{title}}{[\code{list(3)}]\cr}
+\item{\code{title}}{[\code{named list(3)}]\cr properties of the title.}
 
-\item{\code{box}}{[\code{list(4)}]\cr}
+\item{\code{box}}{[\code{named list(4)}]\cr properties of the bounding box.}
 
-\item{\code{xAxis}}{[\code{list(5)}]\cr}
+\item{\code{xAxis}}{[\code{named list(5)}]\cr properties of the x-axis, its labels
+and ticks.}
 
-\item{\code{yAxis}}{[\code{list(5)}]\cr}
+\item{\code{yAxis}}{[\code{named list(5)}]\cr properties of the y-axis, its labels
+and ticks.}
 
-\item{\code{grid}}{[\code{list(5)}]\cr}
+\item{\code{grid}}{[\code{named list(5)}]\cr properties of the major and minor grid.}
 
-\item{\code{legend}}{[\code{list(10)}]\cr}
+\item{\code{legend}}{[\code{named list(10)}]\cr properties of the legend, its title,
+labels, ticks and bounding box.}
 
-\item{\code{geom}}{[\code{list(7)}]\cr}
+\item{\code{geom}}{[\code{named list(7)}]\cr properties of a geom.}
 
-\item{\code{raster}}{[\code{list(2)}]\cr}
+\item{\code{raster}}{[\code{named list(2)}]\cr properties of a raster.}
 }}
 

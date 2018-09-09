@@ -9,29 +9,58 @@ setTheme(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   raster = NULL)
 }
 \arguments{
-\item{from}{[\code{theme}]\cr .}
+\item{from}{[\code{rtTheme}]\cr an rtTheme object.}
 
-\item{title}{[\code{named list(.)}]\cr .}
+\item{title}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+\code{fontsize} and \code{colour} of the title.}
 
-\item{box}{[\code{named list(.)}]\cr .}
+\item{box}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+\code{linewidth}, \code{linetype} and \code{colour} of the bounding box
+(not supported recently).}
 
-\item{xAxis}{[\code{named list(.)}]\cr .}
+\item{xAxis}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, number of
+\code{bins} and \code{margin} of the x-axis,\cr\cr label [\code{named
+list(.)}]\cr \code{plot = TRUE/FALSE}, \code{title}, \code{fontsize},
+\code{colour} and \code{rotation} of the x-axis label,\cr\cr ticks
+[\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize},
+\code{colour} and number of \code{digits} to which to round the x-axis
+ticks.}
 
-\item{yAxis}{[\code{named list(.)}]\cr .}
+\item{yAxis}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, number of
+\code{bins} and \code{margin} of the y-axis,\cr\cr label [\code{named
+list(.)}]\cr \code{plot = TRUE/FALSE}, \code{title}, \code{fontsize},
+\code{colour} and \code{rotation} of the y-axis label,\cr\cr ticks
+[\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize},
+\code{colour} and number of \code{digits} to which to round the y-axis
+ticks.}
 
-\item{grid}{[\code{named list(.)}]\cr .}
+\item{grid}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+\code{colour}, \code{linetype} and \code{linewidth} of the major and minor
+grid and whether or not to plot the \code{minor = TRUE/FALSE} grid.}
 
-\item{legend}{[\code{named list(.)}]\cr .}
+\item{legend}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+\code{common = TRUE/FALSE} scale for several panels, number of \code{bins},
+\code{ascending = TRUE/FALSE} order of values, \code{position} of the
+legend and \code{sizeRatio} plot and legend, \cr\cr title [\code{named
+list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize} and \code{colour} of
+the legend title, \cr\cr label [\code{named list(.)}]\cr \code{plot =
+TRUE/FALSE}, \code{fontsize} and \code{colour} of the legend labels, \cr\cr
+ticks [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize}
+and \code{colour} of the legend ticks, \cr\cr box [\code{named list(.)}]\cr
+\code{plot = TRUE/FALSE}, \code{linetype}, \code{linewidth} and
+\code{colour} of the legend box.}
 
-\item{geom}{[\code{named list(.)}]\cr .}
+\item{geom}{[\code{named list(.)}]\cr \code{line}, \code{fill},
+\code{linetype}, \code{linewidth}, \code{pointsize} and \code{pointsymbol}
+of a geom, \cr\cr scale [\code{named list(.)}]\cr \code{x =
+'someParameter'} and \code{to = 'someAttribute'} to which to scale,
+'someParameter' to.}
 
-\item{raster}{[ \code{named list(.)}]\cr .}
+\item{raster}{[ \code{named list(.)}]\cr \code{scale = 'someAttribute'} and
+at least two \code{colours} to which to scale 'someAttribute' to.}
 }
 \description{
 Assign parameters in an rtTheme to create a new theme.
-}
-\details{
-In case a colourtable is defined in a raster, this overrides 'raster@scale'.
 }
 \examples{
 input <- rtData$continuous

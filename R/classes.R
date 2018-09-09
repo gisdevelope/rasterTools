@@ -1,4 +1,4 @@
-#' Geometry class and methods
+#' Geometry class (S4) and methods
 #'
 #' A \code{geom} stores the vertices that outline the shape and all additional
 #' information that characterise a feature. A \code{geom} can be spatial, but
@@ -18,10 +18,11 @@
 #' than \code{extent} and which determines the relative position of the vertices
 #' when plotting.
 #' @section Methods: So far the following methods have been defined: \itemize{
-#'   \item Getters: \cr \code{length}, \code{subset}, \code{show},
-#'   \code{\link{getWindow}}, \code{\link{getExtent}}, \code{\link{getCRS}},
-#'   \code{\link{getTable}}, \code{\link{getSubset}}, \code{\link{getHistory}},
-#'   \item Setters: \cr \code{\link{setCRS}} }
+#'   \item Getters: \cr \code{length}, \code{show},
+#'   \code{\link{getCoords}}, \code{\link{getCRS}},
+#'   \code{\link{getExtent}}, \code{\link{getHistory}}, \link{getWindow}},
+#'   \code{\link{getSubset}}, \code{\link{getTable}}, \item Setters: \cr
+#'   \code{\link{setCRS}}, \code{\link{setTable}}, \code{\link{setWindow}} }
 #' @slot type [\code{character(1)}]\cr the type of feature, recently either
 #'   \code{"point"}, \code{"line"} or \code{"polygon"}.
 #' @slot coords [\code{data.frame(1)}]\cr the \code{id}, \code{x} and \code{y}
@@ -72,15 +73,23 @@ geom <- setClass(Class = "geom",
 #          }
 # )
 
-#' Theme class and methods
-#' @slot title [\code{list(3)}]\cr
-#' @slot box [\code{list(4)}]\cr
-#' @slot xAxis [\code{list(5)}]\cr
-#' @slot yAxis [\code{list(5)}]\cr
-#' @slot grid [\code{list(5)}]\cr
-#' @slot legend [\code{list(10)}]\cr
-#' @slot geom [\code{list(7)}]\cr
-#' @slot raster [\code{list(2)}]\cr
+#' Theme class (S4) and methods
+#'
+#' An rtTheme stores the \code{\link{visualise}} compatible theme to plot
+#' rasters and geoms. While you can assign values to the slots manually, it
+#' makes more sense to use \code{\link{setTheme}}, which carries out all the
+#' checks and makes sure that names of the parameters are properly matched.
+#' @slot title [\code{named list(3)}]\cr properties of the title.
+#' @slot box [\code{named list(4)}]\cr properties of the bounding box.
+#' @slot xAxis [\code{named list(5)}]\cr properties of the x-axis, its labels
+#'   and ticks.
+#' @slot yAxis [\code{named list(5)}]\cr properties of the y-axis, its labels
+#'   and ticks.
+#' @slot grid [\code{named list(5)}]\cr properties of the major and minor grid.
+#' @slot legend [\code{named list(10)}]\cr properties of the legend, its title,
+#'   labels, ticks and bounding box.
+#' @slot geom [\code{named list(7)}]\cr properties of a geom.
+#' @slot raster [\code{named list(2)}]\cr properties of a raster.
 
 themeClass <- setClass(Class = "rtTheme",
                     slots = c(title = "list",

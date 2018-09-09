@@ -620,16 +620,47 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #' Create a new theme
 #'
 #' Assign parameters in an rtTheme to create a new theme.
-#' @param from [\code{theme}]\cr .
-#' @param title [\code{named list(.)}]\cr .
-#' @param box [\code{named list(.)}]\cr .
-#' @param xAxis [\code{named list(.)}]\cr .
-#' @param yAxis [\code{named list(.)}]\cr .
-#' @param grid [\code{named list(.)}]\cr .
-#' @param legend [\code{named list(.)}]\cr .
-#' @param geom [\code{named list(.)}]\cr .
-#' @param raster [ \code{named list(.)}]\cr .
-#' @details In case a colourtable is defined in a raster, this overrides 'raster@scale'.
+#' @param from [\code{rtTheme}]\cr an rtTheme object.
+#' @param title [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+#'   \code{fontsize} and \code{colour} of the title.
+#' @param box [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+#'   \code{linewidth}, \code{linetype} and \code{colour} of the bounding box
+#'   (not supported recently).
+#' @param xAxis [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, number of
+#'   \code{bins} and \code{margin} of the x-axis,\cr\cr label [\code{named
+#'   list(.)}]\cr \code{plot = TRUE/FALSE}, \code{title}, \code{fontsize},
+#'   \code{colour} and \code{rotation} of the x-axis label,\cr\cr ticks
+#'   [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize},
+#'   \code{colour} and number of \code{digits} to which to round the x-axis
+#'   ticks.
+#' @param yAxis [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, number of
+#'   \code{bins} and \code{margin} of the y-axis,\cr\cr label [\code{named
+#'   list(.)}]\cr \code{plot = TRUE/FALSE}, \code{title}, \code{fontsize},
+#'   \code{colour} and \code{rotation} of the y-axis label,\cr\cr ticks
+#'   [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize},
+#'   \code{colour} and number of \code{digits} to which to round the y-axis
+#'   ticks.
+#' @param grid [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+#'   \code{colour}, \code{linetype} and \code{linewidth} of the major and minor
+#'   grid and whether or not to plot the \code{minor = TRUE/FALSE} grid.
+#' @param legend [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+#'   \code{common = TRUE/FALSE} scale for several panels, number of \code{bins},
+#'   \code{ascending = TRUE/FALSE} order of values, \code{position} of the
+#'   legend and \code{sizeRatio} plot and legend, \cr\cr title [\code{named
+#'   list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize} and \code{colour} of
+#'   the legend title, \cr\cr label [\code{named list(.)}]\cr \code{plot =
+#'   TRUE/FALSE}, \code{fontsize} and \code{colour} of the legend labels, \cr\cr
+#'   ticks [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize}
+#'   and \code{colour} of the legend ticks, \cr\cr box [\code{named list(.)}]\cr
+#'   \code{plot = TRUE/FALSE}, \code{linetype}, \code{linewidth} and
+#'   \code{colour} of the legend box.
+#' @param geom [\code{named list(.)}]\cr \code{line}, \code{fill},
+#'   \code{linetype}, \code{linewidth}, \code{pointsize} and \code{pointsymbol}
+#'   of a geom, \cr\cr scale [\code{named list(.)}]\cr \code{x =
+#'   'someParameter'} and \code{to = 'someAttribute'} to which to scale,
+#'   'someParameter' to.
+#' @param raster [ \code{named list(.)}]\cr \code{scale = 'someAttribute'} and
+#'   at least two \code{colours} to which to scale 'someAttribute' to.
 #' @examples
 #' input <- rtData$continuous
 #' (myTheme <- setTheme(title = list(plot = FALSE)))
@@ -652,16 +683,18 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   if(!is.null(title)){
     assertNames(names(title), subset.of = c("plot", "fontsize", "colour"))
     previous <- from@title
-    matched <- names(previous) %in% names(title)
-    out@title[matched] <- title
+    for(i in seq_along(names(title))){
+      out@title[which(names(previous) == names(title)[i])] <- title[i]
+    }
   }
   
   assertList(box, any.missing = FALSE, max.len = 4, null.ok = TRUE)
   if(!is.null(box)){
     assertNames(names(box), subset.of = c("plot", "linewidth", "linetype", "colour"))
     previous <- from@box
-    matched <- names(previous) %in% names(box)
-    out@box[matched] <- box
+    for(i in seq_along(names(box))){
+      out@box[which(names(previous) == names(box)[i])] <- box[i]
+    }
   }
   
   assertList(xAxis, any.missing = FALSE, max.len = 5, null.ok = TRUE)
@@ -671,15 +704,17 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
       assertList(xAxis$label, any.missing = FALSE, max.len = 5)
       assertNames(xAxis$label, subset.of = c("plot", "title", "fontsize", "colour", "rotation"))
       previous <- from@label
-      matched <- names(previous) %in% names(xAxis$label)
-      out@xAxis$label[matched] <- xAxis$label
+      for(i in seq_along(names(xAxis$label))){
+        out@xAxis$label[which(names(previous) == names(xAxis$label)[i])] <- xAxis$label[i]
+      }
     }
     if(any(names(xAxis) == "ticks")){
       assertList(xAxis$ticks, any.missing = FALSE, max.len = 4)
       assertNames(xAxis$ticks, subset.of = c("plot", "fontsize", "colour", "digits"))
       previous <- from@ticks
-      matched <- names(previous) %in% names(xAxis$ticks)
-      out@xAxis$ticks[matched] <- xAxis$ticks
+      for(i in seq_along(names(xAxis$ticks))){
+        out@xAxis$ticks[which(names(previous) == names(xAxis$ticks)[i])] <- xAxis$ticks[i]
+      }
     }
   }
   
@@ -690,15 +725,17 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
       assertList(yAxis$label, any.missing = FALSE, max.len = 5)
       assertNames(yAxis$label, subset.of = c("plot", "title", "fontsize", "colour", "rotation"))
       previous <- from@yAxis$label
-      matched <- names(previous) %in% names(yAxis$label)
-      out@yAxis$label[matched] <- yAxis$label
+      for(i in seq_along(names(yAxis$label))){
+        out@yAxis$label[which(names(previous) == names(yAxis$label)[i])] <- yAxis$label[i]
+      }
     }
     if(any(names(yAxis) == "ticks")){
       assertList(xAxis$ticks, any.missing = FALSE, max.len = 4)
       assertNames(yAxis$ticks, subset.of = c("plot", "fontsize", "colour", "digits"))
       previous <- from@yAxis$ticks
-      matched <- names(previous) %in% names(yAxis$ticks)
-      out@yAxis$ticks[matched] <- yAxis$ticks
+      for(i in seq_along(names(yAxis$ticks))){
+        out@yAxis$ticks[which(names(previous) == names(yAxis$ticks)[i])] <- yAxis$ticks[i]
+      }
     }
   }
   
@@ -706,8 +743,9 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   if(!is.null(grid)){
     assertNames(names(grid), subset.of = c("plot", "minor", "colour", "linetype", "linewidth"))
     previous <- from@grid
-    matched <- names(previous) %in% names(grid)
-    out@grid[matched] <- grid
+    for(i in seq_along(names(grid))){
+      out@grid[which(names(previous) == names(grid)[i])] <- grid[i]
+    }
   }
   
   assertList(legend, any.missing = FALSE, max.len = 10, null.ok = TRUE)
@@ -718,29 +756,33 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
       assertList(legend$title, any.missing = FALSE, max.len = 3)
       assertNames(legend$title, subset.of = c("plot", "fontsize", "colour"))
       previous <- from@legend$title
-      matched <- names(previous) %in% names(legend$title)
-      out$legend$label[matched] <- legend$title
+      for(i in seq_along(names(legend$title))){
+        out@legend$title[which(names(previous) == names(legend$title)[i])] <- legend$title[i]
+      }
     }
     if(any(names(legend) == "label")){
       assertList(legend$label, any.missing = FALSE, max.len = 3)
       assertNames(legend$label, subset.of = c("plot", "fontsize", "colour"))
       previous <- from@legend$label
-      matched <- names(previous) %in% names(legend$label)
-      out@legend$label[matched] <- legend$label
-    }    
+      for(i in seq_along(names(legend$label))){
+        out@legend$label[which(names(previous) == names(legend$label)[i])] <- legend$label[i]
+      }
+    }
     if(any(names(legend) == "ticks")){
       assertList(legend$ticks, any.missing = FALSE, max.len = 3)
       assertNames(legend$ticks, subset.of = c("plot", "fontsize", "colour"))
       previous <- from@legend$ticks
-      matched <- names(previous) %in% names(legend$ticks)
-      out@legend$ticks[matched] <- legend$ticks
+      for(i in seq_along(names(legend$ticks))){
+        out@legend$ticks[which(names(previous) == names(legend$ticks)[i])] <- legend$ticks[i]
+      }
     }
     if(any(names(legend) == "box")){
       assertList(legend$box, any.missing = FALSE, max.len = 3)
       assertNames(legend$box, subset.of = c("plot", "linetype", "linewidth", "colour"))
       previous <- from@legend$box
-      matched <- names(previous) %in% names(legend$box)
-      out@legend$box[matched] <- legend$box
+      for(i in seq_along(names(legend$box))){
+        out@legend$box[which(names(previous) == names(legend$box)[i])] <- legend$box[i]
+      }
     }
   }
   
@@ -748,16 +790,18 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   if(!is.null(geom)){
     assertNames(names(geom), subset.of = c("scale", "line", "fill", "linetype", "linewidth", "pointsize", "pointsymbol"))
     previous <- from@geom
-    matched <- names(previous) %in% names(geom)
-    out@geom[matched] <- geom
+    for(i in seq_along(names(geom))){
+      out@geom[which(names(previous) == names(geom)[i])] <- geom[i]
+    }
   }
   
   assertList(raster, any.missing = FALSE, max.len = 2, null.ok = TRUE)
   if(!is.null(raster)){
     assertNames(names(raster), subset.of = c("scale", "colours"))
     previous <- from@raster
-    matched <- names(previous) %in% names(raster)
-    out@raster[matched] <- raster
+    for(i in seq_along(names(raster))){
+      out@raster[which(names(previous) == names(raster)[i])] <- raster[i]
+    }
   }
   
   return(out)
