@@ -9,7 +9,7 @@ setTheme(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   raster = NULL)
 }
 \arguments{
-\item{from}{[\code{theme}]\cr}
+\item{from}{[\code{theme}]\cr .}
 
 \item{title}{[\code{named list(.)}]\cr .}
 
@@ -28,9 +28,7 @@ setTheme(from = NULL, title = NULL, box = NULL, xAxis = NULL,
 \item{raster}{[ \code{named list(.)}]\cr .}
 }
 \description{
-This is merely a tentative workaround which I will improve with respect to
-usability in the future. To see the default settings, type
-\code{str(rtTheme)}.
+Create a new theme
 }
 \details{
 In case a colourtable is defined in a raster, this overrides 'raster@scale'.

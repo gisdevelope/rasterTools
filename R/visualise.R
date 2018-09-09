@@ -619,10 +619,8 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
 #' Create a new theme
 #'
-#' This is merely a tentative workaround which I will improve with respect to
-#' usability in the future. To see the default settings, type
-#' \code{str(rtTheme)}.
-#' @param from [\code{theme}]\cr 
+# Assign parameters in an rtTheme to create a new theme.
+#' @param from [\code{theme}]\cr .
 #' @param title [\code{named list(.)}]\cr .
 #' @param box [\code{named list(.)}]\cr .
 #' @param xAxis [\code{named list(.)}]\cr .

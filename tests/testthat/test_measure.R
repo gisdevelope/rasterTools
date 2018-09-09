@@ -46,7 +46,3 @@ test_that("Error if arguments have wrong value", {
   expect_error(measure(input = input, with = wrongMetric))
   expect_error(measure(input = input, with = myMetric, simplify = "bla"))
 })
-
-test_that("history is correct", {
-
-})
