@@ -19,6 +19,7 @@ reference:
     contents:
       - '`visualise`'
       - '`setTheme`'
+      - '`rtTheme-class`'
       - '`locate`'
   - title: document
     desc: take care of your duties
@@ -56,14 +57,18 @@ reference:
       - '`mPerimeter`'
       - '`mAdjacency`'
       - '`mValues`'
-  - title: helper functions
-    desc: functions that assist to keep the data flowing
+  - title: geoms
+    desc: functions to create and work with objects of class geom
     contents:
-      - '`updatePaths`'
       - starts_with("g")
-      - starts_with("get")
-      - -starts_with("setTheme")
+      - starts_with("geom")
+      - -starts_with("get")
       - -starts_with("generate")
+  - title: getters and setters
+    desc: get or set options or objects
+    contents:
+      - starts_with("get")
+      - starts_with("set")
 navbar:
   type: inverse
   left:

@@ -32,9 +32,7 @@
 
 <meta property="og:title" content="Create a new theme — setTheme" />
 
-<meta property="og:description" content="This is merely a tentative workaround which I will improve with respect to
-usability in the future. To see the default settings, type
-str(rtTheme)." />
+<meta property="og:description" content="Assign parameters in an rtTheme to create a new theme." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -139,9 +137,7 @@ str(rtTheme)." />
 
     <div class="ref-description">
     
-    <p>This is merely a tentative workaround which I will improve with respect to
-usability in the future. To see the default settings, type
-<code>str(rtTheme)</code>.</p>
+    <p>Assign parameters in an rtTheme to create a new theme.</p>
     
     </div>
 
@@ -154,103 +150,100 @@ usability in the future. To see the default settings, type
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>from</th>
-      <td><p>[<code>theme</code>]<br /> the theme that serves as basis for
-modifications, by default <code>rtTheme</code>.</p></td>
+      <td><p>[<code>rtTheme</code>]<br /> an rtTheme object.</p></td>
+    </tr>
+    <tr>
+      <th>title</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>,
+<code>fontsize</code> and <code>colour</code> of the title.</p></td>
+    </tr>
+    <tr>
+      <th>box</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>,
+<code>linewidth</code>, <code>linetype</code> and <code>colour</code> of the bounding box
+(not supported recently).</p></td>
+    </tr>
+    <tr>
+      <th>xAxis</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, number of
+<code>bins</code> and <code>margin</code> of the x-axis,<br /><br /> label [<code>named
+list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>title</code>, <code>fontsize</code>,
+<code>colour</code> and <code>rotation</code> of the x-axis label,<br /><br /> ticks
+[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>fontsize</code>,
+<code>colour</code> and number of <code>digits</code> to which to round the x-axis
+ticks.</p></td>
+    </tr>
+    <tr>
+      <th>yAxis</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, number of
+<code>bins</code> and <code>margin</code> of the y-axis,<br /><br /> label [<code>named
+list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>title</code>, <code>fontsize</code>,
+<code>colour</code> and <code>rotation</code> of the y-axis label,<br /><br /> ticks
+[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>fontsize</code>,
+<code>colour</code> and number of <code>digits</code> to which to round the y-axis
+ticks.</p></td>
+    </tr>
+    <tr>
+      <th>grid</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>,
+<code>colour</code>, <code>linetype</code> and <code>linewidth</code> of the major and minor
+grid and whether or not to plot the <code>minor = TRUE/FALSE</code> grid.</p></td>
     </tr>
     <tr>
       <th>legend</th>
-      <td><p>[<code>named list(.)</code>]<br /> whehter or not to sort the legend
-values <code>ascending</code>, the legend <code>position</code> and the
-<code>sizeRatio</code> of legend:grid.</p></td>
+      <td><p>[<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>,
+<code>common = TRUE/FALSE</code> scale for several panels, number of <code>bins</code>,
+<code>ascending = TRUE/FALSE</code> order of values, <code>position</code> of the
+legend and <code>sizeRatio</code> plot and legend, <br /><br /> title [<code>named
+list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>fontsize</code> and <code>colour</code> of
+the legend title, <br /><br /> label [<code>named list(.)</code>]<br /> <code>plot =
+TRUE/FALSE</code>, <code>fontsize</code> and <code>colour</code> of the legend labels, <br /><br />
+ticks [<code>named list(.)</code>]<br /> <code>plot = TRUE/FALSE</code>, <code>fontsize</code>
+and <code>colour</code> of the legend ticks, <br /><br /> box [<code>named list(.)</code>]<br />
+<code>plot = TRUE/FALSE</code>, <code>linetype</code>, <code>linewidth</code> and
+<code>colour</code> of the legend box.</p></td>
     </tr>
     <tr>
-      <th>plot</th>
-      <td><p>[<code>named list(logical)</code>]<br /> which elements (not) to plot:
-<code>title</code>, <code>legend</code>, <code>yAxis</code>, <code>xAxis</code>, <code>grid</code>,
-<code>minorGrid</code> and <code>commonScale</code>.</p></td>
+      <th>geom</th>
+      <td><p>[<code>named list(.)</code>]<br /> <code>line</code>, <code>fill</code>,
+<code>linetype</code>, <code>linewidth</code>, <code>pointsize</code> and <code>pointsymbol</code>
+of a geom, <br /><br /> scale [<code>named list(.)</code>]<br /> <code>x =
+'someParameter'</code> and <code>to = 'someAttribute'</code> to which to scale,
+'someParameter' to.</p></td>
     </tr>
     <tr>
-      <th>labels</th>
-      <td><p>[<code>named list(character)</code>]<br /> the labels of: <code>xAxis</code>
-and <code>yAxis</code>.</p></td>
-    </tr>
-    <tr>
-      <th>bins</th>
-      <td><p>[<code>named list(integerish)</code>]<br /> how many sections for:
-<code>yAxis</code>, <code>xAxis</code> and <code>legend</code> and how many <code>yDigits</code>
-and <code>xDigits</code>.</p></td>
-    </tr>
-    <tr>
-      <th>margin</th>
-      <td><p>[<code>named list(numeric)</code>]<br /> the margin proportion for:
-<code>yAxis</code> and <code>xAxis</code>.</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>[<code>named list(.)</code>]<br /> at least two <code>colours</code>, a
-<code>bias</code>, the colour <code>space</code> and how to <code>interpolate</code> the
-values; see arguments to <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/colorRamp'>colorRampPalette</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>fontsize</th>
-      <td><p>[<code>named list(numeric)</code>]<br /> the fontsize of:
-<code>title</code>, <code>y/xAxisTitle</code>, <code>y/xAxisTicks</code> and <code>legend</code>.</p></td>
-    </tr>
-    <tr>
-      <th>colour</th>
-      <td><p>[ <code>named list(character)</code>]<br /> the colour of: <code>title</code>,
-<code>y/xAxisTitle</code>, <code>y/xAxisTicks</code>, <code>legend</code> and <code>geom</code>.</p></td>
-    </tr>
-    <tr>
-      <th>rotation</th>
-      <td><p>[<code>named list(numeric)</code>]<br /> the rotation of:
-<code>y/xAxisTitle</code> and <code>y/xAxisTicks</code></p></td>
-    </tr>
-    <tr>
-      <th>fill</th>
-      <td><p>[<code>named list(character)</code>]<br /> (only <code>geom</code>) colour for
-filling geometries.</p></td>
-    </tr>
-    <tr>
-      <th>linetype</th>
-      <td><p>[<code>named list(character)</code>]<br /> (only <code>geom</code>) line
-type; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>linewidth</th>
-      <td><p>[<code>named list(numeric)</code>]<br /> (only <code>geom</code>) line
-width; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/par'>par</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>pointsize</th>
-      <td><p>[<code>named list(numeric)</code>]<br /> (only <code>geom</code>) the size
-of point geometries; see <code><a href='http://www.rdocumentation.org/packages/grid/topics/grid.points'>grid.points</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>pointsymbol</th>
-      <td><p>[<code>named list(integerish)</code>]<br /> (only <code>geom</code>)
-point symbol; see <code><a href='http://www.rdocumentation.org/packages/graphics/topics/points'>points</a></code>.</p></td>
+      <th>raster</th>
+      <td><p>[ <code>named list(.)</code>]<br /> <code>scale = 'someAttribute'</code> and
+at least two <code>colours</code> to which to scale 'someAttribute' to.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>In case a colourtable is defined in a raster, this overrides the
-  'scale'.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
-(<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in lapply(list(...), as.character): object 'symbol' not found</span></div><div class='input'>
+(<span class='no'>myTheme</span> <span class='kw'>&lt;-</span> <span class='fu'>setTheme</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)))</div><div class='output co'>#&gt; ✖ title     
+#&gt; ✔ box       in black with 3 wide solid lines 
+#&gt; ✔ xAxis     with 4 bins and a margin of 0.05
+#&gt; ✔  - label  'x' in black with fontsize 12
+#&gt; ✔  - ticks  in black with fontsize 10 rounded to 1 digit 
+#&gt; ✔ yAxis     with 4 bins and a margin of 0.05
+#&gt; ✔  - label  'y' in black with fontsize 12
+#&gt; ✔  - ticks  in black with fontsize 10 rounded to 1 digit 
+#&gt; ✔ grid      in grey with 3 wide solid lines 
+#&gt; ✔ legend    positioned at the right with values ordered ascending in 5 bins
+#&gt; ✔  - title  in black with fontsize 10
+#&gt; ✔  - label  in black with fontsize 10
+#&gt; ✔  - ticks  in black with fontsize 10
+#&gt; ✔  - box    in black with 1 wide solid lines 
+#&gt; ✔ geom      with line-colour scaled to id, 3 wide solid lines and 1 wide points of type 4
+#&gt; ✔ raster    with colours scaled to id</div><div class='input'>
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='no'>input</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='no'>myTheme</span>)</div><div class='img'><img src='setTheme-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 
