@@ -619,7 +619,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 
 #' Create a new theme
 #'
-# Assign parameters in an rtTheme to create a new theme.
+#' Assign parameters in an rtTheme to create a new theme.
 #' @param from [\code{theme}]\cr .
 #' @param title [\code{named list(.)}]\cr .
 #' @param box [\code{named list(.)}]\cr .

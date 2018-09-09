@@ -28,7 +28,7 @@ setTheme(from = NULL, title = NULL, box = NULL, xAxis = NULL,
 \item{raster}{[ \code{named list(.)}]\cr .}
 }
 \description{
-Create a new theme
+Assign parameters in an rtTheme to create a new theme.
 }
 \details{
 In case a colourtable is defined in a raster, this overrides 'raster@scale'.
