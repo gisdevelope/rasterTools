@@ -115,10 +115,10 @@ scaleParameters <- function(attr = NULL, params = NULL){
   assertList(params, len = 7, any.missing = FALSE)
   pos <- which(names(params) == params$scale$x)
   notPos <- which(names(params) != params$scale$x)
-  assertTRUE(length(params[[pos]]) >= 2)
   out <- params
   
   if(params$scale$x %in% c("line", "fill")){
+    assertTRUE(length(params[[pos]]) >= 2)
     out[[pos]] <- colorRampPalette(colors = params[[pos]])(length(scaleTo))
     for(i in notPos[-1]){
       out[[i]] <- rep(out[[i]][[1]], times = length(scaleTo))

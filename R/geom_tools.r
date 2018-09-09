@@ -754,23 +754,3 @@ gFrom <- function(input, window = NULL){
   return(theGeom)
 
 }
-
-# gIntersects <- function(geom1, geom2 = NULL, byId = FALSE){
-#
-# }
-#
-# gBuffer <- function(){
-#
-# }
-#
-# gToSf <- function(geom){
-#
-# }
-#
-# gSkew <- function(geom, angle){
-#
-# }
-#
-# gStretch <- function(geom, width, height){
-#
-# }
