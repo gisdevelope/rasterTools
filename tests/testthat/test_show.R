@@ -11,8 +11,12 @@ test_that("show a geom", {
                        y = c(0, 80))
   aGeom <- geomPolygon(anchor = coords, window = window)
   output <- capture.output(show(object = aGeom))
+  expect_character(output)
   expect_true(length(output) == 8)
-  expect_true(output[1] == "class      : geom")
 })
 
-
+test_that("show an rtTheme", {
+  output <- capture.output(show(rtTheme))
+  expect_character(output)
+  expect_true(length(output) == 16)
+})
