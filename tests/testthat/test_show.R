@@ -18,5 +18,5 @@ test_that("show a geom", {
 test_that("show an rtTheme", {
   output <- capture.output(show(rtTheme))
   expect_character(output)
-  expect_true(length(output) == 16)
+  expect_true(length(output) == 14)
 })

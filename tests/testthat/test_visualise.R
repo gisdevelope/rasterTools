@@ -71,6 +71,14 @@ test_that("output the history of a plotted object", {
   
   output <- capture_message(visualise(raster = backgroundPatches, trace = TRUE))
   expect_class(output, "simpleMessage")
+  
+  anAlgo <- list(background = list(operator = "rBinarise", thresh = 30),
+                 background = list(operator = "rPatches"),
+                 background = list(operator = "rSegregate", background = 0),
+                 background = list(operator = "rBinarise", thresh = 1))
+  segregated <- modify(input = continuous, by = anAlgo)
+  output <- capture_message(visualise(raster = segregated, trace = TRUE))
+  expect_class(output, "simpleMessage")
 })
 
 test_that("Error if arguments have wrong value", {

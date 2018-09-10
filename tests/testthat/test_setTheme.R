@@ -3,6 +3,18 @@ library(raster)
 context("setTheme")
 
 
+test_that("not plotting objects", {
+  continuous <- rtData$continuous
+  myTheme <- setTheme(title = list(plot = FALSE),
+                      box = list(plot = FALSE),
+                      xAxis = list(plot = FALSE),
+                      yAxis = list(plot = FALSE),
+                      grid = list(plot = FALSE),
+                      legend = list(plot = FALSE))
+  output <- visualise(raster = continuous, theme = myTheme)
+  expect_class(output, "recordedplot")
+})
+
 test_that("modifying title works", {
   continuous <- rtData$continuous
   
@@ -17,54 +29,54 @@ test_that("modifying title works", {
 })
 
 test_that("modifying box works", {
-  # box = list(plot  = TRUE,
-  #            linewidth = 3,
-  #            linetype = "solid",
-  #            colour = "black")
+  continuous <- rtData$continuous
+  myTheme <- setTheme(box = list(plot  = TRUE,
+                                 linewidth = 5,
+                                 linetype = "dashed",
+                                 colour = "black"))
+  
+  output <- visualise(raster = continuous, theme = myTheme)
+  expect_class(output, "recordedplot")
 })
 
 test_that("modifying xAxis works", {
   continuous <- rtData$continuous
+  myTheme <- setTheme(xAxis = list(plot = TRUE,
+                                   bins = 8,
+                                   margin = 0.01,
+                                   label = list(
+                                     plot = TRUE,
+                                     title = "lat",
+                                     fontsize = 10,
+                                     colour = "black",
+                                     rotation = 0),
+                                   ticks = list(
+                                     plot = TRUE,
+                                     fontsize = 6,
+                                     colour = "grey",
+                                     digits = 0)))
   
-  # xAxis = list(plot = TRUE,
-  #              bins = 4,
-  #              margin = 0.05,
-  #              label = list(
-  #                plot = TRUE,
-  #                title = "x",
-  #                fontsize = 12,
-  #                colour = "black",
-  #                rotation = 0),
-  #              ticks = list(
-  #                plot = TRUE,
-  #                fontsize = 10,
-  #                colour = "black",
-  #                digits = 1))
-  myTheme <- setTheme(title = list(fontsize = 12, 
-                                   colour = "grey"))
   output <- visualise(raster = continuous, theme = myTheme)
   expect_class(output, "recordedplot")
 })
 
 test_that("modifying yAxis works", {
   continuous <- rtData$continuous
+  myTheme <- setTheme(yAxis = list(plot = TRUE,
+                                   bins = 8,
+                                   margin = 0.01,
+                                   label = list(
+                                     plot = TRUE,
+                                     title = "lat",
+                                     fontsize = 10,
+                                     colour = "black",
+                                     rotation = 0),
+                                   ticks = list(
+                                     plot = TRUE,
+                                     fontsize = 6,
+                                     colour = "grey",
+                                     digits = 0)))
   
-  # yAxis = list(plot = TRUE,
-  #              bins = 4,
-  #              margin = 0.05,
-  #              label = list(
-  #                plot = TRUE,
-  #                title = "y",
-  #                fontsize = 12,
-  #                colour = "black",
-  #                rotation = 0),
-  #              ticks = list(
-  #                plot = TRUE,
-  #                fontsize = 10,
-  #                colour = "black",
-  #                digits = 1))
-  myTheme <- setTheme(title = list(fontsize = 12, 
-                                   colour = "grey"))
   output <- visualise(raster = continuous, theme = myTheme)
   expect_class(output, "recordedplot")
 })
@@ -85,33 +97,23 @@ test_that("modifying grid works", {
 
 test_that("modifying legend works", {
   continuous <- rtData$continuous
+  patches <- rPatches(rBinarise(continuous, thresh = 40))
   
-  # legend = list(plot = TRUE,
-  #               common = FALSE,
-  #               bins = 5,
-  #               ascending = TRUE,
-  #               position = "right",
-  #               sizeRatio = 0.6,
-  #               title = list(
-  #                 plot = TRUE,
-  #                 fontsize = 10,
-  #                 colour = "black"),
-  #               label = list(
-  #                 plot = TRUE,
-  #                 fontsize = 10,
-  #                 colour = "black"),
-  #               ticks = list(
-  #                 plot = TRUE,
-  #                 fontsize = 10,
-  #                 colour = "black"),
-  #               box = list(
-  #                 plot = TRUE,
-  #                 linetype = "solid",
-  #                 linewidth = 1,
-  #                 colour = "black"))
-  myTheme <- setTheme(title = list(fontsize = 12, 
-                                   colour = "grey"))
-  output <- visualise(raster = continuous, theme = myTheme)
+  myTheme <- setTheme(legend = list(plot = TRUE,
+                                    common = TRUE,
+                                    bins = 3,
+                                    ascending = FALSE,
+                                    sizeRatio = 0.8,
+                                    label = list(
+                                      plot = TRUE,
+                                      fontsize = 8,
+                                      colour = "grey"),
+                                    box = list(
+                                      plot = TRUE,
+                                      linetype = "dashed",
+                                      linewidth = 1,
+                                      colour = "black")))
+  output <- visualise(raster = stack(continuous, patches), theme = myTheme)
   expect_class(output, "recordedplot")
 })
 
