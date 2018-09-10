@@ -785,14 +785,6 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
     assertNames(names(legend), subset.of = c("plot", "common", "bins", "ascending", "position", "sizeRatio", "title", "label", "ticks", "box"))
     
     for(i in seq_along(names(legend))){
-      if(names(legend)[i] == "title"){
-        assertList(legend$title, any.missing = FALSE, max.len = 3)
-        assertNames(names(legend$title), subset.of = c("plot", "fontsize", "colour"))
-        previous <- from@legend$title
-        for(i in seq_along(names(legend$title))){
-          out@legend$title[which(names(previous) == names(legend$title)[i])] <- legend$title[i]
-        }
-      }
       if(names(legend)[i] == "label"){
         assertList(legend$label, any.missing = FALSE, max.len = 3)
         assertNames(names(legend$label), subset.of = c("plot", "fontsize", "colour"))

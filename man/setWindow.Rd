@@ -6,18 +6,14 @@
 \alias{setWindow,geom-method}
 \title{Set the reference window (generic)}
 \usage{
-setWindow(x, from, to, ...)
+setWindow(x, to, ...)
 
-\S4method{setWindow}{geom}(x, from, to)
+\S4method{setWindow}{geom}(x, to)
 }
 \arguments{
-\item{x}{the object from which to set the reference window.}
+\item{x}{the object in which to set the reference window.}
 
-\item{from}{[\code{numeric(2)}]\cr x and y value of a coordinate.}
-
-\item{to}{[\code{numeric(2)} | \code{data.frame(1)}]\cr - either x and y value
-of a coordinate at the oposing end of a rectangle with \code{from}\cr - or
-\code{data.frame} that contains either the two oposing corners or all four
+\item{to}{[\code{data.frame(1)}]\cr two oposing corners or all four
 corners of the rectangle.}
 
 \item{...}{other arguments.}
@@ -27,6 +23,6 @@ Set the reference window (generic)
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{geom}: se the reference window of a \code{geom}
+\item \code{geom}: set the reference window of a \code{geom}
 }}
 
