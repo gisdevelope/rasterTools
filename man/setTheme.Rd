@@ -38,17 +38,12 @@ ticks.}
 \code{colour}, \code{linetype} and \code{linewidth} of the major and minor
 grid and whether or not to plot the \code{minor = TRUE/FALSE} grid.}
 
-\item{legend}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
-\code{common = TRUE/FALSE} scale for several panels, number of \code{bins},
-\code{ascending = TRUE/FALSE} order of values, \code{position} of the
-legend and \code{sizeRatio} plot and legend, \cr\cr title [\code{named
-list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize} and \code{colour} of
-the legend title, \cr\cr label [\code{named list(.)}]\cr \code{plot =
-TRUE/FALSE}, \code{fontsize} and \code{colour} of the legend labels, \cr\cr
-ticks [\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, \code{fontsize}
-and \code{colour} of the legend ticks, \cr\cr box [\code{named list(.)}]\cr
-\code{plot = TRUE/FALSE}, \code{linetype}, \code{linewidth} and
-\code{colour} of the legend box.}
+\item{legend}{[\code{named list(.)}]\cr \code{plot = TRUE/FALSE}, number of
+\code{bins}, \code{ascending = TRUE/FALSE} order of values and
+\code{sizeRatio} plot and legend, \cr\cr label [\code{named list(.)}]\cr
+\code{plot = TRUE/FALSE}, \code{fontsize} and \code{colour} of the legend
+labels, \cr\cr box [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
+\code{linetype}, \code{linewidth} and \code{colour} of the legend box.}
 
 \item{geom}{[\code{named list(.)}]\cr \code{line}, \code{fill},
 \code{linetype}, \code{linewidth}, \code{pointsize} and \code{pointsymbol}
