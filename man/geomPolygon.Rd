@@ -102,12 +102,12 @@ window <- data.frame(x = c(0, 80),
 # the vertices are plottet relative to the window
 aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3, regular = TRUE, 
                          fill = "darkorange", show = TRUE)
-(geomHexagon(anchor = coords, col = "green", fill = NA, show = TRUE))
+(geomHexagon(anchor = coords, col = "green", show = TRUE))
 
 # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 grid::grid.newpage()
-aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-anExtent <- geomRectangle(anchor = aGeom, fill = NA, show = TRUE)
+aGeom <- geomPolygon(anchor = coords, window = window, fill = "deeppink", show = TRUE)
+anExtent <- geomRectangle(anchor = aGeom, show = TRUE)
 
 # geoms with more than one element are treated element-wise
 aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))

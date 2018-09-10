@@ -34,13 +34,13 @@ This function creates a random geometry
 \examples{
 input <- matrix(nrow = 100, ncol = 100, data = 0)
 
-# create a random geometry with four vertices
+# create a random geometry with five vertices
 set.seed(1)
 someGeom <- geomRand(type = "polygon", vertices = 5)
 visualise(geom = someGeom)
 
 # in case template is given, this serves as source for the window extent
-someGeom <- geomRand(template = input, show = TRUE)
+someGeom <- geomRand(template = input, col = "green", show = TRUE)
 }
 \seealso{
 Other shapes: \code{\link{geomPoint}},

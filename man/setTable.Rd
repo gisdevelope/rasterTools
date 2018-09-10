@@ -5,7 +5,7 @@
 \alias{setTable}
 \alias{setTable,geom-method}
 \alias{setTable,RasterLayer-method}
-\title{Set the table (generic)}
+\title{Set the attribute table (generic)}
 \usage{
 setTable(x, table, ...)
 
@@ -21,7 +21,7 @@ setTable(x, table, ...)
 \item{...}{other arguments.}
 }
 \description{
-Set the table (generic)
+Set the attribute table (generic)
 }
 \section{Methods (by class)}{
 \itemize{

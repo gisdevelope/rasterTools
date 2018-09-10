@@ -4,7 +4,7 @@
 \name{getCoords}
 \alias{getCoords}
 \alias{getCoords,geom-method}
-\title{Get the table of coordinates}
+\title{Get the table of coordinates (generic)}
 \usage{
 getCoords(x, ...)
 
@@ -16,7 +16,7 @@ getCoords(x, ...)
 \item{...}{other arguments.}
 }
 \description{
-Get the table of coordinates
+Get the table of coordinates (generic)
 }
 \section{Methods (by class)}{
 \itemize{

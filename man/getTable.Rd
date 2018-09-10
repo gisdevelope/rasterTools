@@ -5,7 +5,7 @@
 \alias{getTable}
 \alias{getTable,geom-method}
 \alias{getTable,RasterLayer-method}
-\title{Get the table (generic)}
+\title{Get the attribute table (generic)}
 \usage{
 getTable(x, ...)
 
@@ -19,7 +19,7 @@ getTable(x, ...)
 \item{...}{other arguments.}
 }
 \description{
-Get the table (generic)
+Get the attribute table (generic)
 }
 \section{Methods (by class)}{
 \itemize{

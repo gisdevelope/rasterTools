@@ -1,4 +1,4 @@
-#' Get the table (generic)
+#' Get the attribute table (generic)
 #' @param x the object from which to derive the attribute table.
 #' @param ... other arguments.
 #' @export
@@ -8,7 +8,7 @@ setGeneric(name = "getTable",
              standardGeneric("getTable")
            })
 
-#' Set the table (generic)
+#' Set the attribute table (generic)
 #' @param x the object to which to assign \code{table}.
 #' @param table [\code{data.frame(.)}]\cr the attribute table.
 #' @param ... other arguments.
@@ -19,7 +19,7 @@ setGeneric(name = "setTable",
              standardGeneric("setTable")
            })
 
-#' Get the table of coordinates
+#' Get the table of coordinates (generic)
 #' @param x the object from which to extract the coordinates
 #' @param ... other arguments.
 #' @export
