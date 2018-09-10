@@ -45,6 +45,34 @@ test_that("visualise an object with NA values", {
   expect_class(output, "recordedplot")
 })
 
+test_that("visualise a geom on top of an already plotted raster", {
+  continuous <- rtData$continuous
+  coords <- data.frame(x = c(40, 70, 70, 50),
+                       y = c(40, 40, 60, 70),
+                       id = 1)
+  input <- geomPolygon(anchor = coords)
+  visualise(raster = continuous)
+  
+  output <- visualise(geom = input, new = FALSE)
+  expect_class(output, "recordedplot")
+})
+
+test_that("output the history of a plotted object", {
+  continuous <- rtData$continuous
+  getBGPatches <- list(background = list(operator = "rBinarise", thresh = 30),
+                       background = list(operator = "rPatches"),
+                       background = list(operator = "rSegregate", background = 0),
+                       background = list(operator = "rBinarise", thresh = 1),
+                       background = list(operator = "rPermute"),
+                       background = list(operator = "rPatches"),
+                       background = list(operator = "rReduce", fun = max),
+                       background = list(operator = "rFillNA"))
+  backgroundPatches <- modify(input = continuous, by = getBGPatches)
+  
+  output <- capture_message(visualise(raster = backgroundPatches, trace = TRUE))
+  expect_class(output, "simpleMessage")
+})
+
 test_that("Error if arguments have wrong value", {
   continuous <- rtData$continuous
   coords <- data.frame(x = c(40, 70, 70, 50),
