@@ -143,26 +143,20 @@ setMethod(f = "getWindow",
             x@window
           })
 
-#' @describeIn setWindow se the reference window of a \code{geom}
+#' @describeIn setWindow set the reference window of a \code{geom}
 #' @export
 
 setMethod(f = "setWindow",
           signature = "geom",
-          definition = function(x, from, to){
-            if(is.numeric(to)){
-              stopifnot(length(from) == 2)
-              x@window <- data.frame(x = c(from[1], to[1], to[1], from[1]),
-                                     y = c(from[2], from[2], to[2], to[2]))
-            } else if(is.data.frame(to)){
-              stopifnot(all(colnames(to) %in% c("x", "y")))
-              if(nrow(to) == 4){
-                x@window <- to[c("x", "y")]
-              } else if(nrow(to) == 2){
-                x@window <- data.frame(x = rep(to$x, each = 2),
-                                       y = c(to$y, rev(to$y)))
-              } else{
-                stop("no suitable window provided.")
-              }
+          definition = function(x, to){
+            stopifnot(all(colnames(to) %in% c("x", "y")))
+            if(nrow(to) == 4){
+              x@window <- to[c("x", "y")]
+            } else if(nrow(to) == 2){
+              x@window <- data.frame(x = rep(to$x, each = 2),
+                                     y = c(to$y, rev(to$y)))
+            } else{
+              stop("no suitable window provided.")
             }
             return(x)
           })
