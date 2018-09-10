@@ -50,3 +50,12 @@ notation.}
 \code{geom} in focus.}
 }}
 
+\section{Methods}{
+ So far the following methods have been defined: \itemize{
+  \item Getters: \cr \code{length}, \code{show},
+  \code{\link{getCoords}}, \code{\link{getCRS}},
+  \code{\link{getExtent}}, \code{\link{getHistory}}, \code{\link{getWindow}},
+  \code{\link{getSubset}}, \code{\link{getTable}}, \item Setters: \cr
+  \code{\link{setCRS}}, \code{\link{setTable}}, \code{\link{setWindow}} }
+}
+
