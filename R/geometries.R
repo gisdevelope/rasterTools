@@ -113,7 +113,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   if(!"id" %in% names(anchor)){
     anchor <- cbind(id = 1, anchor)
   }
-  anchor <- anchor[c("x", "y", "id", "fid")]
+  anchor <- anchor[c("id", "fid", "x", "y")]
   out <- new(Class = "geom",
              type = "point",
              coords = anchor,
@@ -129,7 +129,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
     } else{
       new <- new
     }
-    visualise(geom = out, new = new, ...)
+    visualise(geom = out, ...)
   }
 
   invisible(out)
@@ -256,12 +256,12 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 #' # the vertices are plottet relative to the window
 #' aTriangle <- geomPolygon(anchor = coords, window = window, vertices = 3, regular = TRUE, 
 #'                          fill = "darkorange", show = TRUE)
-#' (geomHexagon(anchor = coords, col = "green", fill = NA, show = TRUE))
+#' (geomHexagon(anchor = coords, col = "green", show = TRUE))
 #'
 #' # if a geom is used in 'anchor', its properties (e.g. 'window') are passed on
 #' grid::grid.newpage()
-#' aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
-#' anExtent <- geomRectangle(anchor = aGeom, fill = NA, show = TRUE)
+#' aGeom <- geomPolygon(anchor = coords, window = window, fill = "deeppink", show = TRUE)
+#' anExtent <- geomRectangle(anchor = aGeom, show = TRUE)
 #'
 #' # geoms with more than one element are treated element-wise
 #' aGeom <- gGroup(geom = aGeom, index = c(1, 2, 1, 2))
@@ -418,7 +418,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
                   history = list(paste0()))
 
       if(show){
-        visualise(geom = temp, new = new, ...)
+        visualise(geom = temp, ...)
       }
       nodes <- rbind(nodes, theNodes)
       fids <- c(fids, length(unique(theNodes$fid)))
@@ -437,7 +437,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
                   history = list(paste0()))
 
       if(show){
-        visualise(geom = temp, new = new, ...)
+        visualise(geom = temp, ...)
       }
       nodes <- rbind(nodes, theNodes)
       fids <- c(fids, length(unique(theNodes$fid)))
@@ -489,7 +489,7 @@ geomTriangle <- function(anchor = NULL, window = NULL, template = NULL,
     } else{
       new <- new
     }
-    visualise(geom = theGeom, new = new, ...)
+    visualise(geom = theGeom, ...)
   }
 
   invisible(theGeom)
@@ -529,7 +529,7 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
     } else{
       new <- new
     }
-    visualise(geom = rotGeom, new = new, ...)
+    visualise(geom = rotGeom, ...)
   }
 
   invisible(rotGeom)
@@ -590,7 +590,7 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
     } else{
       new <- new
     }
-    visualise(geom = theGeom, new = new, ...)
+    visualise(geom = theGeom, ...)
   }
 
   invisible(theGeom)
@@ -624,7 +624,7 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
     } else{
       new <- new
     }
-    visualise(geom = theGeom, new = new, ...)
+    visualise(geom = theGeom, ...)
   }
 
   invisible(theGeom)
@@ -651,13 +651,13 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
 #' @examples
 #' input <- matrix(nrow = 100, ncol = 100, data = 0)
 #'
-#' # create a random geometry with four vertices
+#' # create a random geometry with five vertices
 #' set.seed(1)
 #' someGeom <- geomRand(type = "polygon", vertices = 5)
 #' visualise(geom = someGeom)
 #'
 #' # in case template is given, this serves as source for the window extent
-#' someGeom <- geomRand(template = input, show = TRUE)
+#' someGeom <- geomRand(template = input, col = "green", show = TRUE)
 #' @export
 
 geomRand <- function(type = "point", template = NULL, vertices = NULL, 
@@ -727,7 +727,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
     } else{
       new <- new
     }
-    visualise(geom = theGeom, new = new, ...)
+    visualise(geom = theGeom, ...)
   }
 
   invisible(theGeom)
