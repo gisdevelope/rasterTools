@@ -114,25 +114,24 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
     anchor <- cbind(id = 1, anchor)
   }
   anchor <- anchor[c("id", "fid", "x", "y")]
-  out <- new(Class = "geom",
-             type = "point",
-             coords = anchor,
-             attr = data.frame(id = unique(anchor$id), n = 1),
-             window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
-             scale = "absolute",
-             crs = as.character(projection),
-             history = list(paste0("geometry was created as 'point'")))
+  theGeom <- new(Class = "geom",
+                 type = "point",
+                 coords = anchor,
+                 attr = data.frame(id = unique(anchor$id), n = 1),
+                 window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
+                 scale = "absolute",
+                 crs = as.character(projection),
+                 history = list(paste0("geometry was created as 'point'")))
 
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = theGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = theGeom, ...)
     }
-    visualise(geom = out, ...)
   }
 
-  invisible(out)
+  invisible(theGeom)
 }
 
 # Sketch a curve
@@ -336,12 +335,6 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
   } else{
     assertIntegerish(vertices, min.len = 1, lower = 2, any.missing = FALSE, null.ok = TRUE)
   }
-  if(!any(names(listArgs()) == "new")){
-    new <- FALSE
-  } else{
-    new <- new
-  }
-  
 
   # get some raster properties
   if(templateExists){
@@ -416,9 +409,13 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
                   scale = "absolute",
                   crs = as.character(projection),
                   history = list(paste0()))
-
+      
       if(show){
-        visualise(geom = temp, ...)
+        if(!any(names(listArgs()) == "new")){
+          visualise(geom = temp, new = FALSE, ...)
+        } else{
+          visualise(geom = temp, ...)
+        }
       }
       nodes <- rbind(nodes, theNodes)
       fids <- c(fids, length(unique(theNodes$fid)))
@@ -435,9 +432,13 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
                   scale = "absolute",
                   crs = as.character(projection),
                   history = list(paste0()))
-
+      
       if(show){
-        visualise(geom = temp, ...)
+        if(!any(names(listArgs()) == "new")){
+          visualise(geom = temp, new = FALSE, ...)
+        } else{
+          visualise(geom = temp, ...)
+        }
       }
       nodes <- rbind(nodes, theNodes)
       fids <- c(fids, length(unique(theNodes$fid)))
@@ -482,14 +483,13 @@ geomTriangle <- function(anchor = NULL, window = NULL, template = NULL,
                          vertices = 3,
                          regular = TRUE,
                          show = FALSE)
-
+  
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = theGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = theGeom, ...)
     }
-    visualise(geom = theGeom, ...)
   }
 
   invisible(theGeom)
@@ -522,16 +522,14 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
   rotGeom <- gRotate(geom = theGeom,
                      angle = 45,
                      about = centroid)
-
+  
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = rotGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = rotGeom, ...)
     }
-    visualise(geom = rotGeom, ...)
   }
-
   invisible(rotGeom)
 }
 
@@ -583,16 +581,14 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
                          vertices = 4,
                          regular = FALSE,
                          show = FALSE)
-
+  
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = theGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = theGeom, ...)
     }
-    visualise(geom = theGeom, ...)
   }
-
   invisible(theGeom)
 }
 
@@ -617,16 +613,14 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
                          vertices = 6,
                          regular = TRUE,
                          show = FALSE)
-
+  
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = theGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = theGeom, ...)
     }
-    visualise(geom = theGeom, ...)
   }
-
   invisible(theGeom)
 }
 
@@ -723,13 +717,11 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      new <- FALSE
+      visualise(geom = theGeom, new = FALSE, ...)
     } else{
-      new <- new
+      visualise(geom = theGeom, ...)
     }
-    visualise(geom = theGeom, ...)
   }
-
   invisible(theGeom)
 }
 
