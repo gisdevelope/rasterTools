@@ -43,3 +43,4 @@ test_that("getExtent of a matrix", {
   expect_data_frame(output, any.missing = FALSE, nrows = 2, ncols = 2)
   expect_names(names(output), identical.to = c("x", "y"))
 })
+

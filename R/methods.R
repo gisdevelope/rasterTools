@@ -75,24 +75,26 @@ setMethod(f = "show",
           })
 
 #' @describeIn getTable get the attribute table of a \code{geom}
+#' @importFrom tibble as_tibble
 #' @export
 
 setMethod(f = "getTable",
           signature = "geom",
           definition = function(x){
-            x@attr
+            as_tibble(x@attr)
           })
 
 #' @describeIn getTable get the attribute table of a \code{RasterLayer}
+#' @importFrom tibble tibble as_tibble
 #' @export
 
 setMethod(f = "getTable",
           signature = "RasterLayer",
           definition = function(x){
             if(length(x@data@attributes) == 0){
-              data.frame()
+              tibble()
             } else{
-              x@data@attributes[[1]]
+              as_tibble(x@data@attributes[[1]])
             }
           })
 
@@ -126,21 +128,23 @@ setMethod(f = "setTable",
           })
 
 #' @describeIn getCoords get the table of coordinates of a \code{geom}
+#' @importFrom tibble as_tibble
 #' @export
 
 setMethod(f = "getCoords",
           signature = "geom",
           definition = function(x){
-            x@coords
+            as_tibble(x@coords)
           })
 
 #' @describeIn getWindow get the reference window of a \code{geom}
+#' @importFrom tibble as_tibble
 #' @export
 
 setMethod(f = "getWindow",
           signature = "geom",
           definition = function(x){
-            x@window
+            as_tibble(x@window)
           })
 
 #' @describeIn setWindow set the reference window of a \code{geom}
@@ -162,16 +166,18 @@ setMethod(f = "setWindow",
           })
 
 #' @describeIn getExtent get the bounding box of a \code{geom}
+#' @importFrom dplyr bind_cols
 #' @export
 
 setMethod(f = "getExtent",
           signature = "geom",
           definition = function(x){
-            data.frame(x = c(min(x@coords$x), max(x@coords$x)),
-                       y = c(min(x@coords$y), max(x@coords$y)))
+            bind_cols(x = c(min(x@coords$x), max(x@coords$x)),
+                      y = c(min(x@coords$y), max(x@coords$y)))
           })
 
 #' @describeIn getExtent get the bounding box of a \code{Raster*} object
+#' @importFrom dplyr bind_cols
 #' @importFrom raster extent
 #' @export
 
@@ -179,11 +185,12 @@ setMethod(f = "getExtent",
           signature = "Raster",
           definition = function(x){
             ext <- extent(x)
-            data.frame(x = c(ext@xmin, ext@xmax),
-                       y = c(ext@ymin, ext@ymax))
+            bind_cols(x = c(ext@xmin, ext@xmax),
+                      y = c(ext@ymin, ext@ymax))
           })
 
 #' @describeIn getExtent get the bounding box of a \code{Spatial*} object
+#' @importFrom dplyr bind_cols
 #' @importFrom raster extent
 #' @export
 
@@ -191,18 +198,19 @@ setMethod(f = "getExtent",
           signature = "Spatial",
           definition = function(x){
             ext <- extent(x)
-            data.frame(x = c(ext@xmin, ext@xmax),
-                       y = c(ext@ymin, ext@ymax))
+            bind_cols(x = c(ext@xmin, ext@xmax),
+                      y = c(ext@ymin, ext@ymax))
           })
 
 #' @describeIn getExtent get the bounding box of a \code{matrix} object
+#' @importFrom dplyr bind_cols
 #' @export
 
 setMethod(f = "getExtent",
           signature = "matrix",
           definition = function(x){
-            data.frame(x = c(0, ncol(x)),
-                       y = c(0, nrow(x)))
+            bind_cols(x = c(0, ncol(x)),
+                      y = c(0, nrow(x)))
           })
 
 #' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a numeric

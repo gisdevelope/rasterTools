@@ -310,6 +310,7 @@ rCategorise <- function(obj, breaks = NULL, n = NULL){
 #' visualise(raster = patches, geom = centroid_coords, col = "red")
 #' @importFrom checkmate assertClass
 #' @importFrom raster values rasterToPoints rasterize crs
+#' @importFrom tibble tibble
 #' @export
 
 rCentroid <- function(obj, output = "raster", background = NULL){
@@ -341,7 +342,7 @@ rCentroid <- function(obj, output = "raster", background = NULL){
     temp <- thePoints[thePoints$value == i,]
     theMeans <- rbind(theMeans, round(colMeans(temp)/0.5)*0.5)
   }
-  theMeans <- as.data.frame(theMeans)
+  theMeans <- as_tibble(theMeans)
   theMeans <- theMeans[order(theMeans$value),]
   if(containsNA){
     theMeans <- theMeans[-which(theMeans$value == 0),]
@@ -352,8 +353,8 @@ rCentroid <- function(obj, output = "raster", background = NULL){
     out <- new(Class = "geom",
                type = "point",
                coords = theMeans,
-               attr = data.frame(id = unique(theMeans$id)),
-               window = data.frame(x = rep(c(min(theMeans$x), max(theMeans$x)), each = 2), y = c(min(theMeans$y), max(theMeans$y), max(theMeans$y), min(theMeans$y))),
+               attr = tibble(id = unique(theMeans$id)),
+               window = tibble(x = rep(c(min(theMeans$x), max(theMeans$x)), each = 2), y = c(min(theMeans$y), max(theMeans$y), max(theMeans$y), min(theMeans$y))),
                scale = "absolute",
                crs = as.character(NA),
                history = list(paste0("the centroids of patches have been determined")))
