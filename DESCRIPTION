@@ -19,20 +19,23 @@ Imports: Rcpp (>= 0.12.12),
     sp,
     raster,
     rgdal,
+    gdalUtils,
     rgeos,
-    httr,
     mmand,
     grid,
-    gdalUtils,
     checkmate,
     foreign,
-    rmarkdown,
-    stringr,
     crayon,
-    cli
+    cli,
+    httr,
+    stringr,
+    readr,
+    dplyr,
+    tibble
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
 Suggests: testthat,
+    rmarkdown,
     magrittr,
     covr,
     knitr
