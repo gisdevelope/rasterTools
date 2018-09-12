@@ -44,13 +44,15 @@
 #' }
 #' @importFrom grDevices dev.list
 #' @importFrom grid grid.ls grid.grep grid.force seekViewport grid.locator gList
-#'   pointsGrob textGrob grid.draw upViewport unit grid.get gPath
+#'   pointsGrob textGrob grid.draw upViewport unit grid.get gPath grid.points
 #' @importFrom raster as.matrix
 #' @export
 
 locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
                    snap = FALSE, raw = FALSE, silent = FALSE, show = FALSE, ...){
 
+  # samples = 2; raster = NULL; panel = NULL; identify = FALSE; snap = FALSE; raw = FALSE; silent = FALSE; show = FALSE
+  
   # check arguments
   assertIntegerish(samples, lower = 1, max.len = 1)
   isRaster <- testClass(raster, "Raster")
@@ -119,12 +121,22 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
   tryCatch(seekViewport(rasterVpPath), error = function(x) seekViewport(geomVpPath))
   # seekViewport(rasterVpPath)
 
-  metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
-  if(length(panelNames) > 1){
-    matCol <- as.matrix(metaRaster[which(panel == panelNames)][[1]]$raster)
+  if(existsGridded){
+    metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
+    offsetGrob <- grid.get(gPath("offsetGrob"))
+    if(length(panelNames) > 1){
+      matCol <- as.matrix(metaRaster[which(panel == panelNames)][[1]]$raster)
+    } else{
+      matCol <- as.matrix(metaRaster$raster)
+    } 
+    panelExt <- c(xMin = as.numeric(offsetGrob$x), xMax = as.numeric(offsetGrob$x) + dim(matCol)[2],
+                  yMin = as.numeric(offsetGrob$y), yMax = as.numeric(offsetGrob$y) + dim(matCol)[1])
   } else{
-    matCol <- as.matrix(metaRaster$raster)
-  } 
+    extentGrobMeta <- grid.get(gPath("extentGrob"))
+    offsetGrob <- grid.get(gPath("offsetGrob"))
+    panelExt <- c(xMin = as.numeric(offsetGrob$x), xMax = as.numeric(offsetGrob$x) + as.numeric(extentGrobMeta$width),
+                  yMin = as.numeric(offsetGrob$y), yMax = as.numeric(offsetGrob$y) + as.numeric(extentGrobMeta$height))
+  }
 
   if(identify){
     if(!existsGridded){
@@ -157,11 +169,8 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
   
   # get ranges of the x and y-axis (that is the range of the background grid,
   # exceeding the actual range of the raster)
-  # extentGrobMeta <- grid.get(gPath("extentGrob"))
-  panelExt <- c(xMin = 0, xMax = dim(matCol)[2],
-                yMin = 0, yMax = dim(matCol)[1])
   
-  if(snap){
+  if(snap & existsGridded){
     theGrid <- data.frame(x = rep(seq(0.5, panelExt[[2]], 1), times = panelExt[[4]]),
                           xmin = rep(seq(0, panelExt[[2]]-1), times = panelExt[[4]]),
                           xmax = rep(seq(1, panelExt[[2]]), times = panelExt[[4]]),
@@ -176,10 +185,7 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
 
   out <- NULL
   for(i in 1:samples){
-    # check this again, it should work, but there is some tiny problem somewhere...
     click <- grid.locator(unit = "npc")
-    # native <- c(x = as.integer(convertX(x = click$x, "native")),
-    #             y = as.integer(convertY(x = click$y, "native")))
 
     values <- round(as.numeric(click), 3)
     if(any(values < 0)) values <- c(NA, NA)

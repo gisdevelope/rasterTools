@@ -149,7 +149,7 @@ setMethod(f = "getWindow",
 setMethod(f = "setWindow",
           signature = "geom",
           definition = function(x, to){
-            stopifnot(all(colnames(to) %in% c("x", "y")))
+            stopifnot(all(c("x", "y") %in% colnames(to)))
             if(nrow(to) == 4){
               x@window <- to[c("x", "y")]
             } else if(nrow(to) == 2){

@@ -321,7 +321,6 @@ gToGrob <- function(geom, theme = NULL, ...){
   coords <- outGeom@coords
   
   attr <- getTable(x = geom)
-  scaleTo <- eval(parse(text = paste0(theme@geom$scale$to)), envir = attr)
   pars <- scaleParameters(attr = attr, params = theme@geom)
   
   if(featureType %in% c("point")){
@@ -348,8 +347,8 @@ gToGrob <- function(geom, theme = NULL, ...){
   } else if(featureType %in% c("polygon")){
     
     geomGrob <- NULL
-    for(i in seq_along(scaleTo)){
-      tempCoords <- coords[eval(parse(text = paste0("coords$", theme@geom$scale$to))) == scaleTo[i],]
+    for(i in 1:dim(attr)[1]){
+      tempCoords <- coords[coords$id == attr$id[i],]
       if(i == 1){
         geomGrob <- pathGrob(x = tempCoords$x,
                              y = tempCoords$y,

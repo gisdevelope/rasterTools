@@ -108,9 +108,10 @@ scaleParameters <- function(attr = NULL, params = NULL){
   
   # check arguments
   assertCharacter(params$scale$x, any.missing = FALSE)
-  scaleTo <- eval(parse(text = paste0(params$scale$to)), envir = attr)
+  vals <- as.numeric(as.factor(eval(parse(text = paste0(params$scale$to)), envir = attr)))
+  uniqueVals <- sort(unique(vals))
   if(dim(attr)[1] > 1){
-    assertTRUE(length(scaleTo) > 1)
+    assertTRUE(length(vals) > 1)
   }
   assertList(params, len = 7, any.missing = FALSE)
   pos <- which(names(params) == params$scale$x)
@@ -119,9 +120,14 @@ scaleParameters <- function(attr = NULL, params = NULL){
   
   if(params$scale$x %in% c("line", "fill")){
     assertTRUE(length(params[[pos]]) >= 2)
-    out[[pos]] <- colorRampPalette(colors = params[[pos]])(length(scaleTo))
+    uniqueColours <- colorRampPalette(colors = params[[pos]])(length(uniqueVals))
+    breaks <- c(uniqueVals[1]-1, uniqueVals)
+    breaks <- c(0, uniqueVals)
+    valCuts <- cut(vals, breaks = breaks, include.lowest = TRUE)
+    out[[pos]] <- uniqueColours[valCuts]
+      
     for(i in notPos[-1]){
-      out[[i]] <- rep(out[[i]][[1]], times = length(scaleTo))
+      out[[i]] <- rep(out[[i]][[1]], times = length(vals))
     }
 
   }

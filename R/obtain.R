@@ -62,7 +62,6 @@
 #' myData <- obtain(data = myDatasets, mask = myMask)
 #' }
 #' @importFrom stats cutree dist hclust runif setNames
-#' @importFrom utils glob2rx read.csv setTxtProgressBar txtProgressBar write.csv
 #' @export
 
 obtain <- function(data = NULL, mask = NULL){

@@ -61,8 +61,8 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = patches; geom =  NULL; theme = myTheme; trace = FALSE; image = FALSE; new = FALSE
-  
+  # raster = NULL; geom = setCRS(tiles_emma, projs$laea); theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+
   # new ideas:
   # 1. automatically detect which is raster and which is geom
   # 2. Rcpp for the gScale and gToGrob functions
@@ -377,6 +377,8 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       grid.rect(height = unit(panelExt[[4]] - panelExt[[3]], "points"),
                 width = unit(panelExt[[2]] - panelExt[[1]], "points"),
                 gp = gpar(fill = NA, col = NA), name = "extentGrob")
+      grid.points(x = unit(panelExt[1], "points"), y = unit(panelExt[3], "points"),
+                  gp = gpar(fill = NA, col = NA), name = "offsetGrob")
 
       # determine dimensions for this plot
       gridH <- unit(1, "grobheight", "panelGrob") - xAxisTitleH - xAxisTicksH - titleH
@@ -536,6 +538,36 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         }
       }
       
+      # the raster viewport
+      if(existsGridded){
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                              name = "raster"))
+        grid.clip(width = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2,
+                  height = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2)
+        grid.raster(width = unit(1, "npc"),
+                    height = unit(1, "npc"),
+                    image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
+                    name = "theRaster",
+                    interpolate = FALSE)
+        upViewport() # exit raster
+      }
+
+      # the geom viewport
+      if(existsGeom){
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
+                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
+                              name = "geom"))
+        grid.clip(width = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2,
+                  height = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2)
+        grid.draw(geomGrob)
+        upViewport() # exit geom
+      }
+      
       # the box viewport
       if(theme@box$plot){
         pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
@@ -547,34 +579,6 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                             lty = theme@box$linetype), 
                   name = "theBox")
         upViewport() # exit box
-      }
-      
-      # the raster viewport
-      if(existsGridded){
-        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
-                              height = unit(1, "npc") - unit(2*margin$y, "native"),
-                              xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
-                              yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
-                              name = "raster"))
-        # grid.rect(gp = gpar(col = "green", fill = NA), name = "rasterGrob")
-        grid.raster(width = unit(1, "npc"),
-                    height = unit(1, "npc"),
-                    image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
-                    name = "theRaster",
-                    interpolate = FALSE)
-        upViewport() # exit raster
-      }
-
-      # the geom viewport
-      if(existsGeom){
-        # grid.clip()
-        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
-                              height = unit(1, "npc") - unit(2*margin$y, "native"),
-                              # xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
-                              # yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
-                              name = "geom"))
-        grid.draw(geomGrob)
-        upViewport() # exit geom
       }
       upViewport(3) # exit grid and plot and 'plotName'
     }
