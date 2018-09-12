@@ -5,7 +5,7 @@
 \alias{downloadEMMA}
 \title{Obtain data from the Atlas of European Mammals.}
 \usage{
-oEMMA(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ...)
+oEMMA(mask = NULL, species = NULL, version = 1, ...)
 
 downloadEMMA(file = NULL, localPath = NULL, getGrids = NULL,
   keepGrids = FALSE)
@@ -19,10 +19,6 @@ for. Can be abbreviated if a \code{\link{catalog}} is provided.}
 
 \item{version}{[\code{integerish(1)}]\cr The version of the \emph{Atlas of
 European Mammals}; the recent version is 1, but an update is in the making.}
-
-\item{inclMeta}{[\code{logical(1)}]\cr output merely the occurence data
-(\code{FALSE}, default), or output additionally metadata on the species
-(\code{TRUE})?}
 
 \item{...}{[various]\cr other arguments.}
 

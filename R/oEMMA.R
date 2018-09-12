@@ -8,9 +8,6 @@
 #'   for. Can be abbreviated if a \code{\link{catalog}} is provided.
 #' @param version [\code{integerish(1)}]\cr The version of the \emph{Atlas of
 #'   European Mammals}; the recent version is 1, but an update is in the making.
-#' @param inclMeta [\code{logical(1)}]\cr output merely the occurence data
-#'   (\code{FALSE}, default), or output additionally metadata on the species
-#'   (\code{TRUE})?
 #' @param ... [various]\cr other arguments.
 #' @details The website \href{http://www.european-mammals.org/}{Societas
 #'   Europaea Mammalogica} kindly offers maps of the ocurrence of all mammals in
@@ -59,9 +56,11 @@
 #'   assertIntegerish assertLogical
 #' @importFrom sp proj4string spTransform
 #' @importFrom rgeos gIntersects gConvexHull
+#' @importFrom readr read_csv
+#' @importFrom dplyr bind_rows
 #' @export
 
-oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ...){
+oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -75,7 +74,6 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ..
     assertCharacter(species)
   }
   assertIntegerish(version, any.missing = FALSE, len = 1)
-  assertLogical(inclMeta, any.missing = FALSE, len = 1)
 
   species_dropout <- species[!species %in% meta_emma$species]
   species <- species[species %in% meta_emma$species]
@@ -84,20 +82,26 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ..
   }
 
   # transform crs of the mask to the dataset crs
-  target_crs <- getCRS(x = mask)
-  if(target_crs != projs$longlat){
+  targetCRS <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
+  
+  if(targetCRS != projs$longlat){
     mask <- setCRS(x = mask, crs = projs$longlat)
+    targetExtent <- setCRS(theExtent, crs = projs$longlat)
+  } else{
+    targetExtent <- theExtent
   }
   
   # this will download the AFE grids and assemble them to an overal european grid
-  message(paste0("I am handling the European AFE grid:"))
+  blablabla(paste0("I am handling the European AFE grid:"), ...)
   downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
   tiles_emma <- loadData(files = "cgrs_europe.kml",
                          localPath = rtPaths$emma$local,
                          driver = "ogr")
   tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
 
-  message("  ... done\n")
+  blablabla("  ... done\n", ...)
   if(maskIsGeom){
     mask <- gToSp(mask)
   }
@@ -116,15 +120,14 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, inclMeta = FALSE, ..
     # have to read it in again and save some time.
     if(file.exists(paste0(rtPaths$emma$local, "/", species[i], ".csv"))){
       blablabla(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"), ...)
-      allOcc <- read.csv(paste0(rtPaths$emma$local, "/", species[i], ".csv"))
+      allOcc <- read_csv(paste0(rtPaths$emma$local, "/", species[i], ".csv"), col_types = "ccc")
     } else{
       allOcc <- loadData(files = paste0(species[i], ".svg"),
                          dataset = "emma",
                          layer = "emma")
       write.csv(allOcc, paste0(rtPaths$emma$local, "/", species[i], ".csv"), row.names = FALSE)
     }
-    emma <- rbind(emma, allOcc[allOcc$sq%in%tileNames,])
-    row.names(emma) <- NULL
+    emma <- bind_rows(emma, allOcc[allOcc$square%in%tileNames,])
 
   }
 
