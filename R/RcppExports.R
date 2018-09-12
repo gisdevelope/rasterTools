@@ -37,10 +37,6 @@ morphC <- function(mat, kernel, value, blend, merge, rotateKernel, strictKernel)
     .Call('_rasterTools_morphC', PACKAGE = 'rasterTools', mat, kernel, value, blend, merge, rotateKernel, strictKernel)
 }
 
-reduceMatrixC <- function(lMat, f) {
-    .Call('_rasterTools_reduceMatrixC', PACKAGE = 'rasterTools', lMat, f)
-}
-
 scaleMatrixC <- function(mat, range) {
     .Call('_rasterTools_scaleMatrixC', PACKAGE = 'rasterTools', mat, range)
 }
@@ -49,19 +45,11 @@ subNumNumC <- function(mat, replace, with) {
     .Call('_rasterTools_subNumNumC', PACKAGE = 'rasterTools', mat, replace, with)
 }
 
-subNumChrC <- function(mat, replace, with) {
-    .Call('_rasterTools_subNumChrC', PACKAGE = 'rasterTools', mat, replace, with)
-}
-
 subChrIntC <- function(mat, replace, with) {
     .Call('_rasterTools_subChrIntC', PACKAGE = 'rasterTools', mat, replace, with)
 }
 
 matInGeomC <- function(mat, geom, negative) {
     .Call('_rasterTools_matInGeomC', PACKAGE = 'rasterTools', mat, geom, negative)
-}
-
-isCoordsInGeomC <- function(coords, geom) {
-    .Call('_rasterTools_isCoordsInGeomC', PACKAGE = 'rasterTools', coords, geom)
 }
 
