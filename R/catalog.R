@@ -91,8 +91,7 @@ catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FA
   } else{
     files <- list.files(path, recursive = recursive)
   }
-  df <- NULL
-  
+
   # in case recursive is activated, strip of the path and work only with the
   # actual file names for abbreviations.
   if(length(files) == 0){
@@ -118,7 +117,12 @@ catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FA
     for(i in seq_along(files)){
       x <- c(files[i], sapply(file_names[i], abbreviateBy, USE.NAMES = FALSE))
 
-      df <- rbind(df, x)
+      if(i == 1){
+        df <- tibble("original" = x[1], "abbr" = x[2])
+      } else{
+        temp <- tibble("original" = x[1], "abbr" = x[2])
+        df <- bind_rows(df, temp)
+      }
 
       if(!silent){
         setTxtProgressBar(pb, i)
@@ -127,13 +131,6 @@ catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FA
     if(!silent){
       close(pb)
     }
-
-    rownames(df) <- c(seq_along(files))
-    colnames(df) <- c("original", "abbr")
-    df <- as.data.frame(df)
-    df$original <- as.character(df$original)
-    df$abbr <- as.character(df$abbr)
-
   }
 
   return(df)

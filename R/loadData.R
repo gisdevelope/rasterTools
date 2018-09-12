@@ -181,28 +181,32 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 #' @template path
 #' @return a \code{point geometry} of the coordinates
 #' @family loaders
+#' @importFrom readr read_csv
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_cols
 #' @export
 
 load_csv <- function(path){
 
   assertFile(path, access = "r", extension = "csv")
-  out <- read.csv(path, stringsAsFactors = FALSE)
+  out <- read_csv(path)
   colnames(out) <- tolower(colnames(out))
-  assertNames(names(out), must.include = c("x", "y", "id"), subset.of = c("x", "y", "id", "fid"))
+  assertNames(names(out), must.include = c("x", "y", "id"))
   if("fid" %in% names(out)){
-    theData <- data.frame(id = out$id, fid = out$fid, x = out$x, y = out$y)
+    theCoords <- tibble(id = out$id, fid = out$fid, x = out$x, y = out$y)
   } else{
-    theData <- data.frame(id = out$id, fid = out$id, x = out$x, y = out$y)
+    theCoords <- tibble(id = out$id, fid = out$id, x = out$x, y = out$y)
   }
-  theData <- cbind(theData, out[which(!colnames(out) %in% c("x", "y", "id", "fid"))])
-  theAttr <- data.frame(id = unique(theData$id),
-                        n = sapply(seq_along(unique(theData$id)), function(x) length(unique(theData$fid[theData$id == x]))))
-
+  theData <- out[which(!colnames(out) %in% c("x", "y", "id", "fid"))]
+  theAttr <- tibble(id = theCoords$id,
+                    n = sapply(seq_along(unique(theCoords$id)), function(x) length(unique(theCoords$fid[theCoords$id == x]))))
+  theAttr <- bind_cols(theAttr, theData)
+  
   out <- new(Class = "geom",
              type = "point",
-             coords = theData,
+             coords = theCoords,
              attr = theAttr,
-             window = data.frame(x = rep(c(min(out$x), max(out$x)), each = 2), y = c(min(out$y), max(out$y), max(out$y), min(out$y))),
+             window = tibble(x = rep(c(min(out$x), max(out$x)), each = 2), y = c(min(out$y), max(out$y), max(out$y), min(out$y))),
              scale = "absolute",
              crs = as.character(NA),
              history = list(paste0("geom has been loaded from ", path)))
@@ -225,6 +229,7 @@ load_csv <- function(path){
 #' @family loaders
 #' @importFrom rgdal readOGR
 #' @importFrom stringr str_extract str_replace str_split
+#' @importFrom tibble tibble
 #' @export
 
 load_kml <- function(path, layer, driver = "rt"){
@@ -246,17 +251,20 @@ load_kml <- function(path, layer, driver = "rt"){
     id <- str_extract(string = txt, pattern = "<name>.*?<\\/name>")
     id <- str_replace(string = id, pattern = "<name>", replacement = "")
     id <- str_replace(string = id, pattern = "</name>", replacement = "")
+    uniqueID <- unique(id)
     
     # get coordinates
     coords <- str_extract(string = txt, pattern = "<coordinates>.*?<\\/coordinates>")
     coords <- str_replace(string = coords, pattern = "<coordinates>", replacement = "")
     coords <- str_replace(string = coords, pattern = "</coordinates>", replacement = "")
     coords <- str_split(string = coords, pattern = " ")
+    coords <- coords[!duplicated(id)]
     nIds <- lengths(coords)
     coords <- unlist(coords)
     nCoords <- length(coords)
     coords <- as.numeric(unlist(str_split(coords, ",")))
-    coords <- data.frame(rep(id, nIds), fid = rep(id, nIds), matrix(coords, nrow = nCoords, byrow = T), stringsAsFactors = FALSE)
+    coords <- as_tibble(matrix(coords, nrow = nCoords, byrow = T))
+    coords <- tibble(rep(uniqueID, nIds), fid = rep(uniqueID, nIds), coords$V1, coords$V2)
     colnames(coords) <- c("id", "fid", "x", "y")
     
     # what feature type is it?
@@ -273,8 +281,8 @@ load_kml <- function(path, layer, driver = "rt"){
     out <- new(Class = "geom",
                type = type,
                coords = coords,
-               attr = data.frame(id = unique(coords$id), n = 1),
-               window = data.frame(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
+               attr = tibble(id = unique(coords$id), n = 1),
+               window = tibble(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
                scale = "absolute",
                crs = as.character(NA),
                history = list(paste0("geom has been loaded from ", path)))
@@ -369,6 +377,7 @@ load_hdf <- function(path, layer = NULL){
 #' @return \code{data.frame} of the content of interest depending on
 #'   \code{layer}.
 #' @family loaders
+#' @importFrom tibble tibble as_tibble
 #' @export
 
 load_svg <- function(path, layer){
@@ -398,9 +407,10 @@ load_svg <- function(path, layer){
       allOcc <- strsplit(txt, " ")
       allOcc <- as.data.frame(do.call(rbind, allOcc))[-c(2:3)] # these values which look like coordinates are merely values needed to render the svg file.
       allOcc <- cbind(species, allOcc)
+      allOcc <- as_tibble(allOcc)
       colnames(allOcc) <- c("species", "square", "year")
     } else{
-      allOcc <- data.frame(species = species, square = 0, year = 0)
+      allOcc <- tibble(species = species, square = 0, year = 0)
     }
     return(allOcc)
     
