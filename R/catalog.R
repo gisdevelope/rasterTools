@@ -73,6 +73,7 @@
 #'     abbreviateBy = abbr_species) %>%
 #'   subset(abbr %in% c("apo_agr", "apo_fla", "vul_vul"))
 #' }
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 
 catalog <- function(path = ".", abbreviateBy = NULL, type = NULL, recursive = FALSE,

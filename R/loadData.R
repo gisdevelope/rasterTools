@@ -39,7 +39,7 @@
 #' @importFrom checkmate testCharacter testDataFrame assertCharacter assertNames
 #'   testIntegerish assertDirectory assertLogical assertEnvironment assertFile
 #'   assertDataFrame testDirectoryExists
-#' @importFrom utils file_test
+#' @importFrom utils file_test txtProgressBar setTxtProgressBar
 #' @importFrom raster raster res<- stack
 #' @export
 
@@ -306,6 +306,7 @@ load_kml <- function(path, layer, driver = "rt"){
 #' @family loaders
 #' @importFrom gdalUtils gdalinfo
 #' @importFrom raster stack raster
+#' @importFrom utils glob2rx
 #' @export
 
 load_hdf <- function(path, layer = NULL){

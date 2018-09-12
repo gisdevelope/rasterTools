@@ -192,6 +192,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
 #' @importFrom httr GET write_disk progress
 #' @importFrom utils unzip
 #' @importFrom raster writeRaster
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 
 downloadWCLIM <- function(file = NULL, localPath = NULL){

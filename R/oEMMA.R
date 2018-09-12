@@ -56,7 +56,7 @@
 #'   assertIntegerish assertLogical
 #' @importFrom sp proj4string spTransform
 #' @importFrom rgeos gIntersects gConvexHull
-#' @importFrom readr read_csv
+#' @importFrom readr read_csv write_csv
 #' @importFrom dplyr bind_rows
 #' @export
 
@@ -125,7 +125,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
       allOcc <- loadData(files = paste0(species[i], ".svg"),
                          dataset = "emma",
                          layer = "emma")
-      write.csv(allOcc, paste0(rtPaths$emma$local, "/", species[i], ".csv"), row.names = FALSE)
+      write_csv(allOcc, paste0(rtPaths$emma$local, "/", species[i], ".csv"))
     }
     emma <- bind_rows(emma, allOcc[allOcc$square%in%tileNames,])
 
@@ -172,6 +172,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
 #'   gridfiles be stored (\code{TRUE}), or should merely the overall European
 #'   grid be stored (\code{FALSE}, default)?
 #' @importFrom httr GET write_disk progress
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 
 downloadEMMA <- function(file = NULL, localPath = NULL, getGrids = NULL,
