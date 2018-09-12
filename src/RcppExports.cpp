@@ -115,18 +115,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// reduceMatrixC
-NumericMatrix reduceMatrixC(List lMat, Function f);
-RcppExport SEXP _rasterTools_reduceMatrixC(SEXP lMatSEXP, SEXP fSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type lMat(lMatSEXP);
-    Rcpp::traits::input_parameter< Function >::type f(fSEXP);
-    rcpp_result_gen = Rcpp::wrap(reduceMatrixC(lMat, f));
-    return rcpp_result_gen;
-END_RCPP
-}
 // scaleMatrixC
 NumericMatrix scaleMatrixC(NumericMatrix mat, NumericVector range);
 RcppExport SEXP _rasterTools_scaleMatrixC(SEXP matSEXP, SEXP rangeSEXP) {
@@ -149,19 +137,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector& >::type replace(replaceSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type with(withSEXP);
     rcpp_result_gen = Rcpp::wrap(subNumNumC(mat, replace, with));
-    return rcpp_result_gen;
-END_RCPP
-}
-// subNumChrC
-CharacterMatrix subNumChrC(NumericMatrix& mat, NumericVector& replace, CharacterVector with);
-RcppExport SEXP _rasterTools_subNumChrC(SEXP matSEXP, SEXP replaceSEXP, SEXP withSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type replace(replaceSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type with(withSEXP);
-    rcpp_result_gen = Rcpp::wrap(subNumChrC(mat, replace, with));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -191,18 +166,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// isCoordsInGeomC
-LogicalVector isCoordsInGeomC(NumericMatrix& coords, NumericMatrix& geom);
-RcppExport SEXP _rasterTools_isCoordsInGeomC(SEXP coordsSEXP, SEXP geomSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type coords(coordsSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix& >::type geom(geomSEXP);
-    rcpp_result_gen = Rcpp::wrap(isCoordsInGeomC(coords, geom));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rasterTools_cellToPointsC", (DL_FUNC) &_rasterTools_cellToPointsC, 1},
@@ -214,13 +177,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rasterTools_isBinaryC", (DL_FUNC) &_rasterTools_isBinaryC, 1},
     {"_rasterTools_meijsterDistanceC", (DL_FUNC) &_rasterTools_meijsterDistanceC, 2},
     {"_rasterTools_morphC", (DL_FUNC) &_rasterTools_morphC, 7},
-    {"_rasterTools_reduceMatrixC", (DL_FUNC) &_rasterTools_reduceMatrixC, 2},
     {"_rasterTools_scaleMatrixC", (DL_FUNC) &_rasterTools_scaleMatrixC, 2},
     {"_rasterTools_subNumNumC", (DL_FUNC) &_rasterTools_subNumNumC, 3},
-    {"_rasterTools_subNumChrC", (DL_FUNC) &_rasterTools_subNumChrC, 3},
     {"_rasterTools_subChrIntC", (DL_FUNC) &_rasterTools_subChrIntC, 3},
     {"_rasterTools_matInGeomC", (DL_FUNC) &_rasterTools_matInGeomC, 3},
-    {"_rasterTools_isCoordsInGeomC", (DL_FUNC) &_rasterTools_isCoordsInGeomC, 2},
     {NULL, NULL, 0}
 };
 
