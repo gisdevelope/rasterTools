@@ -51,9 +51,9 @@
 #'
 #' # extract worldclim data for the derived mask
 #' myWCLIM <- oWCLIM(mask = myMask,
-#'                   variable = c("tmin", "tmax"),
+#'                   variable = c("tavg"),
 #'                   month = c(5:9))
-#' visualise(gridded = myWCLIM$, trace = TRUE)
+#' visualise(raster = myWCLIM$tavg, trace = TRUE)
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
@@ -170,6 +170,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     }
     
     tempObject@history <- history
+    tempObject <- stack(tempObject)
     
     wc_out <- c(wc_out, setNames(list(tempObject), thisVariable))
   }
@@ -208,12 +209,12 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
       fileParts <- strsplit(file, "[.]")[[1]]
       middle <- strsplit(fileParts[2], "_")[[1]]
       file <- paste0(c(fileParts[1], paste0(middle[-length(middle)], collapse = "_"), "zip"), collapse = ".")
-      onlinePath <- paste0(rtPaths$worldclim$online, "worldclim/v2.0/tif/base/")
+      onlinePath <- paste0(rtPaths$worldclim$remote, "worldclim/v2.0/tif/base/")
     } else{
       fileParts <- strsplit(file, "_")[[1]]
       end <- strsplit(fileParts[[3]], "[.]")[[1]]
       file <- paste0(fileParts[1], "_", paste0(end, collapse = "_"), ".zip")
-      onlinePath <- paste0(rtPaths$worldclim$online, "climate/worldclim/1_4/grid/cur/")
+      onlinePath <- paste0(rtPaths$worldclim$remote, "climate/worldclim/1_4/grid/cur/")
     }
     
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
