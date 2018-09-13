@@ -48,5 +48,4 @@ test_that("bibliography item has been created", {
   output <- oWCLIM(mask = myMask, variable = c("tmean"), month = 5)
   theBib <- getOption("bibliography")
   expect_class(theBib, classes =  "bibentry")
-  expect_list(theBib, len = 1)
 })
