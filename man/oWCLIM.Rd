@@ -87,9 +87,9 @@ myMask <- loadData(files = "aWindow.csv",
 
 # extract worldclim data for the derived mask
 myWCLIM <- oWCLIM(mask = myMask,
-                  variable = c("tmin", "tmax"),
+                  variable = c("tavg"),
                   month = c(5:9))
-visualise(gridded = myWCLIM$, trace = TRUE)
+visualise(raster = myWCLIM$tavg, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")

@@ -545,8 +545,6 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                               xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
                               yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
                               name = "raster"))
-        grid.clip(width = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2,
-                  height = unit(1, "npc") - unit(theme@geom$linewidth, "points")*2)
         grid.raster(width = unit(1, "npc"),
                     height = unit(1, "npc"),
                     image = matrix(data = theColours[[i]], nrow = dims[1], ncol = dims[2], byrow = TRUE),
