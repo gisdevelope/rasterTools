@@ -40,3 +40,4 @@ ToDo_functions.R
 tests/testthatmyBib.bib
 tests/testthat/Rplots.pdf
 tests/testthat/myBib.bib
+src/*.gcda

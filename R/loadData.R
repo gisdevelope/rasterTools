@@ -85,7 +85,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
     filesInLocalPath <- list.files(path = path)
     filePaths <- list.files(path = path, full.names = TRUE)
     filesInLocalPath <- filesInLocalPath[file_test('-f', filePaths)]
-    filePaths <- filePaths[file_test('-f', filePaths)]
+    # filePaths <- filePaths[file_test('-f', filePaths)]
     fileExists <- files %in% filesInLocalPath
     
     return(fileExists)
