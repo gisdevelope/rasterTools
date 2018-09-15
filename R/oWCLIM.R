@@ -131,16 +131,20 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     # manage file names  
     if(version == 1.4){
       if(resolution == 2.5){
-        resolution <- "2-5m"
+        tempRes <- "2-5m"
       } else if(resolution == 0.5){
-        resolution <- "30s"
+        tempRes <- "30s"
         if(thisVariable == "bio"){
           thisVariable <- c("bio1-9", "bio10-19")
         }
       } else{
-        resolution <- paste0(resolution, "m")
+        tempRes <- paste0(resolution, "m")
       }
-      fileNames <- paste0(thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), "_", resolution, ".bil")
+      # due to the improper names of the worldclim 1.4 dataset, we have to do some name-management.
+      fileNames <- paste0("wc1.4_", tempRes, "_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+      if(!testFileExists(paste0(rtPaths$worldclim$local, "/", fileNames))){
+        fileNames <- paste0(thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), "_", tempRes, ".bil")
+      }
     } else{
       if(resolution == 0.5){
         tempRes <- 30
@@ -192,7 +196,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
 #' @template localPath
 #' @importFrom httr GET write_disk progress
 #' @importFrom utils unzip
-#' @importFrom raster writeRaster
+#' @importFrom raster raster writeRaster
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 
@@ -224,7 +228,6 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
     
     message(paste0("  ... unzipping the files of '", file, "'"))
     unzip(paste0(localPath, "/", file), exdir = localPath)
-
     
     # in case we deal with version 1.4, we rename the files to have sensible names
     if(version == 1.4){
@@ -234,7 +237,8 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
       pb <- txtProgressBar(min = 0, max = 12, style = 3, char=">", width = getOption("width")-14)
       for(i in 1:12){
         temp <- raster(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")))
-        writeRaster(temp, filename = paste0(localPath, "/", paste0("wc1.4_", fileNames[2], "_", fileNames[1], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif")), 
+        writeRaster(temp, 
+                    filename = paste0(localPath, "/", paste0("wc1.4_", fileNames[2], "_", fileNames[1], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif")), 
                     format = 'GTiff', options = "COMPRESS=DEFLATE")
         file.remove(c(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")),
                       paste0(localPath, "/", paste0(fileNames[1], "_", i, ".hdr"))))
