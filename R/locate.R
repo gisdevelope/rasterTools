@@ -121,14 +121,15 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
   tryCatch(seekViewport(rasterVpPath), error = function(x) seekViewport(geomVpPath))
   # seekViewport(rasterVpPath)
 
+  metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
+  if(length(panelNames) > 1){
+    matCol <- as.matrix(metaRaster[which(panel == panelNames)][[1]]$raster)
+  } else{
+    matCol <- as.matrix(metaRaster$raster)
+  } 
+  
   if(existsGridded){
-    metaRaster <- grid.get(gPath("theRaster"), global = TRUE)
     offsetGrob <- grid.get(gPath("offsetGrob"))
-    if(length(panelNames) > 1){
-      matCol <- as.matrix(metaRaster[which(panel == panelNames)][[1]]$raster)
-    } else{
-      matCol <- as.matrix(metaRaster$raster)
-    } 
     panelExt <- c(xMin = as.numeric(offsetGrob$x), xMax = as.numeric(offsetGrob$x) + dim(matCol)[2],
                   yMin = as.numeric(offsetGrob$y), yMax = as.numeric(offsetGrob$y) + dim(matCol)[1])
   } else{
@@ -195,7 +196,7 @@ locate <- function(samples = 1, raster = NULL, panel = NULL, identify = FALSE,
     values[2] <- round(((panelExt[[4]] - panelExt[[3]])*(values[2] - 0) / (1 - 0)) + panelExt[[3]], 1)
 
     # snap to the middle of the selected raster cells
-    if(snap){
+    if(snap & existsGridded){
       matPos <- theGrid[which(values[1] > theGrid$xmin & values[1] <= theGrid$xmax &
                                 values[2] > theGrid$ymin & values[2] <= theGrid$ymax),c(1, 4)]
       values[1] <- matPos$x
