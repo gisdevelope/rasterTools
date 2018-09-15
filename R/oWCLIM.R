@@ -58,7 +58,7 @@
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
 #' }
-#' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset
+#' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset testFileExists
 #' @importFrom raster stack crop
 #' @export
 
