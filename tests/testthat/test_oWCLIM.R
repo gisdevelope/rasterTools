@@ -1,5 +1,6 @@
 library(checkmate)
 library(testthat)
+library(magrittr)
 context("oWCLIM")
 
 
@@ -12,6 +13,10 @@ test_that("oWCLIM loads the correct file", {
   output <- oWCLIM(mask = myMask, variable = c("tmean"), month = 5)
   expect_list(output, len = 1)
   expect_class(output$tavg, "RasterStack")
+  
+  output <- oWCLIM(mask = myMask, variable = c("tmean"), month = 2, version = 1.4)
+  expect_list(output, len = 1)
+  expect_class(output$tmean, "RasterStack")
 })
 
 test_that(("oWCLIM works with Spatial* mask (that has another crs than the dataset)"), {
