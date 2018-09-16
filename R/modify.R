@@ -46,6 +46,7 @@
 #'   a raster. }
 #'
 #'   ... to morphologically modify a raster: \itemize{ \item
+#'   \code{\link{rMorph}}: Morphologically modify a raster. \item
 #'   \code{\link{rDilate}}: Morphologically dilate foreground patches in a
 #'   raster. \item \code{\link{rErode}}: Morphologically erode foreground
 #'   patches in a raster. }

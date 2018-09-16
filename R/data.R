@@ -75,6 +75,13 @@
 #'   that are needed to include a reference for the supported MODIS datasets.
 "ref_modis"
 
+#' Tiles of the EMMA dataset
+#'
+#' @format The \code{geom} with 5579 polygons consisting of a total of 28409
+#'   vertices represents the tiles that are needed to subset the Atlas of
+#'   European Mammals.
+"tiles_emma"
+
 #' Projections which are in use in lomm
 #'
 #' @format List with 5 elemens. \describe{ \item{\code{laea}}{Lambert azimuthal

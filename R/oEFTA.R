@@ -87,14 +87,14 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   }
 
   # determine the species that need to be dealt with
-  if(any(!species %in% meta_efta$botanical)){
-    warning(paste0("species '", species[which(!species %in% meta_efta$botanical)], "' is not part of this dataset"))
-    species <- species[species %in% meta_efta$botanical]
+  if(any(!species %in% meta_efta$species)){
+    warning(paste0("species '", species[which(!species %in% meta_efta$species)], "' is not part of this dataset"))
+    species <- species[species %in% meta_efta$species]
   }
   if(type == "rpp"){
-    dataExists <- meta_efta$rpp[meta_efta$botanical %in% species]
+    dataExists <- meta_efta$rpp[meta_efta$species %in% species]
   } else{
-    dataExists <- meta_efta$mhs[meta_efta$botanical %in% species]
+    dataExists <- meta_efta$mhs[meta_efta$species %in% species]
   }
   
   # go through 'species' to extract data
