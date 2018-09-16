@@ -106,6 +106,7 @@ setMethod(f = "setTable",
           definition = function(x, table){
             stopifnot(is.data.frame(table))
             stopifnot(any(names(table) %in% "id"))
+            stopifnot(all(x@attr$id %in% table$id))
             nIDs <- length(x@attr$id)
             stopifnot(dim(table)[1] == nIDs)
             x@attr <- merge(x@attr, table)
@@ -220,6 +221,8 @@ setMethod(f = "getSubset",
           signature = c("geom", "numeric"),
           definition = function(x, subset){
             x@coords <- x@coords[subset,]
+            ids <- unique(x@coords$id)
+            x@attr <- x@attr[x@attr$id %in% ids,]
             return(x)
           })
 
@@ -230,6 +233,8 @@ setMethod(f = "getSubset",
           signature = c("geom", "logical"),
           definition = function(x, subset){
             x@coords <- x@coords[which(subset),]
+            ids <- unique(x@coords$id)
+            x@attr <- x@attr[x@attr$id %in% ids,]
             return(x)
           })
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
