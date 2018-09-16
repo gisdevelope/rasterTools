@@ -4,26 +4,27 @@ context("oEMMA")
 
 
 test_that("oEMMA loads the correct file", {
-  # setPaths(root = system.file("test_datasets", package="rasterTools"))
-  # myMask <- loadData(files = "aWindow.csv",
-  #                    localPath = system.file("csv", package="rasterTools")) %>%
-  #   geomRectangle() %>%
-  #   setCRS(crs = projs$laea)
-  # 
-  # output <- oEMMA(mask = myMask, species = "Ursus arctos")
-  # expect_class(output, "RasterStack")
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
+  myMask <- loadData(files = "aWindow.csv",
+                     localPath = system.file("csv", package="rasterTools")) %>%
+    geomRectangle() %>%
+    setCRS(crs = projs$laea)
+
+  output <- oEMMA(mask = myMask, species = "Ursus arctos")
+  expect_data_frame(output, any.missing = FALSE)
 })
 
 test_that(("oEMMA works with Spatial* mask (that has another crs than the dataset)"), {
-  # myMask <- loadData(files = "aWindow.csv",
-  #                    localPath = system.file("csv", package="rasterTools")) %>%
-  #   geomRectangle() %>%
-  #   setCRS(crs = projs$laea)
-  # myMask <- gToSp(geom = myMask) %>% 
-  #   setCRS(crs = projs$longlat)
-  # 
-  # output <- oEMMA(mask = myMask, )
-  # expect_class(output, "RasterStack")
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
+  myMask <- loadData(files = "aWindow.csv",
+                     localPath = system.file("csv", package="rasterTools")) %>%
+    geomRectangle() %>%
+    setCRS(crs = projs$laea)
+  myMask <- gToSp(geom = myMask) %>%
+    setCRS(crs = projs$longlat)
+
+  output <- oEMMA(mask = myMask, species = "Ursus arctos")
+  expect_data_frame(output, any.missing = FALSE)
 })
 
 test_that("Error if arguments have wrong value", {
