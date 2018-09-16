@@ -882,13 +882,14 @@ rMask <- function(obj, mask = NULL, background = NULL){
 #' @template obj
 #' @template kernel2
 #' @param rotate [\code{logical(1)}]\cr should the kernel be applied for all
-#'   possible rotations (\code{TRUE}, default) or should the kernel be used
-#'   as is (\code{FALSE})?
+#'   possible rotations (\code{TRUE}, default) or should the kernel be used as
+#'   is (\code{FALSE})?
 #' @template background
 #' @return A \code{RasterLayer} or \code{RasterStack} of the same dimension as
 #'   \code{obj} in which all cells that match with the kernel(s) have the kernel
 #'   value and all other cells have the value \code{background}.
-#' @details This is also known as the 'hit-or-miss'-transform.
+#' @details This is also known as the 'hit-or-miss'-transform.\cr\cr Wrapper of
+#'   \code{\link{rMorph}} with blend = 2 and merge = 12.
 #' @family operators to select a subset of cells
 #' @examples
 #' input <- rtData$continuous
@@ -925,19 +926,87 @@ rMask <- function(obj, mask = NULL, background = NULL){
 #'   rBlend(skeletonised, overlay = conjunctions[[3]]))
 #' names(out) <- c("endpoints", "conj1", "conj2", "conj3")
 #' visualise(out)
-#' @importFrom checkmate assertClass testClass testList assertList assertMatrix
-#'   assertIntegerish
-#' @importFrom raster as.matrix values raster extent stack crs crs<-
 #' @export
 
 rMatch <- function(obj, kernel = NULL, rotate = TRUE, background = NULL){
 
-  # check arguments
+  out <- rMorph(obj, kernel = kernel, blend = "equal", merge = "sumNa", 
+                rotate = rotate, background = background)
+
+  if(length(obj@history)==0){
+    history <- list(paste0("the object was loaded from memory"))
+  } else{
+    history <- obj@history
+  }
+  out@history <- c(history, list(paste0("cells have been matched with a ", dim(kernel)[1], "x", dim(kernel)[2], " kernel with values ", paste0(as.vector(kernel), collapse = " "))))
+
+  return(out)
+}
+
+#' Morphologically modify a raster
+#'
+#' @template obj
+#' @param kernel [\code{matrix(.)} | \code{list(.)} thereof]\cr scan the raster
+#'   with this kernel (default is a 3 by 3 cells diamond kernel).
+#' @param blend [\code{character(1)}]\cr \code{identity}, \code{equal},
+#'   \code{lower}, \code{greater}, \code{plus}, \code{minus}, \code{product};
+#'   see Details.
+#' @param merge [\code{character(1)}]\cr \code{min}, \code{max}, \code{all},
+#'   \code{any}, \code{sum}, \code{mean}, \code{median}, \code{sd}, \code{cv},
+#'   \code{one}, \code{zero}, \code{na}; see Details.
+#' @param strictKernel [\code{logical(1)}]\cr
+#' @param rotate [\code{logical(1)}]\cr should the kernel be applied for all
+#'   possible rotations (\code{TRUE}, default) or should the kernel be used as
+#'   is (\code{FALSE})?
+#' @template background
+#' @details The morphC function (internal) is the basis of many modify
+#'   operations in \code{rasterTools} and \code{rMorph} exposes a fully
+#'   functional interface of this C++ function. The morphC function iteratively
+#'   goes through each pixel of a raster (\code{obj}) and compares the kernel
+#'   with the raster at that location. The result of this comparison depends on
+#'   the arguments \code{blend} and \code{merge}: \itemize{ \item First, all
+#'   values in raster that are covered by the kernel (which may be larger than
+#'   one pixel) are "cut out" and summarised pairwise with \code{kernel} (i.e.
+#'   they are \emph{blended}) by the function defined in \code{blend} (e.g.
+#'   "+"), leaving as many values as cells in \code{kernel}. \item Then these
+#'   values are summarised into a single value (i.e. they are \emph{merged}) by
+#'   the function defined in \code{merge} (e.g. "mean") and the resulting value
+#'   is assigned in the current location in the raster.}
+#'
+#'   The following functions are defined for \code{blend}: \enumerate{ \item
+#'   identity: the value of obj where \code{kernel} is not NA. \item equal: the
+#'   value 1 where \code{obj} and \code{kernel} are equal, otherwise the value
+#'   0. \item lower: the values of \code{obj} that are lower than \code{kernel},
+#'   otherwise 0. \item greater: the values of \code{obj} that are greater than
+#'   \code{kernel}, otherwise 0. \item plus: the values of \code{obj} added to
+#'   the values of \code{kernel}. \item minus: the values of \code{kernel}
+#'   subtracted from the values of \code{obj}. \item product: the product of the
+#'   values of \code{obj} and \code{kernel}.} The following functions are
+#'   defined for \code{merge}: \enumerate{ \item min: the minimum value. \item
+#'   max: the maximum value. \item all: the value 1 if all non-NA values are not
+#'   0, otherwise 0. \item any: the value 1 if any of the non-NA values are 0,
+#'   otherwise 0. \item sum: the sum of all non-NA values. \item mean: the mean
+#'   of all non-NA values. \item median: the median of all non-NA values. \item
+#'   sd: the standard deviation of all non-NA values. \item cv: the coefficient
+#'   of variation of all non-NA values. \item sumNa: if the sum of all values if
+#'   greater than 0 than this sum, otherwise NA.}
+#' @references Credit for the original idea/architecture of the C++ part of this
+#'   function goes to Jon Clayden
+#'   (\href{https://github.com/jonclayden/mmand}{R::mmand}). The functionality
+#'   has been slightly extended here.
+#' @family operators to morphologically modify a raster
+#' @importFrom raster as.matrix
+#' @importFrom checkmate assertClass testClass testList assertList assertMatrix
+#'   assertIntegerish assertLogical
+#' @export
+
+rMorph <- function(obj, kernel = NULL, blend = NULL, merge = NULL, rotate = TRUE, 
+                   strictKernel = TRUE, background = NULL){
+  
   assertClass(obj, "RasterLayer")
-  assertNumeric(obj@data@values, any.missing = FALSE)
-  assert
   if(is.null(kernel)){
     kernel <- matrix(c(0, 1, 0, 1, 1, 1, 0, 1, 0), 3, 3)
+    isList <- FALSE
   } else{
     isMatrix <- testClass(kernel, "matrix")
     isList <- testList(kernel)
@@ -947,45 +1016,50 @@ rMatch <- function(obj, kernel = NULL, rotate = TRUE, background = NULL){
   } else{
     assertMatrix(kernel, null.ok = TRUE)
   }
+  assertSubset(blend, choices = c("identity", "equal", "lower", "greater", "plus", "minus", "product"))
+  blendID <- which(c("identity", "equal", "lower", "greater", "plus", "minus", "product") %in% blend)
+  assertSubset(merge, choices = c("min", "max", "all", "any", "!all", "!any", "sum", "mean", "median", "sd", "cv", "sumNa"))
+  mergeID <- which(c("min", "max", "all", "any", "!all", "!any", "sum", "mean", "median", "sd", "cv", "sumNa") %in% merge)
+  assertLogical(rotate, any.missing = FALSE)
+  assertLogical(strictKernel, any.missing = FALSE)
   assertIntegerish(background, null.ok = TRUE)
   if(is.null(background)){
     background <- NA
   }
-
+  
   mat <- as.matrix(obj)
   vals <- unique(as.vector(mat))
-
-  HitOrMiss <- function(mat, kernel, values, rotate){
-    morphC(mat = mat, kernel = kernel, value = vals, blend = 2,
-           merge = 12, rotateKernel = rotate, strictKernel = TRUE)
-  }
-
+  
   if(isList){
     temp <- lapply(seq_along(kernel), function(i){
-      temp2 <- HitOrMiss(mat, kernel[[i]], vals, rotate)
+      temp2 <-   morphC(mat = mat, kernel = kernel[[i]], value = vals, blend = blendID,
+                        merge = mergeID, rotateKernel = rotate, strictKernel = TRUE)
+      
       temp2[is.na(temp2)] <- background
       temp2 <- raster(temp2)
-      names(temp2) <- paste0("matched_kernel_", i)
+      names(temp2) <- paste0("morphed")
       return(temp2)
     })
     out <- stack(temp)
   } else{
-    temp <- HitOrMiss(mat = mat, kernel = kernel, values = vals, rotate = rotate)
+    temp <-   morphC(mat = mat, kernel = kernel, value = vals, blend = blendID,
+                     merge = mergeID, rotateKernel = rotate, strictKernel = TRUE)
+    
     temp[is.na(temp)] <- background
     out <- raster(temp)
-    names(out) <- "matched_kernel"
+    names(out) <- paste0("morphed")
   }
-
+  
   extent(out) <- extent(obj)
   crs(out) <- crs(obj)
-
+  
   if(length(obj@history)==0){
     history <- list(paste0("the object was loaded from memory"))
   } else{
     history <- obj@history
   }
-  out@history <- c(history, list(paste0("cells have been matched with a ", dim(kernel)[1], "x", dim(kernel)[2], " kernel with values ", paste0(as.vector(kernel), collapse = " "))))
-
+  out@history <- c(history, paste0("the object has been morphologically modified (blend:", blend, ",merge:", merge, ")"))
+  
   return(out)
 }
 

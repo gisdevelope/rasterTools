@@ -117,10 +117,35 @@ double mergeAny(const NumericVector &values){
     return(1);
   } else{
     return(0);
-  }}
+  }
+}
+
+double mergeNotAll(const NumericVector &values){
+  if(all(na_omit(values) != 0).is_true()){
+    return(0);
+  } else{
+    return(1);
+  }
+}
+
+double mergeNotAny(const NumericVector &values){
+  if(any(na_omit(values) != 0).is_true()){
+    return(0);
+  } else{
+    return(1);
+  }
+}
 
 double mergeSum(const NumericVector &values){
   return(sum(na_omit(values)));
+}
+
+double mergeNA(const NumericVector &values){
+  if(sum(na_omit(values)) != 0){
+    return(sum(values));
+  } else{
+    return(NA_REAL);
+  }
 }
 
 double mergeMean(const NumericVector &values){
@@ -139,37 +164,13 @@ double mergeCV(const NumericVector &values){
   return(sd(na_omit(values))/mean(na_omit(values)));
 }
 
-double mergeOne(const NumericVector &values){
-  if(sum(na_omit(values)) != 0){
-    return(1);
-  } else{
-    return(0);
-  }
-}
-
-double mergeZero(const NumericVector &values){
-  if(sum(na_omit(values)) != 0){
-    return(0);
-  } else{
-    return(1);
-  }
-}
-
-double mergeNA(const NumericVector &values){
-  if(sum(na_omit(values)) != 0){
-    return(sum(values));
-  } else{
-    return(NA_REAL);
-  }
-}
-
 // [[Rcpp::plugins(cpp11)]]
 
 using BlendFunctionPtr = NumericVector (*)(NumericVector &, NumericVector &);
 using MergeFunctionPtr = double (*)(const NumericVector &);
 
 static BlendFunctionPtr blendFuns[7] = {&blendIdentity, &blendEqual, &blendLower, &blendGreater, &blendPlus, &blendMinus, &blendProdukt};
-static MergeFunctionPtr mergeFuns[12] = {&mergeMin, &mergeMax, &mergeAll, &mergeAny, &mergeSum, &mergeMean, &mergeMedian, &mergeSD, &mergeCV, &mergeOne, &mergeZero, &mergeNA};
+static MergeFunctionPtr mergeFuns[12] = {&mergeMin, &mergeMax, &mergeAll, &mergeAny, &mergeNotAll, &mergeNotAny, &mergeSum, &mergeMean, &mergeMedian, &mergeSD, &mergeCV, &mergeNA};
 
 // [[Rcpp::export]]
 NumericMatrix morphC(NumericMatrix &mat, NumericMatrix &kernel, NumericVector &value, int blend, int merge,
