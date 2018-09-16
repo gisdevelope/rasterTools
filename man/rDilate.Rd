@@ -54,5 +54,6 @@ visualise(rDilate(binarised, kernel = myKernel), new = TRUE)
 visualise(raster::stack(input, rDilate(obj = input)))
 }
 \seealso{
-Other operators to morphologically modify a raster: \code{\link{rErode}}
+Other operators to morphologically modify a raster: \code{\link{rErode}},
+  \code{\link{rMorph}}
 }

@@ -13,8 +13,8 @@ rMatch(obj, kernel = NULL, rotate = TRUE, background = NULL)
 raster with this kernel (default is a 3 by 3 cells diamond kernel).}
 
 \item{rotate}{[\code{logical(1)}]\cr should the kernel be applied for all
-possible rotations (\code{TRUE}, default) or should the kernel be used
-as is (\code{FALSE})?}
+possible rotations (\code{TRUE}, default) or should the kernel be used as
+is (\code{FALSE})?}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}
@@ -32,7 +32,8 @@ The cells of a kernel can have the values 0, 1 and NA. The kernel
   cells with values 0 and 1 are matched accurately in the input raster. The
   kernel cells with value NA will be ignored.
 
-This is also known as the 'hit-or-miss'-transform.
+This is also known as the 'hit-or-miss'-transform.\cr\cr Wrapper of
+  \code{\link{rMorph}} with blend = 2 and merge = 12.
 }
 \examples{
 input <- rtData$continuous
