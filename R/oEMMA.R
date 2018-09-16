@@ -57,6 +57,7 @@
 #' @importFrom sp proj4string spTransform
 #' @importFrom rgeos gIntersects gConvexHull
 #' @importFrom readr read_csv write_csv
+#' @importFrom stringr str_replace
 #' @importFrom dplyr bind_rows
 #' @export
 
@@ -77,39 +78,40 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
 
   species_dropout <- species[!species %in% meta_emma$species]
   species <- species[species %in% meta_emma$species]
+  theSpecies <- str_replace(species, " ", "_")
   if(length(species_dropout) != 0){
     warning(paste0("species '", species_dropout, "' does not exist."))
   }
 
   # transform crs of the mask to the dataset crs
+  if(maskIsSpatial){
+    mask <- gFrom(input = mask)
+  }
   targetCRS <- getCRS(x = mask)
   theExtent <- geomRectangle(anchor = getExtent(x = mask))
   theExtent <- setCRS(x = theExtent, crs = targetCRS)
   
-  if(targetCRS != projs$longlat){
-    mask <- setCRS(x = mask, crs = projs$longlat)
-    targetExtent <- setCRS(theExtent, crs = projs$longlat)
+  if(targetCRS != projs$laea){
+    mask <- setCRS(x = mask, crs = projs$laea)
+    targetExtent <- setCRS(theExtent, crs = projs$laea)
   } else{
     targetExtent <- theExtent
   }
   
-  # this will download the AFE grids and assemble them to an overal european grid
-  blablabla(paste0("I am handling the European AFE grid:"), ...)
-  downloadEMMA(getGrids = rtPaths$emma$gridLinks, localPath = rtPaths$emma$local)
-  tiles_emma <- loadData(files = "cgrs_europe.kml",
-                         localPath = rtPaths$emma$local,
-                         driver = "ogr")
-  tiles_emma <- setCRS(x = tiles_emma, crs = projs$longlat)
-
-  blablabla("  ... done\n", ...)
-  if(maskIsGeom){
-    mask <- gToSp(mask)
+  # determine tiles of interest
+  # hier weiter
+  tabEMMA <- getCoords(x = tiles_emma)
+  tabMask <- getCoords(x = mask)
+  ids <- unique(tabEMMA$id)
+  xMatch <- yMatch <- NULL
+  for(i in seq_along(ids)){
+    temp <- tabEMMA[tabEMMA$id == ids[i],]
+    xMatch <- c(xMatch, ifelse(any(tabMask$x < max(temp$x)) & any(tabMask$x > min(temp$x)), TRUE, FALSE))
+    yMatch <- c(yMatch, ifelse(any(tabMask$y < max(temp$y)) & any(tabMask$y > min(temp$y)), TRUE, FALSE))
   }
-
-  # determine relevant tiles according to 'mask'
-  tiles <- as.logical(gIntersects(tiles_emma, gConvexHull(mask), byid = TRUE))
-  myTiles <- tiles_emma[tiles,]
-  tileNames <- levels(droplevels(myTiles$Name))
+  tiles <- xMatch & yMatch
+  myTiles <- getSubset(x = tiles_emma, subset = tabEMMA$id %in% ids[tiles])
+  tileNames <- as.character(getTable(myTiles)$square)
 
   # go through 'species' to extract data
   emma <- NULL
@@ -118,16 +120,16 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
     blablabla(paste0("I am handling the species '", species[i]), ...)
     # check a csv-table already exists for that species. If it exists, we don't
     # have to read it in again and save some time.
-    if(file.exists(paste0(rtPaths$emma$local, "/", species[i], ".csv"))){
+    if(file.exists(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))){
       blablabla(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"), ...)
-      allOcc <- read_csv(paste0(rtPaths$emma$local, "/", species[i], ".csv"), col_types = "ccc")
+      allOcc <- read_csv(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"), col_types = "ccc")
     } else{
-      allOcc <- loadData(files = paste0(species[i], ".svg"),
+      allOcc <- loadData(files = paste0(theSpecies[i], ".svg"),
                          dataset = "emma",
                          layer = "emma")
-      write_csv(allOcc, paste0(rtPaths$emma$local, "/", species[i], ".csv"))
+      write_csv(allOcc, paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
     }
-    emma <- bind_rows(emma, allOcc[allOcc$square%in%tileNames,])
+    emma <- bind_rows(emma, allOcc[allOcc$square %in% tileNames,])
 
   }
 
@@ -160,30 +162,22 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
   }
 
   return(emma)
-
 }
 
 #' @describeIn oEMMA function to download data related to the EMMA dataset
 #' @param file [\code{character(1)}]\cr the name of the file to download.
 #' @template localPath
-#' @param getGrids [\code{character(1)}]\cr the online path to the gridfiles of
-#'   the EMMA project; stored under \code{rtPaths$emma$gridLinks}
-#' @param keepGrids [\code{logic(1)}]\cr should the the downloaded and seperate
-#'   gridfiles be stored (\code{TRUE}), or should merely the overall European
-#'   grid be stored (\code{FALSE}, default)?
 #' @importFrom httr GET write_disk progress
+#' @importFrom stringr str_replace
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 
-downloadEMMA <- function(file = NULL, localPath = NULL, getGrids = NULL,
-                         keepGrids = FALSE){
+downloadEMMA <- function(file = NULL, localPath = NULL){
 
   assertCharacter(file, any.missing = FALSE, len = 1, null.ok = TRUE)
-  if(!is.null(localPath)){
-    assertDirectory(localPath, access = "rw")
-  }
-  assertCharacter(getGrids, pattern = "http://www.", any.missing = FALSE, len = 1, null.ok = TRUE)
-  assertLogical(keepGrids, any.missing = FALSE, len = 1)
+  assertDirectory(localPath, access = "rw")
+  # assertCharacter(getGrids, pattern = "http://www.", any.missing = FALSE, len = 1, null.ok = TRUE)
+  # assertLogical(keepGrids, any.missing = FALSE, len = 1)
 
   if(!is.null(file) & !is.null(localPath)){
 
@@ -194,47 +188,47 @@ downloadEMMA <- function(file = NULL, localPath = NULL, getGrids = NULL,
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
 
     GET(url = onlinePath,
-        write_disk(paste0(localPath, "/", file)),
+        write_disk(paste0(localPath, "/", str_replace(file, " ", "_"))),
         progress())
 
-  } else if(!is.null(getGrids) & !is.null(localPath)){
-
-    if(!file.exists(paste0(localPath, "/cgrs_europe.kml"))){
-      GET(url = getGrids,
-          write_disk(paste0(localPath, "/emma_grid_links.kml")))
-      lines <- readLines(paste0(localPath, "/emma_grid_links.kml"))
-      file.remove(paste0(localPath, "/emma_grid_links.kml"))
-      entries <- unlist(lapply(seq_along(lines), function(x){
-        line <- lines[x]
-        pos <- regexpr("http:?.+(cgrs).+\\.kml", line)
-        substr(line, pos, pos-1+attr(pos, "match.length"))
-      }))
-      entries <- entries[entries != ""]
-      if(length(grep("slovakia", entries)) == 0){
-        entries <- c(entries, "http://www.helsinki.fi/~rlampine/gmap/cgrs_slovakia.kml")
-      }
-
-      message("  ... downloading/processing the country grids\n")
-      grids <- c('<?xml version="1.0" encoding="UTF-8"?>', '<kml xmlns="http://earth.google.com/kml/2.0">', '<Document>', '')
-      pb <- txtProgressBar(min = 0, max = length(entries), style = 3, char=">", width=getOption("width")-14)
-
-      for(i in seq_along(entries)){
-        path <- entries[i]
-        file <- strsplit(path, split = "/")[[1]]
-        file <- file[length(file)]
-        GET(url = path,
-            write_disk(paste0(localPath, "/", file)))
-        lines <- readLines(paste0(localPath, "/", file))
-        grids <- c(grids, lines[grepl("Placemark", lines)])
-        if(!keepGrids){
-          file.remove(paste0(localPath, "/", file))
-        }
-        setTxtProgressBar(pb, i)
-      }
-      close(pb)
-
-      grids <- c(grids, c('</Document>', '</kml>'))
-      write(grids, file = paste0(localPath, "/cgrs_europe.kml"))
-    }
-  }
+  }# else if(!is.null(getGrids) & !is.null(localPath)){
+# 
+#     if(!file.exists(paste0(localPath, "/cgrs_europe.kml"))){
+#       GET(url = getGrids,
+#           write_disk(paste0(localPath, "/emma_grid_links.kml")))
+#       lines <- readLines(paste0(localPath, "/emma_grid_links.kml"))
+#       file.remove(paste0(localPath, "/emma_grid_links.kml"))
+#       entries <- unlist(lapply(seq_along(lines), function(x){
+#         line <- lines[x]
+#         pos <- regexpr("http:?.+(cgrs).+\\.kml", line)
+#         substr(line, pos, pos-1+attr(pos, "match.length"))
+#       }))
+#       entries <- entries[entries != ""]
+#       if(length(grep("slovakia", entries)) == 0){
+#         entries <- c(entries, "http://www.helsinki.fi/~rlampine/gmap/cgrs_slovakia.kml")
+#       }
+# 
+#       message("  ... downloading/processing the country grids\n")
+#       grids <- c('<?xml version="1.0" encoding="UTF-8"?>', '<kml xmlns="http://earth.google.com/kml/2.0">', '<Document>', '')
+#       pb <- txtProgressBar(min = 0, max = length(entries), style = 3, char=">", width=getOption("width")-14)
+# 
+#       for(i in seq_along(entries)){
+#         path <- entries[i]
+#         file <- strsplit(path, split = "/")[[1]]
+#         file <- file[length(file)]
+#         GET(url = path,
+#             write_disk(paste0(localPath, "/", file)))
+#         lines <- readLines(paste0(localPath, "/", file))
+#         grids <- c(grids, lines[grepl("Placemark", lines)])
+#         if(!keepGrids){
+#           file.remove(paste0(localPath, "/", file))
+#         }
+#         setTxtProgressBar(pb, i)
+#       }
+#       close(pb)
+# 
+#       grids <- c(grids, c('</Document>', '</kml>'))
+#       write(grids, file = paste0(localPath, "/cgrs_europe.kml"))
+#     }
+#   }
 }

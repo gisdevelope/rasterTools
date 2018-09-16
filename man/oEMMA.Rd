@@ -7,8 +7,7 @@
 \usage{
 oEMMA(mask = NULL, species = NULL, version = 1, ...)
 
-downloadEMMA(file = NULL, localPath = NULL, getGrids = NULL,
-  keepGrids = FALSE)
+downloadEMMA(file = NULL, localPath = NULL)
 }
 \arguments{
 \item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
@@ -26,13 +25,6 @@ European Mammals}; the recent version is 1, but an update is in the making.}
 
 \item{localPath}{[\code{character(1)}]\cr the local path where files are
 supposed to be stored (i.e. on your harddisc).}
-
-\item{getGrids}{[\code{character(1)}]\cr the online path to the gridfiles of
-the EMMA project; stored under \code{rtPaths$emma$gridLinks}}
-
-\item{keepGrids}{[\code{logic(1)}]\cr should the the downloaded and seperate
-gridfiles be stored (\code{TRUE}), or should merely the overall European
-grid be stored (\code{FALSE}, default)?}
 }
 \value{
 A data-frame of the species of interest occuring in the area outlined
@@ -45,7 +37,7 @@ Obtain occurence data of mammals in Europe of the first EMMA
 \details{
 The object provided in \code{mask} is treated as a single mask,
   irrespective of that object consisting of only one or several features. The
-  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  extent comprising all features (point(s), line(s), polygon(s)) is used as
   area of interest. This is in contrast to \code{\link{obtain}}, where a mask
   may consist of several features, each of which are treated as seperate
   mask.
