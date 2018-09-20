@@ -119,7 +119,9 @@ scaleParameters <- function(attr = NULL, params = NULL){
   out <- params
   
   if(params$scale$x %in% c("line", "fill")){
-    assertTRUE(length(params[[pos]]) >= 2)
+    if(length(uniqueVals) > 1){
+      assertTRUE(length(params[[pos]]) > 1)
+    }
     uniqueColours <- colorRampPalette(colors = params[[pos]])(length(uniqueVals))
     breaks <- c(uniqueVals[1]-1, uniqueVals)
     breaks <- c(0, uniqueVals)
