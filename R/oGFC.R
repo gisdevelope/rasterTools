@@ -64,6 +64,7 @@
 #' visualise(geom = tiles_gfc)
 #' }
 #' @importFrom sp proj4string spTransform bbox
+#' @importFrom stringr str_split
 #' @importFrom raster crop mosaic projectRaster stack
 #' @export
 
@@ -176,7 +177,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   # reproject
   if(getCRS(mask) != targetCRS){
-    crs_name <- strsplit(targetCRS, " ")[[1]][1]
+    crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
     message(paste0("  ... reprojecting to '", crs_name))
     gfc_out <- setCRS(x = gfc_out, crs = targetCRS, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     gfc_out <- crop(gfc_out, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")

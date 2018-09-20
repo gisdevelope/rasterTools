@@ -59,6 +59,7 @@
 #' reference(style = "bibtex")
 #' }
 #' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset testFileExists
+#' @importFrom stringr str_split
 #' @importFrom raster stack crop
 #' @export
 
@@ -166,7 +167,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     
     # reproject
     if(getCRS(mask) != targetCRS){
-      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
       message(paste0("  ... reprojecting to '", crs_name, "'."))
       tempObject <- setCRS(x = tempObject, crs = targetCRS)
       tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
