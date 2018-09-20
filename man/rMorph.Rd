@@ -63,7 +63,7 @@ The morphC function (internal) is the basis of many modify
   otherwise 0. \item sum: the sum of all non-NA values. \item mean: the mean
   of all non-NA values. \item median: the median of all non-NA values. \item
   sd: the standard deviation of all non-NA values. \item cv: the coefficient
-  of variation of all non-NA values. \item sumNa: if the sum of all values if
+  of variation of all non-NA values. \item sumNa: if the sum of all values is
   greater than 0 than this sum, otherwise NA.}
 }
 \references{
