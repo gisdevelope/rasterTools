@@ -988,7 +988,7 @@ rMatch <- function(obj, kernel = NULL, rotate = TRUE, background = NULL){
 #'   otherwise 0. \item sum: the sum of all non-NA values. \item mean: the mean
 #'   of all non-NA values. \item median: the median of all non-NA values. \item
 #'   sd: the standard deviation of all non-NA values. \item cv: the coefficient
-#'   of variation of all non-NA values. \item sumNa: if the sum of all values if
+#'   of variation of all non-NA values. \item sumNa: if the sum of all values is
 #'   greater than 0 than this sum, otherwise NA.}
 #' @references Credit for the original idea/architecture of the C++ part of this
 #'   function goes to Jon Clayden
