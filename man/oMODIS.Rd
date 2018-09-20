@@ -6,7 +6,7 @@
 \title{Obtain MODIS data}
 \usage{
 oMODIS(mask = NULL, period = NULL, product = NULL, layer = NULL,
-  version = "newest", process = TRUE, raw = FALSE)
+  process = TRUE)
 
 downloadMODIS(file = NULL, localPath = NULL, getDates = NULL,
   getFiles = NULL)
@@ -26,18 +26,9 @@ interest. Can be abbreviated if an \code{index} is provided.}
 interest. Either the integer of the layers position or the name of the
 layer.}
 
-\item{version}{[\code{integerish(1)} | \code{character(1)}]\cr version of a
-modis dataset with 3 leading zeros, e.g. 055, default = "newest".}
-
 \item{process}{[\code{logical(1)}]\cr should the data be procesed further in
 R (\code{TRUE}, default) or should the data merely be downloaded and stored
 on the harddisc (\code{FALSE})?}
-
-\item{raw}{[\code{logical}]\cr should the raw modis-data be obtained
-(\code{TRUE}) or should a correction be applied (\code{FALSE}, default).
-Applying the correction (i.e. the range is cut to the valid range and the
-correction factor is applied) is highly recommended, to end up with
-consisten data.}
 
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
