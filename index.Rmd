@@ -69,7 +69,7 @@ Example workflow
         myMetric <- list(a_l = list(operator = "mArea", scale = "landscape"),
                          a_c = list(operator = "mArea", scale = "class"),
                          mCPA = "a_c / a_l * 100")
-        measure(input = myInput, with = myMetrics)
+        measure(input = myInput, with = myMetric)
 
 ___________________________________________
 

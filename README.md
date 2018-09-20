@@ -49,7 +49,7 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
         myMetric <- list(a_l = list(operator = "mArea", scale = "landscape"),
                          a_c = list(operator = "mArea", scale = "class"),
                          mCPA = "a_c / a_l * 100")
-        measure(input = myInput, with = myMetrics)
+        measure(input = myInput, with = myMetric)
 
 ## Planned for future versions
 - Support of the Sentinel (high prio), Landsat and Lidar datasets.
