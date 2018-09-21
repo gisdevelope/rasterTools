@@ -10,16 +10,9 @@
 #' @param layer [\code{character(1)} | \code{integerish(1)}]\cr layer(s) of
 #'   interest. Either the integer of the layers position or the name of the
 #'   layer.
-#' @param version [\code{integerish(1)} | \code{character(1)}]\cr version of a
-#'   modis dataset with 3 leading zeros, e.g. 055, default = "newest".
 #' @param process [\code{logical(1)}]\cr should the data be procesed further in
 #'   R (\code{TRUE}, default) or should the data merely be downloaded and stored
 #'   on the harddisc (\code{FALSE})?
-#' @param raw [\code{logical}]\cr should the raw modis-data be obtained
-#'   (\code{TRUE}) or should a correction be applied (\code{FALSE}, default).
-#'   Applying the correction (i.e. the range is cut to the valid range and the
-#'   correction factor is applied) is highly recommended, to end up with
-#'   consisten data.
 #' @details The period can either be given as a single value if only one year is
 #'   of interest, or as two values, the start and end date. If you do not
 #'   specify DDD, it will be set to "001" and "366" for start and end year
@@ -81,12 +74,13 @@
 #'                          crs = projs$sinu)
 #' visualise(geom = tiles_modis)
 #' }
+#' @importFrom stringr str_sub str_replace_all
 #' @importFrom sp proj4string spTransform bbox
 #' @importFrom raster values setValues crop projectRaster stack mosaic
 #' @export
 
 oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
-                   version = "newest", process = TRUE, raw = FALSE){
+                   process = TRUE){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -94,14 +88,26 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(period, any.missing = FALSE, min.len = 1, max.len = 2, unique = TRUE)
   assertTRUE(nchar(period[1]) %in% c(4, 7))
+  if(nchar(period[1]) == 7){
+    if(as.integer(str_sub(period[1], 5)) < 1){
+      stop("did you mean to use 001 as first day of the year?")
+    }
+  }
   assertTRUE(nchar(period[2]) %in% c(NA, 4, 7))
   assertCharacter(product)
   layerIsInt <- testIntegerish(layer, any.missing = FALSE, min.len = 1)
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
-  assertLogical(raw)
+  # assertLogical(raw)
   
+  # check satellite
+  if(grepl("MYD", product)){
+    satellite <- "MOLA"
+  } else if(grepl("MOD", product)){
+    satellite <- "MOLT"
+  }
+
   # load meta data
-  meta <- meta_modis[grep(paste0("(?i)", product, "(?-i)$"), meta_modis$product),]
+  meta <- meta_modis[grep(paste0("(?i)", str_sub(string = product, start = 4), "(?-i)$"), meta_modis$product),]
   if(layerIsInt){
     meta <- meta[layer,]
   } else if(layerIsChar){
@@ -111,20 +117,6 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     return(c("'product' does not match any dataset of modis or is undefined."))
   }
   
-  # check version
-  if(version == "newest"){
-    productVersion <- sprintf('%03i', meta$newest_version[1])
-  } else{
-    assertIntegerish(version, len = 3)
-    productVersion <- sprintf('%03i', version)
-  }
-  
-  # check satellite
-  if(grepl("MYD", product)){
-    satellite <- "MOLA"
-  } else if(grepl("MOD", product)){
-    satellite <- "MOLT"
-  }
   availableTiles <- c("h00v08", "h00v09", "h00v10", 
                       "h01v07", "h01v08", "h01v09", "h01v10", "h01v11", 
                       "h02v06", "h02v08", "h02v09", "h02v10", "h02v11", 
@@ -179,20 +171,25 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   }
   
   # set the valid dates for this product
-  year <- substr(period, 0, 4)
-  doy <- substr(period, 5, nchar(period))
+  year <- str_sub(period, 0, 4)
+  doy <- str_sub(period, 5)
   theDates <- doyToDate(year, doy)
   
   # transform crs of the mask to the dataset crs
-  target_crs <- getCRS(x = mask)
-  if(target_crs != projs$sinu){
-    mask <- setCRS(x = mask, crs = projs$sinu)
-  }
-  theExtent <- getExtent(x = mask)
   if(maskIsSpatial){
-    mask <- gFrom(mask)
+    mask <- gFrom(input = mask)
   }
+  targetCRS <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
   
+  if(targetCRS != projs$sinu){
+    mask <- setCRS(x = mask, crs = projs$sinu)
+    targetExtent <- setCRS(theExtent, crs = projs$sinu)
+  } else{
+    targetExtent <- theExtent
+  }
+
   # create the tiles geometry to determine the data-subset to load
   modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
                           y = c(-10007554.677, 10007554.677))
@@ -211,7 +208,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   tiles <- xMatch & yMatch
   myTiles <- getSubset(tiles_modis, tabMODIS$id %in% ids[tiles])
   
-  productDates <- downloadMODIS(getDates = paste0(rtPaths$modis$online, satellite, "/", product, ".", productVersion, "/"))
+  productDates <- downloadMODIS(getDates = paste0(rtPaths$modis$remote, satellite, "/", product, ".006/"))
   productDates <- as.POSIXlt(productDates, format = "%Y.%m.%d", tz = "GMT")
   validDates <- strftime(x = productDates[productDates < theDates[2] & productDates > theDates[1]-1], format = "%Y.%m.%d")
   
@@ -220,7 +217,6 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   nameMat <- t(apply(nameMat, 2, rev))
   colnames(nameMat) <- c(0:35); rownames(nameMat) <- c(0:17)
   
-  modis <- list()
   tabTiles <- getCoords(myTiles)
   # go through all tiles
   for(i in seq_along(unique(tabTiles$id))){
@@ -238,11 +234,11 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     
     modis_out <- list()
     # go through all files, which are available according to the arguments, for the tile
-    allObjects <- NULL
+    allObjects <- list()
     
     for(j in seq_along(validDates)){
       
-      productFiles <- downloadMODIS(getFiles = paste0(rtPaths$modis$online, satellite, "/", product, ".", productVersion, "/", validDates[j], "/"))
+      productFiles <- downloadMODIS(getFiles = paste0(rtPaths$modis$remote, satellite, "/", product, ".006/", validDates[j], "/"))
       validFiles <- productFiles[grep(gridId, productFiles)]
       
       history <- list()
@@ -260,39 +256,30 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
                                localPath = paste0(rtPaths$modis$local, "/", product))
       }
       
-      # usually the corrected values are preferable
-      if(!raw){
-        for(k in 1:dim(tempObject)[3]){
-          oldVals <- values(tempObject[[k]])
-          newVals <- oldVals * meta$correction_factor[k]
-          newVals[newVals < meta$valid_min[k] | newVals > meta$valid_max[k]] <- NA
-          tempObject <- setValues(tempObject, newVals, layer = k)
-          tempNames <- as.character(meta$description)
-        }
-      }
       history <- c(history, paste0(tempObject@history, " with the grid ID '", gridId, "'"))
       
       message("  ... cropping to targeted study area\n")
-      tempObject <- crop(tempObject, theExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      
+      # hier weiter: targetExtent
+      tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
       history <-  c(history, list(paste0("object has been cropped")))
       
       # reproject
-      if(getCRS(mask) != target_crs){
-        crs_name <- strsplit(target_crs, " ")[[1]][1]
+      if(getCRS(mask) != targetCRS){
+        crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
         message(paste0("  ... reprojecting to '", crs_name, "'\n"))
-        mask <- setCRS(x = mask, crs = target_crs)
-        tempObject <- setCRS(tempObject, crs = target_crs)
-        tempExtent <- getExtent(x = mask)
-        tempObject <- crop(tempObject, tempExtent, snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+        tempObject <- setCRS(x = tempObject, crs = targetCRS)
+        tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
         history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
       }
+      
       tempObject@history <- history
       # names(tempObject) <- paste0(tempNames, "_", validDates[j])
       
       if(is.null(allObjects)){
         allObjects <- tempObject
       } else{
-        allObjects <- suppressWarnings(stack(list(allObjects, tempObject)))
+        allObjects <- c(allObjects, setNames(list(tempObject), str_replace_all(validDates[j], "[.]", "")))
       }
     }
     
@@ -365,7 +352,7 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
     date <- strftime(x = date, format = "%Y.%m.%d")
     version <- filePieces[[4]]
 
-    onlinePath <- paste0(rtPaths$modis$online, satellite, "/", product, ".", version, "/", date)
+    onlinePath <- paste0(rtPaths$modis$remote, satellite, "/", product, ".", version, "/", date)
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
     usr <- tryCatch(get("usr"), error = function(e) NULL)
     pwd <- tryCatch(get("usr"), error = function(e) NULL)
