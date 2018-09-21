@@ -233,6 +233,7 @@ load_kml <- function(path, layer = NULL){
 
   assertFile(path, access = "r", extension = "kml")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
+  stop(path)
 
   txt <- suppressWarnings(readLines(path))
   txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]
@@ -303,7 +304,8 @@ load_hdf <- function(path, layer = NULL){
   # get_subdatasets(), we see that it is a rather low-level wrapper around
   # gdalinfo(). So we can also use gdalinfo() and have more control.
   assertFile(path, access = "r", extension = "hdf")
-
+  assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
+  
   gdalinfo_raw <- gdalinfo(path)
 
   if(!any(grep("SUBDATASET", gdalinfo_raw))){
