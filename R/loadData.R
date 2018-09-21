@@ -195,11 +195,11 @@ load_csv <- function(path){
   if("fid" %in% names(out)){
     theCoords <- tibble(id = out$id, fid = out$fid, x = out$x, y = out$y)
   } else{
-    theCoords <- tibble(id = out$id, fid = out$id, x = out$x, y = out$y)
+    theCoords <- tibble(id = out$id, fid = 1, x = out$x, y = out$y)
   }
   theData <- out[which(!colnames(out) %in% c("x", "y", "id", "fid"))]
-  theAttr <- tibble(id = theCoords$id,
-                    n = sapply(seq_along(unique(theCoords$id)), function(x) length(unique(theCoords$fid[theCoords$id == x]))))
+  theAttr <- tibble(fid = unique(theCoords$fid),
+                    n = as.integer(table(theCoords$fid)))
   theAttr <- bind_cols(theAttr, theData)
   
   out <- new(Class = "geom",
@@ -343,7 +343,7 @@ load_hdf <- function(path, layer = NULL){
     layer <- which(files %in% layer)
   }
   if(length(layer) == 0 | all(!layer %in% seq_along(files))){
-    message(paste0("      -> you did not properly specify any layer, so I create a RasterStack\n"))
+    message(paste0("  -> you did not (properly) specify any layer, so I create a RasterStack\n"))
     layer <- seq_along(files)
   }
 

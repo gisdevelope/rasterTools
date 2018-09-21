@@ -19,7 +19,7 @@
 #'   \code{\link{gToRaster}}, \code{\link{gFrom}}
 #' @examples
 #' # create points programmatically
-#' somePoints <- data.frame(id = 1:8, X = c(5190599, 5222810, 5041066, 5234735,
+#' somePoints <- data.frame(fid = 1:8, X = c(5190599, 5222810, 5041066, 5234735,
 #'                          5326537, 5027609, 5281527, 5189955), Y = c(3977612,
 #'                          4060164, 3997230, 4117856, 4028167, 3971119, 4118207,
 #'                          4062838))
@@ -46,7 +46,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   if(anchorExists){
     assertDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
     colnames(anchor) <- tolower(colnames(anchor))
-    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "id"))
+    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "fid"))
   }
   windowExists <- !testNull(window)
   if(windowExists){
@@ -108,16 +108,16 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   }
 
   if(!"fid" %in% names(anchor)){
-    anchor <- cbind(fid = 1, anchor)
+    anchor <- cbind(fid = seq_along(anchor$x), anchor)
   }
   if(!"id" %in% names(anchor)){
-    anchor <- cbind(id = 1, anchor)
+    anchor <- cbind(id = seq_along(anchor$x), anchor)
   }
   anchor <- anchor[c("id", "fid", "x", "y")]
   theGeom <- new(Class = "geom",
                  type = "point",
                  coords = anchor,
-                 attr = data.frame(id = unique(anchor$id), n = 1),
+                 attr = data.frame(fid = unique(anchor$fid), n = 1),
                  window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
                  scale = "absolute",
                  crs = as.character(projection),
@@ -289,7 +289,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features = 1,
                         vertices = NULL, regular = FALSE, show = FALSE, ...){
 
-  # anchor = NULL; window = NULL; template = input; features = 2; vertices = c(4, 6); regular = FALSE; show = TRUE
+  # anchor = pointsGeom; window = NULL; template = NULL; features = 1; vertices = NULL; regular = FALSE; show = TRUE
   
   # check arguments
   anchorIsDF <- testDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
@@ -297,16 +297,16 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
     colnames(anchor) <- tolower(colnames(anchor))
     assertNames(names(anchor), must.include = c("x", "y"), subset.of = c( "id", "fid", "x", "y"))
     if(!"id" %in% names(anchor)){
-      anchor <- cbind(id = 1, anchor)
+      anchor <- cbind(id = seq_along(anchor$x), anchor)
     }
     if(!"fid" %in% names(anchor)){
-      anchor <- cbind(fid = anchor$id, anchor)
+      anchor <- cbind(fid = 1, anchor)
     } 
-    features <- length(unique(anchor$id))
+    features <- length(unique(anchor$fid))
   }
   anchorIsGeom <- testClass(anchor, classes = "geom")
   if(anchorIsGeom){
-    features <- length(unique(anchor@coords$id))
+    features <- length(unique(anchor@coords$fid))
   }
   windowExists <- !testNull(window)
   if(windowExists){
@@ -378,13 +378,13 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       if(!windowExists){
         window <- anchor@window
       }
-      tempAnchor <- anchor@coords[anchor@coords$id == i,]
+      tempAnchor <- anchor@coords[anchor@coords$fid == i,]
     } else if(anchorIsDF){
       if(!windowExists){
         window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
                              y = c(min(anchor$y), max(anchor$y)))
       }
-      tempAnchor <- anchor[anchor$id == i, ]
+      tempAnchor <- anchor[anchor$fid == i, ]
     }
 
     if(regular){
@@ -404,7 +404,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       temp <- new(Class = "geom",
                   type = "polygon",
                   coords = theNodes,
-                  attr = data.frame(id = unique(theNodes$id), n = 1),
+                  attr = data.frame(fid = unique(theNodes$fid), n = length(unique(theNodes$id))),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -427,7 +427,7 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       temp <- new(Class = "geom",
                   type = "polygon",
                   coords = theNodes,
-                  attr = data.frame(id = unique(theNodes$id), n = length(unique(theNodes$fid))),
+                  attr = data.frame(fid = unique(theNodes$fid), n = length(unique(theNodes$id))),
                   window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
@@ -441,14 +441,14 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
         }
       }
       nodes <- rbind(nodes, theNodes)
-      fids <- c(fids, length(unique(theNodes$fid)))
+      fids <- c(fids, length(unique(theNodes$id)))
     }
 
   }
   out <- new(Class = "geom",
              type = "polygon",
              coords = nodes,
-             attr = data.frame(id = unique(nodes$id), n = fids),
+             attr = data.frame(fid = unique(nodes$fid), n = fids),
              window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
              scale = "absolute",
              crs = as.character(projection),
@@ -456,11 +456,6 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
 
   invisible(out)
 }
-
-# coords <- data.frame(x = c(10, 10, 30, 40, 70, 70, 50),
-#                      y = c(10, 50, 20, 40, 40, 60, 70),
-#                      id = c(1, 1, 2, 1, 2, 2, 2))
-
 
 #' @describeIn geomPolygon wrapper of geomPolygon where \code{vertices = 3} and
 #'   \code{regular = TRUE}.
@@ -557,20 +552,20 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
     anchors <- anchor
   }
   newCoords <- NULL
-  if(!any(colnames(anchors) == "id")){
-    anchors <- cbind(anchors, id = 1)
+  if(!any(colnames(anchors) == "fid")){
+    anchors <- cbind(anchors, fid = 1)
   }
     
-  for(i in unique(anchors$id)){
-    tempAnchor <- anchors[anchors$id == i,]
+  for(i in unique(anchors$fid)){
+    tempAnchor <- anchors[anchors$fid == i,]
     # get minimum and maximum value of x and y
     tempAnchor <- data.frame(x = c(min(tempAnchor$x), max(tempAnchor$x)),
                              y = c(min(tempAnchor$y), max(tempAnchor$y)),
-                             id = i)
+                             fid = i)
     # change positions of vertices, so that they follow a square
     tempAnchor <- data.frame(x = rep(tempAnchor$x, each = 2),
                              y = c(tempAnchor$y, rev(tempAnchor$y)),
-                             id = i)
+                             fid = i)
     newCoords <- rbind(newCoords, tempAnchor)
   }
 
@@ -705,7 +700,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   theGeom <- new(Class = "geom",
                  type = outType,
                  coords = anchor,
-                 attr = data.frame(id = unique(anchor$id), n = 1),
+                 attr = data.frame(fid = unique(anchor$id), n = 1),
                  window = window,
                  scale = "relative",
                  crs = as.character(NA),
@@ -843,7 +838,7 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
   theTiles <- new(Class = "geom",
                   type = theType,
                   coords = nodes,
-                  attr = data.frame(id = unique(nodes$id), n = 1),
+                  attr = data.frame(fid = unique(nodes$id), n = 1),
                   window = window,
                   scale = "absolute",
                   crs = as.character(projection),

@@ -115,9 +115,9 @@ obtain <- function(data = NULL, mask = NULL){
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
   tabMasks <- getCoords(x = theMasks)
-  maskElements <- unique(tabMasks$id)
+  maskElements <- unique(tabMasks$fid)
   for(i in maskElements){
-    tempMask <- getSubset(x = theMasks, subset = tabMasks$id == i)
+    tempMask <- getSubset(x = theMasks, subset = tabMasks$fid == i)
 
     message(paste0("--> I am extracting information for mask ", i, ":\n"))
     temp_out <- unlist(lapply(

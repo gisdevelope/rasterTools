@@ -17,7 +17,7 @@ setMethod(f = "show",
           definition = function(object){
             cat("class      : ", class(object), "\n", sep = "")
             cat("type       : ", object@type, "\n", sep = "")
-            cat("features   : ", length(unique(object@coords$id)), "  (", length(object), " vertices)\n", sep = "")
+            cat("features   : ", length(unique(object@coords$fid)), "  (", length(object), " vertices)\n", sep = "")
             cat("window     : ", min(object@window$x), ", ", max(object@window$x), ", ", min(object@window$y), ", ", max(object@window$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
             cat("extent     : ", min(object@coords$x), ", ", max(object@coords$x), ", ", min(object@coords$y), ", ", max(object@coords$y), "  (xmin, xmax, ymin, ymax)\n", sep = "")
             cat("scale      : ", object@scale, "\n", sep = "")
@@ -99,17 +99,16 @@ setMethod(f = "getTable",
           })
 
 #' @describeIn setTable set the attribute table of a \code{geom}
+#' @importFrom dplyr left_join
 #' @export
 
 setMethod(f = "setTable",
           signature = "geom",
           definition = function(x, table){
             stopifnot(is.data.frame(table))
-            stopifnot(any(names(table) %in% "id"))
-            stopifnot(all(x@attr$id %in% table$id))
-            nIDs <- length(x@attr$id)
-            stopifnot(dim(table)[1] == nIDs)
-            x@attr <- merge(x@attr, table)
+            stopifnot(any(names(table) %in% "fid"))
+            nIDs <- length(x@attr$fid)
+            x@attr <- left_join(x@attr, table)
             return(x)
           })
 

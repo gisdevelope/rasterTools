@@ -60,12 +60,18 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
     newId <- temp$cluster
   }
   
-  temp <- cbind(toGroup, id = newId, fid = newId)
+  temp <- cbind(toGroup, id = coords$id, fid = newId)
+  temp <- temp[order(temp$fid),]
+  if(geom@type == "point"){
+    vertices <- as.integer(table(newId))
+  } else{
+    vertices <- rep(1, length(unique(newId)))
+  }
   
   out <- new(Class = "geom",
              type = geom@type,
              coords = temp,
-             attr = data.frame(id = unique(newId), n = 1),
+             attr = data.frame(fid = unique(newId), n = vertices),
              window = geom@window,
              scale = geom@scale,
              crs = geom@crs,
@@ -321,6 +327,15 @@ gToGrob <- function(geom, theme = NULL, ...){
   coords <- outGeom@coords
   
   attr <- getTable(x = geom)
+  # if a "hole" (in an fid) has been defined, assign a common id
+  if(any(names(attr) == "in_fid")){
+    c1 <- ifelse(is.na(attr$in_fid), attr$fid,  attr$in_fid)
+    c2 <- attr$fid
+    attr$fid <- c1
+    attr$in_fid <- c2
+  } else{
+    attr$in_fid <- attr$fid
+  }
   pars <- scaleParameters(attr = attr, params = theme@geom)
   
   if(featureType %in% c("point")){
@@ -347,8 +362,11 @@ gToGrob <- function(geom, theme = NULL, ...){
   } else if(featureType %in% c("polygon")){
     
     geomGrob <- NULL
-    for(i in 1:dim(attr)[1]){
-      tempCoords <- coords[coords$id == attr$id[i],]
+    for(i in seq_along(unique(attr$fid))){
+
+      theID <- unique(attr$fid)[i]
+      tempIDs <- attr[attr$fid == theID, ]
+      tempCoords <- coords[coords$fid %in% tempIDs$in_fid, ]
       if(i == 1){
         geomGrob <- pathGrob(x = tempCoords$x,
                              y = tempCoords$y,
@@ -358,8 +376,7 @@ gToGrob <- function(geom, theme = NULL, ...){
                                col = pars$line[i],
                                fill = pars$fill[i],
                                lty = pars$linetype[i],
-                               lwd = pars$linewidth[i],
-                               ...))
+                               lwd = pars$linewidth[i]))
       } else{
         geomGrob <- gList(geomGrob, 
                           pathGrob(x = tempCoords$x,
@@ -370,8 +387,7 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      col = pars$line[i],
                                      fill = pars$fill[i],
                                      lty = pars$linetype[i],
-                                     lwd = pars$linewidth[i],
-                                     ...)))
+                                     lwd = pars$linewidth[i])))
       }
 
     }
@@ -478,7 +494,7 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
 #'                          5234735, 5281527, 5189955, 5041066),
 #'                          Y = c(3977612, 3971119, 4028167, 3997230,
 #'                          4060164, 4117856, 4118207, 4062838),
-#'                          id = c(1:8))
+#'                          fid = c(1:8))
 #'
 #' pointsGeom <- geomPoint(anchor = somePoints)
 #' polyGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8))) %>%
@@ -496,11 +512,11 @@ gToSp <- function(geom, crs = NULL){
   assertClass(geom, classes = "geom")
   assertCharacter(crs, fixed = "+proj", null.ok = TRUE)
   if(is.null(crs) & is.na(geom@crs)){
-    target_crs <- as.character(NA)
+    targetCRS <- as.character(NA)
   } else if(!is.null(crs)){
-    target_crs <- crs
+    targetCRS <- crs
   } else if(!is.na(geom@crs)){
-    target_crs <- geom@crs
+    targetCRS <- geom@crs
   }
   if(is.na(geom@crs)){
     source_crs <- as.character(NA)
@@ -510,7 +526,7 @@ gToSp <- function(geom, crs = NULL){
 
   featureType <- geom@type
   coords <- geom@coords
-  id <- unique(coords$id)
+  features <- unique(coords$fid)
 
   if(featureType %in% c("point")){
 
@@ -539,14 +555,14 @@ gToSp <- function(geom, crs = NULL){
 
     temp <- list()
     # go through distinct ids and check whether the last coordinate is equat to the first.
-    for(i in seq_along(id)){
-      thePoly <- coords[c("x", "y")][coords$id == id[i],]
+    for(i in seq_along(features)){
+      thePoly <- coords[c("x", "y")][coords$fid == features[i],]
       if(!all(thePoly[1,] == thePoly[dim(thePoly)[1],])){
         thePoly <- rbind(thePoly, thePoly[1,])
       }
 
       # put togehter the 'Polygons' list
-      temp <- c(temp, Polygons(list(Polygon(thePoly)), id[i]))
+      temp <- c(temp, Polygons(list(Polygon(thePoly)), features[i]))
     }
 
     # make a SpatialPolygon out of that
@@ -556,9 +572,9 @@ gToSp <- function(geom, crs = NULL){
   }
 
   if(is.na(source_crs)){
-    proj4string(geomSp) <- target_crs
+    proj4string(geomSp) <- targetCRS
   } else{
-    geomSp <- spTransform(geomSp, target_crs)
+    geomSp <- spTransform(geomSp, targetCRS)
   }
 
   return(geomSp)
@@ -656,7 +672,7 @@ gFrom <- function(input, window = NULL){
         }
         prev <- prev + length(input@coords[[i]][,1])
       }
-      colnames(theData) <- c("id", "n", otherNames)
+      colnames(theData) <- c("fid", "n", otherNames)
       rownames(theData) <- NULL
       
     } else if(sourceClass %in% c("SpatialLines", "SpatialLinesDataFrame")){
@@ -684,7 +700,7 @@ gFrom <- function(input, window = NULL){
         }
         prev <- prev + length(theLines@Lines)
       }
-      colnames(theData) <- c("id", "n", otherNames)
+      colnames(theData) <- c("fid", "n", otherNames)
       rownames(theData) <- NULL
       
     } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")){
@@ -717,7 +733,7 @@ gFrom <- function(input, window = NULL){
         }
         prev <- prev + length(thePolys@Polygons)
       }
-      colnames(theData) <- c("id", "n", otherNames)
+      colnames(theData) <- c("fid", "n", otherNames)
       rownames(theData) <- NULL
       
     }

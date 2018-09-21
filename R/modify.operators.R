@@ -349,11 +349,11 @@ rCentroid <- function(obj, output = "raster", background = NULL){
   }
 
   if(output == "geom"){
-    names(theMeans) <- c("x", "y", "id")
+    names(theMeans) <- c("x", "y", "fid")
     out <- new(Class = "geom",
                type = "point",
                coords = theMeans,
-               attr = tibble(id = unique(theMeans$id)),
+               attr = tibble(fid = unique(theMeans$fid), n = 1),
                window = tibble(x = rep(c(min(theMeans$x), max(theMeans$x)), each = 2), y = c(min(theMeans$y), max(theMeans$y), max(theMeans$y), min(theMeans$y))),
                scale = "absolute",
                crs = as.character(NA),
