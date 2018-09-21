@@ -33,7 +33,7 @@
 <meta property="og:title" content="Load <code>kml</code> files — load_kml" />
 
 <meta property="og:description" content="kml is the short form of Keyhole Markup Language, which uses the
-XML format; this is a simple wrapper around readOGR." />
+XML format." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -139,11 +139,11 @@ XML format; this is a simple wrapper around readOGR." />
     <div class="ref-description">
     
     <p>kml is the short form of <em>Keyhole Markup Language</em>, which uses the
-<code>XML</code> format; this is a simple wrapper around <a href='http://www.rdocumentation.org/packages/rgdal/topics/readOGR'>readOGR</a>.</p>
+<code>XML</code> format.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>load_kml</span>(<span class='no'>path</span>, <span class='no'>layer</span>, <span class='kw'>driver</span> <span class='kw'>=</span> <span class='st'>"rt"</span>)</pre>
+    <pre class="usage"><span class='fu'>load_kml</span>(<span class='no'>path</span>, <span class='no'>layer</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,16 +156,11 @@ XML format; this is a simple wrapper around readOGR." />
       <th>layer</th>
       <td><p>[<code>character(1)</code>]<br /> the layer name.</p></td>
     </tr>
-    <tr>
-      <th>driver</th>
-      <td><p>[<code>chacter(1)</code>]<br /> the driver used to load the 'kml' file,
-either <code>"ogr"</code> (default) or <code>"rt"</code>.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the <code>readOGR</code> standard for kml files.</p>
+    <p>a geom of the contents of the kml file.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
