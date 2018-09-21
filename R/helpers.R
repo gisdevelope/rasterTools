@@ -125,11 +125,11 @@ scaleParameters <- function(attr = NULL, params = NULL){
     uniqueColours <- colorRampPalette(colors = params[[pos]])(length(uniqueVals))
     breaks <- c(uniqueVals[1]-1, uniqueVals)
     breaks <- c(0, uniqueVals)
-    valCuts <- cut(vals, breaks = breaks, include.lowest = TRUE)
+    valCuts <- cut(uniqueVals, breaks = breaks, include.lowest = TRUE)
     out[[pos]] <- uniqueColours[valCuts]
       
     for(i in notPos[-1]){
-      out[[i]] <- rep(out[[i]][[1]], times = length(vals))
+      out[[i]] <- rep(out[[i]][[1]], times = length(uniqueVals))
     }
 
   }

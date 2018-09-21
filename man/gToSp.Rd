@@ -27,7 +27,7 @@ somePoints <- data.frame(X = c(5027609, 5190599, 5326537, 5222810,
                          5234735, 5281527, 5189955, 5041066),
                          Y = c(3977612, 3971119, 4028167, 3997230,
                          4060164, 4117856, 4118207, 4062838),
-                         id = c(1:8))
+                         fid = c(1:8))
 
 pointsGeom <- geomPoint(anchor = somePoints)
 polyGeom <- gGroup(geom = pointsGeom, index = c(rep(1, 8))) \%>\%

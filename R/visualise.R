@@ -61,7 +61,7 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = NULL; geom = myTiles; theme = NULL; trace = FALSE; image = FALSE; new = TRUE
+  # raster = NULL; geom = aGeom; theme = myTheme; trace = FALSE; image = FALSE; new = TRUE
 
   # new ideas:
   # 1. automatically detect which is raster and which is geom
@@ -538,6 +538,19 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         }
       }
       
+      # the box viewport
+      if(theme@box$plot){
+        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
+                              height = unit(1, "npc") - unit(2*margin$y, "native"),
+                              name = "box"))
+        grid.rect(gp = gpar(fill = NA,
+                            col = theme@box$colour, 
+                            lwd = theme@box$linewidth,
+                            lty = theme@box$linetype), 
+                  name = "theBox")
+        upViewport() # exit box
+      }
+      
       # the raster viewport
       if(existsGridded){
         pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
@@ -560,23 +573,10 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                               xscale = c(panelExt[[1]]-margin$x, panelExt[[2]]+margin$x),
                               yscale = c(panelExt[[3]]-margin$y, panelExt[[4]]+margin$y),
                               name = "geom"))
-        grid.clip(width = unit(1, "npc"),
-                  height = unit(1, "npc"))
+        grid.clip(width = unit(1, "npc") + unit(theme@box$linewidth, "native"),
+                  height = unit(1, "npc") + unit(theme@box$linewidth, "native"))
         grid.draw(geomGrob)
         upViewport() # exit geom
-      }
-      
-      # the box viewport
-      if(theme@box$plot){
-        pushViewport(viewport(width = unit(1, "npc") - unit(2*margin$x, "native"),
-                              height = unit(1, "npc") - unit(2*margin$y, "native"),
-                              name = "box"))
-        grid.rect(gp = gpar(fill = NA,
-                            col = theme@box$colour, 
-                            lwd = theme@box$linewidth,
-                            lty = theme@box$linetype), 
-                  name = "theBox")
-        upViewport() # exit box
       }
       upViewport(3) # exit grid and plot and 'plotName'
     }
