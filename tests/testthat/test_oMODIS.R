@@ -10,8 +10,8 @@ test_that("oMODIS loads the correct file", {
                                      y = c(3800000, 4000000))) %>%
     setCRS(crs = projs$sinu)
   
-  output <- oMODIS(mask = myMask, period = 2000, product = "MOD44W")
-  expect_list(output, types = "RasterStack", len = 1)
+  # output <- oMODIS(mask = myMask, period = 2000, product = "MOD44W")
+  # expect_list(output, types = "RasterStack", len = 1)
 })
 
 test_that("Error if arguments have wrong value", {
