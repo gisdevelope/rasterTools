@@ -10,6 +10,9 @@ test_that("output has class RasterLayer/-Stack", {
 
   output <- rMorph(obj = input, kernel = matrix(40, 1, 1), blend = "greater", merge = "all", rotate = FALSE, strictKernel = FALSE)
   expect_class(output, "RasterLayer")
+  
+  output <- rMorph(obj = binarised, kernel = matrix(c(NA, 1, NA, 0, 1, 1, 0, 0, NA), 3, 3), blend = "product", merge = "any", rotate = FALSE, strictKernel = FALSE)
+  expect_class(output, "RasterLayer")
 })
 
 test_that("output is named", {
