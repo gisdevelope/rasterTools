@@ -68,7 +68,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
-    species <- species$species
+    species <- species$original
   } else{
     assertCharacter(species)
   }
@@ -174,59 +174,17 @@ downloadEMMA <- function(file = NULL, localPath = NULL){
 
   assertCharacter(file, any.missing = FALSE, len = 1, null.ok = TRUE)
   assertDirectory(localPath, access = "rw")
-  # assertCharacter(getGrids, pattern = "http://www.", any.missing = FALSE, len = 1, null.ok = TRUE)
-  # assertLogical(keepGrids, any.missing = FALSE, len = 1)
 
   if(!is.null(file) & !is.null(localPath)){
 
     species <- strsplit(file, split = "[.]")[[1]][1]
-    species <- gsub(pattern = " ", replacement = "%20", x = species)
-    onlinePath <- paste0(rtPaths$emma$online, species)
+    species <- str_replace(species, "_", " ")
+    onlinePath <- paste0(rtPaths$emma$remote, species)
 
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
 
     GET(url = onlinePath,
         write_disk(paste0(localPath, "/", str_replace(file, " ", "_"))),
         progress())
-
-  }# else if(!is.null(getGrids) & !is.null(localPath)){
-# 
-#     if(!file.exists(paste0(localPath, "/cgrs_europe.kml"))){
-#       GET(url = getGrids,
-#           write_disk(paste0(localPath, "/emma_grid_links.kml")))
-#       lines <- readLines(paste0(localPath, "/emma_grid_links.kml"))
-#       file.remove(paste0(localPath, "/emma_grid_links.kml"))
-#       entries <- unlist(lapply(seq_along(lines), function(x){
-#         line <- lines[x]
-#         pos <- regexpr("http:?.+(cgrs).+\\.kml", line)
-#         substr(line, pos, pos-1+attr(pos, "match.length"))
-#       }))
-#       entries <- entries[entries != ""]
-#       if(length(grep("slovakia", entries)) == 0){
-#         entries <- c(entries, "http://www.helsinki.fi/~rlampine/gmap/cgrs_slovakia.kml")
-#       }
-# 
-#       message("  ... downloading/processing the country grids\n")
-#       grids <- c('<?xml version="1.0" encoding="UTF-8"?>', '<kml xmlns="http://earth.google.com/kml/2.0">', '<Document>', '')
-#       pb <- txtProgressBar(min = 0, max = length(entries), style = 3, char=">", width=getOption("width")-14)
-# 
-#       for(i in seq_along(entries)){
-#         path <- entries[i]
-#         file <- strsplit(path, split = "/")[[1]]
-#         file <- file[length(file)]
-#         GET(url = path,
-#             write_disk(paste0(localPath, "/", file)))
-#         lines <- readLines(paste0(localPath, "/", file))
-#         grids <- c(grids, lines[grepl("Placemark", lines)])
-#         if(!keepGrids){
-#           file.remove(paste0(localPath, "/", file))
-#         }
-#         setTxtProgressBar(pb, i)
-#       }
-#       close(pb)
-# 
-#       grids <- c(grids, c('</Document>', '</kml>'))
-#       write(grids, file = paste0(localPath, "/cgrs_europe.kml"))
-#     }
-#   }
+  }
 }

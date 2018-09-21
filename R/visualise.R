@@ -61,13 +61,6 @@
 visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
                       image = FALSE, new = TRUE, ...){
 
-  # raster = NULL; geom = aGeom; theme = myTheme; trace = FALSE; image = FALSE; new = TRUE
-
-  # new ideas:
-  # 1. automatically detect which is raster and which is geom
-  # 2. Rcpp for the gScale and gToGrob functions
-  # 3. enable colouring of geom based on its values
-    
   # check arguments
   isRaster <- testClass(raster, "Raster")
   isRasterStackBrick <- testClass(raster, "RasterStackBrick")
