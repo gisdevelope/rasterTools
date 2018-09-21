@@ -4,7 +4,7 @@
 \alias{load_kml}
 \title{Load \code{kml} files}
 \usage{
-load_kml(path, layer)
+load_kml(path, layer = NULL)
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the local path of the file to load.}

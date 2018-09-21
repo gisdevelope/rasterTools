@@ -119,9 +119,9 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
     if(fileExistsNow){
 
       # manage layer names
-      if(is.null(layer)){
-        layer <- fileName
-      }
+      # if(is.null(layer)){
+      #   layer <- fileName
+      # }
 
       # manage the arguments
       if(fileType %in% c("csv", "tif")){
@@ -229,10 +229,10 @@ load_csv <- function(path){
 #' @importFrom tibble tibble
 #' @export
 
-load_kml <- function(path, layer){
+load_kml <- function(path, layer = NULL){
 
   assertFile(path, access = "r", extension = "kml")
-  assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE)
+  assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
 
   txt <- suppressWarnings(readLines(path))
   txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]

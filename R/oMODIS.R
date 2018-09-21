@@ -96,8 +96,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   assertCharacter(product)
   layerIsInt <- testIntegerish(layer, any.missing = FALSE, min.len = 1)
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
-  # assertLogical(raw)
-  
+
   # check satellite
   if(grepl("MYD", product)){
     satellite <- "MOLA"
