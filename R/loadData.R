@@ -233,7 +233,6 @@ load_kml <- function(path, layer = NULL){
 
   assertFile(path, access = "r", extension = "kml")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
-  stop(path)
 
   txt <- suppressWarnings(readLines(path))
   txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]
