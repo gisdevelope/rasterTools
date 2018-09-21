@@ -220,8 +220,8 @@ setMethod(f = "getSubset",
           signature = c("geom", "numeric"),
           definition = function(x, subset){
             x@coords <- x@coords[subset,]
-            ids <- unique(x@coords$id)
-            x@attr <- x@attr[x@attr$id %in% ids,]
+            ids <- unique(x@coords$fid)
+            x@attr <- x@attr[x@attr$fid %in% ids,]
             return(x)
           })
 
@@ -232,8 +232,8 @@ setMethod(f = "getSubset",
           signature = c("geom", "logical"),
           definition = function(x, subset){
             x@coords <- x@coords[which(subset),]
-            ids <- unique(x@coords$id)
-            x@attr <- x@attr[x@attr$id %in% ids,]
+            ids <- unique(x@coords$fid)
+            x@attr <- x@attr[x@attr$fid %in% ids,]
             return(x)
           })
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
