@@ -306,6 +306,7 @@ load_hdf <- function(path, layer = NULL){
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
   
   gdalinfo_raw <- gdalinfo(path)
+  return(gdalinfo_raw)
 
   if(!any(grep("SUBDATASET", gdalinfo_raw))){
     stop(paste0("The dataset in ", path, " has not been given according to the expected specifications. I abort loading it."))
