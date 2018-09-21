@@ -6,13 +6,12 @@ context("oMODIS")
 
 test_that("oMODIS loads the correct file", {
   setPaths(root = system.file("test_datasets", package="rasterTools"))
-  myMask <- loadData(files = "aWindow.csv",
-                     localPath = system.file("csv", package="rasterTools")) %>%
-    geomRectangle() %>%
-    setCRS(crs = projs$laea)
+  myMask <- geomRectangle(data.frame(x = c(-2000000, -1900000),
+                                     y = c(3800000, 4000000))) %>%
+    setCRS(crs = projs$sinu)
   
-  # output <- oMODIS(mask = myMask, period = c(2017001, 2017008), product = "MOD11A2")
-  # expect_class(output, "RasterLayer")
+  output <- oMODIS(mask = myMask, period = 2000, product = "MOD44W")
+  expect_list(output, types = "RasterStack", len = 1)
 })
 
 test_that("Error if arguments have wrong value", {
