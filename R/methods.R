@@ -292,6 +292,7 @@ setMethod(f = "setCRS",
           })
 
 #' @describeIn setCRS set the coordinate reference system of a \code{Raster*} object
+#' @importFrom raster crs projectRaster
 #' @export
 
 setMethod(f = "setCRS",
@@ -306,6 +307,8 @@ setMethod(f = "setCRS",
           })
 
 #' @describeIn setCRS set the coordinate reference system of a \code{Spatial*} object
+#' @importFrom raster crs
+#' @importFrom sp spTransform
 #' @export
 
 setMethod(f = "setCRS",

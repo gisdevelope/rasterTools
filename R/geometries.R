@@ -726,9 +726,9 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
 #'   the maximum value (upper right corner) of the tiling.
 #' @param cells [\code{integerish(2)}]\cr number of tiles in \code{x} and
 #'   \code{y} dimension.
-#' @param crs [\code{proj4string(1)}]\cr corrdinate reference system of the
-#'   object.
-#' @param tiling [\code{¢haracter(1)}]\cr pattern of the tiling. Possible
+#' @param crs [\code{character(1)}]\cr corrdinate reference system of the
+#'   object in proj4 notation.
+#' @param tiling [\code{character(1)}]\cr pattern of the tiling. Possible
 #'   options are \code{"rectangular"} (default), \code{"hexagonal"},
 #'   \code{"triangular"}.
 #' @param centroids [\code{logical(1)}]\cr should the centroids of the tiling be

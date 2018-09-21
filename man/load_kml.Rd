@@ -4,22 +4,19 @@
 \alias{load_kml}
 \title{Load \code{kml} files}
 \usage{
-load_kml(path, layer, driver = "rt")
+load_kml(path, layer)
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the local path of the file to load.}
 
 \item{layer}{[\code{character(1)}]\cr the layer name.}
-
-\item{driver}{[\code{chacter(1)}]\cr the driver used to load the 'kml' file,
-either \code{"ogr"} (default) or \code{"rt"}.}
 }
 \value{
-the \code{readOGR} standard for kml files.
+a geom of the contents of the kml file.
 }
 \description{
 kml is the short form of \emph{Keyhole Markup Language}, which uses the
-\code{XML} format; this is a simple wrapper around \link[rgdal]{readOGR}.
+\code{XML} format.
 }
 \details{
 This is a helper to \code{\link{loadData}} and is not intended to be used on

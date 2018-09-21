@@ -405,8 +405,8 @@ gToGrob <- function(geom, theme = NULL, ...){
 #' @param negative [\code{logical(1)}]\cr should the area covered by \code{geom}
 #'   be set to 0 (\code{TRUE}) or should it be set to 1 (\code{FALSE}, default)?
 #' @param res [\code{numeric(2)}]\cr resolution in x and y direction.
-#' @param crs [\code{proj4string(1)}]\cr corrdinate reference system of the
-#'   object.
+#' @param crs [\code{character(1)}]\cr corrdinate reference system of the
+#'   object in proj4 notation.
 #' @return a binary \code{\link{raster}} with the dimensions of the reference
 #'   window of \code{geom} and the resolution \code{res}.
 #' @examples
@@ -424,7 +424,6 @@ gToGrob <- function(geom, theme = NULL, ...){
 #' visualise(gridded = negRaster, geom = aGeom, col = "deeppink")
 #' @importFrom methods new
 #' @importFrom raster raster extent<-
-#' @importFrom sp proj4string<- spTransform
 #' @export
 
 gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
@@ -465,7 +464,6 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
     vertices <- rbind(vertices, vertices[1,])
   }
   geomRaster <- matInGeomC(mat = temp, geom = vertices, negative = negative)
-  # out <- raster(geomRaster, xmn = min(coords[,1])*res[1], xmx = max(coords[,1])*res[1], ymn = min(coords[,2])*res[2], ymx = max(coords[,2])*res[2], crs = CRS(theCRS))
   out <- raster(geomRaster, xmn = 0, xmx = outCols, ymn = 0, ymx = outRows, crs = as.character(sourceCRS))
   extent(out) <- extent(extCols[1]*res[1], extCols[2]* res[1], extRows[1]*res[2], extRows[2]*res[2])
 
@@ -483,8 +481,8 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
 #' An object of class \code{Spatial*} is the sp-package representation of a
 #' \code{geom}.
 #' @template geom
-#' @param crs [\code{proj4string(1)}]\cr corrdinate reference system of the
-#'   object.
+#' @param crs [\code{character(1)}]\cr corrdinate reference system of the
+#'   object in proj4 notation.
 #' @return Depending on the provided geometry either a
 #'   \code{\link{SpatialPointsDataFrame}}, \code{\link{SpatialLinesDataFrame}}
 #'   or \code{\link{SpatialPolygonsDataFrame}} object.
@@ -503,8 +501,9 @@ gToRaster <- function(geom, negative = FALSE, res = c(1, 1), crs = NULL){
 #' (spPoints <- gToSp(geom = pointsGeom, crs = projs$laea))
 #' (spPolygon <- gToSp(geom = polyGeom, crs = projs$laea))
 #' @importFrom checkmate assertClass assertCharacter
-#' @importFrom sp CRS SpatialPoints SpatialPointsDataFrame Polygon Polygons
-#'   SpatialPolygons SpatialPolygonsDataFrame proj4string<- spTransform
+#' @importFrom raster crs
+#' @importFrom sp SpatialPoints SpatialPointsDataFrame Polygon Polygons
+#'   SpatialPolygons SpatialPolygonsDataFrame
 #' @export
 
 gToSp <- function(geom, crs = NULL){
@@ -519,9 +518,9 @@ gToSp <- function(geom, crs = NULL){
     targetCRS <- geom@crs
   }
   if(is.na(geom@crs)){
-    source_crs <- as.character(NA)
+    sourceCrs <- as.character(NA)
   } else{
-    source_crs <- geom@crs
+    sourceCrs <- geom@crs
   }
 
   featureType <- geom@type
@@ -531,7 +530,7 @@ gToSp <- function(geom, crs = NULL){
   if(featureType %in% c("point")){
 
     temp <- coords[c("x", "y")]
-    geomSp <- SpatialPoints(temp, proj4string = CRS(source_crs))
+    geomSp <- SpatialPoints(temp, proj4string = crs(sourceCrs))
     geomSp <- SpatialPointsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
 
   # } else if(featureType %in% c("line")){
@@ -566,16 +565,11 @@ gToSp <- function(geom, crs = NULL){
     }
 
     # make a SpatialPolygon out of that
-    geomSp <- SpatialPolygons(temp, proj4string = CRS(source_crs))
+    geomSp <- SpatialPolygons(temp, proj4string = crs(sourceCrs))
     geomSp <- SpatialPolygonsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
 
   }
-
-  if(is.na(source_crs)){
-    proj4string(geomSp) <- targetCRS
-  } else{
-    geomSp <- spTransform(geomSp, targetCRS)
-  }
+  geomSp <- setCRS(x = geomSp, crs = targetCRS)
 
   return(geomSp)
 }
@@ -605,7 +599,6 @@ gToSp <- function(geom, crs = NULL){
 #' visualise(geom = myGeom)
 #'
 #' @importFrom checkmate assertClass testDataFrame
-#' @importFrom sp proj4string
 #' @importFrom methods as
 #' @export
 
@@ -738,7 +731,7 @@ gFrom <- function(input, window = NULL){
       
     }
 
-    sourceCrs <- proj4string(input)
+    sourceCrs <- getCRS(x = input)
     bbox <- data.frame(input@bbox)
     if(!existsWindow){
       theWindow <- data.frame(x = rep(c(bbox$min[1], bbox$max[1]), each = 2),

@@ -31,7 +31,6 @@
 #' reference(style = "bibtex")
 #' }
 #' @importFrom checkmate testClass assertIntegerish assertTRUE
-#' @importFrom sp spTransform proj4string
 #' @importFrom raster stack crop projectRaster colortable unique
 #' @export
 

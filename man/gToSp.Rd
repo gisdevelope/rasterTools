@@ -9,8 +9,8 @@ gToSp(geom, crs = NULL)
 \arguments{
 \item{geom}{[\code{geom}]\cr Object of class \code{\link{geom}}.}
 
-\item{crs}{[\code{proj4string(1)}]\cr corrdinate reference system of the
-object.}
+\item{crs}{[\code{character(1)}]\cr corrdinate reference system of the
+object in proj4 notation.}
 }
 \value{
 Depending on the provided geometry either a

@@ -63,7 +63,6 @@
 #'                        crs = projs$longlat)
 #' visualise(geom = tiles_gfc)
 #' }
-#' @importFrom sp proj4string spTransform bbox
 #' @importFrom stringr str_split
 #' @importFrom raster crop mosaic projectRaster stack
 #' @export

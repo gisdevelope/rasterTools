@@ -217,76 +217,66 @@ load_csv <- function(path){
 #' Load \code{kml} files
 #'
 #' kml is the short form of \emph{Keyhole Markup Language}, which uses the
-#' \code{XML} format; this is a simple wrapper around \link[rgdal]{readOGR}.
+#' \code{XML} format.
 #'
 #' This is a helper to \code{\link{loadData}} and is not intended to be used on
 #' its own.
 #' @template path
 #' @param layer [\code{character(1)}]\cr the layer name.
-#' @param driver [\code{chacter(1)}]\cr the driver used to load the 'kml' file,
-#'   either \code{"ogr"} (default) or \code{"rt"}.
-#' @return the \code{readOGR} standard for kml files.
+#' @return a geom of the contents of the kml file.
 #' @family loaders
-#' @importFrom rgdal readOGR
 #' @importFrom stringr str_extract str_replace str_split
 #' @importFrom tibble tibble
 #' @export
 
-load_kml <- function(path, layer, driver = "rt"){
+load_kml <- function(path, layer){
 
   assertFile(path, access = "r", extension = "kml")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE)
   assertSubset(driver, choices = c("ogr", "rt"))
-
-  if(driver == "ogr"){
-    out <- readOGR(dsn = path,
-                   layer = layer,
-                   verbose = FALSE)
-    
+  
+  txt <- suppressWarnings(readLines(path))
+  txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]
+  
+  # get ids
+  id <- str_extract(string = txt, pattern = "<name>.*?<\\/name>")
+  id <- str_replace(string = id, pattern = "<name>", replacement = "")
+  id <- str_replace(string = id, pattern = "</name>", replacement = "")
+  uniqueID <- unique(id)
+  
+  # get coordinates
+  coords <- str_extract(string = txt, pattern = "<coordinates>.*?<\\/coordinates>")
+  coords <- str_replace(string = coords, pattern = "<coordinates>", replacement = "")
+  coords <- str_replace(string = coords, pattern = "</coordinates>", replacement = "")
+  coords <- str_split(string = coords, pattern = " ")
+  coords <- coords[!duplicated(id)]
+  nIds <- lengths(coords)
+  coords <- unlist(coords)
+  nCoords <- length(coords)
+  coords <- as.numeric(unlist(str_split(coords, ",")))
+  coords <- as_tibble(matrix(coords, nrow = nCoords, byrow = T))
+  coords <- tibble(rep(uniqueID, nIds), fid = rep(uniqueID, nIds), coords$V1, coords$V2)
+  colnames(coords) <- c("id", "fid", "x", "y")
+  
+  # what feature type is it?
+  if(all(grepl("Point", txt))){
+    type <- "point"
+  } else if(all(grepl("LineString", txt))){
+    type <- "line"
+  } else if(all(grepl("Polygon", txt))){
+    type <- "polygon"
   } else{
-    txt <- suppressWarnings(readLines(path))
-    txt <- txt[grep("<coordinates> *([^<]+?) *<\\/coordinates>", txt)]
-    
-    # get ids
-    id <- str_extract(string = txt, pattern = "<name>.*?<\\/name>")
-    id <- str_replace(string = id, pattern = "<name>", replacement = "")
-    id <- str_replace(string = id, pattern = "</name>", replacement = "")
-    uniqueID <- unique(id)
-    
-    # get coordinates
-    coords <- str_extract(string = txt, pattern = "<coordinates>.*?<\\/coordinates>")
-    coords <- str_replace(string = coords, pattern = "<coordinates>", replacement = "")
-    coords <- str_replace(string = coords, pattern = "</coordinates>", replacement = "")
-    coords <- str_split(string = coords, pattern = " ")
-    coords <- coords[!duplicated(id)]
-    nIds <- lengths(coords)
-    coords <- unlist(coords)
-    nCoords <- length(coords)
-    coords <- as.numeric(unlist(str_split(coords, ",")))
-    coords <- as_tibble(matrix(coords, nrow = nCoords, byrow = T))
-    coords <- tibble(rep(uniqueID, nIds), fid = rep(uniqueID, nIds), coords$V1, coords$V2)
-    colnames(coords) <- c("id", "fid", "x", "y")
-    
-    # what feature type is it?
-    if(all(grepl("Point", txt))){
-      type <- "point"
-    } else if(all(grepl("LineString", txt))){
-      type <- "line"
-    } else if(all(grepl("Polygon", txt))){
-      type <- "polygon"
-    } else{
-      stop("I was not able to determine the feature type of this 'kml'.")
-    }
-    
-    out <- new(Class = "geom",
-               type = type,
-               coords = coords,
-               attr = tibble(id = unique(coords$id), n = 1),
-               window = tibble(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
-               scale = "absolute",
-               crs = as.character(NA),
-               history = list(paste0("geom has been loaded from ", path)))
+    stop("I was not able to determine the feature type of this 'kml'.")
   }
+  
+  out <- new(Class = "geom",
+             type = type,
+             coords = coords,
+             attr = tibble(fid = unique(coords$id), n = 1),
+             window = tibble(x = rep(c(min(coords$x), max(coords$x)), each = 2), y = c(min(coords$y), max(coords$y), max(coords$y), min(coords$y))),
+             scale = "absolute",
+             crs = as.character(NA),
+             history = list(paste0("geom has been loaded from ", path)))
   
   return(out)
 }
@@ -418,21 +408,6 @@ load_svg <- function(path, layer){
   } else{
     stop("loading svg files other than from the EMMA dataset has not been programmed yet...")
   }
-}
-
-
-load_dbf <- function(path){
-
-  foreign::read.dbf(path)
-
-}
-
-load_shp <- function(path, layer){
-
-  rgdal::readOGR(dsn = path,
-                 layer = layer,
-                 verbose = FALSE)
-
 }
 
 load_tif <- function(path){

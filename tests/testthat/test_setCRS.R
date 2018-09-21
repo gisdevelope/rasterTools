@@ -29,7 +29,7 @@ test_that("setCRS of a geom", {
 
 test_that("getExtent of a Raster", {
   aRaster <- raster(xmn=-110, xmx=-90, ymn=40, ymx=60, ncols=40, nrows=40)
-  aRaster <- setValues(aRaster, 1:ncell(aRaster))
+  aRaster[] <- 1:ncell(aRaster)
   theCRS <- projection(aRaster)
   crs(aRaster) <- as.character(NA)
   

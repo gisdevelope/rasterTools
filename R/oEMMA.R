@@ -54,8 +54,6 @@
 #' }
 #' @importFrom checkmate testClass testDataFrame assertNames testVector
 #'   assertIntegerish assertLogical
-#' @importFrom sp proj4string spTransform
-#' @importFrom rgeos gIntersects gConvexHull
 #' @importFrom readr read_csv write_csv
 #' @importFrom stringr str_replace
 #' @importFrom dplyr bind_rows

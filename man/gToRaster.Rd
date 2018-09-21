@@ -14,8 +14,8 @@ be set to 0 (\code{TRUE}) or should it be set to 1 (\code{FALSE}, default)?}
 
 \item{res}{[\code{numeric(2)}]\cr resolution in x and y direction.}
 
-\item{crs}{[\code{proj4string(1)}]\cr corrdinate reference system of the
-object.}
+\item{crs}{[\code{character(1)}]\cr corrdinate reference system of the
+object in proj4 notation.}
 }
 \value{
 a binary \code{\link{raster}} with the dimensions of the reference

@@ -14,10 +14,10 @@ the maximum value (upper right corner) of the tiling.}
 \item{cells}{[\code{integerish(2)}]\cr number of tiles in \code{x} and
 \code{y} dimension.}
 
-\item{crs}{[\code{proj4string(1)}]\cr corrdinate reference system of the
-object.}
+\item{crs}{[\code{character(1)}]\cr corrdinate reference system of the
+object in proj4 notation.}
 
-\item{tiling}{[\code{¢haracter(1)}]\cr pattern of the tiling. Possible
+\item{tiling}{[\code{character(1)}]\cr pattern of the tiling. Possible
 options are \code{"rectangular"} (default), \code{"hexagonal"},
 \code{"triangular"}.}
 

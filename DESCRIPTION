@@ -16,15 +16,12 @@ Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 0.12.12),
     methods,
-    sp,
     raster,
-    rgdal,
+    sp,
     gdalUtils,
-    rgeos,
     mmand,
     grid,
     checkmate,
-    foreign,
     crayon,
     cli,
     httr,
@@ -37,6 +34,7 @@ LinkingTo: Rcpp
 Suggests: testthat,
     rmarkdown,
     magrittr,
+    rgeos,
     covr,
     knitr
 SystemRequirements: C++11
