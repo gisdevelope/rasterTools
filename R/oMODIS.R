@@ -258,7 +258,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       history <- c(history, paste0(tempObject@history, " with the grid ID '", gridId, "'"))
       
       message("  ... cropping to targeted study area\n")
-      tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      tempObject <- stack(crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
       history <-  c(history, list(paste0("object has been cropped")))
       
       # reproject
@@ -266,7 +266,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
         crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
         message(paste0("  ... reprojecting to '", crs_name, "'\n"))
         tempObject <- setCRS(x = tempObject, crs = targetCRS)
-        tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+        tempObject <- stack(crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
         history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
       }
       
