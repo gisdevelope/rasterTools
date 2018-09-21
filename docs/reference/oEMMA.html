@@ -143,10 +143,9 @@ dataset." />
     
     </div>
 
-    <pre class="usage"><span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>inclMeta</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>species</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)
 
-<span class='fu'>downloadEMMA</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>getGrids</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keepGrids</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>downloadEMMA</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,12 +166,6 @@ for. Can be abbreviated if a <code><a href='catalog.html'>catalog</a></code> is 
 European Mammals</em>; the recent version is 1, but an update is in the making.</p></td>
     </tr>
     <tr>
-      <th>inclMeta</th>
-      <td><p>[<code>logical(1)</code>]<br /> output merely the occurence data
-(<code>FALSE</code>, default), or output additionally metadata on the species
-(<code>TRUE</code>)?</p></td>
-    </tr>
-    <tr>
       <th>...</th>
       <td><p>[various]<br /> other arguments.</p></td>
     </tr>
@@ -185,17 +178,6 @@ European Mammals</em>; the recent version is 1, but an update is in the making.<
       <td><p>[<code>character(1)</code>]<br /> the local path where files are
 supposed to be stored (i.e. on your harddisc).</p></td>
     </tr>
-    <tr>
-      <th>getGrids</th>
-      <td><p>[<code>character(1)</code>]<br /> the online path to the gridfiles of
-the EMMA project; stored under <code>rtPaths$emma$gridLinks</code></p></td>
-    </tr>
-    <tr>
-      <th>keepGrids</th>
-      <td><p>[<code>logic(1)</code>]<br /> should the the downloaded and seperate
-gridfiles be stored (<code>TRUE</code>), or should merely the overall European
-grid be stored (<code>FALSE</code>, default)?</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -207,7 +189,7 @@ grid be stored (<code>FALSE</code>, default)?</p></td>
 
     <p>The object provided in <code>mask</code> is treated as a single mask,
   irrespective of that object consisting of only one or several features. The
-  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  extent comprising all features (point(s), line(s), polygon(s)) is used as
   area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
   may consist of several features, each of which are treated as seperate
   mask.</p>

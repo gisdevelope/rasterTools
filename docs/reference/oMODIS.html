@@ -142,7 +142,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"newest"</span>, <span class='kw'>process</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>process</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>downloadMODIS</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>getDates</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>getFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -173,23 +173,10 @@ interest. Either the integer of the layers position or the name of the
 layer.</p></td>
     </tr>
     <tr>
-      <th>version</th>
-      <td><p>[<code>integerish(1)</code> | <code>character(1)</code>]<br /> version of a
-modis dataset with 3 leading zeros, e.g. 055, default = "newest".</p></td>
-    </tr>
-    <tr>
       <th>process</th>
       <td><p>[<code>logical(1)</code>]<br /> should the data be procesed further in
 R (<code>TRUE</code>, default) or should the data merely be downloaded and stored
 on the harddisc (<code>FALSE</code>)?</p></td>
-    </tr>
-    <tr>
-      <th>raw</th>
-      <td><p>[<code>logical</code>]<br /> should the raw modis-data be obtained
-(<code>TRUE</code>) or should a correction be applied (<code>FALSE</code>, default).
-Applying the correction (i.e. the range is cut to the valid range and the
-correction factor is applied) is highly recommended, to end up with
-consisten data.</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -221,7 +208,7 @@ where product files are stored.</p></td>
 
     <p>The object provided in <code>mask</code> is treated as a single mask,
   irrespective of that object consisting of only one or several features. The
-  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  extent comprising all features (point(s), line(s), polygon(s)) is used as
   area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
   may consist of several features, each of which are treated as seperate
   mask.</p>

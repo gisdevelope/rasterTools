@@ -141,27 +141,21 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>from</span>, <span class='no'>to</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>to</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for geom</span>
-<span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>from</span>, <span class='no'>to</span>)</pre>
+<span class='fu'>setWindow</span>(<span class='no'>x</span>, <span class='no'>to</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>the object from which to set the reference window.</p></td>
-    </tr>
-    <tr>
-      <th>from</th>
-      <td><p>[<code>numeric(2)</code>]<br /> x and y value of a coordinate.</p></td>
+      <td><p>the object in which to set the reference window.</p></td>
     </tr>
     <tr>
       <th>to</th>
-      <td><p>[<code>numeric(2)</code> | <code>data.frame(1)</code>]<br /> - either x and y value
-of a coordinate at the oposing end of a rectangle with <code>from</code><br /> - or
-<code>data.frame</code> that contains either the two oposing corners or all four
+      <td><p>[<code>data.frame(1)</code>]<br /> two oposing corners or all four
 corners of the rectangle.</p></td>
     </tr>
     <tr>
@@ -173,7 +167,7 @@ corners of the rectangle.</p></td>
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
     <ul>
-<li><p><code>geom</code>: se the reference window of a <code>geom</code></p></li>
+<li><p><code>geom</code>: set the reference window of a <code>geom</code></p></li>
 </ul>
     
 

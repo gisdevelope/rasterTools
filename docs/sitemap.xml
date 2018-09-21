@@ -199,6 +199,9 @@
     <loc>http://EhrmannS.github.io/rasterTools/reference/rMatch.html</loc>
   </url>
   <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rMorph.html</loc>
+  </url>
+  <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/rOffset.html</loc>
   </url>
   <url>
@@ -287,6 +290,9 @@
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/spmRandom.html</loc>
+  </url>
+  <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/tiles_emma.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/visualise.html</loc>

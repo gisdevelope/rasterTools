@@ -158,8 +158,8 @@ raster with this kernel (default is a 3 by 3 cells diamond kernel).</p></td>
     <tr>
       <th>rotate</th>
       <td><p>[<code>logical(1)</code>]<br /> should the kernel be applied for all
-possible rotations (<code>TRUE</code>, default) or should the kernel be used
-as is (<code>FALSE</code>)?</p></td>
+possible rotations (<code>TRUE</code>, default) or should the kernel be used as
+is (<code>FALSE</code>)?</p></td>
     </tr>
     <tr>
       <th>background</th>
@@ -179,7 +179,8 @@ should have.</p></td>
     <p>The cells of a kernel can have the values 0, 1 and NA. The kernel
   cells with values 0 and 1 are matched accurately in the input raster. The
   kernel cells with value NA will be ignored.</p>
-<p>This is also known as the 'hit-or-miss'-transform.</p>
+<p>This is also known as the 'hit-or-miss'-transform.<br /><br /> Wrapper of
+  <code><a href='rMorph.html'>rMorph</a></code> with blend = 2 and merge = 12.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

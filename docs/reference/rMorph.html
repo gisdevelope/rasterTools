@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Morphologically dilate foreground patches in a raster — rDilate • rasterTools</title>
+<title>Morphologically modify a raster — rMorph • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Morphologically dilate foreground patches in a raster — rDilate" />
+<meta property="og:title" content="Morphologically modify a raster — rMorph" />
 
-<meta property="og:description" content="The morphological operation 'dilate' increases the value of cells along a
-gradient of values." />
+<meta property="og:description" content="Morphologically modify a raster" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -131,19 +130,19 @@ gradient of values." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Morphologically dilate foreground patches in a raster</h1>
+    <h1>Morphologically modify a raster</h1>
     <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/modify.operators.R'><code>R/modify.operators.R</code></a></small>
-    <div class="hidden name"><code>rDilate.Rd</code></div>
+    <div class="hidden name"><code>rMorph.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The morphological operation 'dilate' increases the value of cells along a
-gradient of values.</p>
+    <p>Morphologically modify a raster</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>rDilate</span>(<span class='no'>obj</span>, <span class='kw'>kernel</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>rMorph</span>(<span class='no'>obj</span>, <span class='kw'>kernel</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>blend</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>merge</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rotate</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>strictKernel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,70 +153,115 @@ gradient of values.</p>
     </tr>
     <tr>
       <th>kernel</th>
-      <td><p>[<code>matrix(1)</code>]<br /> scan the raster with this kernel (default
-is a 3 by 3 cells diamond kernel).</p></td>
+      <td><p>[<code>matrix(.)</code> | <code>list(.)</code> thereof]<br /> scan the raster
+with this kernel (default is a 3 by 3 cells diamond kernel).</p></td>
+    </tr>
+    <tr>
+      <th>blend</th>
+      <td><p>[<code>character(1)</code>]<br /> <code>identity</code>, <code>equal</code>,
+<code>lower</code>, <code>greater</code>, <code>plus</code>, <code>minus</code>, <code>product</code>;
+see Details.</p></td>
+    </tr>
+    <tr>
+      <th>merge</th>
+      <td><p>[<code>character(1)</code>]<br /> <code>min</code>, <code>max</code>, <code>all</code>,
+<code>any</code>, <code>sum</code>, <code>mean</code>, <code>median</code>, <code>sd</code>, <code>cv</code>,
+<code>one</code>, <code>zero</code>, <code>na</code>; see Details.</p></td>
+    </tr>
+    <tr>
+      <th>rotate</th>
+      <td><p>[<code>logical(1)</code>]<br /> should the kernel be applied for all
+possible rotations (<code>TRUE</code>, default) or should the kernel be used as
+is (<code>FALSE</code>)?</p></td>
+    </tr>
+    <tr>
+      <th>strictKernel</th>
+      <td><p>[<code>logical(1)</code>]<br /></p></td>
+    </tr>
+    <tr>
+      <th>background</th>
+      <td><p>[<code>integerish(1)</code>]<br /> the value any cell with value NA
+should have.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A <code>RasterLayer</code> of the same dimension as <code>obj</code>, where a
-  dilation has been performed.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>A morphological dilation changes the values in a raster after
-  comparing each value to a kernel that moves systematically across the
-  raster. A kernel is any 2D array with an odd number of cells in each
-  dimension and a focal cell in the middle. The cells of a kernel can have
-  four categories of values: 0, 1, NA and any value &gt; 1. When the kernel
-  values match the values of the input raster, the input raster cell covered
-  by the focal kernel cell is modified according to a specific operation, for
-  instance the smallest value covered by the kernel is assigned.</p>
-<p>Rasters are either binary or non-binary (greyscale) rasters.</p><ul>
-<li><p>For binary rasters the kernel cells with values 0 and 1 are matched
-  accurately in the input raster. Cells with value NA will be ignored, i.e.
-  "it does not matter what value is there".</p></li>
-<li><p>For a non-binary raster the
-  value 0 does not have any meaning and every 0 is turned into an NA. In case
-  a non-binary kernel is defined to dilate a non-binary (greyscale) raster,
-  each value of the input raster that is currently covered by the kernel is
-  summarised with the focal kernel value and the maximum of this set of
-  values is assigned to the input raster cell covered by the focal kernel
-  cell.</p></li>
+    <p>The morphC function (internal) is the basis of many modify
+  operations in <code>rasterTools</code> and <code>rMorph</code> exposes a fully
+  functional interface of this C++ function. The morphC function iteratively
+  goes through each pixel of a raster (<code>obj</code>) and compares the kernel
+  with the raster at that location. The result of this comparison depends on
+  the arguments <code>blend</code> and <code>merge</code>:</p><ul>
+<li><p>First, all
+  values in raster that are covered by the kernel (which may be larger than
+  one pixel) are "cut out" and summarised pairwise with <code>kernel</code> (i.e.
+  they are <em>blended</em>) by the function defined in <code>blend</code> (e.g.
+  "+"), leaving as many values as cells in <code>kernel</code>.</p></li>
+<li><p>Then these
+  values are summarised into a single value (i.e. they are <em>merged</em>) by
+  the function defined in <code>merge</code> (e.g. "mean") and the resulting value
+  is assigned in the current location in the raster.</p></li>
 </ul>
+    <p>The following functions are defined for <code>blend</code>:</p><ol>
+<li><p>identity: the value of obj where <code>kernel</code> is not NA.</p></li>
+<li><p>equal: the
+  value 1 where <code>obj</code> and <code>kernel</code> are equal, otherwise the value
+  0.</p></li>
+<li><p>lower: the values of <code>obj</code> that are lower than <code>kernel</code>,
+  otherwise 0.</p></li>
+<li><p>greater: the values of <code>obj</code> that are greater than
+  <code>kernel</code>, otherwise 0.</p></li>
+<li><p>plus: the values of <code>obj</code> added to
+  the values of <code>kernel</code>.</p></li>
+<li><p>minus: the values of <code>kernel</code>
+  subtracted from the values of <code>obj</code>.</p></li>
+<li><p>product: the product of the
+  values of <code>obj</code> and <code>kernel</code>.</p></li>
+</ol><p>The following functions are
+  defined for <code>merge</code>:</p><ol>
+<li><p>min: the minimum value.</p></li>
+<li><p>max: the maximum value.</p></li>
+<li><p>all: the value 1 if all non-NA values are not
+  0, otherwise 0.</p></li>
+<li><p>any: the value 1 if any of the non-NA values are 0,
+  otherwise 0.</p></li>
+<li><p>sum: the sum of all non-NA values.</p></li>
+<li><p>mean: the mean
+  of all non-NA values.</p></li>
+<li><p>median: the median of all non-NA values.</p></li>
+<li><p>sd: the standard deviation of all non-NA values.</p></li>
+<li><p>cv: the coefficient
+  of variation of all non-NA values.</p></li>
+<li><p>sumNa: if the sum of all values is
+  greater than 0 than this sum, otherwise NA.</p></li>
+</ol>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Credit for the original idea/architecture of the C++ part of this
+  function goes to Jon Clayden
+  (<a href='https://github.com/jonclayden/mmand'>R::mmand</a>). The functionality
+  has been slightly extended here.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other operators to morphologically modify a raster: <code><a href='rErode.html'>rErode</a></code>,
-  <code><a href='rMorph.html'>rMorph</a></code></p></div>
+    <div class='dont-index'><p>Other operators to morphologically modify a raster: <code><a href='rDilate.html'>rDilate</a></code>,
+  <code><a href='rErode.html'>rErode</a></code></p></div>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>input</span> <span class='kw'>&lt;-</span> <span class='no'>rtData</span>$<span class='no'>continuous</span>
-<span class='no'>binarised</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rBinarise.html'>rBinarise</a></span>(<span class='no'>input</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>30</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rDilate</span>(<span class='no'>binarised</span>))</div><div class='img'><img src='rDilate-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># use another kernel</span>
-(<span class='no'>myKernel</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>))</div><div class='output co'>#&gt;      [,1] [,2] [,3]
-#&gt; [1,]    1    1    1
-#&gt; [2,]    1    1    1
-#&gt; [3,]    1    1    1</div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rDilate</span>(<span class='no'>binarised</span>, <span class='kw'>kernel</span> <span class='kw'>=</span> <span class='no'>myKernel</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='rDilate-2.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># dilate also non-binary rasters</span>
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='fu'>rDilate</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>input</span>)))</div><div class='img'><img src='rDilate-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
 
+      <li><a href="#references">References</a></li>
+
       <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

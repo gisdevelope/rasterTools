@@ -193,7 +193,7 @@ supposed to be stored (i.e. on your harddisc).</p></td>
 
     <p>The object provided in <code>mask</code> is treated as a single mask,
   irrespective of that object consisting of only one or several features. The
-  extent comprising all features (point(s), line(s),polygon(s)) is used as
+  extent comprising all features (point(s), line(s), polygon(s)) is used as
   area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
   may consist of several features, each of which are treated as seperate
   mask.</p>
@@ -238,25 +238,24 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"># NOT RUN {
-require(magrittr)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>require</span>(<span class='no'>magrittr</span>)
 
-# load and outline masks from file
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) %>%
-  geomRectangle() %>%
-  setCRS(crs = projs$laea)
+<span class='co'># load and outline masks from file</span>
+<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"aWindow.csv"</span>,
+                   <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
 
-# extract worldclim data for the derived mask
-myWCLIM <- oWCLIM(mask = myMask,
-                  variable = c("tmin", "tmax"),
-                  month = c(5:9))
-visualise(gridded = myWCLIM$, trace = TRUE)
+<span class='co'># extract worldclim data for the derived mask</span>
+<span class='no'>myWCLIM</span> <span class='kw'>&lt;-</span> <span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
+                  <span class='kw'>variable</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"tavg"</span>),
+                  <span class='kw'>month</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>:<span class='fl'>9</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>myWCLIM</span>$<span class='no'>tavg</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-# get the (updated) bibliography
-reference(style = "bibtex")
-# }
-</pre>
+<span class='co'># get the (updated) bibliography</span>
+<span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
