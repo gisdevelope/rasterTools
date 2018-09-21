@@ -6,7 +6,7 @@ context("gToGrob")
 test_that("output is valid grob", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aPolyGeom <- geomPolygon(anchor = coords, window = window, col = "blue")

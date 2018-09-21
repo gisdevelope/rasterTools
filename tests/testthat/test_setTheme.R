@@ -122,14 +122,12 @@ test_that("modifying geom works", {
                              40, 10, 20, 30, 30, 20, 50, 40, 10, 20),
                        y = c(40, 40, 60, 70, 40, 20, 40, 10, 20, 
                              40, 20, 20, 50, 40, 40, 70, 40, 20, 60),
-                       id = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
-                              3, 3, 3, 4, 4, 4, 4, 4, 4, 4),
                        fid = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
                                3, 3, 3, 4, 4, 4, 5, 5, 5, 5))
   window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aGeom <- geomPolygon(anchor = coords, window = window)
-  myTheme <- setTheme(geom = list(scale = list(x = "fill", to = "id"),
+  myTheme <- setTheme(geom = list(scale = list(x = "fill", to = "fid"),
                                   line = "grey", 
                                   fill = c("#00204DFF", "#FFEA46FF"), 
                                   linetype = "dashed",

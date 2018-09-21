@@ -7,7 +7,7 @@ context("getWindow")
 test_that("getWindow of a geom", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = c(1, 2, 1, 2))
+                       fid = c(1, 2, 1, 2))
   window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aGeom <- geomPoint(anchor = coords, window = window)

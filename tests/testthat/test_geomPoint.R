@@ -6,7 +6,7 @@ context("geomPoint")
 test_that("output is valid geometry", {
   coords <- data.frame(x = c(40, 40),
                        y = c(40, 70),
-                       id = c(1, 2))
+                       fid = c(1, 2))
   window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
 

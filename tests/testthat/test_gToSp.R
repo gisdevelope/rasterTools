@@ -8,7 +8,7 @@ test_that("output has class Spatial*", {
                            5234735, 5281527, 5189955, 5041066),
                            Y = c(3977612, 3971119, 4028167, 3997230,
                            4060164, 4117856, 4118207, 4062838),
-                           id = c(1:8))
+                           fid = c(1:8))
 
   pointsGeom <- geomPoint(anchor = input)
   spPoints <- gToSp(geom = pointsGeom, crs = projs$laea)
@@ -29,7 +29,7 @@ test_that("output has correct length", {
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,
                             4060164, 4117856, 4118207, 4062838),
-                      id = c(1, 1, 2, 2, 2, 2, 1, 1))
+                      fid = c(1, 1, 2, 2, 2, 2, 1, 1))
   polyGeom <- geomPolygon(anchor = input)
   spPolygon <- gToSp(geom = polyGeom, crs = projs$laea)
   expect_equal(length(spPolygon), 2)
@@ -40,7 +40,7 @@ test_that("output has proper coordinate reference system", {
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,
                             4060164, 4117856, 4118207, 4062838),
-                      id = c(1, 1, 2, 2, 2, 2, 1, 1))
+                      fid = c(1, 1, 2, 2, 2, 2, 1, 1))
   polyGeom <- geomPolygon(anchor = input, show = FALSE)
   spPolygon <- gToSp(geom = polyGeom, crs = projs$laea)
   expect_equal(spPolygon@proj4string@projargs, projs$laea)

@@ -8,7 +8,6 @@ test_that("function loads 'csv' files", {
                      localPath = system.file("csv", package = "rasterTools"),
                      verbose = TRUE)
   expect_list(output, types = "geom")
-  
 })
 
 test_that("function loads also from a 'catalog'", {

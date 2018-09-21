@@ -20,22 +20,22 @@ test_that("output is valid geometry", {
   expect_class(groupedGeom, classes = "geom")
 })
 
-test_that("output has different values (id) than input", {
+test_that("output has different values (fid) than input", {
   input <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
                       y = c(40, 40, 60, 70, 10, 20, 40),
-                      id = 1)
+                      fid = 1)
   extent = data.frame(x = c(0, 80),
                       y = c(0, 80))
   aGeom <- geomPolygon(anchor = input, extent = extent)
   
   groupedGeom <- gGroup(geom = aGeom, distance = 40)
-  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
+  expect_false(length(aGeom@attr$fid) == length(groupedGeom@attr$fid))
   
   groupedGeom <- gGroup(geom = aGeom, index = c(1, 1, 1, 1, 2, 2, 2, 2))
-  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
+  expect_false(length(aGeom@attr$fid) == length(groupedGeom@attr$fid))
   
   groupedGeom <- gGroup(geom = aGeom, clusters = 2)
-  expect_false(length(aGeom@attr$id) == length(groupedGeom@attr$id))
+  expect_false(length(aGeom@attr$fid) == length(groupedGeom@attr$fid))
 })
 
 test_that("Error if arguments have wrong value", {
