@@ -715,6 +715,12 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   assertList(xAxis, any.missing = FALSE, max.len = 5, null.ok = TRUE)
   if(!is.null(xAxis)){
     assertNames(names(xAxis), subset.of = c("plot", "bins", "margin", "label", "ticks"))
+    if(any(names(xAxis) == "plot")){
+      if(xAxis$plot == FALSE){
+        xAxis$label$plot <- FALSE
+        xAxis$ticks$plot <- FALSE
+      }
+    }
     for(i in seq_along(names(xAxis))){
       if(names(xAxis)[i] == "label"){
         assertList(xAxis$label, any.missing = FALSE, max.len = 5)
@@ -742,6 +748,12 @@ setTheme <- function(from = NULL, title = NULL, box = NULL, xAxis = NULL,
   assertList(yAxis, any.missing = FALSE, max.len = 5, null.ok = TRUE)
   if(!is.null(yAxis)){
     assertNames(names(yAxis), subset.of = c("plot", "bins", "margin", "label", "ticks"))
+    if(any(names(yAxis) == "plot")){
+      if(yAxis$plot == FALSE){
+        yAxis$label$plot <- FALSE
+        yAxis$ticks$plot <- FALSE
+      }
+    }
     for(i in seq_along(names(yAxis))){
       if(names(yAxis)[i] == "label"){
         assertList(yAxis$label, any.missing = FALSE, max.len = 5)
