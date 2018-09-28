@@ -49,6 +49,7 @@
 #' \dontrun{
 #'
 #' require(magrittr)
+#' require(rgeos)
 #'
 #' # define an algorithm
 #' myDatasets <- list(list(operator = "oGFC", years = 2006)),
@@ -56,12 +57,13 @@
 #'                    list(operator = "oMODIS", product = "mod17a3",
 #'                         period = 2006, layer = 2))
 #'
-#' # load a mask from some file,
-#' # myMask <- loadData(files = "myLocations2.csv",
-#' #                    localPath = rtPaths$project) %>%
-#' #    gGroup(distance = 10000) %>%
-#' #    geomPolygon() %>%
-#' #    gToSp(crs = LAEA)
+#' load a mask from some file,
+#' myMask <- loadData(files = "locations.csv",
+#'                    localPath = system.file("csv", package="rasterTools")) %>%
+#'   gGroup(distance = 10000) %>%
+#'   geomRectangle() %>%
+#'   gToSp(crs = projs$laea) %>%
+#'   gBuffer(width = 1000, byid = TRUE)
 #'
 #' # grab the data
 #' myData <- obtain(data = myDatasets, mask = myMask)
