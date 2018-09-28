@@ -340,8 +340,8 @@ gToGrob <- function(geom, theme = NULL, ...){
   
   if(featureType %in% c("point")){
 
-    geomGrob <- pointsGrob(x = coords$x,
-                           y = coords$y,
+    geomGrob <- pointsGrob(x = unit(coords$x, "npc"),
+                           y = unit(coords$y, "npc"),
                            pch = theme@geom$pointsymbol,
                            size = unit(theme@geom$pointsize, "char"),
                            gp = gpar(
