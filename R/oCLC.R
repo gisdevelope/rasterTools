@@ -44,15 +44,20 @@ oCLC <- function(mask = NULL, years = NULL){
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
   
   labels <- meta_clc
-
+  
   # transform crs of the mask to the dataset crs
-  targetCRS <- getCRS(x = mask)
-  if(targetCRS != projs$laea){
-    mask <- setCRS(x = mask, crs = projs$laea)
-  }
-  theExtent <- getExtent(x = mask)
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
+  }
+  targetCRS <- getCRS(x = mask)
+  theExtent <- geomRectangle(anchor = getExtent(x = mask))
+  theExtent <- setCRS(x = theExtent, crs = targetCRS)
+  
+  if(targetCRS != projs$laea){
+    mask <- setCRS(x = mask, crs = projs$laea)
+    targetExtent <- setCRS(theExtent, crs = projs$laea)
+  } else{
+    targetExtent <- theExtent
   }
 
   clc_out <- stack()
@@ -67,10 +72,8 @@ oCLC <- function(mask = NULL, years = NULL){
 
     history <- c(history, paste0(tempObject@history, " for the year ", years[i], ""))
 
-    tempObject <- setCRS(x = tempObject, crs = projs$laea)
-
     message(paste0("  ... cropping CLC to target area"))
-    tempObject <- crop(tempObject, theExtent, snap = "out")
+    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     names(tempObject) <- paste0("landcover_", years[i])
     history <-  c(history, list(paste0("object has been cropped")))
 
