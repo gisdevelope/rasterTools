@@ -178,13 +178,12 @@ downloadEMMA <- function(file = NULL, localPath = NULL){
   if(!is.null(file) & !is.null(localPath)){
 
     species <- strsplit(file, split = "[.]")[[1]][1]
-    species <- str_replace(species, "_", " ")
+    species <- str_replace(species, "_", "%20")
     onlinePath <- paste0(rtPaths$emma$remote, species)
 
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
 
     GET(url = onlinePath,
-        write_disk(paste0(localPath, "/", str_replace(file, " ", "_"))),
-        progress())
+        write_disk(paste0(localPath, "/", str_replace(file, " ", "_"))))
   }
 }
