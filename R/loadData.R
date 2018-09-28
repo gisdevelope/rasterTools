@@ -369,6 +369,7 @@ load_hdf <- function(path, layer = NULL){
 #'   \code{layer}.
 #' @family loaders
 #' @importFrom tibble tibble as_tibble
+#' @importFrom stringr str_split str_replace
 #' @export
 
 load_svg <- function(path, layer){
@@ -381,9 +382,10 @@ load_svg <- function(path, layer){
   # throw out uninteresting lines
   if(layer == "emma"){
 
-    path <- strsplit(path, split = "/")[[1]]
+    path <- str_split(string = path, pattern = "/")[[1]]
     species <- path[length(path)]
-    species <- strsplit(species, split = "[.]")[[1]][1]
+    species <- str_split(string = species, pattern = "[.]")[[1]][1]
+    species <- str_replace(string = species, pattern = "_", replacement = " ")
 
     txt <- txt[grep("use id[[:space:]]?=", txt)]
     txt <- gsub("'", "", txt)
@@ -395,7 +397,7 @@ load_svg <- function(path, layer){
 
     if(length(txt) != 0){
       # make a proper data.frame out of the mess.
-      allOcc <- strsplit(txt, " ")
+      allOcc <- str_split(string = txt, pattern = " ")
       allOcc <- as.data.frame(do.call(rbind, allOcc))[-c(2:3)] # these values which look like coordinates are merely values needed to render the svg file.
       allOcc <- cbind(species, allOcc)
       allOcc <- as_tibble(allOcc)
