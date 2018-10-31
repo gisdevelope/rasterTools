@@ -4,8 +4,8 @@
 \alias{rMorph}
 \title{Morphologically modify a raster}
 \usage{
-rMorph(obj, kernel = NULL, blend = NULL, merge = NULL, rotate = TRUE,
-  strictKernel = TRUE, background = NULL)
+rMorph(obj, kernel = NULL, blend = NULL, merge = NULL,
+  rotate = TRUE, strictKernel = TRUE, background = NULL)
 }
 \arguments{
 \item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
@@ -76,3 +76,4 @@ Credit for the original idea/architecture of the C++ part of this
 Other operators to morphologically modify a raster: \code{\link{rDilate}},
   \code{\link{rErode}}
 }
+\concept{operators to morphologically modify a raster}

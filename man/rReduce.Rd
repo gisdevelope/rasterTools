@@ -63,3 +63,4 @@ visualise(rReduce(myPatches, by = by))
 Other operators to modify a raster: \code{\link{rBlend}},
   \code{\link{rRescale}}, \code{\link{rSegregate}}
 }
+\concept{operators to modify a raster}

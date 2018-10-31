@@ -76,3 +76,4 @@ Other operators to select a subset of cells: \code{\link{rBounded}},
   \code{\link{rGreater}}, \code{\link{rLess}},
   \code{\link{rMask}}
 }
+\concept{operators to select a subset of cells}

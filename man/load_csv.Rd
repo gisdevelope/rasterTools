@@ -15,8 +15,9 @@ a \code{point geometry} of the coordinates
 \description{
 csv is the short form of \emph{Comma Separated Values}, which represents
 simple tables of systematically delimited information. The files loaded with
-this function should have the columns \code{x}, \code{y} and \code{id} and
-potentially other columns that represent the attributes of these coordinates.
+this function should have the columns \code{x}, \code{y} and potentially
+other columns that represent the attributes of these coordinates, for example
+an \code{id}.
 }
 \details{
 A column \code{fid} can have a deviating value than \code{id} when several
@@ -30,3 +31,4 @@ its own.
 Other loaders: \code{\link{load_hdf}},
   \code{\link{load_kml}}, \code{\link{load_svg}}
 }
+\concept{loaders}

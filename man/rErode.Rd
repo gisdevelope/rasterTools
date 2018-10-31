@@ -58,3 +58,4 @@ visualise(raster::stack(input, rErode(obj = input)))
 Other operators to morphologically modify a raster: \code{\link{rDilate}},
   \code{\link{rMorph}}
 }
+\concept{operators to morphologically modify a raster}

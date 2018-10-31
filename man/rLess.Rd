@@ -31,3 +31,4 @@ Other operators to select a subset of cells: \code{\link{rBounded}},
   \code{\link{rGreater}}, \code{\link{rMask}},
   \code{\link{rMatch}}
 }
+\concept{operators to select a subset of cells}

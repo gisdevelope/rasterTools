@@ -4,8 +4,8 @@
 \alias{catalog}
 \title{Build a look-up-table (catalog)}
 \usage{
-catalog(path = ".", abbreviateBy = NULL, type = NULL, recursive = FALSE,
-  inclType = FALSE, silent = FALSE)
+catalog(path = ".", abbreviateBy = NULL, type = NULL,
+  recursive = FALSE, inclType = FALSE, silent = FALSE)
 }
 \arguments{
 \item{path}{[\code{character(1)}]\cr the path to a folder that contains files

@@ -8,20 +8,21 @@
 \alias{geomHexagon}
 \title{Create a polygon geometry}
 \usage{
-geomPolygon(anchor = NULL, window = NULL, template = NULL, features = 1,
-  vertices = NULL, regular = FALSE, show = FALSE, ...)
+geomPolygon(anchor = NULL, window = NULL, template = NULL,
+  features = 1, vertices = NULL, regular = FALSE, show = FALSE,
+  ...)
 
 geomTriangle(anchor = NULL, window = NULL, template = NULL,
   features = 1, show = FALSE, ...)
 
-geomSquare(anchor = NULL, window = NULL, template = NULL, features = 1,
-  show = FALSE, ...)
+geomSquare(anchor = NULL, window = NULL, template = NULL,
+  features = 1, show = FALSE, ...)
 
 geomRectangle(anchor = NULL, window = NULL, template = NULL,
   features = 1, show = FALSE, ...)
 
-geomHexagon(anchor = NULL, window = NULL, template = NULL, features = 1,
-  show = FALSE, ...)
+geomHexagon(anchor = NULL, window = NULL, template = NULL,
+  features = 1, show = FALSE, ...)
 }
 \arguments{
 \item{anchor}{[\code{geom} | \code{data.frame(1)}]\cr Object to derive the
@@ -139,3 +140,4 @@ Tools to modify geometries: \code{\link{gRotate}},
 Other shapes: \code{\link{geomPoint}},
   \code{\link{geomRand}}
 }
+\concept{shapes}

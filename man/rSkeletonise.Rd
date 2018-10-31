@@ -4,7 +4,8 @@
 \alias{rSkeletonise}
 \title{Determine the skeleton of foreground patches in a raster}
 \usage{
-rSkeletonise(obj, method = "hitormiss", kernel = NULL, background = NULL)
+rSkeletonise(obj, method = "hitormiss", kernel = NULL,
+  background = NULL)
 }
 \arguments{
 \item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
@@ -44,3 +45,4 @@ visualise(raster::stack(binarised, rSkeletonise(binarised)))
 Other operators to determine objects: \code{\link{rCentroid}},
   \code{\link{rPatches}}
 }
+\concept{operators to determine objects}

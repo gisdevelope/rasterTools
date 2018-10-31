@@ -46,3 +46,4 @@ visualise(patchValues[[c(2, 3, 12, 16)]])
 Other operators to modify a raster: \code{\link{rBlend}},
   \code{\link{rReduce}}, \code{\link{rRescale}}
 }
+\concept{operators to modify a raster}

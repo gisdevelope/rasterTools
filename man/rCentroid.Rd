@@ -39,3 +39,4 @@ visualise(raster = patches, geom = centroid_coords, col = "red")
 Other operators to determine objects: \code{\link{rPatches}},
   \code{\link{rSkeletonise}}
 }
+\concept{operators to determine objects}

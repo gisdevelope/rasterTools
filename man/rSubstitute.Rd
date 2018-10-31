@@ -31,3 +31,4 @@ Other operators to modify cell values: \code{\link{rBinarise}},
   \code{\link{rFillNA}}, \code{\link{rOffset}},
   \code{\link{rPermute}}, \code{\link{rRange}}
 }
+\concept{operators to modify cell values}

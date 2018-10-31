@@ -34,3 +34,4 @@ visualise(rPatches(binarised))
 Other operators to determine objects: \code{\link{rCentroid}},
   \code{\link{rSkeletonise}}
 }
+\concept{operators to determine objects}
