@@ -19,7 +19,7 @@
 #'   \code{\link{gToRaster}}, \code{\link{gFrom}}
 #' @examples
 #' # create points programmatically
-#' somePoints <- data.frame(fid = 1:8, X = c(5190599, 5222810, 5041066, 5234735,
+#' somePoints <- data.frame(X = c(5190599, 5222810, 5041066, 5234735,
 #'                          5326537, 5027609, 5281527, 5189955), Y = c(3977612,
 #'                          4060164, 3997230, 4117856, 4028167, 3971119, 4118207,
 #'                          4062838))
@@ -117,7 +117,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   theGeom <- new(Class = "geom",
                  type = "point",
                  coords = anchor,
-                 attr = data.frame(fid = unique(anchor$fid), n = 1),
+                 attr = data.frame(fid = unique(anchor$fid), n = as.data.frame(table(anchor$fid))$Freq),
                  window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
                  scale = "absolute",
                  crs = as.character(projection),
