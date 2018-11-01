@@ -169,8 +169,9 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 #'
 #' csv is the short form of \emph{Comma Separated Values}, which represents
 #' simple tables of systematically delimited information. The files loaded with
-#' this function should have the columns \code{x}, \code{y} and \code{id} and
-#' potentially other columns that represent the attributes of these coordinates.
+#' this function should have the columns \code{x}, \code{y} and potentially
+#' other columns that represent the attributes of these coordinates, for example
+#' an \code{id}.
 #'
 #' A column \code{fid} can have a deviating value than \code{id} when several
 #' features are part of the same object, such as multiple line features or holes
@@ -191,11 +192,16 @@ load_csv <- function(path){
   assertFile(path, access = "r", extension = "csv")
   out <- read_csv(path)
   colnames(out) <- tolower(colnames(out))
-  assertNames(names(out), must.include = c("x", "y", "id"))
-  if("fid" %in% names(out)){
-    theCoords <- tibble(id = out$id, fid = out$fid, x = out$x, y = out$y)
+  assertNames(names(out), must.include = c("x", "y"))
+  if(!"id" %in% names(out)){
+    theCoords <- tibble(id = seq_along(out$x), x = out$x, y = out$y)
   } else{
-    theCoords <- tibble(id = out$id, fid = 1, x = out$x, y = out$y)
+    theCoords <- tibble(id = out$id, x = out$x, y = out$y)
+  }
+  if(!"fid" %in% names(out)){
+    theCoords <- bind_cols(fid = seq_along(id), theCoords)
+  } else{
+    theCoords <- bind_cols(fid = out$fid, theCoords)
   }
   theData <- out[which(!colnames(out) %in% c("x", "y", "id", "fid"))]
   theAttr <- tibble(fid = unique(theCoords$fid),

@@ -39,9 +39,9 @@
   assign("rtPaths", getOption("rtPaths"), envir = as.environment("package:rasterTools"))
 
   if(!file.exists(pathFile)){
-    packageStartupMessage(paste0("Hi, I am rasterTools ", packageVersion("rasterTools"), " and I help you with your spatial data!\nI don't know where your files are stored, please see '?setPaths' to create a suitable index."))
+    packageStartupMessage(paste0("Hi, I am rasterTools ", packageVersion("rasterTools"), " and I help you organise and compute spatial data!\nI don't know where your files are stored, please see '?setPaths' to create a suitable index."))
   } else{
-    packageStartupMessage(paste0("Hi, I am rasterTools ", packageVersion("rasterTools"), " and I help you with your spatial data!"))
+    packageStartupMessage(paste0("Hi, I am rasterTools ", packageVersion("rasterTools"), " and I help you organise and compute spatial data!"))
 
   }
 
