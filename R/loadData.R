@@ -299,7 +299,7 @@ load_kml <- function(path, layer = NULL){
 #' @param layer [\code{character(1)}]\cr the layer name.
 #' @return \code{RasterLayer} of the loaded \code{hdf} file
 #' @family loaders
-#' @importFrom gdalUtils gdalinfo
+#' @importFrom gdalUtils get_subdatasets
 #' @importFrom raster stack raster
 #' @importFrom utils glob2rx
 #' @export
@@ -328,7 +328,7 @@ load_hdf <- function(path, layer = NULL){
     layer <- seq_along(files)
   }
 
-  tsds <- paths[layer]
+  tsds <- subsets_name[layer]
   files <- files[layer]
 
   if(length(tsds)>1){
