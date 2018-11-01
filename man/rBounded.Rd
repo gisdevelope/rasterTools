@@ -32,3 +32,4 @@ Other operators to select a subset of cells: \code{\link{rGreater}},
   \code{\link{rLess}}, \code{\link{rMask}},
   \code{\link{rMatch}}
 }
+\concept{operators to select a subset of cells}

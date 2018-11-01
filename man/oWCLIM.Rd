@@ -5,8 +5,8 @@
 \alias{downloadWCLIM}
 \title{Obtain global climate data}
 \usage{
-oWCLIM(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5,
-  version = 2)
+oWCLIM(mask = NULL, variable = NULL, month = c(1:12),
+  resolution = 0.5, version = 2)
 
 downloadWCLIM(file = NULL, localPath = NULL)
 }
@@ -100,3 +100,4 @@ Other obtain operators: \code{\link{oCLC}},
   \code{\link{oEFTA}}, \code{\link{oEMMA}},
   \code{\link{oGFC}}, \code{\link{oMODIS}}
 }
+\concept{obtain operators}

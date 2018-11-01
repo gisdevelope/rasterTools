@@ -43,3 +43,4 @@ Other operators to modify cell values: \code{\link{rBinarise}},
   \code{\link{rFillNA}}, \code{\link{rOffset}},
   \code{\link{rRange}}, \code{\link{rSubstitute}}
 }
+\concept{operators to modify cell values}

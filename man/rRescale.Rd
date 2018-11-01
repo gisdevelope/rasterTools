@@ -53,3 +53,4 @@ visualise(rSkeletonise(rescaled), new = TRUE)
 Other operators to modify a raster: \code{\link{rBlend}},
   \code{\link{rReduce}}, \code{\link{rSegregate}}
 }
+\concept{operators to modify a raster}

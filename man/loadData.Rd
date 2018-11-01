@@ -4,8 +4,8 @@
 \alias{loadData}
 \title{Import spatial datasets}
 \usage{
-loadData(files = NULL, layer = NULL, dataset = NULL, localPath = NULL,
-  verbose = FALSE, ...)
+loadData(files = NULL, layer = NULL, dataset = NULL,
+  localPath = NULL, verbose = FALSE, ...)
 }
 \arguments{
 \item{files}{[\code{character(.)} | \code{data.frame(1)}]\cr the files, as

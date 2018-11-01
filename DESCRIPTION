@@ -29,7 +29,7 @@ Imports: Rcpp (>= 0.12.12),
     readr,
     dplyr,
     tibble
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 LinkingTo: Rcpp
 Suggests: testthat,
     rmarkdown,

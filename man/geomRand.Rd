@@ -4,8 +4,8 @@
 \alias{geomRand}
 \title{Create a geometry randomly}
 \usage{
-geomRand(type = "point", template = NULL, vertices = NULL, show = FALSE,
-  ...)
+geomRand(type = "point", template = NULL, vertices = NULL,
+  show = FALSE, ...)
 }
 \arguments{
 \item{type}{[\code{character(1)}]\cr Either one of the three main feature
@@ -46,3 +46,4 @@ someGeom <- geomRand(template = input, col = "green", show = TRUE)
 Other shapes: \code{\link{geomPoint}},
   \code{\link{geomPolygon}}
 }
+\concept{shapes}

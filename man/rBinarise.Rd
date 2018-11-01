@@ -37,3 +37,4 @@ Other operators to modify cell values: \code{\link{rCategorise}},
   \code{\link{rOffset}}, \code{\link{rPermute}},
   \code{\link{rRange}}, \code{\link{rSubstitute}}
 }
+\concept{operators to modify cell values}

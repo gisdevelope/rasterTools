@@ -60,3 +60,4 @@ Tools to modify geometries: \code{\link{gRotate}},
 Other shapes: \code{\link{geomPolygon}},
   \code{\link{geomRand}}
 }
+\concept{shapes}

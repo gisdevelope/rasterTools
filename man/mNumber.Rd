@@ -50,3 +50,4 @@ Other generic metrics: \code{\link{mAdjacency}},
   \code{\link{mArea}}, \code{\link{mPerimeter}},
   \code{\link{mValues}}
 }
+\concept{generic metrics}

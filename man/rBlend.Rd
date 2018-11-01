@@ -59,3 +59,4 @@ visualise(rBlend(patches, overlay = mask, weight = 10))
 Other operators to modify a raster: \code{\link{rReduce}},
   \code{\link{rRescale}}, \code{\link{rSegregate}}
 }
+\concept{operators to modify a raster}

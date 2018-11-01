@@ -28,3 +28,4 @@ its own.
 Other loaders: \code{\link{load_csv}},
   \code{\link{load_kml}}, \code{\link{load_svg}}
 }
+\concept{loaders}

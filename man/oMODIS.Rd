@@ -127,3 +127,4 @@ Other obtain operators: \code{\link{oCLC}},
   \code{\link{oEFTA}}, \code{\link{oEMMA}},
   \code{\link{oGFC}}, \code{\link{oWCLIM}}
 }
+\concept{obtain operators}

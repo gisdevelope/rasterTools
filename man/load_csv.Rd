@@ -30,3 +30,4 @@ its own.
 Other loaders: \code{\link{load_hdf}},
   \code{\link{load_kml}}, \code{\link{load_svg}}
 }
+\concept{loaders}

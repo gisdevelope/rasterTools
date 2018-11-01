@@ -82,3 +82,4 @@ Other obtain operators: \code{\link{oCLC}},
   \code{\link{oEMMA}}, \code{\link{oGFC}},
   \code{\link{oMODIS}}, \code{\link{oWCLIM}}
 }
+\concept{obtain operators}
