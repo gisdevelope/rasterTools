@@ -305,35 +305,20 @@ load_kml <- function(path, layer = NULL){
 #' @export
 
 load_hdf <- function(path, layer = NULL){
-  # get the layers; could be done via get_subdatasets(path), but if we look into
-  # get_subdatasets(), we see that it is a rather low-level wrapper around
-  # gdalinfo(). So we can also use gdalinfo() and have more control.
+
   assertFile(path, access = "r", extension = "hdf")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
   
-  gdalinfo_raw <- gdalinfo(datasetname = path)
-
-  if(!any(grep("SUBDATASET", gdalinfo_raw))){
-    stop(paste0("The dataset in ", path, " has not been given according to the expected specifications. I abort loading it."))
-  } else{
-
-    subsets_name <- gdalinfo_raw[grep(glob2rx("*SUBDATASET*NAME*"), gdalinfo_raw)]
-    subset_desc <- gdalinfo_raw[grep(glob2rx("*SUBDATASET*DESC*"), gdalinfo_raw)]
-
-    paths <- unlist(lapply(
-      seq_along(subsets_name), function(i){
-        gsub("\"", "", strsplit(subsets_name[i], "=")[[1]][2])
-      }
-    ))
-    files <- unlist(lapply(
-      seq_along(subsets_name), function(i){
-        parts <- strsplit(subsets_name[i], ":")[[1]]
-        parts[length(parts)]
-        
-      }
-    ))
-  }
-
+  subsets_name <- get_subdatasets(datasetname = path)
+  
+  files <- unlist(lapply(
+    seq_along(subsets_name), function(i){
+      parts <- strsplit(subsets_name[i], ":")[[1]]
+      parts[length(parts)]
+      
+    }
+  ))
+  
   # select the layer(s)
   if(!is.numeric(layer)){
     layer <- which(files %in% layer)
