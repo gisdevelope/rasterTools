@@ -100,7 +100,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-10-31</h4>
+            <h4 class="date">2018-11-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -133,18 +133,18 @@
 </h2>
 <p><code>rasterTools</code> comes with its own (spatial) S4 class. This class is radically simplified (even in comparison to <code>sf</code>) and thus consists only of the feature classes <code>point</code>, <code>line</code> and <code>polygon</code>. It does, however, come with many functions that create specific types of lines or polygons, for instance <code><a href="../reference/geomPolygon.html">geomHexagon()</a></code>, which creates exclusively hexagonal polygon geometries.</p>
 <p>These geometries are deliberately per default not <em>spatial</em> in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a <em>coordinate reference system</em>. We learn a lot about them by simply creating and plotting one:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
-<span class="co">#&gt; Loading required package: sp</span>
-<span class="kw">library</span>(rasterTools)
-<span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you organise and compute spatial data!</span>
-<span class="co">#&gt; I don't know where your files are stored, please see '?setPaths' to create a suitable index.</span>
-
-coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
-                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
-                     <span class="dt">id =</span> <span class="dv">1</span>)
-window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),
-                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))
-(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(raster)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; Loading required package: sp</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">library</span>(rasterTools)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you organise and compute spatial data!</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; I don't know where your files are stored, please see '?setPaths' to create a suitable index.</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">                     <span class="dt">id =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <pre><code>#&gt; class      : geom
 #&gt; type       : polygon
@@ -172,100 +172,100 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 <h2 class="hasAnchor">
 <a href="#obtain-spatial-datasets" class="anchor"></a>Obtain spatial datasets</h2>
 <p>An algorithm with which one would obtain information from various spatial data sets could be:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myDatasets &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oGFC"</span>, <span class="dt">period =</span> <span class="kw">c</span>(<span class="dv">2006</span>)),
-                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oMODIS"</span>, <span class="dt">product =</span> <span class="st">"mod17a3"</span>, <span class="dt">period =</span> <span class="dv">2006</span>,
-                        <span class="dt">layer =</span> <span class="dv">2</span>))</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">myDatasets &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oGFC"</span>, <span class="dt">period =</span> <span class="kw">c</span>(<span class="dv">2006</span>)),</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">                   <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"oMODIS"</span>, <span class="dt">product =</span> <span class="st">"mod17a3"</span>, <span class="dt">period =</span> <span class="dv">2006</span>,</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                        <span class="dt">layer =</span> <span class="dv">2</span>))</a></code></pre></div>
 <p>Most of the different spatial datasets are available in a specific file format and may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the <code>product</code> and <code>layer</code> need to be specified. Each of the required arguments can be found in the respective documentation, for instance with <code><a href="../reference/oMODIS.html">?oMODIS</a></code>.</p>
 <p>Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask (of the class <code>geom</code>) to outline this area of interest:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'magrittr'</span>
-<span class="co">#&gt; The following object is masked from 'package:raster':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     extract</span>
-myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> <span class="st">"aWindow.csv"</span>,
-                   <span class="dt">localPath =</span> <span class="kw">system.file</span>(<span class="st">"csv"</span>, <span class="dt">package=</span><span class="st">"rasterTools"</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">crs =</span> projs<span class="op">$</span>laea)
-<span class="co">#&gt; Parsed with column specification:</span>
-<span class="co">#&gt; cols(</span>
-<span class="co">#&gt;   fid = col_integer(),</span>
-<span class="co">#&gt;   x = col_integer(),</span>
-<span class="co">#&gt;   y = col_integer()</span>
-<span class="co">#&gt; )</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; Attaching package: 'magrittr'</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; The following object is masked from 'package:raster':</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt;     extract</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">myMask &lt;-<span class="st"> </span><span class="kw"><a href="../reference/loadData.html">loadData</a></span>(<span class="dt">files =</span> <span class="st">"aWindow.csv"</span>,</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">                   <span class="dt">localPath =</span> <span class="kw">system.file</span>(<span class="st">"csv"</span>, <span class="dt">package=</span><span class="st">"rasterTools"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="../reference/geomPolygon.html">geomRectangle</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="../reference/setCRS.html">setCRS</a></span>(<span class="dt">crs =</span> projs<span class="op">$</span>laea)</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; Parsed with column specification:</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt; cols(</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;   fid = col_integer(),</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;   x = col_integer(),</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt;   y = col_integer()</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; )</span></a></code></pre></div>
 <p>The collection of datasets for the area of our interest can be obtained by the following code:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">myData &lt;-<span class="st"> </span><span class="kw"><a href="../reference/obtain.html">obtain</a></span>(<span class="dt">data =</span> myDatasets, <span class="dt">mask =</span> myMask)</a></code></pre></div>
 <p>(output here not shown as it may download the datasets, if you do not have them yet)</p>
 </div>
 <div id="modify-raster-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#modify-raster-objects" class="anchor"></a>Modify raster objects</h2>
 <p>A typical modification algorithm determines patches of the foreground in a raster with continuous integer values:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
-                    <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">                    <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</a></code></pre></div>
 <p>When using this algorithm in <code><a href="../reference/modify.html">modify()</a></code> while <code>sequential = TRUE</code> the binarised raster will be used to derive patches. The output of <code>rBinarise</code> will be passed to <code>rPatches</code>, which determines patches from the thresholded rasters values.</p>
 <p>However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cc_cats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),
-                <span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),
-                <span class="dt">get_categories =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCategorise"</span>, <span class="dt">n =</span> <span class="dv">5</span>))</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">cc_cats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">                <span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">                <span class="dt">get_categories =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCategorise"</span>, <span class="dt">n =</span> <span class="dv">5</span>))</a></code></pre></div>
 <p>In this case <code>sequential = TRUE</code> would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to <code>FALSE</code> in the call).</p>
 <p>The modifications would be carried out by:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>continuous
-myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> myInput, <span class="dt">by =</span> get_patches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>continuous</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">myPatches &lt;-<span class="st"> </span><span class="kw"><a href="../reference/modify.html">modify</a></span>(<span class="dt">input =</span> myInput, <span class="dt">by =</span> get_patches, <span class="dt">sequential =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="../reference/visualise.html">visualise</a></span>(raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(myInput, myPatches))</a></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div id="measure-raster-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#measure-raster-objects" class="anchor"></a>Measure raster objects</h2>
 <p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical
-myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>))
-<span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
-<span class="co">#&gt; $a_c</span>
-<span class="co">#&gt;   class result</span>
-<span class="co">#&gt; 1     1     37</span>
-<span class="co">#&gt; 2    11    104</span>
-<span class="co">#&gt; 3    21    209</span>
-<span class="co">#&gt; 4    24    914</span>
-<span class="co">#&gt; 5    27    466</span>
-<span class="co">#&gt; 6    31     72</span>
-<span class="co">#&gt; 7    41    561</span>
-<span class="co">#&gt; 8    44    453</span>
-<span class="co">#&gt; 9    47    544</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $a_l</span>
-<span class="co">#&gt;   landscape result</span>
-<span class="co">#&gt; 1         1   3360</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>))</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">#&gt; $a_c</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt;   class result</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt; 1     1     37</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="co">#&gt; 2    11    104</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="co">#&gt; 3    21    209</span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co">#&gt; 4    24    914</span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="co">#&gt; 5    27    466</span></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="co">#&gt; 6    31     72</span></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="co">#&gt; 7    41    561</span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"><span class="co">#&gt; 8    44    453</span></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="co">#&gt; 9    47    544</span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"><span class="co">#&gt; $a_l</span></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co">#&gt;   landscape result</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="co">#&gt; 1         1   3360</span></a></code></pre></div>
 <p>The so defined <em>terms</em> are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the <em>Class proportional area</em> is the class areas divided by the landscape area:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
-                 <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">myMetric &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">                 <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">                 <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>)</a></code></pre></div>
 <p>Several derived metrics can be defined in one algorithm, given the required terms are defined:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_p =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>),
-                  <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),
-                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),
-                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>,
-                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_l * 100"</span>)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_p =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"patch"</span>),</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">                  <span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>,</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_l * 100"</span>)</a></code></pre></div>
 <p>The generic metrics <code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code> are available. Equations for the derived metrics can be found in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette (and with increasing version numbers more of them, for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code>). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
 <p>Finally, the measurement of the <em>class proportional area</em> and the <em>largest patch index</em>, in a raster where patches have been determined, would be carried out by:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;   class  mCPA</span>
-<span class="co">#&gt; 1     1  1.10</span>
-<span class="co">#&gt; 2    11  3.10</span>
-<span class="co">#&gt; 3    21  6.22</span>
-<span class="co">#&gt; 4    24 27.20</span>
-<span class="co">#&gt; 5    27 13.87</span>
-<span class="co">#&gt; 6    31  2.14</span>
-<span class="co">#&gt; 7    41 16.70</span>
-<span class="co">#&gt; 8    44 13.48</span>
-<span class="co">#&gt; 9    47 16.19</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;   landscape  mLPI</span>
-<span class="co">#&gt; 1         1 24.88</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">#&gt;   class  mCPA</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">#&gt; 1     1  1.10</span></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="co">#&gt; 2    11  3.10</span></a>
+<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="co">#&gt; 3    21  6.22</span></a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="co">#&gt; 4    24 27.20</span></a>
+<a class="sourceLine" id="cb16-8" data-line-number="8"><span class="co">#&gt; 5    27 13.87</span></a>
+<a class="sourceLine" id="cb16-9" data-line-number="9"><span class="co">#&gt; 6    31  2.14</span></a>
+<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="co">#&gt; 7    41 16.70</span></a>
+<a class="sourceLine" id="cb16-11" data-line-number="11"><span class="co">#&gt; 8    44 13.48</span></a>
+<a class="sourceLine" id="cb16-12" data-line-number="12"><span class="co">#&gt; 9    47 16.19</span></a>
+<a class="sourceLine" id="cb16-13" data-line-number="13"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb16-14" data-line-number="14"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb16-15" data-line-number="15"><span class="co">#&gt;   landscape  mLPI</span></a>
+<a class="sourceLine" id="cb16-16" data-line-number="16"><span class="co">#&gt; 1         1 24.88</span></a></code></pre></div>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">
@@ -279,10 +279,10 @@ myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 <a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
 <div id="ref-bush_connecting_2017">
-<p>Bush, Alex, Rahel Sollmann, Andreas Wilting, Kristine Bohmann, Beth Cole, Heiko Balzter, Christopher Martius, et al. 2017. “Connecting Earth Observation to High-Throughput Biodiversity Data.” <em>Nature Ecology &amp; Evolution</em> 1 (7): 0176. doi:<a href="https://doi.org/10.1038/s41559-017-0176">10.1038/s41559-017-0176</a>.</p>
+<p>Bush, Alex, Rahel Sollmann, Andreas Wilting, Kristine Bohmann, Beth Cole, Heiko Balzter, Christopher Martius, et al. 2017. “Connecting Earth Observation to High-Throughput Biodiversity Data.” <em>Nature Ecology &amp; Evolution</em> 1 (7): 0176. <a href="https://doi.org/10.1038/s41559-017-0176">https://doi.org/10.1038/s41559-017-0176</a>.</p>
 </div>
 <div id="ref-hijmans_raster_2017">
-<p>Hijmans, Robert J. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster" class="uri">https://CRAN.R-project.org/package=raster</a>.</p>
+<p>Hijmans, Robert J. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.</p>
 </div>
 </div>
 </div>
