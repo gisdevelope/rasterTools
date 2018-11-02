@@ -57,7 +57,6 @@ Guidelines} or create an issue on
 \dontrun{
 
 require(magrittr)
-require(rgeos)
 
 # define an algorithm
 myDatasets <- list(list(operator = "oGFC", years = 2006)),
@@ -70,8 +69,7 @@ myMask <- loadData(files = "locations.csv",
                    localPath = system.file("csv", package="rasterTools")) \%>\%
   gGroup(distance = 10000) \%>\%
   geomRectangle() \%>\%
-  gToSp(crs = projs$laea) \%>\%
-  gBuffer(width = 1000, byid = TRUE)
+  gToSp(crs = projs$laea)
 
 # grab the data
 myData <- obtain(data = myDatasets, mask = myMask)

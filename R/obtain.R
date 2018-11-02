@@ -40,8 +40,9 @@
 #'   specified in the arguments, but for some operators the output is a
 #'   \code{data.frame} or \code{SpatialPointsDataFrame}.
 #' @examples
+#'
+#' \dontrun{
 #' require(magrittr)
-#' require(rgeos)
 #'
 #' # specify the datasets for which you want to get data
 #' myDatasets <- list(list(operator = "oGFC", years = c(2005:2007)),
@@ -53,10 +54,7 @@
 #'                         localPath = system.file("csv", package="rasterTools"))
 #' myMask <- gGroup(geom = myLocations, distance = 10000) %>%
 #'   geomRectangle() %>%
-#'   gToSp(crs = projs$laea) %>%
-#'   gBuffer(width = 1000, byid = TRUE)
-#'
-#' \dontrun{
+#'   gToSp(crs = projs$laea)
 #' 
 #' # grab the data
 #' myData <- obtain(data = myDatasets, mask = myMask)
