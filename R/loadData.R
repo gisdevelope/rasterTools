@@ -199,7 +199,7 @@ load_csv <- function(path){
     theCoords <- tibble(id = out$id, x = out$x, y = out$y)
   }
   if(!"fid" %in% names(out)){
-    theCoords <- bind_cols(fid = seq_along(out$iid), theCoords)
+    theCoords <- bind_cols(fid = seq_along(out$id), theCoords)
   } else{
     theCoords <- bind_cols(fid = out$fid, theCoords)
   }
