@@ -33,8 +33,6 @@ src/*.dll
 inst/doc
 /misc
 ToDo.txt
-myBib.bib
-ToDo_functions.R
 
 # stuff that gets created while testing
 tests/testthatmyBib.bib
