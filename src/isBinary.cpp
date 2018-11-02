@@ -9,7 +9,7 @@ bool isBinaryC(NumericMatrix mat) {
 
   for(int i = 0; i < data; i++){
     if(mat[i] != 0.0){
-      if(nonZero != 0.0 & mat[i] != nonZero){
+      if((nonZero != 0.0) & (mat[i] != nonZero)){
         isBinary = false;
         break;
       } else{

@@ -13,7 +13,6 @@ NumericMatrix diamondSquareC(NumericMatrix mat, NumericVector stepSize, double r
   for(int z = 0; z < n; ++z){
     int halfStep = stepSize[z]/2;
     int aStep = stepSize[z];
-    int steps = stepSize[0]/stepSize[z];
 
     // diamond step
     // In this step the point in the center of a square is computed. This is 

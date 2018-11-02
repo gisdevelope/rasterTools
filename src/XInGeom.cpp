@@ -39,7 +39,7 @@ NumericMatrix matInGeomC(NumericMatrix &mat, NumericMatrix &geom, bool negative)
     for(int y = 0; y < mRows; y++){
 
       // if the coordinate is within the bounding box, proceed, otherwise value is definitely 0
-      if(x < xMax & x > xMin & y < yMax & y > yMin){
+      if((x < xMax) & (x > xMin) & (y < yMax) & (y > yMin)){
         int wn = 0;                            // the  winding number counter
 
         // loop through all edges of the polygon and find wn

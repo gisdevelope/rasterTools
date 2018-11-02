@@ -86,10 +86,10 @@ DataFrame countEdgesC(NumericMatrix &mat) {
 
 // [[Rcpp::export]]
 NumericMatrix countAdjacenciesC(NumericMatrix &mat, bool countDouble) {
-  int mRows = mat.nrow(), mCols = mat.ncol(), elements, steps;
+  int mRows = mat.nrow(), mCols = mat.ncol(), elements;
 
   IntegerVector values, theValue, rightValue, leftValue, topValue, bottomValue, position;
-  int posFocal, posRight, posLeft, posTop, posBottom;
+  int posFocal, posRight, posLeft, posBottom;
   values = sort_unique(mat);
   elements = values.size();
   // Rcout << values << std::endl;
