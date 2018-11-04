@@ -311,7 +311,7 @@ load_hdf <- function(path, layer = NULL){
   assertFile(path, access = "r", extension = "hdf")
   assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
   
-  subsets_name <- get_subdatasets(datasetname = path)
+  subsets_name <- gdalUtils::get_subdatasets(datasetname = path)
   
   files <- unlist(lapply(
     seq_along(subsets_name), function(i){

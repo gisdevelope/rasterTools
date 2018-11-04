@@ -5,6 +5,7 @@ context("oMODIS")
 
 
 test_that("oMODIS loads the correct file", {
+  skip_on_appveyor()
   setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- geomRectangle(data.frame(x = c(-2000000, -1900000),
                                      y = c(3800000, 4000000))) %>%
