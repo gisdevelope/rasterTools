@@ -1,5 +1,13 @@
 # DO NOT CHANGE the "init" and "install" sections below
 
+# set environmental variables
+environment:
+  WARNINGS_ARE_ERRORS: 1
+  _R_CHECK_FORCE_SUGGESTS_: false
+  R_CHECK_ARGS: --no-build-vignettes --no-manual 
+  R_BUILD_ARGS: --no-build-vignettes --no-manual 
+  CRAN: https://cran.csiro.au
+
 # Download script file from GitHub
 init:
   ps: |
@@ -8,27 +16,17 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
-  - ps: Bootstrap
-    ## install GDAL2
-  - ps: (new-object net.webclient).DownloadFile('http://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64.exe', 'osgeo4w-setup-x86_64.exe')
-  - osgeo4w-setup-x86_64.exe --quiet-mode --upgrade-also --delete-orphans --no-desktop --advanced  --root %systemdrive%\OSGeo4w --packages msvcrt setup shell avce00 zlib iconv libxml2 cairo openssl curl expat fcgi ffmpeg fftw freexl fribidi libpng libjpeg libjpeg12 libtiff libgeotiff proj-hpgn proj-datumgrid proj geos libmysql sqlite3 hdf5 netcdf libpq xerces-c-vc10 hdf4 ogdi openjpeg spatialite gdal python-core python-numpy gdal-python gdal-autotest gdal-filegdb pdcurses msys python-win32 wxpython python-pil pyopengl gs grass gsl-libs libspatialindex mapserver mapscript-python msinttypes opencv psycopg2 qt4-libs pyqt4 pyspatialite six python-dateutil python-devel python-help sip qscintilla python-qscintilla python-shapely python-simplejson python-tcltk python-test python-tools python-xlrd python-xlwt qwt5-libs-qt4 qgis-common qgis qgis-grass-plugin qgis-server setuptools --site http://download.osgeo.org/osgeo4w
-  - "SET PATH=%systemdrive%\\OSGeo4w;%systemdrive%\\OSGeo4w\\bin;%systemdrive%\\OSGeo4w\\share\\gdal;%systemdrive%\\OSGeo4w\\apps\\gdal;%PATH%"
-  - "SET GDAL_DATA=%systemdrive%\\OSGeo4w\\share\\gdal"
-
-cache:
-  - C:\RLibrary
+  ps: Bootstrap
 
 # Adapt as necessary starting from here
-
 build_script:
-  - travis-tool.sh install_deps
+  - R -e "options(repos=c(CRAN='https://cran.rstudio.com/')); install.packages('remotes'); suppressWarnings(remotes::install_deps(dependencies = TRUE, type = 'binary'))"
 
 test_script:
   - travis-tool.sh run_tests
 
 on_failure:
-  - 7z a failure.zip *.Rcheck\*
-  - appveyor PushArtifact failure.zip
+  - travis-tool.sh dump_logs
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
