@@ -5,36 +5,36 @@ context("loadData")
 
 test_that("function loads 'csv' files", {
   setPaths(root = system.file("test_datasets", package="rasterTools"))
-  output <- loadData(files = c("aWindow.csv", "locations.csv"),
-                     localPath = system.file("csv", package = "rasterTools"),
+  output <- loadData(files = "locations.csv",
+                     localPath = system.file("test_datasets", package = "rasterTools"),
                      verbose = TRUE)
-  expect_list(output, types = "geom")
+  expect_class(output, classes = "geom")
 })
 
 test_that("function loads also from a 'catalog'", {
   abbr <- function(x){
     strsplit(x = x, split = "[.]")[[1]][1]
   }
-  theFiles <- catalog(path = system.file("csv", package="rasterTools"), 
+  theFiles <- catalog(path = system.file("test_datasets", package="rasterTools"), 
                       abbreviateBy = abbr, 
                       silent = TRUE)
   
   output <- loadData(files = theFiles,
-                     localPath = system.file("csv", package = "rasterTools"))
-  expect_list(output, types = "geom", len = 3)
+                     localPath = system.file("test_datasets", package = "rasterTools"))
+  expect_list(output, types = c("geom", "character"), len = 9)
   
 })
 
 test_that("function loads all in a directory", {
   setPaths(root = system.file("test_datasets", package="rasterTools"))
-  output <- loadData(localPath = system.file("csv", package = "rasterTools"))
-  expect_list(output, types = "geom", len = 3)
+  output <- loadData(localPath = system.file("test_datasets", package = "rasterTools"))
+  expect_list(output, types = c("geom", "character"), len = 9)
 })
 
 test_that("function handles files that don't exist properly", {
   setPaths(root = system.file("test_datasets", package="rasterTools"))
-  output <- loadData(files = c("aWindow.csv", "anotherWindow.csv"),
-                     localPath = system.file("csv", package = "rasterTools"))
+  output <- loadData(files = c("locations.csv", "aWindow.csv"),
+                     localPath = system.file("test_datasets", package = "rasterTools"))
   
   expect_character(output[[2]])
 })

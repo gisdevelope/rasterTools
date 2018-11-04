@@ -49,10 +49,12 @@ and other files containing spatial data.
   it here (see \code{\link{setPaths}}).
 }
 \examples{
-# load a bunch of '.csv'-files containing coordinates into the gloabl environment.
-myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
-                        localPath = system.file("csv", package="rasterTools"),
-                        verbose = TRUE)
+require(magrittr)
+
+myLocations <- loadData(files = "locations.csv",
+                   localPath = system.file("test_datasets", package="rasterTools")) \%>\%
+  geomRectangle() \%>\%
+  setCRS(crs = projs$laea)
 }
 \seealso{
 The specific load operators: \code{\link{load_kml}},

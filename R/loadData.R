@@ -32,10 +32,12 @@
 #'   \code{\link{load_csv}}, \code{\link{load_hdf}}, \code{load_tif},
 #'   \code{load_dbf}, \code{load_shp}, \code{\link{load_svg}}
 #' @examples
-#' # load a bunch of '.csv'-files containing coordinates into the gloabl environment.
-#' myLocations <- loadData(files = c("aWindow.csv", "locations.csv"),
-#'                         localPath = system.file("csv", package="rasterTools"),
-#'                         verbose = TRUE)
+#' require(magrittr)
+#' 
+#' myLocations <- loadData(files = "locations.csv",
+#'                    localPath = system.file("test_datasets", package="rasterTools")) %>%
+#'   geomRectangle() %>%
+#'   setCRS(crs = projs$laea)
 #' @importFrom checkmate testCharacter testDataFrame assertCharacter assertNames
 #'   testIntegerish assertDirectory assertLogical assertEnvironment assertFile
 #'   assertDataFrame testDirectoryExists

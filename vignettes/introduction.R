@@ -22,10 +22,7 @@ myDatasets <- list(list(operator = "oGFC", period = c(2006)),
 
 ## ------------------------------------------------------------------------
 library(magrittr)
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) %>%
-  geomRectangle() %>%
-  setCRS(crs = projs$laea)
+myMask <- rtGeoms$mask
 
 ## ----eval=FALSE----------------------------------------------------------
 #  myData <- obtain(data = myDatasets, mask = myMask)

@@ -43,14 +43,7 @@
 #'
 #' require(magrittr)
 #'
-#' # load and outline masks from file
-#' myMask <- loadData(files = "aWindow.csv",
-#'                    localPath = system.file("csv", package="rasterTools")) %>%
-#'   geomRectangle() %>%
-#'   setCRS(crs = projs$laea)
-#'
-#' # extract worldclim data for the derived mask
-#' myWCLIM <- oWCLIM(mask = myMask,
+#' myWCLIM <- oWCLIM(mask = rtGeoms$mask,
 #'                   variable = c("tavg"),
 #'                   month = c(5:9))
 #' visualise(raster = myWCLIM$tavg, trace = TRUE)

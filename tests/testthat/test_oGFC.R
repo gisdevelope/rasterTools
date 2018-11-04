@@ -14,6 +14,7 @@ test_that("oGFC loads the correct file", {
 })
 
 test_that(("oGFC works with Spatial* mask (that has another crs than the dataset)"), {
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   myMask <- geomRectangle(data.frame(x = c(5094124, 5096249),
                                      y = c(4060501, 4061961))) %>%
     setCRS(crs = projs$laea)
@@ -25,12 +26,9 @@ test_that(("oGFC works with Spatial* mask (that has another crs than the dataset
 })
 
 test_that("Error if arguments have wrong value", {
-  myMask <- loadData(files = "aWindow.csv",
-                     localPath = system.file("csv", package="rasterTools")) %>%
-    geomRectangle() %>%
-    setCRS(crs = projs$laea)
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
   
   expect_error(oGFC(mask = "myMask"))
-  expect_error(oGFC(mask = myMask, years = "bla"))
-  expect_error(oGFC(mask = myMask, years = 2012, keepRaw = "bla"))
+  expect_error(oGFC(mask = rtGeoms$mask, years = "bla"))
+  expect_error(oGFC(mask = rtGeoms$mask, years = 2012, keepRaw = "bla"))
 })

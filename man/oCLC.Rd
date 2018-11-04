@@ -38,14 +38,7 @@ The CLC data dataset is available for the years 1990, 2000, 2006 and
 
 require(magrittr)
 
-# load and outline masks from file
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) \%>\%
-  geomRectangle() \%>\%
-  setCRS(crs = projs$laea)
-
-# extract CLC data for the derived mask
-myCLC <- oCLC(mask = myMask, years = c(2006, 2012))
+myCLC <- oCLC(mask = rtGeoms$mask, years = c(2006, 2012))
 visualise(gridded = myCLC, trace = TRUE)
 
 # get the (updated) bibliography

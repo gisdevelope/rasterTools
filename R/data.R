@@ -8,6 +8,14 @@
 #'   vegetation cover.
 "rtData"
 
+#' Two example Geoms
+#'
+#' A set of two geometries.
+#' @format The list contains two objects of class geom, a polygon and a couple
+#'   of points. Both are mostly used in the example and test-sections of the
+#'   rasterTools package.
+"rtGeoms"
+
 #' Dataset paths
 #'
 #' All the paths to the datasets that are of interest.
