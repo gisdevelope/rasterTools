@@ -26,14 +26,7 @@
 #'
 #' require(magrittr)
 #'
-#' # load and outline masks from file
-#' myMask <- loadData(files = "aWindow.csv",
-#'                    localPath = system.file("csv", package="rasterTools")) %>%
-#'   geomRectangle() %>%
-#'   setCRS(crs = projs$laea)
-#'
-#' # extract data for the derived mask
-#' myTrees <- oEFTA(mask = myMask,
+#' myTrees <- oEFTA(mask = rtGeoms$mask,
 #'                  species = c("Quercus robur", "Alnus incana", 
 #'                              "Pinus sylvestris", "Betula sp"))
 #' visualise(gridded = myTrees, trace = TRUE)
