@@ -62,7 +62,7 @@ setMethod(f = "show",
                        paste0(green(symbol$tick), yellow(" grid     "), " in ", object@grid$colour, " with ", object@grid$linewidth, " wide ", object@grid$linetype, " lines"),
                        paste0(red(symbol$cross), yellow(" grid     "))), "\n")
             cat(ifelse(object@legend$plot,
-                       paste0(green(symbol$tick), yellow(" legend    "), " with values ordered ", ifelse(object@legend$ascending, "ascending", "descending"), " in ", object@legend$bins, " bins and a relative height of ", object@legend$sizeRatio, "\n",
+                       paste0(green(symbol$tick), yellow(" legend   "), " with values ordered ", ifelse(object@legend$ascending, "ascending", "descending"), " in ", object@legend$bins, " bins and a relative height of ", object@legend$sizeRatio, "\n",
                               ifelse(object@legend$label$plot,
                                      paste0(green(symbol$tick), yellow("  - label  "), "in ", object@legend$label$colour, " with fontsize ", object@legend$label$fontsize),
                                      paste0(red(symbol$cross), yellow("  - label  "))), "\n",                              

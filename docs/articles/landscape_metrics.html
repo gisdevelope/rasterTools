@@ -155,10 +155,7 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <h2 class="hasAnchor">
 <a href="#the-dependence-structure-of-landscape-metrics" class="anchor"></a>The dependence structure of landscape metrics</h2>
 <p>The following graph shows the relationship of all metrics defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>. This is followed by a section outlining details about the generic metrics and a list containing details and the equations of derived metrics.</p>
-<div class="figure">
-<img src="../../../in%20preparation/rasterTools/vignettes/metrics_relations.png">
-</div>
-<p>In the following you will find a list of the generic metrics defined (so far) and below that the derived metrics sorted into the groups defined in <span class="citation">McGarigal (<a href="#ref-mcgarigal_fragstats_2015">2015</a>)</span>:</p>
+<p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/metrics_relations.png" width="100%"></p>
 <ol style="list-style-type: decimal">
 <li><a href="#area_and_edge">Area and Edge</a></li>
 <li><a href="#shape">Shape</a></li>
@@ -264,10 +261,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Proportion of the landscape window occupied by classes.</p>
 <p>Level of measurement: Class</p>
 <p>Internal name: class proportional area (CPA)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
   CPA = \frac{A_C}{A_L} \cdot 100
-\end{equation}\]</span>
-<p>with <span class="math inline">\(A_{C}\)</span> = <a href="#mArea">Area</a> of a class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
+\end{equation}\]</span> with <span class="math inline">\(A_{C}\)</span> = <a href="#mArea">Area</a> of a class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(a_c = list(operator = "mArea", scale = "class"),
      a_l = list(operator = "mArea", scale = "landscape"),
      mCPA = "a_c / a_l * 100")</code></pre>
@@ -284,10 +280,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Proportion of the landscape window occupied by the largest patch.</p>
 <p>Level of measurement: Landscape</p>
 <p>Internal name: largest patch index (LPI)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
   LPI = \frac{max(A_{P})}{A_L} \cdot 100
-\end{equation}\]</span>
-<p>with <span class="math inline">\(max(A_{P})\)</span> = <a href="#mArea">Area</a> of the largest patch, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
+\end{equation}\]</span> with <span class="math inline">\(max(A_{P})\)</span> = <a href="#mArea">Area</a> of the largest patch, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(a_l = list(operator = "mArea", scale = "landscape"),
      a_p = list(operator = "mArea", scale = "patch"),
      mLPI = "max(a_p) / a_l * 100")</code></pre>
@@ -305,10 +300,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Mean distance between each cell of a patch and its centroid.</p>
 <p>Level of measurement:</p>
 <p>Internal name: radius of gyration (RG)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     RG = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -323,10 +317,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Length of edges per hectare of the landscape window.</p>
 <p>Level of measurement: Class, Landscape</p>
 <p>Internal name: density of edges (DE)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
   DE = \frac{P_{X}}{A_L} \cdot 10000
-\end{equation}\]</span>
-<p>with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
+\end{equation}\]</span> with <span class="math inline">\(P_{X}\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch or class, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(p_c = list(operator = "mPerimeter", scale = "class"),
      a_l = list(operator = "mArea", scale = "landscape"),
      mDE = "p_c / a_l * 10000")</code></pre>
@@ -347,10 +340,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Ratio of the perimeter per area of each patch.</p>
 <p>Level of measurement: Patch, Class, Landscape</p>
 <p>Internal name: perimeter per area ratio (PAR)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
   PAR = \frac{P_P}{A_P} \cdot 10000
-\end{equation}\]</span>
-<p>with <span class="math inline">\(P_P\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch, <span class="math inline">\(A_P\)</span> = <a href="#mArea">Area</a> of a patch</p>
+\end{equation}\]</span> with <span class="math inline">\(P_P\)</span> = <a href="#mPerimeter">Perimeter</a> of a patch, <span class="math inline">\(A_P\)</span> = <a href="#mArea">Area</a> of a patch</p>
 <pre><code>list(p_p = list(operator = "mPerimeter", scale = "patch"),
      a_p = list(operator = "mArea", scale = "patch"),
      mPAR = "p_p / a_p * 10000")</code></pre>
@@ -379,10 +371,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Percent of the adjacencies per class that are like adjacencies.</p>
 <p>Level of measurement: Class</p>
 <p>Internal name: percentage of like adjacencies (PLA)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLA = \frac{G_{ii}}{G_{ik}} \cdot 100
-  \end{equation}\]</span>
-<p>with <span class="math inline">\(G_{ii}\)</span> = <a href="#mAdjacency">like Adjacencies</a> based on double count, <span class="math inline">\(G_{ik}\)</span> = all (incl. like) <a href="#mAdjacency">Adjacencies</a> based on double count</p>
+  \end{equation}\]</span> with <span class="math inline">\(G_{ii}\)</span> = <a href="#mAdjacency">like Adjacencies</a> based on double count, <span class="math inline">\(G_{ik}\)</span> = all (incl. like) <a href="#mAdjacency">Adjacencies</a> based on double count</p>
 <pre><code>list(g_ii = list(operator = "mAdjacency"),
      g_ik = list(operator = "mAdjacency", type = "pairedSum"),
      mPLA = "(g_ii / g_ik * 100")</code></pre>
@@ -407,15 +398,14 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description: Number of patches per hectare of the landscape window.</p>
 <p>Level of measurement: Class, Landscape</p>
 <p>Internal name: density of patches (DP)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
   DP = \frac{N_P}{A_L} \cdot 10000
-\end{equation}\]</span>
-<p>with <span class="math inline">\(N_P\)</span> = <a href="#mNumber">Number</a> of patches, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
+\end{equation}\]</span> with <span class="math inline">\(N_P\)</span> = <a href="#mNumber">Number</a> of patches, <span class="math inline">\(A_L\)</span> = <a href="#mArea">Area</a> of the landscape</p>
 <pre><code>list(n_p = list(operator = "mNumber", scale = "patch"),
      a_l = list(operator = "mArea", scale = "landscape"),
      mDP = "n_p / a_l * 10000")</code></pre>
 <p>Unit: <span class="math inline">\(n\,ha^{-1}\)</span></p>
-<p>Range: <span class="math inline">\(0 &lt; PD ≤ \infty\)</span></p>
+<p>Range: <span class="math inline">\(0 &lt; DP ≤ \infty\)</span></p>
 <p>Interpretation: Higher values indicate higher spatial fragmentation of a particular class.</p>
 <p>Limitations:</p>
 <p>Employed in the derived metrics:</p>
@@ -439,10 +429,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -457,10 +446,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -475,10 +463,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -493,10 +480,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -511,10 +497,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -529,10 +514,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: contiguity index (CII)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -547,10 +531,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -565,10 +548,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -583,10 +565,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: area of the core (AC)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     AC = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -601,10 +582,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: proportion of core area (PCA)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PCA = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -619,10 +599,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: number of disjunct cores (NDC)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     NDC = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -637,10 +616,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: density of disjunct cores (DDC)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     DDC = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -655,10 +633,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: area of the ecotone (AE)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     AE = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -673,10 +650,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -691,10 +667,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: edge contrast index (ECI)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     ECI = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -709,10 +684,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -727,10 +701,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -745,10 +718,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -763,10 +735,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -781,10 +752,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -799,10 +769,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -817,10 +786,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -835,10 +803,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -853,10 +820,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -871,10 +837,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: nearest neighbour distance (NND)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     NND = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -889,10 +854,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -907,10 +871,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -925,10 +888,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -943,10 +905,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -961,10 +922,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: proximity index (PI)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PI = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -979,10 +939,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: related circumscribing circle (RCC)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     RCC = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -997,10 +956,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1015,10 +973,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1033,10 +990,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1051,10 +1007,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: shape index (SHAPE)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     SHI = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1069,10 +1024,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name: similarity index (SIMI)</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     SIMI = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1087,10 +1041,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1105,10 +1058,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1123,10 +1075,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1141,10 +1092,9 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Description:</p>
 <p>Level of measurement:</p>
 <p>Internal name:</p>
-<span class="math display">\[\begin{equation} 
+<p><span class="math display">\[\begin{equation} 
     PLP = 
-  \end{equation}\]</span>
-<p>with <span class="math display">\[ = , \]</span> =</p>
+  \end{equation}\]</span> with <span class="math display">\[ = , \]</span> =</p>
 <pre><code>someRCode(...)</code></pre>
 <p>Unit: $$</p>
 <p>Range: $$</p>
@@ -1163,7 +1113,7 @@ list(term1 = list(operator = "mMetric1", scale = "class"),    # derived metric
 <p>Leitão, André Botequilha, Joseph Miller, Jack Ahern, and Kevin McGarigal. 2006. <em>Measuring Landscapes - A Planner’s Handbook</em>. Island Press.</p>
 </div>
 <div id="ref-mcgarigal_fragstats_2015">
-<p>McGarigal, Kevin. 2015. “FRAGSTATS Help.” Documentation on computer software. Univerity of Massachusets, Amherst: Department of Environmental Conservation. <a href="https://www.umass.edu/landeco/research/fragstats/documents/fragstats.help.4.2.pdf" class="uri">https://www.umass.edu/landeco/research/fragstats/documents/fragstats.help.4.2.pdf</a>.</p>
+<p>McGarigal, Kevin. 2015. “FRAGSTATS Help.” Documentation on computer software. Univerity of Massachusets, Amherst: Department of Environmental Conservation. <a href="https://www.umass.edu/landeco/research/fragstats/documents/fragstats.help.4.2.pdf">https://www.umass.edu/landeco/research/fragstats/documents/fragstats.help.4.2.pdf</a>.</p>
 </div>
 <div id="ref-turner_landscape_2001">
 <p>Turner, Monica G, Robert H Gardner, and Robert V O’Neill. 2001. <em>Landscape Ecology in Theory and Practice</em>. Springer New York.</p>

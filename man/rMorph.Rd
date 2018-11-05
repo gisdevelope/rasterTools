@@ -49,22 +49,22 @@ The morphC function (internal) is the basis of many modify
   is assigned in the current location in the raster.}
 
   The following functions are defined for \code{blend}: \enumerate{ \item
-  identity: the value of obj where \code{kernel} is not NA. \item equal: the
-  value 1 where \code{obj} and \code{kernel} are equal, otherwise the value
-  0. \item lower: the values of \code{obj} that are lower than \code{kernel},
-  otherwise 0. \item greater: the values of \code{obj} that are greater than
-  \code{kernel}, otherwise 0. \item plus: the values of \code{obj} added to
-  the values of \code{kernel}. \item minus: the values of \code{kernel}
-  subtracted from the values of \code{obj}. \item product: the product of the
-  values of \code{obj} and \code{kernel}.} The following functions are
-  defined for \code{merge}: \enumerate{ \item min: the minimum value. \item
-  max: the maximum value. \item all: the value 1 if all non-NA values are not
-  0, otherwise 0. \item any: the value 1 if any of the non-NA values are 0,
-  otherwise 0. \item sum: the sum of all non-NA values. \item mean: the mean
-  of all non-NA values. \item median: the median of all non-NA values. \item
-  sd: the standard deviation of all non-NA values. \item cv: the coefficient
-  of variation of all non-NA values. \item sumNa: if the sum of all values is
-  greater than 0 than this sum, otherwise NA.}
+  identity: the value of \code{obj} where \code{kernel} is not NA. \item
+  equal: the value 1 where \code{obj} and \code{kernel} are equal, otherwise
+  the value 0. \item lower: the values of \code{obj} that are lower than
+  \code{kernel}, otherwise 0. \item greater: the values of \code{obj} that
+  are greater than \code{kernel}, otherwise 0. \item plus: the values of
+  \code{obj} added to the values of \code{kernel}. \item minus: the values of
+  \code{kernel} subtracted from the values of \code{obj}. \item product: the
+  product of the values of \code{obj} and \code{kernel}.} The following
+  functions are defined for \code{merge}: \enumerate{ \item min: the minimum
+  value. \item max: the maximum value. \item all: the value 1 if all non-NA
+  values are not 0, otherwise 0. \item any: the value 1 if any of the non-NA
+  values are not 0, otherwise 0. \item sum: the sum of all non-NA values.
+  \item mean: the mean of all non-NA values. \item median: the median of all
+  non-NA values. \item sd: the standard deviation of all non-NA values. \item
+  cv: the coefficient of variation of all non-NA values. \item sumNa: if the
+  sum of all values is greater than 0 than this sum, otherwise NA.}
 }
 \references{
 Credit for the original idea/architecture of the C++ part of this

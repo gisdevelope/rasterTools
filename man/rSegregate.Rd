@@ -21,9 +21,9 @@ of \code{obj} will be taken.}
 should have.}
 }
 \value{
-a \code{RasterLayer} stack of the same dimensions as \code{obj}, in
-  which the elements specified in \code{by} or the distinct values of
-  \code{obj} have each been assigned to a layer of the raster stack.
+a \code{RasterStack} of the same dimensions as \code{obj}, in which
+  the elements specified in \code{by} or the distinct values of \code{obj}
+  have each been assigned to a seperate layer.
 }
 \description{
 Distinct values in a raster will be assigned to layers in a raster stack.

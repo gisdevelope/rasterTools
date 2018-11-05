@@ -217,7 +217,7 @@ created, where the resulting values are associated to the correct ids
 #&gt;   landscape result
 #&gt; 1         1   3360
 #&gt; </div><div class='input'>
-<span class='co'># calculate 'class proportional area' and 'larges patch index'</span>
+<span class='co'># calculate 'class proportional area' and 'largest patch index'</span>
 <span class='co'># 1) define the terms (generic metrics) that are needed to compute the metrics</span>
 <span class='co'># 2) define the equations that are used based on these terms</span>
 <span class='no'>myMetrics</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>a_p</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"mArea"</span>, <span class='kw'>scale</span> <span class='kw'>=</span> <span class='st'>"patch"</span>),
@@ -302,7 +302,9 @@ created, where the resulting values are associated to the correct ids
 <span class='co'># not make sense ecologically, or be at best arbitrary. Instead we might</span>
 <span class='co'># want to treat all forest, irrespective of deciduous or coniferous as one</span>
 <span class='co'># patch.</span>
-<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)</div><div class='output co'>#&gt; <span class='message'>please make sure that the new value has properly specified attributes.</span></div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; [[1]]
+<span class='no'>substituted</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rSubstitute.html'>rSubstitute</a></span>(<span class='no'>input</span>, <span class='kw'>old</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>41</span>:<span class='fl'>47</span>), <span class='kw'>new</span> <span class='kw'>=</span> <span class='fl'>40</span>)</div><div class='output co'>#&gt; <span class='message'>please make sure that the new value has properly specified attributes.</span></div><div class='input'><span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>input</span>, <span class='no'>substituted</span>))</div><div class='img'><img src='measure-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># now we can get perhaps more reasonable data in a simplified table</span>
+(<span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='no'>substituted</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='no'>myMetrics</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt;   class  mCPA
 #&gt; 1     1  1.10
 #&gt; 2    11  3.10
@@ -316,7 +318,7 @@ created, where the resulting values are associated to the correct ids
 #&gt;   landscape  mLPI
 #&gt; 1         1 24.88
 #&gt; </div><div class='input'>
-# set of spatial operations that enables more complex metrics
+# To come: set of spatial operations that enables more complex metrics
 # derive 'Disjunct Cores Density', which is a rather complex metric
 </div></pre>
   </div>

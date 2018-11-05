@@ -38,7 +38,7 @@
 #'                   a_l = list(operator = "mArea", scale = "landscape"))
 #' (measure(input = input, with = myMetrics))
 #'
-#' # calculate 'class proportional area' and 'larges patch index'
+#' # calculate 'class proportional area' and 'largest patch index'
 #' # 1) define the terms (generic metrics) that are needed to compute the metrics
 #' # 2) define the equations that are used based on these terms
 #' myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
@@ -54,9 +54,11 @@
 #' # patch.
 #' substituted <- rSubstitute(input, old = c(41:47), new = 40)
 #' visualise(raster::stack(input, substituted))
+#'
+#' # now we can get perhaps more reasonable data in a simplified table
 #' (measure(input = substituted, with = myMetrics))
 #'
-#' # set of spatial operations that enables more complex metrics
+#' # To come: set of spatial operations that enables more complex metrics
 #' # derive 'Disjunct Cores Density', which is a rather complex metric
 #' @importFrom checkmate testClass assertList assertNamed assertLogical testList
 #'   testCharacter
