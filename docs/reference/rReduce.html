@@ -171,7 +171,7 @@ each layer are multiplied before applying <code>fun</code>.</p></td>
     <tr>
       <th>direction</th>
       <td><p>[<code>character(1)</code>]<br /> the direction into which the
-<code>RasterLayer</code>s of <code>obj</code> are supposed to be combine. Either
+<code>RasterLayer</code> in <code>obj</code> is supposed to be combine. Either
 <code>"right"</code> (default) or <code>"left"</code>; see Details.</p></td>
     </tr>
     </table>
@@ -207,11 +207,11 @@ each layer are multiplied before applying <code>fun</code>.</p></td>
 <span class='co'># revert the segregation</span>
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rReduce</span>(<span class='no'>myPatches</span>))</div><div class='img'><img src='rReduce-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># group patches</span>
-<span class='no'>by</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>c</span>(<span class='fl'>1</span>:<span class='fl'>14</span>), <span class='fu'>c</span>(<span class='fl'>15</span>:<span class='fl'>28</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rReduce</span>(<span class='no'>myPatches</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>by</span>))</div><div class='img'><img src='rReduce-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>twoGroups</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>c</span>(<span class='fl'>1</span>:<span class='fl'>14</span>), <span class='fu'>c</span>(<span class='fl'>15</span>:<span class='fl'>28</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rReduce</span>(<span class='no'>myPatches</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>twoGroups</span>))</div><div class='img'><img src='rReduce-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># select a subset of patches</span>
-<span class='no'>by</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rReduce</span>(<span class='no'>myPatches</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>by</span>))</div><div class='img'><img src='rReduce-3.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>someLayers</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span>))
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='fu'>rReduce</span>(<span class='no'>myPatches</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='no'>someLayers</span>))</div><div class='img'><img src='rReduce-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
