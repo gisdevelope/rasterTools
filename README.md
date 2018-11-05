@@ -52,11 +52,9 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
         measure(input = myInput, with = myMetric)
 
 ## Planned for future versions
-- Support of the Sentinel (high prio), Landsat and Lidar datasets.
+- Support of the Sentinel, Landsat and Lidar datasets.
 
-- `geomCurve()` to create lines and curves (high prio); `geomVoronoi()` to create a pattern of voronoi polygons with a random or given point pattern as anchor
-
-- new functions to simulate neutral and process oriented landscape models (high prio).
+- `geomCurve()` to create lines and curves; `geomVoronoi()` to create a pattern of voronoi polygons with a random or given point pattern as anchor
 
 - Support of various "national forest inventory" datasets (Germany, France, Italy, Spain, yours?)
 
@@ -64,7 +62,11 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
 
 - in-R georeferencing.
 
-- more `Rcpp` and parallelisation.
+- more `Rcpp`, `gdal` and parallelisation.
+
+- new functions to simulate neutral and process oriented landscape models.
+
+- ...
 
 - You are encouraged to [participate](articles/contribute.html) as well by writing for instance an obtain operator for your favourite dataset.
 
