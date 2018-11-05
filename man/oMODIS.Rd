@@ -92,22 +92,16 @@ The period can either be given as a single value if only one year is
 
 require(magrittr)
 
-# load and outline masks from file
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) \%>\%
-  geomRectangle() \%>\%
-  setCRS(crs = projs$laea)
-
-water <- oMODIS(mask = myMask, period = 2000,
+water <- oMODIS(mask = rtGeoms$mask, period = 2000,
                 product = "MOD44W", layer = 1)
 visualise(gridded = water, trace = TRUE)
 
 # not specifying 'layer' results in a stack of all layers
-myMODIS <- oMODIS(mask = myMask, period = 2012,
+myMODIS <- oMODIS(mask = rtGeoms$mask, period = 2012,
                   product = "MOD17A3")
 visualise(gridded = myMODIS, trace = TRUE)
 
-modEvi <- oMODIS(mask = myMask, period = c(2016100, 2016250),
+modEvi <- oMODIS(mask = rtGeoms$mask, period = c(2016100, 2016250),
                  product = "MOD13A3", layer = "EVI")
 visualise(gridded = modEvi, trace = TRUE)
 

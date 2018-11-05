@@ -42,14 +42,7 @@
 #'
 #' require(magrittr)
 #'
-#' # load and outline masks from file
-#' myMask <- loadData(files = "aWindow.csv",
-#'                    localPath = system.file("csv", package="rasterTools")) %>%
-#'   geomRectangle() %>%
-#'   setCRS(crs = projs$laea)
-#'
-#' # extract GFC data for the derived mask
-#' myGFC <- oGFC(mask = myMask,
+#' myGFC <- oGFC(mask = rtGeoms$mask,
 #'               years = c(2002, 2006, 2010, 2014))
 #' visualise(gridded = myGFC$treecover_2002, trace = TRUE)
 #'

@@ -64,13 +64,7 @@ The website \href{http://www.european-mammals.org/}{Societas
 
 require(magrittr)
 
-# load and outline masks from file
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) \%>\%
-  geomRectangle() \%>\%
-  setCRS(crs = projs$laea)
-
-mySpecies <- oEMMA(mask = myMask,
+mySpecies <- oEMMA(mask = rtGeoms$mask,
                    species = c("Apodemus agrarius",
                                "Apodemus flavicollis",
                                "Vulpes vulpes"))

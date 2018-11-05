@@ -32,9 +32,8 @@ test_that(("oWCLIM works with Spatial* mask (that has another crs than the datas
 })
 
 test_that("Error if arguments have wrong value", {
-  myMask <- loadData(files = "aWindow.csv",
-                     localPath = system.file("csv", package="rasterTools")) %>%
-    geomRectangle() %>%
+  myMask <- geomRectangle(data.frame(x = c(5093616, 5103222),
+                                     y = c(4054188, 4064870))) %>%
     setCRS(crs = projs$laea)
 
   expect_error(oWCLIM(mask = "myMask"))

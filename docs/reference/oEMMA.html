@@ -226,13 +226,7 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>require</span>(<span class='no'>magrittr</span>)
 
-<span class='co'># load and outline masks from file</span>
-<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"aWindow.csv"</span>,
-                   <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"csv"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
-
-<span class='no'>mySpecies</span> <span class='kw'>&lt;-</span> <span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>,
+<span class='no'>mySpecies</span> <span class='kw'>&lt;-</span> <span class='fu'>oEMMA</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>,
                    <span class='kw'>species</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Apodemus agrarius"</span>,
                                <span class='st'>"Apodemus flavicollis"</span>,
                                <span class='st'>"Vulpes vulpes"</span>))

@@ -90,10 +90,7 @@ Typically we only need a (vastly) smaller subset of an earth observation dataset
 
 ```{r}
 library(magrittr)
-myMask <- loadData(files = "aWindow.csv",
-                   localPath = system.file("csv", package="rasterTools")) %>%
-  geomRectangle() %>%
-  setCRS(crs = projs$laea)
+myMask <- rtGeoms$mask
 ```
 
 The collection of datasets for the area of our interest can be obtained by the following code:
