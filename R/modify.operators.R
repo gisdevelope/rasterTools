@@ -974,22 +974,22 @@ rMatch <- function(obj, kernel = NULL, rotate = TRUE, background = NULL){
 #'   is assigned in the current location in the raster.}
 #'
 #'   The following functions are defined for \code{blend}: \enumerate{ \item
-#'   identity: the value of obj where \code{kernel} is not NA. \item equal: the
-#'   value 1 where \code{obj} and \code{kernel} are equal, otherwise the value
-#'   0. \item lower: the values of \code{obj} that are lower than \code{kernel},
-#'   otherwise 0. \item greater: the values of \code{obj} that are greater than
-#'   \code{kernel}, otherwise 0. \item plus: the values of \code{obj} added to
-#'   the values of \code{kernel}. \item minus: the values of \code{kernel}
-#'   subtracted from the values of \code{obj}. \item product: the product of the
-#'   values of \code{obj} and \code{kernel}.} The following functions are
-#'   defined for \code{merge}: \enumerate{ \item min: the minimum value. \item
-#'   max: the maximum value. \item all: the value 1 if all non-NA values are not
-#'   0, otherwise 0. \item any: the value 1 if any of the non-NA values are 0,
-#'   otherwise 0. \item sum: the sum of all non-NA values. \item mean: the mean
-#'   of all non-NA values. \item median: the median of all non-NA values. \item
-#'   sd: the standard deviation of all non-NA values. \item cv: the coefficient
-#'   of variation of all non-NA values. \item sumNa: if the sum of all values is
-#'   greater than 0 than this sum, otherwise NA.}
+#'   identity: the value of \code{obj} where \code{kernel} is not NA. \item
+#'   equal: the value 1 where \code{obj} and \code{kernel} are equal, otherwise
+#'   the value 0. \item lower: the values of \code{obj} that are lower than
+#'   \code{kernel}, otherwise 0. \item greater: the values of \code{obj} that
+#'   are greater than \code{kernel}, otherwise 0. \item plus: the values of
+#'   \code{obj} added to the values of \code{kernel}. \item minus: the values of
+#'   \code{kernel} subtracted from the values of \code{obj}. \item product: the
+#'   product of the values of \code{obj} and \code{kernel}.} The following
+#'   functions are defined for \code{merge}: \enumerate{ \item min: the minimum
+#'   value. \item max: the maximum value. \item all: the value 1 if all non-NA
+#'   values are not 0, otherwise 0. \item any: the value 1 if any of the non-NA
+#'   values are not 0, otherwise 0. \item sum: the sum of all non-NA values.
+#'   \item mean: the mean of all non-NA values. \item median: the median of all
+#'   non-NA values. \item sd: the standard deviation of all non-NA values. \item
+#'   cv: the coefficient of variation of all non-NA values. \item sumNa: if the
+#'   sum of all values is greater than 0 than this sum, otherwise NA.}
 #' @references Credit for the original idea/architecture of the C++ part of this
 #'   function goes to Jon Clayden
 #'   (\href{https://github.com/jonclayden/mmand}{R::mmand}). The functionality
@@ -1224,10 +1224,10 @@ rPermute <- function(obj, type = "invert", by = NULL){
 
   if(type == "invert"){
     newVals <- max(vals, na.rm = TRUE) - vals
-    action <- "invert"
+    action <- "inverted"
   } else if(type == "revert"){
     newVals <- rev(vals)
-    action <- "revert"
+    action <- "reverted"
   } else if(type == "descending"){
     newVals <- sort(vals, decreasing = TRUE)
     action <- "sorted into descending order"
@@ -1313,7 +1313,7 @@ rRange <- function(obj, range = NULL){
 #' @param weights [\code{numeric(length(obj))}]\cr weight by which the values in
 #'   each layer are multiplied before applying \code{fun}.
 #' @param direction [\code{character(1)}]\cr the direction into which the
-#'   \code{RasterLayer}s of \code{obj} are supposed to be combine. Either
+#'   \code{RasterLayer} in \code{obj} is supposed to be combine. Either
 #'   \code{"right"} (default) or \code{"left"}; see Details.
 #' @details The argument \code{direction} takes the direction into which the
 #'   layers should be combined. \code{"right"} means that layers are combined
@@ -1337,12 +1337,12 @@ rRange <- function(obj, range = NULL){
 #' visualise(rReduce(myPatches))
 #'
 #' # group patches
-#' by <- list(c(1:14), c(15:28))
-#' visualise(rReduce(myPatches, by = by))
+#' twoGroups <- list(c(1:14), c(15:28))
+#' visualise(rReduce(myPatches, by = twoGroups))
 #'
 #' # select a subset of patches
-#' by <- list(c(1, 3, 5, 7, 9))
-#' visualise(rReduce(myPatches, by = by))
+#' someLayers <- list(c(1, 3, 5, 7, 9))
+#' visualise(rReduce(myPatches, by = someLayers))
 #' @importFrom checkmate assertClass assertList assertFunction assertIntegerish
 #' @importFrom raster as.matrix addLayer overlay brick extent<- crs crs<-
 #' @export
@@ -1524,9 +1524,9 @@ rRescale <- function(obj, factor = NULL, kernelFunction = NULL){
 #'   (\code{TRUE}) or should the original \code{obj} values be retained
 #'   (\code{FALSE}, default)?
 #' @template background
-#' @return a \code{RasterLayer} stack of the same dimensions as \code{obj}, in
-#'   which the elements specified in \code{by} or the distinct values of
-#'   \code{obj} have each been assigned to a layer of the raster stack.
+#' @return a \code{RasterStack} of the same dimensions as \code{obj}, in which
+#'   the elements specified in \code{by} or the distinct values of \code{obj}
+#'   have each been assigned to a seperate layer.
 #' @family operators to modify a raster
 #' @examples
 #' input <- rtData$continuous

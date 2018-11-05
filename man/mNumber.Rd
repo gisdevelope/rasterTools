@@ -29,19 +29,18 @@ cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the number ...
-# ... per landuse type
+# ... per landcover type
 mNumber(obj = cat, scale = "class")
 
-# ... of patches per landuse type
+# ... of patches per landcover type
 mNumber(obj = cat, scale = "patch")
 
-# ... of certain values
+# ...  of certain values; from a binary raster, patches are 
+# automatically determined
 require(magrittr)
 rBinarise(obj = cat, match = c(41, 44, 47)) \%>\%
   mNumber(scale = "patch", layer = "values_binarised")
 
-# ... from a binary raster
-mNumber(obj = bin, scale = "patch")
 mNumber(obj = bin, scale = "class")
 
 }

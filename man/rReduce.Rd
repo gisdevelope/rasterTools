@@ -20,7 +20,7 @@ layers.}
 each layer are multiplied before applying \code{fun}.}
 
 \item{direction}{[\code{character(1)}]\cr the direction into which the
-\code{RasterLayer}s of \code{obj} are supposed to be combine. Either
+\code{RasterLayer} in \code{obj} is supposed to be combine. Either
 \code{"right"} (default) or \code{"left"}; see Details.}
 }
 \value{
@@ -52,12 +52,12 @@ myPatches <- rSegregate(patches)
 visualise(rReduce(myPatches))
 
 # group patches
-by <- list(c(1:14), c(15:28))
-visualise(rReduce(myPatches, by = by))
+twoGroups <- list(c(1:14), c(15:28))
+visualise(rReduce(myPatches, by = twoGroups))
 
 # select a subset of patches
-by <- list(c(1, 3, 5, 7, 9))
-visualise(rReduce(myPatches, by = by))
+someLayers <- list(c(1, 3, 5, 7, 9))
+visualise(rReduce(myPatches, by = someLayers))
 }
 \seealso{
 Other operators to modify a raster: \code{\link{rBlend}},

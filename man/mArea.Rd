@@ -35,19 +35,18 @@ cat <- rtData$categorical
 bin <- rBinarise(rtData$continuous, thresh = 40)
 
 # the area ...
-# ... per landuse type
+# ... per landcover type
 mArea(obj = cat, scale = "class")
 
-# ... of patches per landuse type
+# ... of patches per landcover type
 mArea(obj = cat, scale = "patch")
 
-# ...  of certain values
+# ...  of certain values; from a binary raster, patches are 
+# automatically determined
 require(magrittr)
 rBinarise(obj = cat, match = c(41, 44, 47)) \%>\%
   mArea(scale = "patch", layer = "values_binarised")
 
-# ... from a binary raster, patches are automatically determined
-mArea(obj = bin, scale = "patch")
 mArea(obj = bin, scale = "class")
 
 }
