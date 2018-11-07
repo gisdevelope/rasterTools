@@ -101,7 +101,6 @@ oCLC <- function(mask = NULL, years = NULL){
                   ogranization = "OPOCE",
                   address = "Luxembourg")
 
-  message()
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
