@@ -184,7 +184,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 #' @template path
 #' @return a \code{point geometry} of the coordinates
 #' @family loaders
-#' @importFrom readr read_csv
+#' @importFrom utils read.csv
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_cols
 #' @export
@@ -192,7 +192,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
 load_csv <- function(path){
 
   assertFile(path, access = "r", extension = "csv")
-  out <- read_csv(path)
+  out <- read.csv(path)
   colnames(out) <- tolower(colnames(out))
   assertNames(names(out), must.include = c("x", "y"))
   if(!"id" %in% names(out)){

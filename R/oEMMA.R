@@ -48,7 +48,7 @@
 #' }
 #' @importFrom checkmate testClass testDataFrame assertNames testVector
 #'   assertIntegerish assertLogical
-#' @importFrom readr read_csv write_csv
+#' @importFrom utils read.csv write.csv
 #' @importFrom stringr str_replace
 #' @importFrom dplyr bind_rows
 #' @export
@@ -114,12 +114,12 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
     # have to read it in again and save some time.
     if(file.exists(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))){
       blablabla(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"), ...)
-      allOcc <- read_csv(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"), col_types = "ccc")
+      allOcc <- read.csv(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
     } else{
       allOcc <- loadData(files = paste0(theSpecies[i], ".svg"),
                          dataset = "emma",
                          layer = "emma")
-      write_csv(allOcc, paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
+      write.csv(allOcc, paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
     }
     emma <- bind_rows(emma, allOcc[allOcc$square %in% tileNames,])
 
