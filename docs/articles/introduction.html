@@ -100,7 +100,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-11-05</h4>
+            <h4 class="date">2018-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -137,14 +137,13 @@
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; Loading required package: sp</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">library</span>(rasterTools)</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you organise and compute spatial data!</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; I don't know where your files are stored, please see '?setPaths' to create a suitable index.</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">                     <span class="dt">id =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">                     <span class="dt">id =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <pre><code>#&gt; class      : geom
 #&gt; type       : polygon
