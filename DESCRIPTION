@@ -25,7 +25,6 @@ Imports: methods,
     cli,
     httr,
     stringr,
-    readr,
     dplyr,
     tibble
 RoxygenNote: 6.1.0
