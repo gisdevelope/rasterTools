@@ -100,7 +100,7 @@
       <h1>rasterTools - Introduction</h1>
                         <h4 class="author">Steffen Ehrmann</h4>
             
-            <h4 class="date">2018-11-08</h4>
+            <h4 class="date">2018-11-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/EhrmannS/rasterTools/blob/master/vignettes/introduction.Rmd"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -140,7 +140,7 @@
 <a class="sourceLine" id="cb5-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),</a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">                     <span class="dt">id =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">                     <span class="dt">fid =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb5-9" data-line-number="9">window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</a>
 <a class="sourceLine" id="cb5-10" data-line-number="10">                     <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">80</span>))</a>
 <a class="sourceLine" id="cb5-11" data-line-number="11">(aGeom &lt;-<span class="st"> </span><span class="kw"><a href="../reference/geomPolygon.html">geomPolygon</a></span>(<span class="dt">anchor =</span> coords, <span class="dt">window =</span> window, <span class="dt">show =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
@@ -161,7 +161,7 @@
 <h1 class="hasAnchor">
 <a href="#example-workflow" class="anchor"></a>Example workflow</h1>
 <p>In the following you will find an example for each of the core functions.</p>
-<p><code>rasterTools</code> may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via <code>updatePaths(root = "/path/to/the/spatial/files")</code>.</p>
+<p><code>rasterTools</code> may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via <code><a href="../reference/setPaths.html">setPaths(root = "/path/to/the/spatial/files")</a></code>.</p>
 <div id="generate-spatial-patterns" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-spatial-patterns" class="anchor"></a>Generate spatial patterns</h2>
@@ -194,7 +194,7 @@
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">get_patches &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">                    <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>))</a></code></pre></div>
 <p>When using this algorithm in <code><a href="../reference/modify.html">modify()</a></code> while <code>sequential = TRUE</code> the binarised raster will be used to derive patches. The output of <code>rBinarise</code> will be passed to <code>rPatches</code>, which determines patches from the thresholded rasters values.</p>
-<p>However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:</p>
+<p>However, if you want to determine patches, but also derive categories from the original raster, you have to give each operator in the algorithm a specific name. Operators which should be part of the same sub-algorithm have to have the same name:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">cc_cats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rBinarise"</span>, <span class="dt">thresh =</span> <span class="dv">30</span>),</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">                <span class="dt">get_patches =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rPatches"</span>),</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3">                <span class="dt">get_categories =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"rCategorise"</span>, <span class="dt">n =</span> <span class="dv">5</span>))</a></code></pre></div>
@@ -208,7 +208,7 @@
 <div id="measure-raster-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#measure-raster-objects" class="anchor"></a>Measure raster objects</h2>
-<p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:</p>
+<p>Landscape metrics are another case of algorithms in <code>rasterTools</code>. We distinguish between <em>generic</em> and <em>derived</em> landscape metrics. To evaluate a generic metric, typically just the respective operator with its arguments needs to be given:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">myInput &lt;-<span class="st"> </span>rtData<span class="op">$</span>categorical</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2">myMetrics &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">a_c =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"class"</span>),</a>
 <a class="sourceLine" id="cb13-3" data-line-number="3">                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>))</a>
@@ -238,7 +238,7 @@
 <a class="sourceLine" id="cb15-3" data-line-number="3">                  <span class="dt">a_l =</span> <span class="kw">list</span>(<span class="dt">operator =</span> <span class="st">"mArea"</span>, <span class="dt">scale =</span> <span class="st">"landscape"</span>),</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4">                  <span class="dt">mCPA =</span> <span class="st">"a_c / a_l * 100"</span>,</a>
 <a class="sourceLine" id="cb15-5" data-line-number="5">                  <span class="dt">mLPI =</span> <span class="st">"max(a_p) / a_l * 100"</span>)</a></code></pre></div>
-<p>The generic metrics <code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code> are available. Equations for the derived metrics can be found in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette (and with increasing version numbers more of them, for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code>). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
+<p>The generic metrics <code><a href="../reference/mNumber.html">mNumber()</a></code>, <code><a href="../reference/mPerimeter.html">mPerimeter()</a></code>, <code><a href="../reference/mArea.html">mArea()</a></code>, <code><a href="../reference/mAdjacency.html">mAdjacency()</a></code> and <code><a href="../reference/mValues.html">mValues()</a></code> are available. Equations for the derived metrics can be found in the <a href="articles/landscape_metrics.html">landscape metrics</a> vignette (for example the <em>largest patch index</em> <code>mLPI</code> or the <em>percentage of like adjacencies</em> <code>mPLA</code> and with increasing version number more of them). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.</p>
 <p>Finally, the measurement of the <em>class proportional area</em> and the <em>largest patch index</em>, in a raster where patches have been determined, would be carried out by:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="../reference/measure.html">measure</a></span>(<span class="dt">input =</span> myInput, <span class="dt">with =</span> myMetrics)</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#&gt; [[1]]</span></a>

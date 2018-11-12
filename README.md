@@ -32,7 +32,7 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
                            ...)
         myData <- obtain(data = myDatasets, mask = aMask)
                            
-2) Determine forest patches in a raster with continuous integer values:
+2) Determine forest patches in a raster with continuous integer values of tree-cover:
 
         get_patches <- list(list(operator = "rBinarise", thresh = 30),
                             list(operator = "rPatches"))

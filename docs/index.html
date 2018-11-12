@@ -141,7 +141,7 @@
  myData &lt;- obtain(data = myDatasets, mask = aMask)</code></pre>
 </li>
 <li>
-<p>Determine forest patches in a raster with continuous integer values:</p>
+<p>Determine forest patches in a raster with continuous integer values of tree-cover:</p>
 <pre><code> get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
                      list(operator = "rPatches"))
  myInput &lt;- rtData$continuous

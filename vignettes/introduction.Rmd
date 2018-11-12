@@ -56,7 +56,7 @@ library(rasterTools)
 
 coords <- data.frame(x = c(40, 70, 70, 50),
                      y = c(40, 40, 60, 70),
-                     id = 1)
+                     fid = 1)
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
 (aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE))
@@ -70,7 +70,7 @@ Additionally, several "tools" to modify the `geom` vertices and to transform the
 # Example workflow
 In the following you will find an example for each of the core functions.
 
-`rasterTools` may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via `updatePaths(root = "/path/to/the/spatial/files")`.
+`rasterTools` may write large files to your harddisc and you should assign a specific directory on a storage medium that has sufficient space via `setPaths(root = "/path/to/the/spatial/files")`.
 
 ## Generate spatial patterns
 *In the making*
@@ -111,7 +111,7 @@ get_patches <- list(list(operator = "rBinarise", thresh = 30),
 
 When using this algorithm in `modify()` while `sequential = TRUE` the binarised raster will be used to derive patches. The output of `rBinarise` will be passed to `rPatches`, which determines patches from the thresholded rasters values.
 
-However, if you want to determine patches, but also derive categories from the original raster, you have to give each function in the algorithm a specific name. Functions which should be part of the same sub-algorithm have to have the same name:
+However, if you want to determine patches, but also derive categories from the original raster, you have to give each operator in the algorithm a specific name. Operators which should be part of the same sub-algorithm have to have the same name:
 
 ```{r}
 cc_cats <- list(get_patches = list(operator = "rBinarise", thresh = 30),
@@ -131,7 +131,7 @@ visualise(raster::stack(myInput, myPatches))
 
 
 ## Measure raster objects
-Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric typically just the respective operator with its arguments needs to be given:
+Landscape metrics are another case of algorithms in `rasterTools`. We distinguish between _generic_ and _derived_ landscape metrics. To evaluate a generic metric, typically just the respective operator with its arguments needs to be given:
 
 ```{r}
 myInput <- rtData$categorical
@@ -158,7 +158,7 @@ myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   mLPI = "max(a_p) / a_l * 100")
 ```
 
-The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (and with increasing version numbers more of them, for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA` and with increasing version number more of them). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
 Finally, the measurement of the *class proportional area* and the *largest patch index*, in a raster where patches have been determined, would be carried out by:
 
