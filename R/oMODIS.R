@@ -92,9 +92,9 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
 
   # check satellite
-  if(grepl("MYD", product)){
+  if(grepl("MYD", toupper(product))){
     satellite <- "MOLA"
-  } else if(grepl("MOD", product)){
+  } else if(grepl("MOD", toupper(product))){
     satellite <- "MOLT"
   }
 
