@@ -376,7 +376,8 @@ gToGrob <- function(geom, theme = NULL, ...){
                                col = pars$line[i],
                                fill = pars$fill[i],
                                lty = pars$linetype[i],
-                               lwd = pars$linewidth[i]))
+                               lwd = pars$linewidth[i],
+                               ...))
       } else{
         geomGrob <- gList(geomGrob, 
                           pathGrob(x = tempCoords$x,
@@ -387,7 +388,8 @@ gToGrob <- function(geom, theme = NULL, ...){
                                      col = pars$line[i],
                                      fill = pars$fill[i],
                                      lty = pars$linetype[i],
-                                     lwd = pars$linewidth[i])))
+                                     lwd = pars$linewidth[i],
+                                     ...)))
       }
 
     }
