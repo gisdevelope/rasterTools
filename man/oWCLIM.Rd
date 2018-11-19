@@ -6,7 +6,7 @@
 \title{Obtain global climate data}
 \usage{
 oWCLIM(mask = NULL, variable = NULL, month = c(1:12),
-  resolution = 0.5, version = 2)
+  resolution = 0.5)
 
 downloadWCLIM(file = NULL, localPath = NULL)
 }
@@ -15,7 +15,7 @@ downloadWCLIM(file = NULL, localPath = NULL)
 extent is the area of interest.}
 
 \item{variable}{[\code{character(.)}]\cr the climatic variable of interest;
-see Details to find which variables are available in which version.}
+see Details.}
 
 \item{month}{[\code{integerish(.)}]\cr the month(s) for which the data should
 be extracted.}
@@ -23,18 +23,14 @@ be extracted.}
 \item{resolution}{[\code{numeric(1)}]\cr the spatial resolution in
 arc-minutes.}
 
-\item{version}{[\code{integerish(1)}]\cr the version for which you'd like to
-obtain the worldclim data.}
-
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
 \item{localPath}{[\code{character(1)}]\cr the local path where files are
 supposed to be stored (i.e. on your harddisc).}
 }
 \description{
-Obtain data from the 'worldclim' \href{http://worldclim.org/}{dataset}
-(\href{https://doi.org/10.1002/joc.1276}{paper1},
-\href{https://doi.org/10.1002/joc.5086}{paper2}).
+Obtain data from the 'worldclim 2' \href{http://worldclim.org/}{dataset}
+(\href{https://doi.org/10.1002/joc.5086}{paper}).
 }
 \details{
 The object provided in \code{mask} is treated as a single mask,
@@ -44,30 +40,35 @@ The object provided in \code{mask} is treated as a single mask,
   may consist of several features, each of which are treated as seperate
   mask.
 
-\itemize{\item Version 1.4 includes the variables:\itemize{ \item
-  \code{"tmin"}: average monthly minimum temperature [°C * 10], \item
-  \code{"tmax"}: average monthly maximum temperature [°C * 10], \item
-  \code{"tmean"}: average monthly mean temperature [°C * 10], \item
-  \code{"prec"}: average monthly precipitation [mm], \item \code{"bio"}:
-  bioclimatic variables derived from the above.} \item Version 2.0 includes
-  the variables:\itemize{ \item \code{"tmin"}: average monthly minimum
-  temperature [°C * 10], \item \code{"tmax"}: average monthly maximum
-  temperature [°C * 10], \item \code{"tavg"}: average monthly mean
-  temperature [°C * 10], \item \code{"prec"}: average monthly precipitation
-  [mm], \item \code{"srad"}: average monthly solar radiation [kJ m-2 day-1],
-  \item \code{"wind"}: average monthly wind speed [m s-1], \item
-  \code{"vapr"}: average monthly water vapour pressure [kPa], \item
-  \code{"bio"}: bioclimatic variables derived from the above.} }
-
-  The files of version 1.4 are shipped in the 'bil' format. While the files
-  are compressed into a zip-file, once unzipped, they take up a lot of space
-  on the harddisc. Hence, when using this function for the first time,
-  \code{downloadWCLIM} downloads and unzips the original file(s), transforms
-  the monthly files into 'tif' format (which uses only about 1/10th of the
-  space) and deletes the original 'bil' files. Beware that due to the size of
-  the inital files this takes a lot (!) of time, especially for the 30
-  arc-second files. However, when repeatedly using these data, so the hope,
-  this procedure should make the future work with these data smoother.
+The following variables are included:\itemize{ 
+  \item \code{"tmin"}: average monthly minimum temperature [°C * 10], 
+  \item \code{"tmax"}: average monthly maximum temperature [°C * 10], 
+  \item \code{"tavg"}: average monthly mean temperature [°C * 10], 
+  \item \code{"prec"}: average monthly precipitation [mm], 
+  \item \code{"srad"}: average monthly solar radiation
+  [kJ m-2 day-1], 
+  \item \code{"wind"}: average monthly wind speed [m s-1],
+  \item \code{"vapr"}: average monthly water vapour pressure [kPa],
+  \item \code{"bio"}: all bioclimatic variables,
+  \item \code{"bio_01"}: annual mean temperature,
+  \item \code{"bio_02"}: mean diurnal range,
+  \item \code{"bio_03"}: Isothermality,
+  \item \code{"bio_04"}: temperature seasonality,
+  \item \code{"bio_05"}: Max temperature of warmest month,
+  \item \code{"bio_06"}: Min temperature of coldest month,
+  \item \code{"bio_07"}: temperature annual Range,
+  \item \code{"bio_08"}: mean temperature of wettest quarter,
+  \item \code{"bio_09"}: mean temperature of driest quarter,
+  \item \code{"bio_10"}: mean temperature of warmest quarter,
+  \item \code{"bio_11"}: mean temperature of coldest quarter,
+  \item \code{"bio_12"}: annual precipitation,
+  \item \code{"bio_13"}: precipitation of wettest month,
+  \item \code{"bio_14"}: precipitation of driest month,
+  \item \code{"bio_15"}: precipitation seasonality,
+  \item \code{"bio_16"}: precipitation of wettest quarter,
+  \item \code{"bio_17"}: precipitation of driest quarter,
+  \item \code{"bio_18"}: precipitation of warmest quarter,
+  \item \code{"bio_19"}: precipitation of coldest quarter.}
 }
 \section{Functions}{
 \itemize{
