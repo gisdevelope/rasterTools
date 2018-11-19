@@ -821,8 +821,8 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
   if(!centroids){
     nodes <- NULL
     for(i in seq_along(cntrds$id)){
-      cx <- cntrds$x[i] + radius*cos(rad(angles))
-      cy <- cntrds$y[i] + radius*sin(rad(angles))
+      cx <- round(cntrds$x[i] + radius*cos(rad(angles)))
+      cy <- round(cntrds$y[i] + radius*sin(rad(angles)))
       theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
       nodes <- rbind(nodes, theNodes)
     }
