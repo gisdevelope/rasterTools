@@ -214,6 +214,7 @@ default)?</p></td>
 
 <span class='co'># create points interactively</span>
 <span class='no'>myPoints</span> <span class='kw'>&lt;-</span> <span class='fu'>geomPoint</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>input</span>, <span class='kw'>vertices</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"deeppink"</span>)
+<span class='no'>myPoints</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='no'>myPoints</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>5</span>))
 <span class='no'>anExtent</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>(<span class='no'>myPoints</span>, <span class='kw'>show</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"green"</span>)
 <span class='co'># }</span></pre>
   </div>
