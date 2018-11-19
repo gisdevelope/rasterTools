@@ -94,8 +94,6 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
   }
   out <- list()
 
-  # test how this function plays
-  fileExists <- testFiles(files, path = localPath)
   # go through file and load each of them
   if(verbose){
     pb <- txtProgressBar(min = 0, max = length(files), style = 3, char=">", width = getOption("width")-14)
@@ -103,13 +101,15 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
   for(i in seq_along(files)){
 
     theFile <- files[i]
+
+    fileExists <- testFiles(theFile, path = localPath)
     thePath <- paste0(localPath, "/", theFile)
     fileTemp <- strsplit(theFile, split = "[.]")[[1]]
     fileType <- fileTemp[length(fileTemp)]
     fileName <- paste0(fileTemp[!fileTemp %in% fileType], collapse = ".")
 
     # if 'file' does not exist, attempt to download it (in case a downloadDATASET method is given)
-    if(!fileExists[i] & !is.null(dataset)){
+    if(!fileExists & !is.null(dataset)){
       args <- list(file = files[i], localPath = localPath)
 
       do.call(what = paste0("download", toupper(dataset)),
@@ -309,9 +309,11 @@ load_kml <- function(path, layer = NULL){
 load_hdf <- function(path, layer = NULL){
 
   assertFile(path, access = "r", extension = "hdf")
-  assertCharacter(layer, ignore.case = TRUE, any.missing = FALSE, null.ok = TRUE)
+  layerIsInt <- testIntegerish(layer, any.missing = FALSE, min.len = 1)
+  layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
+  assert(layerIsChar, layerIsInt)
   
-  subsets_name <- gdalUtils::get_subdatasets(datasetname = path)
+  subsets_name <- get_subdatasets(datasetname = path)
   
   files <- unlist(lapply(
     seq_along(subsets_name), function(i){
@@ -322,7 +324,7 @@ load_hdf <- function(path, layer = NULL){
   ))
   
   # select the layer(s)
-  if(!is.numeric(layer)){
+  if(layerIsChar){
     layer <- which(files %in% layer)
   }
   if(length(layer) == 0 | all(!layer %in% seq_along(files))){
