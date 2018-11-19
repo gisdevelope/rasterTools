@@ -113,7 +113,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
     # check a csv-table already exists for that species. If it exists, we don't
     # have to read it in again and save some time.
     if(file.exists(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))){
-      blablabla(paste0("  ... loading the file from '", rtPaths$emma$local, "'\n"), ...)
+      # blablabla(paste0("  ... loading the file from '", rtPaths$emma$local), ...)
       allOcc <- read.csv(paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
     } else{
       allOcc <- loadData(files = paste0(theSpecies[i], ".svg"),
@@ -122,7 +122,6 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
       write.csv(allOcc, paste0(rtPaths$emma$local, "/", theSpecies[i], ".csv"))
     }
     emma <- bind_rows(emma, allOcc[allOcc$square %in% tileNames,])
-
   }
 
   # manage the bibliography entry
@@ -143,6 +142,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
                   publisher = "Academic Press",
                   address = "London"
                   )
+  blablabla()
 
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
