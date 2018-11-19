@@ -309,10 +309,8 @@ load_kml <- function(path, layer = NULL){
 load_hdf <- function(path, layer = NULL){
 
   assertFile(path, access = "r", extension = "hdf")
-  layerIsInt <- testIntegerish(layer, any.missing = FALSE, min.len = 1)
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
-  assert(layerIsChar, layerIsInt)
-  
+
   subsets_name <- get_subdatasets(datasetname = path)
   
   files <- unlist(lapply(
