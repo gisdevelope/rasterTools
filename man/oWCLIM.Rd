@@ -77,10 +77,7 @@ The object provided in \code{mask} is treated as a single mask,
 \examples{
 \dontrun{
 
-require(magrittr)
-
-myWCLIM <- oWCLIM(mask = rtGeoms$mask,
-                  variable = c("tavg"),
+myWCLIM <- oWCLIM(mask = rtGeoms$mask, variable = c("tavg"),
                   month = c(5:9))
 visualise(raster = myWCLIM$tavg, trace = TRUE)
 

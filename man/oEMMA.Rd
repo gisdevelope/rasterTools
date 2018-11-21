@@ -78,6 +78,8 @@ mySpecies <- catalog(path = rtPaths$emma$local,
   subset(abbr \%in\% c("apo_agr", "apo_fla", "vul_vul")) \%$\%
   oEMMA(mask = myMask, species = original)
 
+# get the (updated) bibliography
+reference(style = "bibtex")
 }
 }
 \references{

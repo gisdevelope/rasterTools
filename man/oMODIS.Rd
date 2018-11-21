@@ -90,8 +90,6 @@ The period can either be given as a single value if only one year is
 \examples{
 \dontrun{
 
-require(magrittr)
-
 water <- oMODIS(mask = rtGeoms$mask, period = 2000,
                 product = "MOD44W", layer = 1)
 visualise(gridded = water, trace = TRUE)
