@@ -146,6 +146,7 @@ scaleParameters <- function(attr = NULL, params = NULL){
 #' @export
 
 blablabla <- function(msg, silent = FALSE){
+  if(missing(msg)) msg <- ""
   if(!silent){
     message(msg)
   }
