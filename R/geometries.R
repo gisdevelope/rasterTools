@@ -31,6 +31,7 @@
 #'
 #' # create points interactively
 #' myPoints <- geomPoint(template = input, vertices = 5, show = TRUE, col = "deeppink")
+#' myPoints <- gGroup(myPoints, index = rep(1, 5))
 #' anExtent <- geomRectangle(myPoints, show = TRUE, col = "green")
 #' }
 #' @importFrom checkmate testDataFrame assertNames testNull assert testClass
@@ -821,8 +822,8 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
   if(!centroids){
     nodes <- NULL
     for(i in seq_along(cntrds$id)){
-      cx <- cntrds$x[i] + radius*cos(rad(angles))
-      cy <- cntrds$y[i] + radius*sin(rad(angles))
+      cx <- round(cntrds$x[i] + radius*cos(rad(angles)))
+      cy <- round(cntrds$y[i] + radius*sin(rad(angles)))
       theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
       nodes <- rbind(nodes, theNodes)
     }

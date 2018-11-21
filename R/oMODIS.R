@@ -80,7 +80,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   assertIntegerish(period, any.missing = FALSE, min.len = 1, max.len = 2, unique = TRUE)
   assertTRUE(nchar(period[1]) %in% c(4, 7))
   if(nchar(period[1]) == 7){
-    if(as.integer(str_sub(period[1], 5)) < 1){
+    if(as.integer(substr(period[1], 5, length(period[1]))) < 1){
       stop("did you mean to use 001 as first day of the year?")
     }
   }
@@ -90,9 +90,9 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
 
   # check satellite
-  if(grepl("MYD", product)){
+  if(grepl("MYD", toupper(product))){
     satellite <- "MOLA"
-  } else if(grepl("MOD", product)){
+  } else if(grepl("MOD", toupper(product))){
     satellite <- "MOLT"
   }
 
@@ -249,8 +249,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       
       # reproject
       if(getCRS(mask) != targetCRS){
-        crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
-        message(paste0("  ... reprojecting to '", crs_name, "'\n"))
+        crs_name <- strsplit(targetCRS, " ")[[1]][1]
+        blablabla(paste0(" ... reprojecting to '", crs_name))
         tempObject <- setCRS(x = tempObject, crs = targetCRS)
         tempObject <- stack(crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
         history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
@@ -263,6 +263,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       } else{
         allObjects <- c(allObjects, setNames(list(tempObject), str_replace_all(validDates[j], "[.]", "")))
       }
+      blablabla()
+      
     }
     
     out <- c(out, setNames(list(allObjects), gridId))
@@ -291,7 +293,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   
   # manage the bibliography entry
   bib <- eval(parse(text = paste0("ref_modis$", product)))
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
@@ -340,7 +342,7 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
     onlinePath <- paste0(rtPaths$modis$remote, satellite, "/", product, ".", version, "/", date)
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
     usr <- tryCatch(get("usr"), error = function(e) NULL)
-    pwd <- tryCatch(get("usr"), error = function(e) NULL)
+    pwd <- tryCatch(get("pwd"), error = function(e) NULL)
     if(is.null(usr)){
       usr <- readline("earthdata.nasa.gov user name: ")
       assign("usr", usr, envir = .GlobalEnv)
