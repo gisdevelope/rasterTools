@@ -1,36 +1,41 @@
 #' Obtain global ESA CCI land-cover data
 #'
-#' Obtain data from the 'ESA CCI land-cover' \href{https://www.esa-landcover-cci.org/?q=node/164}{dataset}
-#' (\href{https://doi.org/10.1002/joc.1276}{paper1}).
+#' Obtain data from the 'ESA CCI land-cover'
+#' \href{http://maps.elie.ucl.ac.be/CCI/viewer/index.php}{dataset}
+#' (\href{http://maps.elie.ucl.ac.be/CCI/viewer/download/ESACCI-LC-Ph2-PUGv2_2.0.pdf}{User
+#' Guide}).
 #'
 #' @template mask
-#' @param years [\code{integerish(.)}]\cr year(s) for which ESA CCI land-cover data should be
-#'   extracted; see Details.
+#' @param years [\code{integerish(.)}]\cr year(s) for which ESA CCI land-cover
+#'   data should be extracted; see Details.
+#' @param assertQuality [\code{logical(1)}] (not supported yet)\cr should the
+#'   quality flags of the ESA CCI land-cover dataset be extracted (\code{TRUE},
+#'   default) or should merely the data-layer be extracted (\code{FALSE})?
+#' @param keepFile [\code{logical(1)}]\cr should the file gdal creates in the
+#'   workingdirectory be kept (\code{TRUE}) or should it be deleted
+#'   (\code{FALSE}, default)?
 #' @param ... [various]\cr other arguments.
-#' @family obtain operators
+#' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
 #'
-#' require(magrittr)
-#'
-#' myWCLIM <- oESALC(mask = rtGeoms$mask,
-#'                   variable = c("tavg"),
-#'                   month = c(5:9))
-#' visualise(raster = myWCLIM$tavg, trace = TRUE)
+#' myESALC <- oESALC(mask = rtGeoms$mask, years = 2005)
+#' visualise(raster = myESALC, trace = TRUE)
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
 #' }
-#' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset testFileExists
-#' @importFrom stringr str_split
+#' @importFrom checkmate testClass assertIntegerish testFileExists
 #' @importFrom raster stack crop
+#' @importFrom gdalUtils gdal_translate
 #' @export
 
-oESALC <- function(mask = NULL, years = NULL, ...){
+oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = FALSE, ...){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
   maskIsSpatial <- testClass(mask, classes = "Spatial")
+  # maskIsSf <- testClass(mask, classes = "sf")
   assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(years, lower = 1992, upper = 2015, any.missing = FALSE, min.len = 1)
 
@@ -39,134 +44,116 @@ oESALC <- function(mask = NULL, years = NULL, ...){
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)
-  theExtent <- geomRectangle(anchor = getExtent(x = mask))
-  theExtent <- setCRS(x = theExtent, crs = targetCRS)
+  targetMask <- setCRS(x = geomRectangle(anchor = getExtent(x = mask)), crs = targetCRS)
 
   if(targetCRS != projs$longlat){
-    mask <- setCRS(x = mask, crs = projs$longlat)
-    targetExtent <- setCRS(theExtent, crs = projs$longlat)
-  } else{
-    targetExtent <- theExtent
+    # mask <- setCRS(x = mask, crs = projs$longlat)
+    targetMask <- setCRS(targetMask, crs = projs$longlat)
   }
+  targetExtent <- getExtent(x = targetMask)
   
   out <- stack()
   history <- list()
   # go through years to extract the respective data and subset it with theExtent
   for(i in seq_along(years)){
     
-    message(paste0("I am handling the clc datasets of the year '", years[i], "':"))
-    fileName <- paste0( "g100_", substr(years[i], start = nchar(years[i])-1, stop = nchar(years[i])), ".tif")
-    tempObject <- loadData(files = fileName, dataset = "clc")
-    outCols <- colortable(tempObject)[-1]
+    blablabla(msg = paste0("I am handling the ESALC datasets of the year '", years[i], "':"))
+    fileName <- paste0( "ESACCI-LC-L4-LCCS-Map-300m-P1Y-", years[i], "-v2.0.7.tif")
+    fileExists <- testFileExists(paste0(paste0(rtPaths$esalc$local, "/", fileName)))
     
-    history <- c(history, paste0(tempObject@history, " for the year ", years[i], ""))
-    
-    message(paste0("  ... cropping CLC to target area"))
-    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    names(tempObject) <- paste0("landcover_", years[i])
-    history <-  c(history, list(paste0("object has been cropped")))
-    
-    if(getCRS(mask) != targetCRS){
-      crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      message(paste0("  ... reprojecting target CLC to '",crs_name))
-      tempObject <- setCRS(x = tempObject, crs = targetCRS, method = "ngb")
-      history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
+    if(!fileExists){
+      downloadESALC(file = fileName,
+                    localPath = rtPaths$esalc$local)
     }
+    blablabla(paste0(" ... cropping ESALC to 'mask'"), ...)
+    tempObject <- gdal_translate(src_dataset = paste0(rtPaths$esalc$local, "/", fileName),
+                                 dst_dataset = paste0("esalc_", years[i], ".tif"),
+                                 projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
+                                 output_Raster = TRUE)
+    
+    history <- c(history, paste0("object loaded for the year ", years[i], ""))
+    history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
+    
+    if(targetCRS != projs$longlat){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      blablabla(paste0(" ... reprojecting target ESALC to '",crs_name), ...)
+      tempObject <- setCRS(x = tempObject, crs = targetCRS, method = "ngb")
+      tempObject <- crop(tempObject, getExtent(x = mask), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      history <- c(history, list(paste0("object reprojected to ", crs_name)))
+    }
+    
+    # set history
+    tempObject@history <- history
     
     # create and set RAT table
     tempObject@data@isfactor <- TRUE
     ids <- unique(tempObject)
-    tempObject@data@attributes <- list(data.frame(id = ids, labels[ids,]))
+    tempObject@data@attributes <- list(data.frame(id = ids, label = meta_esalc$LCCOwnLabel[which(meta_esalc$NB_LAB %in% ids)]))
     
     # set colortable
+    outCols <- rep("#000000", 256)
+    outCols[meta_esalc$NB_LAB] <- meta_esalc$colour[-1]
     tempObject@legend@colortable <- outCols
     
-    # add up all upcoming years
-    clc_out <- stack(clc_out, tempObject)
+    if(!keepFile){
+      file.remove(paste0(getwd(), "/esalc_", years[i], ".tif"))
+    }
     
+    # stack all upcoming years
+    out <- stack(out, tempObject)
   }
   
-  names(clc_out) <- paste0("clc_", years)
-  clc_out@history <- history
+  out@history <- list("please see each RasterLayer's individual history")
   
-  #   bib <- bibentry(bibtype = "",
-  #                   title = "",
-  #                   author = c(person(given = "", family = "")),
-  #                   journal = "",
-  #                   volume = "",
-  #                   year = "",
-  #                   pages = "",
-  #                   doi = ""
-  #   )
+  bib <- bibentry(bibtype = "Manual",
+                  title = "Product User Guide",
+                  author = person("Land Cover CCI"),
+                  version = 2.0,
+                  year = "2017",
+                  pages = "105"
+  )
+  blablabla()
+  
+  if(is.null(getOption("bibliography"))){
+    options(bibliography = bib)
+  } else{
+    currentBib <- getOption("bibliography")
+    if(!bib%in%currentBib){
+      options(bibliography = c(currentBib, bib))
+    }
+  }
 
-  # if(is.null(getOption("bibliography"))){
-  #   options(bibliography = bib)
-  # } else{
-  #   currentBib <- getOption("bibliography")
-  #   if(!bib%in%currentBib){
-  #     options(bibliography = c(currentBib, bib))
-  #   }
-  # }
-  # 
-  # return(wc_out)
+  return(out)
 }
 
 #' @describeIn oESALC function to download ESA CCI land-cover data
 #' @param file [\code{character(1)}]\cr the name of the file to download.
 #' @template localPath
 #' @importFrom httr GET write_disk progress
-#' @importFrom utils unzip
-#' @importFrom raster raster writeRaster
-#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom tools md5sum
 #' @export
 
 downloadESALC <- function(file = NULL, localPath = NULL){
   
-  # assertCharacter(file, any.missing = FALSE, len = 1, null.ok = TRUE)
-  # if(!is.null(localPath)){
-  #   assertDirectory(localPath, access = "rw")
-  # }
-  # 
-  # if(!is.null(file) & !is.null(localPath)){
-  #   version <- ifelse(strsplit(file, "_")[[1]][1] == "wc2.0", 2, 1.4)
-  #   if(version == 2){
-  #     fileParts <- strsplit(file, "[.]")[[1]]
-  #     middle <- strsplit(fileParts[2], "_")[[1]]
-  #     file <- paste0(c(fileParts[1], paste0(middle[-length(middle)], collapse = "_"), "zip"), collapse = ".")
-  #     onlinePath <- paste0(rtPaths$worldclim$remote, "worldclim/v2.0/tif/base/")
-  #   } else{
-  #     fileParts <- strsplit(file, "_")[[1]]
-  #     end <- strsplit(fileParts[[3]], "[.]")[[1]]
-  #     file <- paste0(fileParts[1], "_", paste0(end, collapse = "_"), ".zip")
-  #     onlinePath <- paste0(rtPaths$worldclim$remote, "climate/worldclim/1_4/grid/cur/")
-  #   }
-  #   
-  #   message(paste0("  ... downloading the file from '", onlinePath, "'"))
-  #   GET(url = paste0(onlinePath, file),
-  #       write_disk(paste0(localPath, "/", file)),
-  #       progress())
-  #   
-  #   message(paste0("  ... unzipping the files of '", file, "'"))
-  #   unzip(paste0(localPath, "/", file), exdir = localPath)
-  #   
-  #   # in case we deal with version 1.4, we rename the files to have sensible names
-  #   if(version == 1.4){
-  #     fileNames <- strsplit(file, "_")[[1]]
-  #     
-  #     message("  ... transforming the files to '.tif'")
-  #     pb <- txtProgressBar(min = 0, max = 12, style = 3, char=">", width = getOption("width")-14)
-  #     for(i in 1:12){
-  #       temp <- raster(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")))
-  #       writeRaster(temp, 
-  #                   filename = paste0(localPath, "/", paste0("wc1.4_", fileNames[2], "_", fileNames[1], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif")), 
-  #                   format = 'GTiff', options = "COMPRESS=DEFLATE")
-  #       file.remove(c(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")),
-  #                     paste0(localPath, "/", paste0(fileNames[1], "_", i, ".hdr"))))
-  #       setTxtProgressBar(pb, i)
-  #     }
-  #     close(pb)
-  #     
-  #     file.remove(paste0(localPath, "/", file))
-  #   }
-  # }
+  assertCharacter(file, any.missing = FALSE, len = 1)
+  if(!is.null(localPath)){
+    assertDirectory(localPath, access = "rw")
+  }
+
+  onlinePath <- rtPaths$esalc$remote
+  blablabla(paste0(" ... downloading the file from '", onlinePath, "'"))
+  suppressWarnings(
+    GET(url = paste0(onlinePath, file),
+        authenticate(user = "anonymous", password = "rasterTools@funroll-loops.de"),
+        write_disk(paste0(localPath, "/", file)),
+        progress())
+  )
+  
+  tempMD5 <- md5sum(paste0(localPath, "/", file))
+  if(rtMD5$md5[which(rtMD5$file %in% file)] != tempMD5[[1]]){
+    stop(paste0("the file '", file, "' in the directory '", localPath, "' may be damaged. See '?setMD5' for details."))
+  } else{
+    blablabla(" ... MD5 checksum ok")
+  }
+
 }
