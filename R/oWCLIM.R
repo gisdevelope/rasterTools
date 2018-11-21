@@ -37,14 +37,11 @@
 #'   the inital files this takes a lot (!) of time, especially for the 30
 #'   arc-second files. However, when repeatedly using these data, so the hope,
 #'   this procedure should make the future work with these data smoother.
-#' @family obtain operators
+#' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
 #'
-#' require(magrittr)
-#'
-#' myWCLIM <- oWCLIM(mask = rtGeoms$mask,
-#'                   variable = c("tavg"),
+#' myWCLIM <- oWCLIM(mask = rtGeoms$mask, variable = c("tavg"),
 #'                   month = c(5:9))
 #' visualise(raster = myWCLIM$tavg, trace = TRUE)
 #'

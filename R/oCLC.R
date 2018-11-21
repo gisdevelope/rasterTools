@@ -11,11 +11,9 @@
 #'   2012. It covers 45 land cover classes for many European countries. It was
 #'   compiled by the European Environmental Agency.
 #' @return A \code{RasterLayer} of clc data.
-#' @family obtain operators
+#' @family obtain operators (Europe)
 #' @examples
 #' \dontrun{
-#'
-#' require(magrittr)
 #'
 #' myCLC <- oCLC(mask = rtGeoms$mask, years = c(2006, 2012))
 #' visualise(gridded = myCLC, trace = TRUE)
@@ -35,7 +33,7 @@ oCLC <- function(mask = NULL, years = NULL){
   assert(maskIsGeom, maskIsSpatial)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
-  
+
   labels <- meta_clc
   
   # transform crs of the mask to the dataset crs
