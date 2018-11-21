@@ -66,12 +66,12 @@
 #'                          crs = projs$sinu)
 #' visualise(geom = tiles_modis)
 #' }
-#' @importFrom stringr str_sub str_replace_all
+#' @importFrom stringr str_replace_all
 #' @importFrom raster values crop projectRaster stack mosaic
 #' @export
 
-oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
-                   process = TRUE){
+oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL, 
+                   assertQuality = TRUE, keepFile = FALSE, ...){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -97,7 +97,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   }
 
   # load meta data
-  meta <- meta_modis[grep(paste0("(?i)", str_sub(string = product, start = 4), "(?-i)$"), meta_modis$product),]
+  meta <- meta_modis[grep(paste0("(?i)", substr(x = product, start = 4, stop = nchar(product)), "(?-i)$"), meta_modis$product),]
   if(layerIsInt){
     meta <- meta[layer,]
   } else if(layerIsChar){
@@ -161,8 +161,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   }
   
   # set the valid dates for this product
-  year <- str_sub(period, 0, 4)
-  doy <- str_sub(period, 5)
+  year <- substr(period, 0, 4)
+  doy <- substr(period, 5, 7)
   theDates <- doyToDate(year, doy)
   
   # transform crs of the mask to the dataset crs
@@ -170,16 +170,13 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)
-  theExtent <- geomRectangle(anchor = getExtent(x = mask))
-  theExtent <- setCRS(x = theExtent, crs = targetCRS)
+  targetMask <- setCRS(x = geomRectangle(anchor = getExtent(x = mask)), crs = targetCRS)
   
   if(targetCRS != projs$sinu){
-    mask <- setCRS(x = mask, crs = projs$sinu)
-    targetExtent <- setCRS(theExtent, crs = projs$sinu)
-  } else{
-    targetExtent <- theExtent
+    targetMask <- setCRS(targetMask, crs = projs$sinu)
   }
-
+  targetExtent <- getExtent(x = targetMask)
+  
   # create the tiles geometry to determine the data-subset to load
   modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
                           y = c(-10007554.677, 10007554.677))
@@ -222,35 +219,33 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       next
     }
     
-    modis_out <- list()
-    # go through all files, which are available according to the arguments, for the tile
+    out <- list()
     allObjects <- list()
     
     for(j in seq_along(validDates)){
       
-      productFiles <- downloadMODIS(getFiles = paste0(rtPaths$modis$remote, satellite, "/", product, ".006/", validDates[j], "/"))
-      validFiles <- productFiles[grep(gridId, productFiles)]
-      
       history <- list()
       message(paste0("I am handling the modis product '", product, "' with the grid ID '", gridId, "' for ", validDates[j], ":"))
+      productFiles <- downloadMODIS(getFiles = paste0(rtPaths$modis$remote, satellite, "/", product, ".006/", validDates[j], "/"))
+      fileName <- productFiles[grep(gridId, productFiles)]
+      fileExists <- testFileExists(paste0(rtPaths$modis$local, "/", product, "/", fileName))
       
-      
-      if(!process){
-        downloadMODIS(file = validFiles,
+      if(!fileExists){
+        downloadMODIS(file = fileName,
                       localPath = paste0(rtPaths$modis$local, "/", product))
-        next
-      } else{
-        tempObject <- loadData(files = validFiles,
-                               dataset = "modis",
-                               layer = layer,
-                               localPath = paste0(rtPaths$modis$local, "/", product))
       }
+      blablabla(paste0(" ... cropping ", product," to 'mask'"), ...)
+      tempObject <- gdal_translate(src_dataset = paste0(rtPaths$modis$local, "/", product, "/", fileName),
+                                   dst_dataset = paste0(procut, "_", validDates[j], ".tif"),
+                                   projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
+                                   output_Raster = TRUE)
       
-      history <- c(history, paste0(tempObject@history, " with the grid ID '", gridId, "'"))
+      history <- c(history, paste0("object with the grid ID '", gridId, "' loaded for ", validDates[j], ""))
+      history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
       
-      message("  ... cropping to targeted study area\n")
-      tempObject <- stack(crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
-      history <-  c(history, list(paste0("object has been cropped")))
+      # message("  ... cropping to targeted study area\n")
+      # tempObject <- stack(crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
+      # history <-  c(history, list(paste0("object has been cropped")))
       
       # reproject
       if(getCRS(mask) != targetCRS){
@@ -270,28 +265,28 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       }
     }
     
-    modis_out <- c(modis_out, setNames(list(allObjects), gridId))
+    out <- c(out, setNames(list(allObjects), gridId))
   }
   
-  if(length(modis_out) > 1){
+  if(length(out) > 1){
     
     # TODO: after loading all tiles per date, put together the mosaic (should be done
     # with the help of gdalUtils::raster_mosaic instead of raster::mosaic), also
     # outside of R.
     message("the mask intersects with two tiles, I merge them now ...\n")
-    modis_name <- names(modis_out)
-    modis_list_names <- names(modis_out[[1]])
-    modis_out <- lapply(
-      seq_along(modis_out[[1]]), function(i){
-        x <- unlist(lapply(modis_out, "[", i))
+    modis_name <- names(out)
+    modis_list_names <- names(out[[1]])
+    out <- lapply(
+      seq_along(out[[1]]), function(i){
+        x <- unlist(lapply(out, "[", i))
         names(x) <- NULL
         do.call(mosaic, c(x, fun = "mean"))
       }
     )
-    modis_out <- setNames(modis_out, modis_list_names)
+    out <- setNames(out, modis_list_names)
     
   } else{
-    modis_out <- modis_out[[1]]
+    out <- out[[1]]
   }
   
   # manage the bibliography entry
@@ -306,7 +301,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
     }
   }
   
-  return(modis_out)
+  return(out)
 }
 
 #' @describeIn oMODIS function to download data related to the MODIS products

@@ -47,7 +47,6 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = F
   targetMask <- setCRS(x = geomRectangle(anchor = getExtent(x = mask)), crs = targetCRS)
 
   if(targetCRS != projs$longlat){
-    # mask <- setCRS(x = mask, crs = projs$longlat)
     targetMask <- setCRS(targetMask, crs = projs$longlat)
   }
   targetExtent <- getExtent(x = targetMask)
