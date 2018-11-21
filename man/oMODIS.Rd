@@ -117,8 +117,7 @@ visualise(geom = tiles_modis)
 }
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oEMMA}},
+Other obtain operators (Global): \code{\link{oESALC}},
   \code{\link{oGFC}}, \code{\link{oWCLIM}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Global)}

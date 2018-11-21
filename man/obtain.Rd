@@ -25,7 +25,7 @@ A list of objects that is organised according to the stratification
   \code{data.frame} or \code{SpatialPointsDataFrame}.
 }
 \description{
-Extract information from various spatial (gridded) datasets both from local
+Extract information from various spatial (raster) dataseries both from local
 and online resources.
 }
 \details{
@@ -46,6 +46,7 @@ and online resources.
      \item \code{\link{oGFC}}: Global Forest Change
      \item \code{\link{oMODIS}}: MODIS products
      \item \code{\link{oWCLIM}}: Worldclim
+     \item \code{\link{oESALC}}: ESA CCI land-cover
   }
   \item European: \itemize{
      \item \code{\link{oCLC}}: Corine Land Cover

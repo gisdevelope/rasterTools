@@ -89,8 +89,7 @@ reference(style = "bibtex")
 }
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oEMMA}},
+Other obtain operators (Global): \code{\link{oESALC}},
   \code{\link{oGFC}}, \code{\link{oMODIS}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Global)}

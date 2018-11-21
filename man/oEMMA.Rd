@@ -86,8 +86,7 @@ Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
   Atlas of European Mammals. Academic Press, London
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oGFC}},
-  \code{\link{oMODIS}}, \code{\link{oWCLIM}}
+Other obtain operators (Europe): \code{\link{oCLC}},
+  \code{\link{oEFTA}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Europe)}
