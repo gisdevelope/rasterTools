@@ -36,7 +36,7 @@
 #'   Kommareddy, A., Egorov, A., Chini, L., Justice, C.O., Townshend, J.R.G.,
 #'   2013. High-Resolution Global Maps of 21st-Century Forest Cover Change.
 #'   Science 342, 846–850.
-#' @family obtain operators
+#' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
 #'
@@ -255,17 +255,15 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
 downloadGFC <- function(file = NULL, localPath = NULL){
 
-  assertCharacter(file, any.missing = FALSE, len = 1, null.ok = TRUE)
+  assertCharacter(file, any.missing = FALSE, len = 1)
   if(!is.null(localPath)){
     assertDirectory(localPath, access = "rw")
   }
 
-  if(!is.null(file) & !is.null(localPath)){
-    onlinePath <- rtPaths$gfc$online
-    message(paste0("  ... downloading the file from '", onlinePath, "'"))
-
-    GET(url = paste0(onlinePath, file),
-        write_disk(paste0(localPath, "/", file)),
-        progress())
-  }
+  onlinePath <- rtPaths$gfc$online
+  blablabla(paste0("  ... downloading the file from '", onlinePath, "'"))
+  
+  GET(url = paste0(onlinePath, file),
+      write_disk(paste0(localPath, "/", file)),
+      progress())
 }
