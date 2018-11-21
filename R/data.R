@@ -25,6 +25,14 @@
 #'   the dataset is given, and 'online', where the dataset can be donwloaded.
 "rtPaths"
 
+#' MD5 checksums
+#'
+#' MD5 checksums of various files that are handled by rasterTools
+#' @format The tibble has the 3 columns 'dataseries', 'file' and 'md5', where
+#'   each file has been assigned the MD5 checksum that is used to validate the
+#'   correct download of this file.
+"rtMD5"
+
 #' Metadata of the MODIS datasets
 #'
 #' @format The dataframe with 13 variables and 97 entries contains meta-data for
@@ -76,6 +84,15 @@
 #'   \item{\code{mhs}}{a binary variable whether the 'maximum habitat
 #'   suitability' dataset is available for this species}}
 "meta_efta"
+
+#' Metadata of the ESA CCI land-cover datasets
+#'
+#' @format The \code{data.frame} with 3 variables and 38 entries contains
+#'   meta-data for the classes of land cover in the esalc dataset. \describe{
+#'   \item{\code{NB_LAB}}{integer value of the land-cover class} 
+#'   \item{\code{LCCOwnLabel}}{the long class name}
+#'   \item{\code{colour}}{hexadecimal code of the colour per land-cover class.}}
+"meta_esalc"
 
 #' References of the MODIS dataset
 #'
