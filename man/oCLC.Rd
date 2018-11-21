@@ -36,8 +36,6 @@ The CLC data dataset is available for the years 1990, 2000, 2006 and
 \examples{
 \dontrun{
 
-require(magrittr)
-
 myCLC <- oCLC(mask = rtGeoms$mask, years = c(2006, 2012))
 visualise(gridded = myCLC, trace = TRUE)
 
@@ -46,8 +44,7 @@ reference(style = "bibtex")
 }
 }
 \seealso{
-Other obtain operators: \code{\link{oEFTA}},
-  \code{\link{oEMMA}}, \code{\link{oGFC}},
-  \code{\link{oMODIS}}, \code{\link{oWCLIM}}
+Other obtain operators (Europe): \code{\link{oEFTA}},
+  \code{\link{oEMMA}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Europe)}

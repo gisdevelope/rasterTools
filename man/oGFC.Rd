@@ -95,8 +95,7 @@ Hansen, M.C., Potapov, P.V., Moore, R., Hancher, M., Turubanova,
   Science 342, 846–850.
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oEMMA}},
+Other obtain operators (Global): \code{\link{oESALC}},
   \code{\link{oMODIS}}, \code{\link{oWCLIM}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Global)}

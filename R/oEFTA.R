@@ -20,16 +20,17 @@
 #' @details The values in this dataset are originally stored as values in the
 #'   range of 0 and 1 (the probability of presence). Here they are transformed
 #'   to integer factors from 0 to 100.
-#' @family obtain operators
+#' @family obtain operators (Europe)
 #' @examples
 #' \dontrun{
-#'
-#' require(magrittr)
 #'
 #' myTrees <- oEFTA(mask = rtGeoms$mask,
 #'                  species = c("Quercus robur", "Alnus incana", 
 #'                              "Pinus sylvestris", "Betula sp"))
 #' visualise(gridded = myTrees, trace = TRUE)
+#'
+#' # get the (updated) bibliography
+#' reference(style = "bibtex")
 #' }
 #' @importFrom checkmate testClass
 #' @importFrom raster crop unique stack

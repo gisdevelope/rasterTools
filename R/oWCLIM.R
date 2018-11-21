@@ -39,14 +39,11 @@
 #'   \item \code{"bio_17"}: precipitation of driest quarter,
 #'   \item \code{"bio_18"}: precipitation of warmest quarter,
 #'   \item \code{"bio_19"}: precipitation of coldest quarter.}
-#' @family obtain operators
+#' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
 #'
-#' require(magrittr)
-#'
-#' myWCLIM <- oWCLIM(mask = rtGeoms$mask,
-#'                   variable = c("tavg"),
+#' myWCLIM <- oWCLIM(mask = rtGeoms$mask, variable = c("tavg"),
 #'                   month = c(5:9))
 #' visualise(raster = myWCLIM$tavg, trace = TRUE)
 #'

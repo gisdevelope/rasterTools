@@ -55,12 +55,13 @@ The values in this dataset are originally stored as values in the
 \examples{
 \dontrun{
 
-require(magrittr)
-
 myTrees <- oEFTA(mask = rtGeoms$mask,
                  species = c("Quercus robur", "Alnus incana", 
                              "Pinus sylvestris", "Betula sp"))
 visualise(gridded = myTrees, trace = TRUE)
+
+# get the (updated) bibliography
+reference(style = "bibtex")
 }
 }
 \references{
@@ -71,8 +72,7 @@ de Rigo, D., Caudullo, G., Houston Durrant, T., San-Miguel-Ayanz,
   Forest Tree Species. Publ. Off. EU, Luxembourg, pp.
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEMMA}}, \code{\link{oGFC}},
-  \code{\link{oMODIS}}, \code{\link{oWCLIM}}
+Other obtain operators (Europe): \code{\link{oCLC}},
+  \code{\link{oEMMA}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Europe)}

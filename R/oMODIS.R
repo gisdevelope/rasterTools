@@ -39,11 +39,9 @@
 #'   \href{https://code.env.duke.edu/projects/mget/wiki/SinusoidalMODIS}{Marine
 #'   Geospatial Ecology Tools}
 #' @return A \code{RasterLayer} or \code{RasterStack} of MODIS data.
-#' @family obtain operators
+#' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
-#'
-#' require(magrittr)
 #'
 #' water <- oMODIS(mask = rtGeoms$mask, period = 2000,
 #'                 product = "MOD44W", layer = 1)

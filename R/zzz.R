@@ -14,6 +14,9 @@
                                 gridLinks = "http://www.helsinki.fi/~rlampine/gmap/gridfilelinks.kml"),
                     efta = list(local = NA,
                                 remote = "https://w3id.org/mtv/FISE/map-data"),
+                    esalc = list(local = NA,
+                                 remote = "ftp://geo10.elie.ucl.ac.be/v207/",
+                                 qualityLayer = "https://storage.googleapis.com/cci-lc-v207/ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992_2015-v2.0.7_Qualityflags.zip"),
                     gfc = list(local = NA,
                                remote = "http://commondatastorage.googleapis.com/earthenginepartners-hansen/GFC2015/"),
                     modis = list(local = NA,
@@ -49,8 +52,8 @@
 }
 
 # internal rasterTools data
-globalVariables(c("rtPaths", "rtData", "rtTheme"))
+globalVariables(c("rtPaths", "rtData", "rtTheme", "rtMD5", "rtGeoms"))
 # meta data
-globalVariables(c("meta_modis", "meta_clc", "meta_emma", "meta_efta", "tiles_emma"))
+globalVariables(c("meta_modis", "meta_clc", "meta_emma", "meta_efta", "meta_esalc", "tiles_emma"))
 # projections
 globalVariables(c("projs"))

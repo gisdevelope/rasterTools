@@ -25,7 +25,7 @@
 #' @references Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
 #'   P, Spitzenberger F, Stubbe M, Thissen J, Vohralík V and Zima J (1999). The
 #'   Atlas of European Mammals. Academic Press, London
-#' @family obtain operators
+#' @family obtain operators (Europe)
 #' @examples
 #' \dontrun{
 #'
@@ -45,6 +45,8 @@
 #'   subset(abbr %in% c("apo_agr", "apo_fla", "vul_vul")) %$%
 #'   oEMMA(mask = myMask, species = original)
 #'
+#' # get the (updated) bibliography
+#' reference(style = "bibtex")
 #' }
 #' @importFrom checkmate testClass testDataFrame assertNames testVector
 #'   assertIntegerish assertLogical

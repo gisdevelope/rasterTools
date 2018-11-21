@@ -78,6 +78,8 @@ mySpecies <- catalog(path = rtPaths$emma$local,
   subset(abbr \%in\% c("apo_agr", "apo_fla", "vul_vul")) \%$\%
   oEMMA(mask = myMask, species = original)
 
+# get the (updated) bibliography
+reference(style = "bibtex")
 }
 }
 \references{
@@ -86,8 +88,7 @@ Mitchell-Jones A, Amori G, Bogdanowicz W, Kryštufek B, Reijnders
   Atlas of European Mammals. Academic Press, London
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oGFC}},
-  \code{\link{oMODIS}}, \code{\link{oWCLIM}}
+Other obtain operators (Europe): \code{\link{oCLC}},
+  \code{\link{oEFTA}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Europe)}

@@ -21,14 +21,14 @@ test_that("function loads also from a 'catalog'", {
   
   output <- loadData(files = theFiles,
                      localPath = system.file("test_datasets", package = "rasterTools"))
-  expect_list(output, types = c("geom", "character"), len = 9)
+  expect_list(output, types = c("geom", "character"), len = 10)
   
 })
 
 test_that("function loads all in a directory", {
   setPaths(root = system.file("test_datasets", package="rasterTools"))
   output <- loadData(localPath = system.file("test_datasets", package = "rasterTools"))
-  expect_list(output, types = c("geom", "character"), len = 9)
+  expect_list(output, types = c("geom", "character"), len = 10)
 })
 
 test_that("function handles files that don't exist properly", {

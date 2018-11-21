@@ -90,8 +90,6 @@ The period can either be given as a single value if only one year is
 \examples{
 \dontrun{
 
-require(magrittr)
-
 water <- oMODIS(mask = rtGeoms$mask, period = 2000,
                 product = "MOD44W", layer = 1)
 visualise(gridded = water, trace = TRUE)
@@ -117,8 +115,7 @@ visualise(geom = tiles_modis)
 }
 }
 \seealso{
-Other obtain operators: \code{\link{oCLC}},
-  \code{\link{oEFTA}}, \code{\link{oEMMA}},
+Other obtain operators (Global): \code{\link{oESALC}},
   \code{\link{oGFC}}, \code{\link{oWCLIM}}
 }
-\concept{obtain operators}
+\concept{obtain operators (Global)}

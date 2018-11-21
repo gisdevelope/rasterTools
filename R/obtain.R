@@ -1,6 +1,6 @@
 #' Obtain spatial datasets
 #'
-#' Extract information from various spatial (gridded) datasets both from local
+#' Extract information from various spatial (raster) dataseries both from local
 #' and online resources.
 #' @param data [\code{list(.)}]\cr algorithm in which the operators to load
 #'   spatial datasets are specified. Each \code{operator} is a list iteself and
@@ -25,6 +25,7 @@
 #'      \item \code{\link{oGFC}}: Global Forest Change
 #'      \item \code{\link{oMODIS}}: MODIS products
 #'      \item \code{\link{oWCLIM}}: Worldclim
+#'      \item \code{\link{oESALC}}: ESA CCI land-cover
 #'   }
 #'   \item European: \itemize{
 #'      \item \code{\link{oCLC}}: Corine Land Cover
