@@ -232,17 +232,13 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other obtain operators: <code><a href='oCLC.html'>oCLC</a></code>,
-  <code><a href='oEFTA.html'>oEFTA</a></code>, <code><a href='oEMMA.html'>oEMMA</a></code>,
+    <div class='dont-index'><p>Other obtain operators (Global): <code><a href='oESALC.html'>oESALC</a></code>,
   <code><a href='oGFC.html'>oGFC</a></code>, <code><a href='oMODIS.html'>oMODIS</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>require</span>(<span class='no'>magrittr</span>)
-
-<span class='no'>myWCLIM</span> <span class='kw'>&lt;-</span> <span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>,
-                  <span class='kw'>variable</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"tavg"</span>),
+<span class='no'>myWCLIM</span> <span class='kw'>&lt;-</span> <span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"tavg"</span>),
                   <span class='kw'>month</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>:<span class='fl'>9</span>))
 <span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>myWCLIM</span>$<span class='no'>tavg</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
