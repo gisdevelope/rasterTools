@@ -1,5 +1,4 @@
 [![Travis-CI Build Status](https://travis-ci.org/EhrmannS/rasterTools.svg?branch=master)](https://travis-ci.org/EhrmannS/rasterTools)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/EhrmannS/rasterTools?branch=master&svg=true)](https://ci.appveyor.com/project/EhrmannS/rasterTools)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rasterTools)](https://cran.r-project.org/package=rasterTools)
 [![Coverage Status](https://img.shields.io/codecov/c/github/EhrmannS/rasterTools/master.svg)](https://codecov.io/github/EhrmannS/rasterTools?branch=master)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/rasterTools)](http://cran.rstudio.com/web/packages/rasterTools/index.html)
@@ -33,7 +32,7 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
                            ...)
         myData <- obtain(data = myDatasets, mask = aMask)
                            
-2) Determine forest patches in a raster with continuous integer values:
+2) Determine forest patches in a raster with continuous integer values of tree-cover:
 
         get_patches <- list(list(operator = "rBinarise", thresh = 30),
                             list(operator = "rPatches"))

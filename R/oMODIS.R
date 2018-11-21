@@ -66,7 +66,7 @@
 #'                          crs = projs$sinu)
 #' visualise(geom = tiles_modis)
 #' }
-#' @importFrom stringr str_sub str_replace_all
+#' @importFrom stringr str_replace_all
 #' @importFrom raster values crop projectRaster stack mosaic
 #' @export
 
@@ -80,7 +80,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   assertIntegerish(period, any.missing = FALSE, min.len = 1, max.len = 2, unique = TRUE)
   assertTRUE(nchar(period[1]) %in% c(4, 7))
   if(nchar(period[1]) == 7){
-    if(as.integer(str_sub(period[1], 5)) < 1){
+    if(as.integer(substr(period[1], 5, length(period[1]))) < 1){
       stop("did you mean to use 001 as first day of the year?")
     }
   }
@@ -90,14 +90,14 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   layerIsChar <- testCharacter(layer, any.missing = FALSE, min.len = 1, ignore.case = TRUE)
 
   # check satellite
-  if(grepl("MYD", product)){
+  if(grepl("MYD", toupper(product))){
     satellite <- "MOLA"
-  } else if(grepl("MOD", product)){
+  } else if(grepl("MOD", toupper(product))){
     satellite <- "MOLT"
   }
 
   # load meta data
-  meta <- meta_modis[grep(paste0("(?i)", str_sub(string = product, start = 4), "(?-i)$"), meta_modis$product),]
+  meta <- meta_modis[grep(paste0("(?i)", substr(x = product, start = 4, stop = nchar(product)), "(?-i)$"), meta_modis$product),]
   if(layerIsInt){
     meta <- meta[layer,]
   } else if(layerIsChar){
@@ -161,8 +161,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   }
   
   # set the valid dates for this product
-  year <- str_sub(period, 0, 4)
-  doy <- str_sub(period, 5)
+  year <- substr(period, 0, 4)
+  doy <- substr(period, 5, 7)
   theDates <- doyToDate(year, doy)
   
   # transform crs of the mask to the dataset crs
@@ -245,17 +245,20 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
                                layer = layer,
                                localPath = paste0(rtPaths$modis$local, "/", product))
       }
+      if(length(tempObject) == 0){
+        next # this could be a raster with 1 cell with value 0
+      }
       
       history <- c(history, paste0(tempObject@history, " with the grid ID '", gridId, "'"))
       
-      message("  ... cropping to targeted study area\n")
+      blablabla(" ... cropping to targeted study area")
       tempObject <- stack(crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
       history <-  c(history, list(paste0("object has been cropped")))
       
       # reproject
       if(getCRS(mask) != targetCRS){
-        crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
-        message(paste0("  ... reprojecting to '", crs_name, "'\n"))
+        crs_name <- strsplit(targetCRS, " ")[[1]][1]
+        blablabla(paste0(" ... reprojecting to '", crs_name))
         tempObject <- setCRS(x = tempObject, crs = targetCRS)
         tempObject <- stack(crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
         history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
@@ -268,6 +271,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
       } else{
         allObjects <- c(allObjects, setNames(list(tempObject), str_replace_all(validDates[j], "[.]", "")))
       }
+      blablabla()
+      
     }
     
     modis_out <- c(modis_out, setNames(list(allObjects), gridId))
@@ -296,7 +301,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   
   # manage the bibliography entry
   bib <- eval(parse(text = paste0("ref_modis$", product)))
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
@@ -345,7 +350,7 @@ downloadMODIS <- function(file = NULL, localPath = NULL, getDates = NULL,
     onlinePath <- paste0(rtPaths$modis$remote, satellite, "/", product, ".", version, "/", date)
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
     usr <- tryCatch(get("usr"), error = function(e) NULL)
-    pwd <- tryCatch(get("usr"), error = function(e) NULL)
+    pwd <- tryCatch(get("pwd"), error = function(e) NULL)
     if(is.null(usr)){
       usr <- readline("earthdata.nasa.gov user name: ")
       assign("usr", usr, envir = .GlobalEnv)

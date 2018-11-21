@@ -70,6 +70,19 @@ reference:
     contents:
       - starts_with("get")
       - starts_with("set")
+  - title: helpers
+    desc: other useful functions
+    contents:
+      - '`catalog`'
+      - '`loadData`'
+  - title: example data
+    desc: data that are used throughout the documentation
+    contents:
+      - '`rtData`'
+      - '`rtGeoms`'
+      - '`rtPalette`'
+      - '`rtPaths`'
+      - '`rtTheme`'
 navbar:
   type: inverse
   left:

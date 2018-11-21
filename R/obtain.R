@@ -52,7 +52,7 @@
 #'
 #' # load and outline masks from a file with locations
 #' myLocations <- loadData(files = "locations.csv",
-#'                         localPath = system.file("csv", package="rasterTools"))
+#'                         localPath = system.file("test_datasets", package="rasterTools"))
 #' myMask <- gGroup(geom = myLocations, distance = 10000) %>%
 #'   geomRectangle() %>%
 #'   gToSp(crs = projs$laea)
@@ -102,8 +102,13 @@ obtain <- function(data = NULL, mask = NULL){
 
   # put together a list of datasets, paths, functions and arguments
   datasets <- lapply(
-    seq_along(data), function(j)
-      tolower(substr(data[[j]][[1]], 2, nchar(data[[j]][[1]])))
+    seq_along(data), function(j){
+      if(data[[j]][[1]] == "oMODIS"){
+        tolower(data[[j]][[2]])
+      } else{
+        tolower(substr(data[[j]][[1]], 2, nchar(data[[j]][[1]])))
+      }
+    }
   )
 
   args <- lapply(
@@ -119,12 +124,12 @@ obtain <- function(data = NULL, mask = NULL){
     tempMask <- getSubset(x = theMasks, subset = tabMasks$fid == i)
 
     message(paste0("--> I am extracting information for mask ", i, ":\n"))
-    temp_out <- unlist(lapply(
+    temp_out <- lapply(
       seq_along(funs), function(j){
         do.call(what = funs[j],
                 args = c(args[[j]], mask = list(tempMask)))
       }
-    ), recursive = FALSE)
+    )
 
     temp_out <- setNames(temp_out, datasets)
     out <- c(out, list(temp_out))

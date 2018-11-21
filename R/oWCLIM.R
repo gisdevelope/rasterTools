@@ -1,42 +1,44 @@
 #' Obtain global climate data
 #'
-#' Obtain data from the 'worldclim' \href{http://worldclim.org/}{dataset}
-#' (\href{https://doi.org/10.1002/joc.1276}{paper1},
-#' \href{https://doi.org/10.1002/joc.5086}{paper2}).
+#' Obtain data from the 'worldclim 2' \href{http://worldclim.org/}{dataset}
+#' (\href{https://doi.org/10.1002/joc.5086}{paper}).
 #'
 #' @template mask
 #' @param variable [\code{character(.)}]\cr the climatic variable of interest;
-#'   see Details to find which variables are available in which version.
+#'   see Details.
 #' @param month [\code{integerish(.)}]\cr the month(s) for which the data should
 #'   be extracted.
 #' @param resolution [\code{numeric(1)}]\cr the spatial resolution in
 #'   arc-minutes.
-#' @param version [\code{integerish(1)}]\cr the version for which you'd like to
-#'   obtain the worldclim data.
-#' @details \itemize{\item Version 1.4 includes the variables:\itemize{ \item
-#'   \code{"tmin"}: average monthly minimum temperature [°C * 10], \item
-#'   \code{"tmax"}: average monthly maximum temperature [°C * 10], \item
-#'   \code{"tmean"}: average monthly mean temperature [°C * 10], \item
-#'   \code{"prec"}: average monthly precipitation [mm], \item \code{"bio"}:
-#'   bioclimatic variables derived from the above.} \item Version 2.0 includes
-#'   the variables:\itemize{ \item \code{"tmin"}: average monthly minimum
-#'   temperature [°C * 10], \item \code{"tmax"}: average monthly maximum
-#'   temperature [°C * 10], \item \code{"tavg"}: average monthly mean
-#'   temperature [°C * 10], \item \code{"prec"}: average monthly precipitation
-#'   [mm], \item \code{"srad"}: average monthly solar radiation [kJ m-2 day-1],
-#'   \item \code{"wind"}: average monthly wind speed [m s-1], \item
-#'   \code{"vapr"}: average monthly water vapour pressure [kPa], \item
-#'   \code{"bio"}: bioclimatic variables derived from the above.} }
-#'
-#'   The files of version 1.4 are shipped in the 'bil' format. While the files
-#'   are compressed into a zip-file, once unzipped, they take up a lot of space
-#'   on the harddisc. Hence, when using this function for the first time,
-#'   \code{downloadWCLIM} downloads and unzips the original file(s), transforms
-#'   the monthly files into 'tif' format (which uses only about 1/10th of the
-#'   space) and deletes the original 'bil' files. Beware that due to the size of
-#'   the inital files this takes a lot (!) of time, especially for the 30
-#'   arc-second files. However, when repeatedly using these data, so the hope,
-#'   this procedure should make the future work with these data smoother.
+#' @details The following variables are included:\itemize{ 
+#'   \item \code{"tmin"}: average monthly minimum temperature [°C * 10], 
+#'   \item \code{"tmax"}: average monthly maximum temperature [°C * 10], 
+#'   \item \code{"tavg"}: average monthly mean temperature [°C * 10], 
+#'   \item \code{"prec"}: average monthly precipitation [mm], 
+#'   \item \code{"srad"}: average monthly solar radiation
+#'   [kJ m-2 day-1], 
+#'   \item \code{"wind"}: average monthly wind speed [m s-1],
+#'   \item \code{"vapr"}: average monthly water vapour pressure [kPa],
+#'   \item \code{"bio"}: all bioclimatic variables,
+#'   \item \code{"bio_01"}: annual mean temperature,
+#'   \item \code{"bio_02"}: mean diurnal range,
+#'   \item \code{"bio_03"}: Isothermality,
+#'   \item \code{"bio_04"}: temperature seasonality,
+#'   \item \code{"bio_05"}: Max temperature of warmest month,
+#'   \item \code{"bio_06"}: Min temperature of coldest month,
+#'   \item \code{"bio_07"}: temperature annual Range,
+#'   \item \code{"bio_08"}: mean temperature of wettest quarter,
+#'   \item \code{"bio_09"}: mean temperature of driest quarter,
+#'   \item \code{"bio_10"}: mean temperature of warmest quarter,
+#'   \item \code{"bio_11"}: mean temperature of coldest quarter,
+#'   \item \code{"bio_12"}: annual precipitation,
+#'   \item \code{"bio_13"}: precipitation of wettest month,
+#'   \item \code{"bio_14"}: precipitation of driest month,
+#'   \item \code{"bio_15"}: precipitation seasonality,
+#'   \item \code{"bio_16"}: precipitation of wettest quarter,
+#'   \item \code{"bio_17"}: precipitation of driest quarter,
+#'   \item \code{"bio_18"}: precipitation of warmest quarter,
+#'   \item \code{"bio_19"}: precipitation of coldest quarter.}
 #' @family obtain operators (Global)
 #' @examples
 #' \dontrun{
@@ -48,57 +50,28 @@
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
 #' }
-#' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset testFileExists
+#' @importFrom checkmate testClass assertCharacter assertNumeric assertSubset
+#'   testFileExists
 #' @importFrom stringr str_split
 #' @importFrom raster stack crop
 #' @export
 
-oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5, 
-                   version = 2){
+oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
   maskIsSpatial <- testClass(mask, classes = "Spatial")
   assert(maskIsGeom, maskIsSpatial)
   assertCharacter(variable, any.missing = FALSE, min.len = 1)
-  assertSubset(variable, choices = c("tmean", "tavg", "tmin", "tmax", "prec", "bio", "alt"))
+  assertSubset(variable, choices = c("tavg", "tmin", "tmax", "prec", "bio", "bio_01", "bio_02", "bio_03", "bio_04", "bio_05", "bio_06", "bio_07", "bio_08", "bio_09", "bio_10", "bio_11", "bio_12", "bio_13", "bio_14", "bio_15", "bio_16", "bio_17", "bio_18", "bio_19", "alt"))
+  if(any(variable %in% "bio")){
+    variable <- c(variable, "bio_01", "bio_02", "bio_03", "bio_04", "bio_05", "bio_06", "bio_07", "bio_08", "bio_09", "bio_10", "bio_11", "bio_12", "bio_13", "bio_14", "bio_15", "bio_16", "bio_17", "bio_18", "bio_19")
+    variable <- variable[!variable %in% "bio"]
+    variable <- variable[!duplicated(variable)]
+  }
   assertIntegerish(month, lower = 1, upper = 12, any.missing = FALSE, min.len = 1)
   assertSubset(resolution, choices = c(0.5, 2.5, 5, 10))
-  assertSubset(version, choices = c(1.4, 2))
-  
-  if(version == 1.4){
-    bib <- bibentry(bibtype = "Article",
-                    title = "Very high resolution interpolated climate surfaces for global land areas",
-                    author = c(person(given = "Robert J", family = "Hijmans"),
-                               person(given = "Susan E", family = "Cameron"),
-                               person(given = "Juan L", family = "Parra"),
-                               person(given = "Peter G", family = "Jones"),
-                               person(given = "Andy", family = "Jarvis")),
-                    journal = "International Journal of Climatology",
-                    volume = "25",
-                    year = "2005",
-                    pages = "1965-1978",
-                    doi = "10.1002/joc.1276"
-    )
-    # make sure that the variable name is correct
-    if(any(variable %in% "tavg")){
-      variable[which(variable %in% "tavg")] <- "tmean"
-    }
-  } else{
-    bib <- bibentry(bibtype = "Article",
-                    title = "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas",
-                    author = c(person(given = "Stephen E", family = "Fick"),
-                               person(given = "Robert J", family = "Hijmans")),
-                    journal = "International Journal of Climatology",
-                    year = "2017",
-                    doi = "10.1002/joc.5086"
-    )
-    # make sure that the variable name is correct
-    if(any(variable %in% "tmean")){
-      variable[which(variable %in% "tmean")] <- "tavg"
-    }
-  }
-  
+
   # transform crs of the mask to the dataset crs
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
@@ -120,45 +93,35 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     thisVariable <- variable[i]
     
     # manage file names  
-    if(version == 1.4){
-      if(resolution == 2.5){
-        tempRes <- "2-5m"
-      } else if(resolution == 0.5){
-        tempRes <- "30s"
-        if(thisVariable == "bio"){
-          thisVariable <- c("bio1-9", "bio10-19")
-        }
-      } else{
-        tempRes <- paste0(resolution, "m")
-      }
-      # due to the improper names of the worldclim 1.4 dataset, we have to do some name-management.
-      fileNames <- paste0("wc1.4_", tempRes, "_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
-      if(!testFileExists(paste0(rtPaths$worldclim$local, "/", fileNames))){
-        fileNames <- paste0(thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), "_", tempRes, ".bil")
-      }
+    if(resolution == 0.5){
+      tempRes <- "30s"
     } else{
-      if(resolution == 0.5){
-        tempRes <- 30
-        fileNames <- paste0("wc2.0_", tempRes, "s_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
-      } else{
-        fileNames <- paste0("wc2.0_", resolution, "m_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
-      }
+      tempRes <- paste0(resolution, "m")
     }
-    
+    if(grepl("bio", thisVariable)){
+      fileNames <- paste0("wc2.0_", tempRes, "_", thisVariable, ".tif")
+    } else{
+      fileNames <- paste0("wc2.0_", tempRes, "_", thisVariable, "_", formatC(month, width = 2, format = "d", flag = "0"), ".tif")
+    }
+
     history <- list()
-    message(paste0("I am handling the worldclim variable '", thisVariable, "':"))
+    blablabla(paste0("I am handling the worldclim variable '", thisVariable, "':"))
     tempObject <- stack(loadData(files = fileNames, dataset = "wclim", localPath = rtPaths$worldclim$local))
     history <- c(history, paste0(tempObject[[1]]@history))
     
-    message("  ... cropping to targeted study area.")
+    blablabla(" ... cropping to targeted study area.")
     tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been cropped")))
-    names(tempObject) <- paste0(thisVariable, "_", month.abb[month])
+    if(grepl("bio", thisVariable)){
+      names(tempObject) <- thisVariable
+    } else{
+      names(tempObject) <- paste0(thisVariable, "_", month.abb[month])
+    }
     
     # reproject
     if(getCRS(mask) != targetCRS){
       crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
-      message(paste0("  ... reprojecting to '", crs_name, "'."))
+      blablabla(paste0(" ... reprojecting to '", crs_name, "'."))
       tempObject <- setCRS(x = tempObject, crs = targetCRS)
       tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
       history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
@@ -169,6 +132,16 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     
     wc_out <- c(wc_out, setNames(list(tempObject), thisVariable))
   }
+  
+  bib <- bibentry(bibtype = "Article",
+                  title = "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas",
+                  author = c(person(given = "Stephen E", family = "Fick"),
+                             person(given = "Robert J", family = "Hijmans")),
+                  journal = "International Journal of Climatology",
+                  year = "2017",
+                  doi = "10.1002/joc.5086"
+  )
+  blablabla()
   
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
@@ -199,45 +172,26 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
   }
   
   if(!is.null(file) & !is.null(localPath)){
-    version <- ifelse(strsplit(file, "_")[[1]][1] == "wc2.0", 2, 1.4)
-    if(version == 2){
-      fileParts <- strsplit(file, "[.]")[[1]]
-      middle <- strsplit(fileParts[2], "_")[[1]]
-      file <- paste0(c(fileParts[1], paste0(middle[-length(middle)], collapse = "_"), "zip"), collapse = ".")
-      onlinePath <- paste0(rtPaths$worldclim$remote, "worldclim/v2.0/tif/base/")
-    } else{
-      fileParts <- strsplit(file, "_")[[1]]
-      end <- strsplit(fileParts[[3]], "[.]")[[1]]
-      file <- paste0(fileParts[1], "_", paste0(end, collapse = "_"), ".zip")
-      onlinePath <- paste0(rtPaths$worldclim$remote, "climate/worldclim/1_4/grid/cur/")
-    }
+    fileParts <- strsplit(file, "[.]")[[1]]
+    middle <- strsplit(fileParts[2], "_")[[1]]
+    downFile <- paste0(c(fileParts[1], paste0(middle[-length(middle)], collapse = "_"), "zip"), collapse = ".")
+    onlinePath <- paste0(rtPaths$worldclim$remote, "worldclim/v2.0/tif/base/")
     
     message(paste0("  ... downloading the file from '", onlinePath, "'"))
-    GET(url = paste0(onlinePath, file),
-        write_disk(paste0(localPath, "/", file)),
+    GET(url = paste0(onlinePath, downFile),
+        write_disk(paste0(localPath, "/", downFile)),
         progress())
     
-    message(paste0("  ... unzipping the files of '", file, "'"))
-    unzip(paste0(localPath, "/", file), exdir = localPath)
+    message(paste0("  ... unzipping the files of '", downFile, "'"))
+    unzip(paste0(localPath, "/", downFile), exdir = localPath)
     
-    # in case we deal with version 1.4, we rename the files to have sensible names
-    if(version == 1.4){
-      fileNames <- strsplit(file, "_")[[1]]
-      
-      message("  ... transforming the files to '.tif'")
-      pb <- txtProgressBar(min = 0, max = 12, style = 3, char=">", width = getOption("width")-14)
-      for(i in 1:12){
-        temp <- raster(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")))
-        writeRaster(temp, 
-                    filename = paste0(localPath, "/", paste0("wc1.4_", fileNames[2], "_", fileNames[1], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif")), 
-                    format = 'GTiff', options = "COMPRESS=DEFLATE")
-        file.remove(c(paste0(localPath, "/", paste0(fileNames[1], "_", i, ".bil")),
-                      paste0(localPath, "/", paste0(fileNames[1], "_", i, ".hdr"))))
-        setTxtProgressBar(pb, i)
+    # bio variables don't follow the same naming convention as the other files
+    if(any(middle %in% "bio")){
+      for(i in 1:19){
+        file.rename(paste0(rtPaths$worldclim$local, "/wc2.0_", middle[3], "_", middle[2], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif"), 
+                    paste0(rtPaths$worldclim$local, "/wc2.0_", middle[2], "_", middle[3], "_", formatC(i, width = 2, format = "d", flag = "0"), ".tif"))
       }
-      close(pb)
-      
-      file.remove(paste0(localPath, "/", file))
     }
+
   }
 }

@@ -145,12 +145,12 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     fileNames <-  paste0("Hansen_GFC2015_", layerNames, "_", gridId, '.tif')
 
     history <- list()
-    message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':"))
+    blablabla(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':"))
     tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
     tempObject <- setNames(tempObject, layerNames)
     history <- c(history, paste0(tempObject[[1]]@history, " with the grid ID '", gridId, "'"))
 
-    message("  ... cropping to targeted study area")
+    blablabla(" ... cropping to targeted study area")
     tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been cropped")))
 
@@ -170,7 +170,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   # reproject
   if(getCRS(mask) != targetCRS){
     crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
-    message(paste0("  ... reprojecting to '", crs_name))
+    blablabla(paste0(" ... reprojecting to '", crs_name))
     gfc_out <- setCRS(x = gfc_out, crs = targetCRS, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     gfc_out <- crop(gfc_out, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
@@ -232,8 +232,8 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
                   pages = "846-850",
                   doi = "10.1126/science.1244693"
   )
-
-  message()
+  blablabla()
+  
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{

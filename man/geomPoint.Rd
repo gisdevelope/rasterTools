@@ -48,6 +48,7 @@ input <- rtData$continuous
 
 # create points interactively
 myPoints <- geomPoint(template = input, vertices = 5, show = TRUE, col = "deeppink")
+myPoints <- gGroup(myPoints, index = rep(1, 5))
 anExtent <- geomRectangle(myPoints, show = TRUE, col = "green")
 }
 }

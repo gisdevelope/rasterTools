@@ -98,18 +98,18 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
     fileName <- paste0(sub(thisSpecies, pattern = " ", replacement  = "-"), "_", type, ".tif")
     
     history <- list()
-    message(paste0("I am handling the tree species '", thisSpecies, "':"))
+    blablabla(paste0("I am handling the tree species '", thisSpecies, "':"))
     tempObject <- loadData(files = fileName, dataset = "efta")
     history <- c(history, paste0(tempObject[[1]]@history))
     
-    message("  ... cropping to targeted study area")
+    blablabla(paste0(" ... cropping to targeted study area"))
     tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
     history <-  c(history, list(paste0("object has been cropped")))
     
     # reproject
     if(getCRS(mask) != targetCRS){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      message(paste0("  ... reprojecting to '", crs_name))
+      blablabla(paste0(" ... reprojecting to '", crs_name))
       tempObject <- setCRS(x = tempObject, crs = targetCRS)
       tempObject <- crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
       history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
@@ -153,6 +153,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
                   publisher = "Publ. Off. EU",
                   address = "Luxembourg"
   )
+  blablabla()
   
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
