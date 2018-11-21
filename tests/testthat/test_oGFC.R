@@ -32,3 +32,16 @@ test_that("Error if arguments have wrong value", {
   expect_error(oGFC(mask = rtGeoms$mask, years = "bla"))
   expect_error(oGFC(mask = rtGeoms$mask, years = 2012, keepRaw = "bla"))
 })
+
+test_that("bibliography item has been created", {
+  setPaths(root = system.file("test_datasets", package="rasterTools"))
+  options(bibliography = NULL)
+  myMask <- geomRectangle(data.frame(x = c(5094124, 5096249),
+                                     y = c(4060501, 4061961))) %>%
+    setCRS(crs = projs$laea)
+  
+  output <- oGFC(mask = myMask, years = 2000)
+  theBib <- getOption("bibliography")
+  expect_class(theBib, classes =  "bibentry")
+  expect_list(theBib, len = 1)
+})
