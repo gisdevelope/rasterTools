@@ -10,9 +10,10 @@
 #' @param layer [\code{character(1)} | \code{integerish(1)}]\cr layer(s) of
 #'   interest. Either the integer of the layers position or the name of the
 #'   layer.
-#' @param process [\code{logical(1)}]\cr should the data be procesed further in
-#'   R (\code{TRUE}, default) or should the data merely be downloaded and stored
-#'   on the harddisc (\code{FALSE})?
+#' @param assertQuality [\code{logical(1)}] (not supported yet)\cr should the
+#'   quality flags of the ESA CCI land-cover dataset be extracted (\code{TRUE},
+#'   default) or should merely the data-layer be extracted (\code{FALSE})?
+#' @param ... [various]\cr other arguments.
 #' @details The period can either be given as a single value if only one year is
 #'   of interest, or as two values, the start and end date. If you do not
 #'   specify DDD, it will be set to "001" and "366" for start and end year
@@ -45,19 +46,29 @@
 #'
 #' water <- oMODIS(mask = rtGeoms$mask, period = 2000,
 #'                 product = "MOD44W", layer = 1)
-#' visualise(gridded = water, trace = TRUE)
+#' visualise(raster = water, trace = TRUE)
 #'
-#' # not specifying 'layer' results in a stack of all layers
-#' myMODIS <- oMODIS(mask = rtGeoms$mask, period = 2012,
-#'                   product = "MOD17A3")
-#' visualise(gridded = myMODIS, trace = TRUE)
 #'
+#' # specify exact dates
 #' modEvi <- oMODIS(mask = rtGeoms$mask, period = c(2016100, 2016250),
 #'                  product = "MOD13A3", layer = "EVI")
-#' visualise(gridded = modEvi, trace = TRUE)
+#' visualise(raster = modEvi, trace = TRUE)
+#' 
+#' 
+#' # handles also more than one tile at the same time
+#' library(magrittr)
+#' myMask <- geomRectangle(data.frame(x = c(571751, 612443),
+#'                                    y = c(5569592, 5536989))) %>%
+#'   setCRS(crs = projs$sinu)
+#'   
+#' water <- oMODIS(mask = myMask, period = 2000,
+#'                 product = "MOD44W", layer = 1)
+#' visualise(raster = water, trace = TRUE)
+#'
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
+#' 
 #' 
 #' # the modis tiles
 #' modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
@@ -67,11 +78,12 @@
 #' visualise(geom = tiles_modis)
 #' }
 #' @importFrom stringr str_replace_all
-#' @importFrom raster values crop projectRaster stack mosaic
+#' @importFrom gdalUtils gdal_translate mosaic_rasters
+#' @importFrom raster crop stack
 #' @export
 
-oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL, 
-                   assertQuality = TRUE, keepFile = FALSE, ...){
+oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = 1, 
+                   assertQuality = TRUE, ...){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -80,7 +92,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   assertIntegerish(period, any.missing = FALSE, min.len = 1, max.len = 2, unique = TRUE)
   assertTRUE(nchar(period[1]) %in% c(4, 7))
   if(nchar(period[1]) == 7){
-    if(as.integer(substr(period[1], 5, length(period[1]))) < 1){
+    if(as.integer(substr(period[1], 5, nchar(period[1]))) < 1){
       stop("did you mean to use 001 as first day of the year?")
     }
   }
@@ -99,9 +111,11 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   # load meta data
   meta <- meta_modis[grep(paste0("(?i)", substr(x = product, start = 4, stop = nchar(product)), "(?-i)$"), meta_modis$product),]
   if(layerIsInt){
+    layer <- layer[1]
     meta <- meta[layer,]
   } else if(layerIsChar){
-    meta <- meta[grep(layer, meta$sds_layer_name, ignore.case = TRUE),]
+    layer <- grep(layer[1], meta$sds_layer_name, ignore.case = TRUE)
+    meta <- meta[2,]
   }
   if(nrow(meta)==0){
     return(c("'product' does not match any dataset of modis or is undefined."))
@@ -169,13 +183,17 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
+
   targetCRS <- getCRS(x = mask)
-  targetMask <- setCRS(x = geomRectangle(anchor = getExtent(x = mask)), crs = targetCRS)
-  
+  maskExtent <- getExtent(x = mask)
   if(targetCRS != projs$sinu){
-    targetMask <- setCRS(targetMask, crs = projs$sinu)
-  }
-  targetExtent <- getExtent(x = targetMask)
+    targetMask <- setCRS(x = mask, crs = projs$sinu)
+  } else{
+    targetMask <- mask
+  } 
+  maskGeom <- geomRectangle(anchor = getExtent(x = targetMask))
+  maskGeom <- setCRS(x = maskGeom, crs = projs$sinu)
+  targetExtent <- getExtent(maskGeom)
   
   # create the tiles geometry to determine the data-subset to load
   modWindow <- data.frame(x = c(-20015109.354, 20015109.354),
@@ -184,7 +202,7 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   
   # determine tiles of interest
   tabMODIS <- getCoords(tiles_modis)
-  tabMask <- getCoords(mask)
+  tabMask <- getCoords(targetMask)
   ids <- unique(tabMODIS$id)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -205,90 +223,84 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = NULL,
   colnames(nameMat) <- c(0:35); rownames(nameMat) <- c(0:17)
   
   tabTiles <- getCoords(myTiles)
-  # go through all tiles
-  for(i in seq_along(unique(tabTiles$id))){
-    
-    tileID <- unique(tabTiles$id)[i]
-    
-    # determine gridId to narrow down the files
-    colRowNames <- which(nameMat==tileID, arr.ind = T)-1
+  gridIDs <- sapply(seq_along(tileID <- unique(tabTiles$id)), function(x){
+    colRowNames <- which(nameMat==tileID[x], arr.ind = T)-1
     gridId <- paste0(c("h", "v"), sprintf('%02i', as.integer(rev(colRowNames))), collapse = "")
+  })
+  
+  out <- stack()
+  for(j in seq_along(validDates)){
     
-    # not all tiles contain actual data, skip those that don't
-    if(!gridId %in% availableTiles){
-      next
-    }
+    history <- list()
+    tempOut <- list()
+    for(i in seq_along(unique(tabTiles$id))){
+      gridID <- gridIDs[i]
     
-    out <- list()
-    allObjects <- list()
-    
-    for(j in seq_along(validDates)){
+      # not all tiles contain actual data, skip those that don't
+      if(!gridID %in% availableTiles){
+        next
+      }
       
-      history <- list()
-      message(paste0("I am handling the modis product '", product, "' with the grid ID '", gridId, "' for ", validDates[j], ":"))
+      message(paste0("I am handling the modis product '", product, "' with the grid ID '", gridID, "' for ", validDates[j], ":"))
       productFiles <- downloadMODIS(getFiles = paste0(rtPaths$modis$remote, satellite, "/", product, ".006/", validDates[j], "/"))
-      fileName <- productFiles[grep(gridId, productFiles)]
+      fileName <- productFiles[grep(gridID, productFiles)]
       fileExists <- testFileExists(paste0(rtPaths$modis$local, "/", product, "/", fileName))
       
       if(!fileExists){
         downloadMODIS(file = fileName,
                       localPath = paste0(rtPaths$modis$local, "/", product))
       }
-      blablabla(paste0(" ... cropping ", product," to 'mask'"), ...)
+      blablabla(paste0(" ... cropping ", product," to 'mask'"))
       tempObject <- gdal_translate(src_dataset = paste0(rtPaths$modis$local, "/", product, "/", fileName),
-                                   dst_dataset = paste0(procut, "_", validDates[j], ".tif"),
+                                   dst_dataset = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_", gridID, ".tif"),
                                    projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
+                                   sd_index = layer,
+                                   epo = FALSE,
+                                   q = TRUE,
                                    output_Raster = TRUE)
       
-      history <- c(history, paste0("object with the grid ID '", gridId, "' loaded for ", validDates[j], ""))
+      history <- c(history, paste0("object with the grid ID '", gridID, "' loaded for ", validDates[j], ""))
       history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
-      
-      # message("  ... cropping to targeted study area\n")
-      # tempObject <- stack(crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
-      # history <-  c(history, list(paste0("object has been cropped")))
-      
-      # reproject
-      if(getCRS(mask) != targetCRS){
-        crs_name <- strsplit(targetCRS, " ")[[1]][1]
-        blablabla(paste0(" ... reprojecting to '", crs_name))
-        tempObject <- setCRS(x = tempObject, crs = targetCRS)
-        tempObject <- stack(crop(tempObject, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW"))
-        history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
-      }
-      
-      tempObject@history <- history
 
-      if(is.null(allObjects)){
-        allObjects <- tempObject
-      } else{
-        allObjects <- c(allObjects, setNames(list(tempObject), str_replace_all(validDates[j], "[.]", "")))
-      }
-      blablabla()
-      
+      tempOut <- c(tempOut, tempObject)
     }
     
-    out <- c(out, setNames(list(allObjects), gridId))
-  }
-  
-  if(length(out) > 1){
+    if(length(tempOut) > 1){
+      blablabla(" ... merging two tiles")
+      tempOut <- mosaic_rasters(gdalfile = unlist(lapply(tempOut, function(x) x@file@name)),
+                       dst_dataset = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), ".tif"),
+                       overwrite = TRUE,
+                       output_Raster = TRUE)
+      history <- c(history, paste0("tiles merged as mosaic"))
+      file.remove(paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_", gridIDs, ".tif"))
+    } else{
+      file.rename(from = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_", gridIDs, ".tif"),
+                  to = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), ".tif"))
+      tempOut <- raster(paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), ".tif"))
+    }
+
+    # reproject
+    if(targetCRS != projs$sinu){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      blablabla(paste0(" ... reprojecting target to '", crs_name))
+      tempOut <- gdalwarp(srcfile = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), ".tif"),
+                          dstfile = paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_warped.tif"),
+                          s_srs = projs$sinu,
+                          t_srs = targetCRS,
+                          te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
+                          overwrite = TRUE,
+                          output_Raster = TRUE)
+      history <- c(history, list(paste0("object reprojected to ", crs_name)))
+    }
     
-    # TODO: after loading all tiles per date, put together the mosaic (should be done
-    # with the help of gdalUtils::raster_mosaic instead of raster::mosaic), also
-    # outside of R.
-    message("the mask intersects with two tiles, I merge them now ...\n")
-    modis_name <- names(out)
-    modis_list_names <- names(out[[1]])
-    out <- lapply(
-      seq_along(out[[1]]), function(i){
-        x <- unlist(lapply(out, "[", i))
-        names(x) <- NULL
-        do.call(mosaic, c(x, fun = "mean"))
-      }
-    )
-    out <- setNames(out, modis_list_names)
+    # make file available as raster
+    tempOut <- raster(tempOut@file@name)
     
-  } else{
-    out <- out[[1]]
+    # set history
+    tempOut@history <- history
+    
+    # stack all upcoming years
+    out <- stack(out, tempOut)
   }
   
   # manage the bibliography entry

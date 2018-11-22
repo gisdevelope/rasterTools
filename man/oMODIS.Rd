@@ -5,8 +5,8 @@
 \alias{downloadMODIS}
 \title{Obtain MODIS data}
 \usage{
-oMODIS(mask = NULL, period = NULL, product = NULL, layer = NULL,
-  process = TRUE)
+oMODIS(mask = NULL, period = NULL, product = NULL, layer = 1,
+  assertQuality = TRUE, ...)
 
 downloadMODIS(file = NULL, localPath = NULL, getDates = NULL,
   getFiles = NULL)
@@ -26,9 +26,11 @@ interest. Can be abbreviated if an \code{index} is provided.}
 interest. Either the integer of the layers position or the name of the
 layer.}
 
-\item{process}{[\code{logical(1)}]\cr should the data be procesed further in
-R (\code{TRUE}, default) or should the data merely be downloaded and stored
-on the harddisc (\code{FALSE})?}
+\item{assertQuality}{[\code{logical(1)}] (not supported yet)\cr should the
+quality flags of the ESA CCI land-cover dataset be extracted (\code{TRUE},
+default) or should merely the data-layer be extracted (\code{FALSE})?}
+
+\item{...}{[various]\cr other arguments.}
 
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
@@ -92,19 +94,29 @@ The period can either be given as a single value if only one year is
 
 water <- oMODIS(mask = rtGeoms$mask, period = 2000,
                 product = "MOD44W", layer = 1)
-visualise(gridded = water, trace = TRUE)
+visualise(raster = water, trace = TRUE)
 
-# not specifying 'layer' results in a stack of all layers
-myMODIS <- oMODIS(mask = rtGeoms$mask, period = 2012,
-                  product = "MOD17A3")
-visualise(gridded = myMODIS, trace = TRUE)
 
+# specify exact dates
 modEvi <- oMODIS(mask = rtGeoms$mask, period = c(2016100, 2016250),
                  product = "MOD13A3", layer = "EVI")
-visualise(gridded = modEvi, trace = TRUE)
+visualise(raster = modEvi, trace = TRUE)
+
+
+# handles also more than one tile at the same time
+library(magrittr)
+myMask <- geomRectangle(data.frame(x = c(571751, 612443),
+                                   y = c(5569592, 5536989))) \%>\%
+  setCRS(crs = projs$sinu)
+  
+water <- oMODIS(mask = myMask, period = 2000,
+                product = "MOD44W", layer = 1)
+visualise(raster = water, trace = TRUE)
+
 
 # get the (updated) bibliography
 reference(style = "bibtex")
+
 
 # the modis tiles
 modWindow <- data.frame(x = c(-20015109.354, 20015109.354),

@@ -6,7 +6,7 @@
 \title{Obtain global climate data}
 \usage{
 oWCLIM(mask = NULL, variable = NULL, month = c(1:12),
-  resolution = 0.5)
+  resolution = 0.5, ...)
 
 downloadWCLIM(file = NULL, localPath = NULL)
 }
@@ -22,6 +22,8 @@ be extracted.}
 
 \item{resolution}{[\code{numeric(1)}]\cr the spatial resolution in
 arc-minutes.}
+
+\item{...}{[various]\cr other arguments.}
 
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
@@ -80,7 +82,7 @@ The following variables are included:\itemize{
 
 myWCLIM <- oWCLIM(mask = rtGeoms$mask, variable = c("tavg"),
                   month = c(5:9))
-visualise(raster = myWCLIM$tavg, trace = TRUE)
+visualise(raster = myWCLIM, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")
