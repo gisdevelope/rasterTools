@@ -11,9 +11,6 @@
 #' @param assertQuality [\code{logical(1)}] (not supported yet)\cr should the
 #'   quality flags of the ESA CCI land-cover dataset be extracted (\code{TRUE},
 #'   default) or should merely the data-layer be extracted (\code{FALSE})?
-#' @param keepFile [\code{logical(1)}]\cr should the file gdal creates in the
-#'   workingdirectory be kept (\code{TRUE}) or should it be deleted
-#'   (\code{FALSE}, default)?
 #' @param ... [various]\cr other arguments.
 #' @family obtain operators (Global)
 #' @examples
@@ -25,12 +22,12 @@
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
 #' }
-#' @importFrom checkmate testClass assertIntegerish testFileExists
-#' @importFrom raster stack crop
-#' @importFrom gdalUtils gdal_translate
+#' @importFrom checkmate testClass assert assertIntegerish testFileExists
+#' @importFrom raster stack raster unique
+#' @importFrom gdalUtils gdal_translate gdalwarp
 #' @export
 
-oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = FALSE, ...){
+oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -43,19 +40,22 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = F
   if(maskIsSpatial){
     mask <- gFrom(input = mask)
   }
-  targetCRS <- getCRS(x = mask)
-  targetMask <- setCRS(x = geomRectangle(anchor = getExtent(x = mask)), crs = targetCRS)
 
+  targetCRS <- getCRS(x = mask)
+  maskGeom <- geomRectangle(anchor = getExtent(x = mask))
+  maskGeom <- setCRS(x = maskGeom, crs = targetCRS)
+  maskExtent <- getExtent(maskGeom)
   if(targetCRS != projs$longlat){
-    targetMask <- setCRS(targetMask, crs = projs$longlat)
-  }
-  targetExtent <- getExtent(x = targetMask)
+    targetExtent <- getExtent(setCRS(x = maskGeom, crs = projs$longlat))
+  } else{
+    targetExtent <- getExtent(maskGeom)
+  } 
   
   out <- stack()
-  history <- list()
-  # go through years to extract the respective data and subset it with theExtent
+  # go through years to extract the respective data and subset it
   for(i in seq_along(years)){
     
+    history <- list()
     blablabla(msg = paste0("I am handling the ESALC datasets of the year '", years[i], "':"))
     fileName <- paste0( "ESACCI-LC-L4-LCCS-Map-300m-P1Y-", years[i], "-v2.0.7.tif")
     fileExists <- testFileExists(paste0(paste0(rtPaths$esalc$local, "/", fileName)))
@@ -66,37 +66,43 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = F
     }
     blablabla(paste0(" ... cropping ESALC to 'mask'"), ...)
     tempObject <- gdal_translate(src_dataset = paste0(rtPaths$esalc$local, "/", fileName),
-                                 dst_dataset = paste0("esalc_", years[i], ".tif"),
+                                 dst_dataset = paste0(rtPaths$project, "/esalc_", years[i], ".tif"),
                                  projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
                                  output_Raster = TRUE)
     
     history <- c(history, paste0("object loaded for the year ", years[i], ""))
     history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
     
+    # reproject
     if(targetCRS != projs$longlat){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      blablabla(paste0(" ... reprojecting target ESALC to '",crs_name), ...)
-      tempObject <- setCRS(x = tempObject, crs = targetCRS, method = "ngb")
-      tempObject <- crop(tempObject, getExtent(x = mask), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
+      blablabla(paste0(" ... reprojecting target to '", crs_name))
+      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/esalc_", years[i], ".tif"),
+                             dstfile = paste0(rtPaths$project, "/esalc_", years[i], "_warped.tif"),
+                             s_srs = projs$longlat,
+                             t_srs = targetCRS,
+                             te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
+                             overwrite = TRUE,
+                             output_Raster = TRUE)
       history <- c(history, list(paste0("object reprojected to ", crs_name)))
     }
+    
+    # make file available as raster
+    tempObject <- raster(tempObject@file@name)
     
     # set history
     tempObject@history <- history
     
-    # create and set RAT table
+    # create and set RAT
     tempObject@data@isfactor <- TRUE
     ids <- unique(tempObject)
+    ids <- ids[!is.na(ids)]
     tempObject@data@attributes <- list(data.frame(id = ids, label = meta_esalc$LCCOwnLabel[which(meta_esalc$NB_LAB %in% ids)]))
     
     # set colortable
     outCols <- rep("#000000", 256)
     outCols[meta_esalc$NB_LAB] <- meta_esalc$colour[-1]
     tempObject@legend@colortable <- outCols
-    
-    if(!keepFile){
-      file.remove(paste0(getwd(), "/esalc_", years[i], ".tif"))
-    }
     
     # stack all upcoming years
     out <- stack(out, tempObject)
@@ -128,6 +134,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, keepFile = F
 #' @describeIn oESALC function to download ESA CCI land-cover data
 #' @param file [\code{character(1)}]\cr the name of the file to download.
 #' @template localPath
+#' @importFrom checkmate assertCharacter assertDirectory
 #' @importFrom httr GET write_disk progress
 #' @importFrom tools md5sum
 #' @export
