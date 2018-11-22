@@ -4,9 +4,9 @@
 \name{rtMD5}
 \alias{rtMD5}
 \title{MD5 checksums}
-\format{The tibble has the 3 columns 'dataseries', 'file' and 'md5', where
+\format{The tibble has the 4 columns 'dataseries', 'file', 'md5' and 'size', where
   each file has been assigned the MD5 checksum that is used to validate the
-  correct download of this file.}
+  correct download of this file, and the expected size in bytes.}
 \usage{
 rtMD5
 }
