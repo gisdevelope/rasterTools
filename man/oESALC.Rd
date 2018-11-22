@@ -5,8 +5,7 @@
 \alias{downloadESALC}
 \title{Obtain global ESA CCI land-cover data}
 \usage{
-oESALC(mask = NULL, years = NULL, assertQuality = TRUE,
-  keepFile = FALSE, ...)
+oESALC(mask = NULL, years = NULL, assertQuality = TRUE, ...)
 
 downloadESALC(file = NULL, localPath = NULL)
 }
@@ -20,10 +19,6 @@ data should be extracted; see Details.}
 \item{assertQuality}{[\code{logical(1)}] (not supported yet)\cr should the
 quality flags of the ESA CCI land-cover dataset be extracted (\code{TRUE},
 default) or should merely the data-layer be extracted (\code{FALSE})?}
-
-\item{keepFile}{[\code{logical(1)}]\cr should the file gdal creates in the
-workingdirectory be kept (\code{TRUE}) or should it be deleted
-(\code{FALSE}, default)?}
 
 \item{...}{[various]\cr other arguments.}
 
