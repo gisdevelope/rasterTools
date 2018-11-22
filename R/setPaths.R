@@ -2,6 +2,8 @@
 #'
 #' @param root [\code{character(1)}]\cr the root directory where all spatial
 #'   files are already organised or should be saved to.
+#' @param project [\code{character(1)}]\cr the project directory where the
+#'   output of various functions will be stored to.
 #' @param local [\code{list(.)}]\cr a named list pointing to the directory where
 #'   the local resources are located.
 #' @param remote [\code{list(.)}]\cr a named list pointing to the url where the
@@ -29,9 +31,10 @@
 #' }
 #' @export
 
-setPaths <- function(root = NULL, local = NULL, remote = NULL){
+setPaths <- function(root = NULL, project = NULL, local = NULL, remote = NULL){
   
   assertCharacter(root, null.ok = TRUE)
+  assertCharacter(project, null.ok = TRUE)
   assertList(local, null.ok = TRUE)
   assertList(remote, null.ok = TRUE)
   
@@ -50,8 +53,15 @@ setPaths <- function(root = NULL, local = NULL, remote = NULL){
   } else{
     stop("please specify a root directory where the spatial files are located.")
   }
+  if(is.null(project)){
+    rtPaths$project <- paste0(rtPaths$root, "/rT_output")
+  }
+  projectDirExists <- testDirectoryExists(rtPaths$project)
+  if(!projectDirExists){
+    dir.create(rtPaths$project)
+  }
 
-  datasets <- names(rtPaths)[!names(rtPaths) %in% c("root")]
+  datasets <- names(rtPaths)[!names(rtPaths) %in% c("root", "project")]
 
   for(i in seq_along(datasets)){
     pos <- which(names(rtPaths) == datasets[i])

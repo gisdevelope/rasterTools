@@ -7,6 +7,7 @@
 
   if(!file.exists(pathFile)){
     rtPaths <- list(root = NA,
+                    project = NA,
                     clc = list(local = NA,
                                remote = "missing"),
                     emma = list(local = NA,

@@ -4,11 +4,14 @@
 \alias{setPaths}
 \title{Manage the internal paths of rasterTools}
 \usage{
-setPaths(root = NULL, local = NULL, remote = NULL)
+setPaths(root = NULL, project = NULL, local = NULL, remote = NULL)
 }
 \arguments{
 \item{root}{[\code{character(1)}]\cr the root directory where all spatial
 files are already organised or should be saved to.}
+
+\item{project}{[\code{character(1)}]\cr the project directory where the
+output of various functions will be stored to.}
 
 \item{local}{[\code{list(.)}]\cr a named list pointing to the directory where
 the local resources are located.}
