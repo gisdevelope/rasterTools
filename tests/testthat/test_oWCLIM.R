@@ -11,8 +11,7 @@ test_that("oWCLIM loads the correct file", {
     setCRS(crs = projs$laea)
   
   output <- oWCLIM(mask = myMask, variable = c("tavg"), month = 5)
-  expect_list(output, len = 1)
-  expect_class(output$tavg, "RasterStack")
+  expect_class(output, "RasterStack")
 })
 
 test_that(("oWCLIM works with Spatial* mask (that has another crs than the dataset)"), {
@@ -23,8 +22,7 @@ test_that(("oWCLIM works with Spatial* mask (that has another crs than the datas
     setCRS(crs = projs$longlat)
 
   output <- oWCLIM(mask = myMask, variable = c("tavg"), month = 5)
-  expect_list(output, len = 1)
-  expect_class(output$tavg, "RasterStack")
+  expect_class(output, "RasterStack")
 })
 
 test_that("Error if arguments have wrong value", {
