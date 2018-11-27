@@ -6,6 +6,7 @@
 \alias{setCRS,geom-method}
 \alias{setCRS,Raster-method}
 \alias{setCRS,Spatial-method}
+\alias{setCRS,sf-method}
 \title{Set (or transform) the coordinate reference system (generic)}
 \usage{
 setCRS(x, crs, ...)
@@ -15,6 +16,8 @@ setCRS(x, crs, ...)
 \S4method{setCRS}{Raster}(x, crs, ...)
 
 \S4method{setCRS}{Spatial}(x, crs)
+
+\S4method{setCRS}{sf}(x, crs)
 }
 \arguments{
 \item{x}{the object for which to set the coordinate reference system.}
@@ -37,6 +40,8 @@ computed with the standard defined in the \code{rgdal} package.
 \item \code{Raster}: set the coordinate reference system of a \code{Raster*} object
 
 \item \code{Spatial}: set the coordinate reference system of a \code{Spatial*} object
+
+\item \code{sf}: set the coordinate reference system of a \code{sf} object
 }}
 
 \seealso{

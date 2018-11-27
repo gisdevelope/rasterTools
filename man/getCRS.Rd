@@ -6,6 +6,7 @@
 \alias{getCRS,geom-method}
 \alias{getCRS,Raster-method}
 \alias{getCRS,Spatial-method}
+\alias{getCRS,sf-method}
 \title{Get the coordinate reference system (generic)}
 \usage{
 getCRS(x, ...)
@@ -15,6 +16,8 @@ getCRS(x, ...)
 \S4method{getCRS}{Raster}(x)
 
 \S4method{getCRS}{Spatial}(x)
+
+\S4method{getCRS}{sf}(x)
 }
 \arguments{
 \item{x}{the object from which to derive the coordinate reference system.}
@@ -31,6 +34,8 @@ Get the coordinate reference system (generic)
 \item \code{Raster}: get the coordinate reference system of a \code{Raster*} object
 
 \item \code{Spatial}: get the coordinate reference system of a \code{Spatial*} object
+
+\item \code{sf}: get the coordinate reference system of a \code{sf} object
 }}
 
 \seealso{

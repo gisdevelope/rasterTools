@@ -98,6 +98,26 @@ setMethod(f = "getTable",
             }
           })
 
+#' @describeIn getTable get the attribute table of a \code{Spatial*} object
+#' @importFrom tibble tibble as_tibble
+#' @export
+
+setMethod(f = "getTable",
+          signature = "Spatial",
+          definition = function(x){
+
+          })
+
+#' @describeIn getTable get the attribute table of a \code{sf} object
+#' @importFrom tibble tibble as_tibble
+#' @export
+
+setMethod(f = "getTable",
+          signature = "sf",
+          definition = function(x){
+
+          })
+
 #' @describeIn setTable set the attribute table of a \code{geom}
 #' @importFrom dplyr left_join
 #' @export
@@ -135,6 +155,98 @@ setMethod(f = "getCoords",
           signature = "geom",
           definition = function(x){
             as_tibble(x@coords)
+          })
+
+#' @describeIn getCoords get the table of coordinates of a \code{Spatial*} object
+#' @importFrom tibble tibble as_tibble
+#' @export
+
+setMethod(f = "getCoords",
+          signature = "Spatial",
+          definition = function(x){
+            
+            theCoords <- NULL
+            prev <- 0
+            sourceClass <- class(x)[1]
+            if(sourceClass %in% c("SpatialGrid")){
+              x <- as(x, "SpatialPolygons")
+            } else if(sourceClass %in% "SpatialGridDataFrame"){
+              x <- as(x, "SpatialPolygonsDataFrame")
+            } else if(sourceClass %in% "SpatialPixels"){
+              x <- as(x, "SpatialPoints")
+            } else if(sourceClass %in% "SpatialPixelsDataFrame"){
+              x <- as(x, "SpatialPointsDataFrame")
+            }
+            sourceClass <- class(x)[1]
+            
+            if(sourceClass %in% c("SpatialPoints", "SpatialPointsDataFrame")){
+              
+              theCoords <- bind_cols(vid = seq_along(x@coords[,1]), 
+                                     fid = seq_along(x@coords[,1]),
+                                     as.tibble(x@coords))
+              colnames(theCoords) <- c("vid", "fid", "x", "y")
+              
+            } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
+              
+              for(i in seq_along(x@coords)){
+                tempCoords <- data.frame(fid = i,
+                                         vid = seq_along(x@coords[[i]][,1]),
+                                         x = x@coords[[i]][,1],
+                                         y = x@coords[[i]][,2])
+                theCoords <- rbind(theCoords, tempCoords)
+              }
+              
+            } else if(sourceClass %in% c("SpatialLines", "SpatialLinesDataFrame")){
+              
+              for(i in seq_along(x@lines)){
+                theLines <- x@lines[[i]]
+                for(j in seq_along(theLines@Lines)){
+                  theLine <- theLines@Lines[[j]]
+                  
+                  tempCoords <- tibble(fid = prev + j,
+                                       vid = seq_along(theLine@coords[,1]),
+                                       x = theLine@coords[,1],
+                                       y = theLine@coords[,2])
+                  theCoords <- bind_rows(theCoords, tempCoords)
+                }
+                prev <- prev + length(theLines@Lines)
+              }
+              
+            } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")){
+              
+              for(i in seq_along(x@polygons)){
+                thePolys <- x@polygons[[i]]
+                for(j in seq_along(thePolys@Polygons)){
+                  thePoly <- thePolys@Polygons[[j]]
+                  
+                  if(thePoly@hole){
+                    fidID <- j-1
+                  } else{
+                    fidID <- j
+                  }
+                  tempCoords <- tibble(fid = prev + j,
+                                       vid = seq_along(thePoly@coords[,1]),
+                                       x = thePoly@coords[,1],
+                                       y = thePoly@coords[,2])
+                  theCoords <- bind_rows(theCoords, tempCoords)
+                }
+                prev <- prev + length(thePolys@Polygons)
+              }
+              
+            }
+            
+            return(theCoords)
+          })
+
+#' @describeIn getCoords get the table of coordinates of a \code{sf} object
+#' @importFrom tibble as_tibble
+#' @importFrom sf st_coordinates
+#' @export
+
+setMethod(f = "getCoords",
+          signature = "sf",
+          definition = function(x){
+            # temp <- st_coordinates(x)
           })
 
 #' @describeIn getWindow get the reference window of a \code{geom}
@@ -190,7 +302,7 @@ setMethod(f = "getExtent",
           })
 
 #' @describeIn getExtent get the bounding box of a \code{Spatial*} object
-#' @importFrom dplyr bind_cols
+#' @importFrom tibble tibble
 #' @importFrom raster extent
 #' @export
 
@@ -198,8 +310,21 @@ setMethod(f = "getExtent",
           signature = "Spatial",
           definition = function(x){
             ext <- extent(x)
-            bind_cols(x = c(ext@xmin, ext@xmax),
-                      y = c(ext@ymin, ext@ymax))
+            tibble(x = c(ext@xmin, ext@xmax),
+                   y = c(ext@ymin, ext@ymax))
+          })
+
+#' @describeIn getExtent get the bounding box of a \code{sf} object
+#' @importFrom tibble tibble
+#' @importFrom sf st_bbox
+#' @export
+
+setMethod(f = "getExtent",
+          signature = "sf",
+          definition = function(x){
+            ext <- st_bbox(x)
+            tibble(x = c(ext[[1]], ext[[3]]),
+                   y = c(ext[[2]], ext[[4]]))
           })
 
 #' @describeIn getExtent get the bounding box of a \code{matrix} object
@@ -263,6 +388,16 @@ setMethod(f = "getCRS",
             as.character(x@proj4string)
           })
 
+#' @describeIn getCRS get the coordinate reference system of a \code{sf} object
+#' @importFrom sf st_crs
+#' @export
+
+setMethod(f = "getCRS",
+          signature = "sf",
+          definition = function(x){
+            st_crs(x)$proj4string
+          })
+
 #' @describeIn setCRS set the coordinate reference system of a \code{geom}
 #' @importFrom stringr str_split
 #' @export
@@ -320,6 +455,17 @@ setMethod(f = "setCRS",
               x <- spTransform(x, CRSobj = crs(crs))
             }
             return(x)
+          })
+
+#' @describeIn setCRS set the coordinate reference system of a \code{sf} object
+#' @importFrom raster crs
+#' @importFrom sp spTransform
+#' @export
+
+setMethod(f = "setCRS",
+          signature = "sf",
+          definition = function(x, crs){
+
           })
 
 #' @describeIn getHistory get the history of a \code{geom}

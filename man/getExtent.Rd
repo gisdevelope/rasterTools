@@ -6,6 +6,7 @@
 \alias{getExtent,geom-method}
 \alias{getExtent,Raster-method}
 \alias{getExtent,Spatial-method}
+\alias{getExtent,sf-method}
 \alias{getExtent,matrix-method}
 \title{Get the extent (generic)}
 \usage{
@@ -16,6 +17,8 @@ getExtent(x, ...)
 \S4method{getExtent}{Raster}(x)
 
 \S4method{getExtent}{Spatial}(x)
+
+\S4method{getExtent}{sf}(x)
 
 \S4method{getExtent}{matrix}(x)
 }
@@ -34,6 +37,8 @@ Get the extent (generic)
 \item \code{Raster}: get the bounding box of a \code{Raster*} object
 
 \item \code{Spatial}: get the bounding box of a \code{Spatial*} object
+
+\item \code{sf}: get the bounding box of a \code{sf} object
 
 \item \code{matrix}: get the bounding box of a \code{matrix} object
 }}

@@ -4,7 +4,7 @@
 \alias{gFrom}
 \title{Derive a \code{geom} from other spatial objects}
 \usage{
-gFrom(input, window = NULL)
+gFrom(input)
 }
 \arguments{
 \item{input}{[various]\cr the spatial object; currently defined are ojects of

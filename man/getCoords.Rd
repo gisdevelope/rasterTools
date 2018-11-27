@@ -4,11 +4,17 @@
 \name{getCoords}
 \alias{getCoords}
 \alias{getCoords,geom-method}
+\alias{getCoords,Spatial-method}
+\alias{getCoords,sf-method}
 \title{Get the table of coordinates (generic)}
 \usage{
 getCoords(x, ...)
 
 \S4method{getCoords}{geom}(x)
+
+\S4method{getCoords}{Spatial}(x)
+
+\S4method{getCoords}{sf}(x)
 }
 \arguments{
 \item{x}{the object from which to extract the coordinates}
@@ -21,5 +27,9 @@ Get the table of coordinates (generic)
 \section{Methods (by class)}{
 \itemize{
 \item \code{geom}: get the table of coordinates of a \code{geom}
+
+\item \code{Spatial}: get the table of coordinates of a \code{Spatial*} object
+
+\item \code{sf}: get the table of coordinates of a \code{sf} object
 }}
 
