@@ -420,10 +420,10 @@ gToGrob <- function(geom, theme = NULL, ...){
 #' aGeom <- geomPolygon(anchor = coords, window = window)
 #'
 #' aRaster <- gToRaster(geom = aGeom)
-#' visualise(gridded = aRaster, geom = aGeom, col = "deeppink")
+#' visualise(raster = aRaster, geom = aGeom, col = "deeppink")
 #'
 #' negRaster <- gToRaster(geom = aGeom, negative = TRUE)
-#' visualise(gridded = negRaster, geom = aGeom, col = "deeppink")
+#' visualise(raster = negRaster, geom = aGeom, col = "deeppink")
 #' @importFrom methods new
 #' @importFrom raster raster extent<-
 #' @export
@@ -763,4 +763,13 @@ gFrom <- function(input, window = NULL){
 
   return(theGeom)
 
+}
+
+#' Edit the vertices of a geom
+#' 
+#' 
+
+gEditVerts <- function(){
+  
+  
 }
