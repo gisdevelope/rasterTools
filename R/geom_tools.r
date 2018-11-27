@@ -602,19 +602,23 @@ gToSp <- function(geom, crs = NULL){
 #'
 #' @importFrom checkmate assertClass testDataFrame
 #' @importFrom methods as
+#' @importFrom tibble tibble
+#' @importFrom sf st_geometry_type
 #' @export
 
-gFrom <- function(input, window = NULL){
+gFrom <- function(input){
 
   # check arguments
-  existsSp <- testClass(input, classes = "Spatial")
-  # existsSf <- testClass(input, classes = "sf")
-  existsWindow <- testDataFrame(window, types = "numeric", any.missing = FALSE, nrows = 2, ncols = 2)
-  # if(!existsSp & !existsSf){
-  #   stop("I can recently only transform objects of packages 'sp' and 'sf' to class 'geom'.")
-  # }
+  isSp <- testClass(input, classes = "Spatial")
+  isSf <- testClass(input, classes = "sf")
 
-  if(existsSp){
+  sourceCRS <- getCRS(x = input)
+  bbox <- getExtent(input)
+  theWindow <- tibble(x = rep(c(bbox$x), each = 2),
+                      y = c(bbox$y, rev(bbox$y)))
+  theCoords <- getCoords(input)
+  
+  if(isSp){
 
     theCoords <- NULL
     theData <- NULL
@@ -733,33 +737,36 @@ gFrom <- function(input, window = NULL){
       
     }
 
-    sourceCrs <- getCRS(x = input)
-    bbox <- data.frame(input@bbox)
-    if(!existsWindow){
-      theWindow <- data.frame(x = rep(c(bbox$min[1], bbox$max[1]), each = 2),
-                              y = c(bbox$min[2], bbox$max[2], bbox$max[2], bbox$min[2]))
-    } else{
-      theWindow <- window
+    history <- paste0("geometry was created from an object of class '", sourceClass, "'")
+    
+  } else if(isSf){
+    
+    theCoords <- NULL
+    theData <- NULL
+    sourceClass <- st_geometry_type(input)
+    
+    if(sourceClass %in% c("POINT", "MULTIPOINT")){
+      type <- "point"
+      
+    } else if(sourceClass %in% c("LINESTRING", "MULTILINESTRING")){
+      type <- "line"
+      
+    } else if(sourceClass %in% c("POLYGON", "MULTIPOLYGON")){
+      type <- "polygon"
+      
     }
-
-
-
-  } #else if(existsSf){
-
-  # sourceClass <-
-  # sourceCrs <-
-  #
-
-  #}
-
+    
+    history <- paste0("geometry was created from an sf-object of geometry type '", sourceClass, "'")
+  }
+  
   theGeom <- new(Class = "geom",
                  type = type,
                  coords = theCoords,
                  attr = theData,
                  window = theWindow,
                  scale = "absolute",
-                 crs = as.character(sourceCrs),
-                 history = list(paste0("geometry was created from an object of class '", sourceClass, "'")))
+                 crs = sourceCRS,
+                 history = list(history))
 
   return(theGeom)
 
