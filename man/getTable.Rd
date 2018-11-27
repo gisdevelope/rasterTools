@@ -5,6 +5,8 @@
 \alias{getTable}
 \alias{getTable,geom-method}
 \alias{getTable,RasterLayer-method}
+\alias{getTable,Spatial-method}
+\alias{getTable,sf-method}
 \title{Get the attribute table (generic)}
 \usage{
 getTable(x, ...)
@@ -12,6 +14,10 @@ getTable(x, ...)
 \S4method{getTable}{geom}(x)
 
 \S4method{getTable}{RasterLayer}(x)
+
+\S4method{getTable}{Spatial}(x)
+
+\S4method{getTable}{sf}(x)
 }
 \arguments{
 \item{x}{the object from which to derive the attribute table.}
@@ -26,5 +32,9 @@ Get the attribute table (generic)
 \item \code{geom}: get the attribute table of a \code{geom}
 
 \item \code{RasterLayer}: get the attribute table of a \code{RasterLayer}
+
+\item \code{Spatial}: get the attribute table of a \code{Spatial*} object
+
+\item \code{sf}: get the attribute table of a \code{sf} object
 }}
 
