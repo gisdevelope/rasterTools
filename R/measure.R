@@ -9,6 +9,9 @@
 #' @param with [\code{character(.)}]\cr algorithm in which the operators
 #'   (landscape metrics) to measure spatial patterns are specified; see
 #'   Examples.
+#' @param background [\code{numeric(.)}]\cr a set of values that are supposed to
+#'   be regarded as background, i.e. that should not be considered for
+#'   evaluating the equation(s).
 #' @param simplify [\code{logical(1)}]\cr should a "nice looking" output be
 #'   created, where the resulting values are associated to the correct ids
 #'   (\code{TRUE}, default), or should the raw values be returned
@@ -64,7 +67,7 @@
 #'   testCharacter
 #' @export
 
-measure <- function(input = NULL, with = NULL, simplify = TRUE){
+measure <- function(input = NULL, with = NULL, background = NA, simplify = TRUE){
 
   # check arguments
   isRaster <- testClass(input, "Raster")
@@ -130,7 +133,8 @@ measure <- function(input = NULL, with = NULL, simplify = TRUE){
       # call the function and assign names
       values <- do.call(what = tempTerm$operator,
                         args = c(tempTerm[-1], obj =  input[[1]]))
-      colnames(values)[!names(values) %in% c("landscape", "class", "patch")] <- "result"
+      colnames(values)[!names(values) %in% c("landscape", "class", "patch", "value")] <- "result"
+      values <- values[c(!values[,names(values) != "result"] %in% background),]
       
       value_list <- c(value_list, setNames(list(values), termName))
     }
@@ -164,7 +168,7 @@ measure <- function(input = NULL, with = NULL, simplify = TRUE){
       idInResults <- NULL
       tempOut <- lapply(seq_along(result_list), function(x){
         nElements <- length(result_list[[x]])
-        idPos <- which(elemInValues == nElements)
+        idPos <- which(elemInValues == nElements)[[1]]
         idInResults <- c(idInResults, idPos)
         
         id_list[[idInResults]] <- data.frame(id_list[[idInResults]], result_list[[x]], fix.empty.names = FALSE)
