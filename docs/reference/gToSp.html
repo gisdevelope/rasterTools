@@ -180,20 +180,13 @@ object in proj4 notation.</p></td>
 <span class='no'>polyGeom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>pointsGeom</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>8</span>))) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='geomPolygon.html'>geomPolygon</a></span>()
 
-(<span class='no'>spPoints</span> <span class='kw'>&lt;-</span> <span class='fu'>gToSp</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>pointsGeom</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>))</div><div class='output co'>#&gt; class       : SpatialPointsDataFrame 
+(<span class='no'>spPoints</span> <span class='kw'>&lt;-</span> <span class='fu'>gToSp</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>pointsGeom</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>))</div><div class='output co'>#&gt; class       : SpatialPoints 
 #&gt; features    : 8 
 #&gt; extent      : 5027609, 5326537, 3971119, 4118207  (xmin, xmax, ymin, ymax)
-#&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs 
-#&gt; variables   : 1
-#&gt; names       : id 
-#&gt; min values  :  1 
-#&gt; max values  :  8 </div><div class='input'>(<span class='no'>spPolygon</span> <span class='kw'>&lt;-</span> <span class='fu'>gToSp</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>polyGeom</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>))</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
+#&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs </div><div class='input'>(<span class='no'>spPolygon</span> <span class='kw'>&lt;-</span> <span class='fu'>gToSp</span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>polyGeom</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>))</div><div class='output co'>#&gt; class       : SpatialPolygons 
 #&gt; features    : 1 
 #&gt; extent      : 5027609, 5326537, 3971119, 4118207  (xmin, xmax, ymin, ymax)
-#&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs 
-#&gt; variables   : 1
-#&gt; names       : id 
-#&gt; value       :  1 </div></pre>
+#&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

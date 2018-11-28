@@ -118,11 +118,11 @@
 <ol style="list-style-type: decimal">
 <li>
 <p>Install the development version from github via:</p>
-<pre><code><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports"> devtools::install_github("EhrmannS/rasterTools")</a></code></pre>
+<pre><code><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">devtools::install_github("EhrmannS/rasterTools")</a></code></pre>
 </li>
 <li>
 <p>Read a <strong>brief introduction</strong> to understand the philosophy of <code>rasterTools</code>:</p>
-<pre><code><a href="reference/rasterTools.html"> ?`rasterTools-package`</a></code></pre>
+<pre><code><a href="reference/rasterTools.html">?`rasterTools-package`</a></code></pre>
 </li>
 <li><p>The vignettes given an in detail <a href="articles/introduction.html">Introduction</a> and explain what the logic behind <a href="articles/landscape_metrics.html">landscape metrics</a> is.</p></li>
 </ol>
@@ -134,30 +134,30 @@
 <ol style="list-style-type: decimal">
 <li>
 <p>(Down)load a range of gridded datasets:</p>
-<pre><code> myDatasets &lt;- list(list(operator = "oGFC", years = 2006)),
-                    list(operator = "oMODIS", product = "mod17a3",
-                         period = 2006, layer = 2),
-                    ...)
- myData &lt;- obtain(data = myDatasets, mask = aMask)</code></pre>
+<pre><code>myDatasets &lt;- list(list(operator = "oGFC", years = 2006)),
+                   list(operator = "oMODIS", product = "mod17a3",
+                        period = 2006, layer = 2),
+                   ...)
+myData &lt;- obtain(data = myDatasets, mask = aMask)</code></pre>
 </li>
 <li>
 <p>Determine forest patches in a raster with continuous integer values of tree-cover:</p>
-<pre><code> get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
-                     list(operator = "rPatches"))
- myInput &lt;- rtData$continuous
- myPatches &lt;- modify(input = myInput, by = get_patches, sequential = TRUE)
- visualise(raster::stack(myInput, myPatches))</code></pre>
+<pre><code>get_patches &lt;- list(list(operator = "rBinarise", thresh = 30),
+                    list(operator = "rPatches"))
+myInput &lt;- rtData$continuous
+myPatches &lt;- modify(input = myInput, by = get_patches, sequential = TRUE)
+visualise(raster::stack(myInput, myPatches))</code></pre>
 </li>
 </ol>
 <p><img src="https://raw.githubusercontent.com/EhrmannS/rasterTools/master/vignettes/readme.png" width="100%"></p>
 <ol start="3" style="list-style-type: decimal">
 <li>
 <p>Compute the <em>Class proportional area</em> in a raster with categorial values:</p>
-<pre><code> myInput &lt;- rtData$categorial
- myMetric &lt;- list(a_l = list(operator = "mArea", scale = "landscape"),
-                  a_c = list(operator = "mArea", scale = "class"),
-                  mCPA = "a_c / a_l * 100")
- measure(input = myInput, with = myMetric)</code></pre>
+<pre><code>myInput &lt;- rtData$categorial
+myMetric &lt;- list(a_l = list(operator = "mArea", scale = "landscape"),
+                 a_c = list(operator = "mArea", scale = "class"),
+                 mCPA = "a_c / a_l * 100")
+measure(input = myInput, with = myMetric)</code></pre>
 </li>
 </ol>
 <hr>

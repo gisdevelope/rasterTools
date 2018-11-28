@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the coordinate reference system (generic) — getCRS • rasterTools</title>
+<title>A set of 2D kernels — rtKernels • rasterTools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Get the coordinate reference system (generic) — getCRS" />
+<meta property="og:title" content="A set of 2D kernels — rtKernels" />
 
-<meta property="og:description" content="Get the coordinate reference system (generic)" />
+<meta property="og:description" content="This objects stores several kernels that can be used with various
+morphological operators." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -130,67 +131,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the coordinate reference system (generic)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/generics.R'><code>R/generics.R</code></a>, <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/methods.R'><code>R/methods.R</code></a></small>
-    <div class="hidden name"><code>getCRS.Rd</code></div>
+    <h1>A set of 2D kernels</h1>
+    <small class="dont-index">Source: <a href='https://github.com/EhrmannS/rasterTools/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>rtKernels.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get the coordinate reference system (generic)</p>
+    <p>This objects stores several kernels that can be used with various
+morphological operators.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getCRS</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='no'>rtKernels</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-<span class='co'># S4 method for geom</span>
-<span class='fu'>getCRS</span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for Raster</span>
-<span class='fu'>getCRS</span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for Spatial</span>
-<span class='fu'>getCRS</span>(<span class='no'>x</span>)
-
-<span class='co'># S4 method for sf</span>
-<span class='fu'>getCRS</span>(<span class='no'>x</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>the object from which to derive the coordinate reference system.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>other arguments.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
-
-    <ul>
-<li><p><code>geom</code>: get the coordinate reference system of a <code>geom</code></p></li>
-<li><p><code>Raster</code>: get the coordinate reference system of a <code>Raster*</code> object</p></li>
-<li><p><code>Spatial</code>: get the coordinate reference system of a <code>Spatial*</code> object</p></li>
-<li><p><code>sf</code>: get the coordinate reference system of a <code>sf</code> object</p></li>
-</ul>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='setCRS.html'>setCRS</a></code></p></div>
+    <p>The list has the 4 elements 'disc', 'diamond', 'square' and
+  'rectangle', where each element contains a set of differently sized
+  matrixes that contain values 0, 1 or NA.</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#methods-by-class-">Methods (by class)</a></li>
-
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#format">Format</a></li>
           </ul>
 
   </div>

@@ -32,9 +32,8 @@
 
 <meta property="og:title" content="Obtain global climate data — oWCLIM" />
 
-<meta property="og:description" content="Obtain data from the 'worldclim' dataset
-(paper1,
-paper2)." />
+<meta property="og:description" content="Obtain data from the 'worldclim 2' dataset
+(paper)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -139,14 +138,13 @@ paper2)." />
 
     <div class="ref-description">
     
-    <p>Obtain data from the 'worldclim' <a href='http://worldclim.org/'>dataset</a>
-(<a href='https://doi.org/10.1002/joc.1276'>paper1</a>,
-<a href='https://doi.org/10.1002/joc.5086'>paper2</a>).</p>
+    <p>Obtain data from the 'worldclim 2' <a href='http://worldclim.org/'>dataset</a>
+(<a href='https://doi.org/10.1002/joc.5086'>paper</a>).</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>month</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>:<span class='fl'>12</span>),
-  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='no'>...</span>)
 
 <span class='fu'>downloadWCLIM</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
@@ -161,7 +159,7 @@ extent is the area of interest.</p></td>
     <tr>
       <th>variable</th>
       <td><p>[<code>character(.)</code>]<br /> the climatic variable of interest;
-see Details to find which variables are available in which version.</p></td>
+see Details.</p></td>
     </tr>
     <tr>
       <th>month</th>
@@ -174,9 +172,8 @@ be extracted.</p></td>
 arc-minutes.</p></td>
     </tr>
     <tr>
-      <th>version</th>
-      <td><p>[<code>integerish(1)</code>]<br /> the version for which you'd like to
-obtain the worldclim data.</p></td>
+      <th>...</th>
+      <td><p>[various]<br /> other arguments.</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -197,32 +194,36 @@ supposed to be stored (i.e. on your harddisc).</p></td>
   area of interest. This is in contrast to <code><a href='obtain.html'>obtain</a></code>, where a mask
   may consist of several features, each of which are treated as seperate
   mask.</p>
-<ul>
-<li><p>Version 2.0 includes
-  the variables:</p><ul>
-<li><p><code>"tmin"</code>: average monthly minimum
-  temperature [°C * 10],</p></li>
-<li><p><code>"tmax"</code>: average monthly maximum
-  temperature [°C * 10],</p></li>
-<li><p><code>"tavg"</code>: average monthly mean
-  temperature [°C * 10],</p></li>
-<li><p><code>"prec"</code>: average monthly precipitation
-  [mm],</p></li>
-<li><p><code>"srad"</code>: average monthly solar radiation [kJ m-2 day-1],</p></li>
+<p>The following variables are included:</p><ul>
+<li><p><code>"tmin"</code>: average monthly minimum temperature [°C * 10],</p></li>
+<li><p><code>"tmax"</code>: average monthly maximum temperature [°C * 10],</p></li>
+<li><p><code>"tavg"</code>: average monthly mean temperature [°C * 10],</p></li>
+<li><p><code>"prec"</code>: average monthly precipitation [mm],</p></li>
+<li><p><code>"srad"</code>: average monthly solar radiation
+  [kJ m-2 day-1],</p></li>
 <li><p><code>"wind"</code>: average monthly wind speed [m s-1],</p></li>
 <li><p><code>"vapr"</code>: average monthly water vapour pressure [kPa],</p></li>
-<li><p><code>"bio"</code>: bioclimatic variables derived from the above.</p></li>
-</ul></li>
+<li><p><code>"bio"</code>: all bioclimatic variables,</p></li>
+<li><p><code>"bio_01"</code>: annual mean temperature,</p></li>
+<li><p><code>"bio_02"</code>: mean diurnal range,</p></li>
+<li><p><code>"bio_03"</code>: Isothermality,</p></li>
+<li><p><code>"bio_04"</code>: temperature seasonality,</p></li>
+<li><p><code>"bio_05"</code>: Max temperature of warmest month,</p></li>
+<li><p><code>"bio_06"</code>: Min temperature of coldest month,</p></li>
+<li><p><code>"bio_07"</code>: temperature annual Range,</p></li>
+<li><p><code>"bio_08"</code>: mean temperature of wettest quarter,</p></li>
+<li><p><code>"bio_09"</code>: mean temperature of driest quarter,</p></li>
+<li><p><code>"bio_10"</code>: mean temperature of warmest quarter,</p></li>
+<li><p><code>"bio_11"</code>: mean temperature of coldest quarter,</p></li>
+<li><p><code>"bio_12"</code>: annual precipitation,</p></li>
+<li><p><code>"bio_13"</code>: precipitation of wettest month,</p></li>
+<li><p><code>"bio_14"</code>: precipitation of driest month,</p></li>
+<li><p><code>"bio_15"</code>: precipitation seasonality,</p></li>
+<li><p><code>"bio_16"</code>: precipitation of wettest quarter,</p></li>
+<li><p><code>"bio_17"</code>: precipitation of driest quarter,</p></li>
+<li><p><code>"bio_18"</code>: precipitation of warmest quarter,</p></li>
+<li><p><code>"bio_19"</code>: precipitation of coldest quarter.</p></li>
 </ul>
-    <p>The files of version 1.4 are shipped in the 'bil' format. While the files
-  are compressed into a zip-file, once unzipped, they take up a lot of space
-  on the harddisc. Hence, when using this function for the first time,
-  <code>downloadWCLIM</code> downloads and unzips the original file(s), transforms
-  the monthly files into 'tif' format (which uses only about 1/10th of the
-  space) and deletes the original 'bil' files. Beware that due to the size of
-  the inital files this takes a lot (!) of time, especially for the 30
-  arc-second files. However, when repeatedly using these data, so the hope,
-  this procedure should make the future work with these data smoother.</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
@@ -240,7 +241,7 @@ supposed to be stored (i.e. on your harddisc).</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='no'>myWCLIM</span> <span class='kw'>&lt;-</span> <span class='fu'>oWCLIM</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"tavg"</span>),
                   <span class='kw'>month</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>:<span class='fl'>9</span>))
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>myWCLIM</span>$<span class='no'>tavg</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>myWCLIM</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># get the (updated) bibliography</span>
 <span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)

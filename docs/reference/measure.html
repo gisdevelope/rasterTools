@@ -143,7 +143,8 @@ maps of landscapes, artificial (spatial) patterns or even photographs.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>measure</span>(<span class='kw'>input</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>with</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>background</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,6 +161,12 @@ but can also be assembled "by hand".</p></td>
       <td><p>[<code>character(.)</code>]<br /> algorithm in which the operators
 (landscape metrics) to measure spatial patterns are specified; see
 Examples.</p></td>
+    </tr>
+    <tr>
+      <th>background</th>
+      <td><p>[<code>numeric(.)</code>]<br /> a set of values that are supposed to
+be regarded as background, i.e. that should not be considered for
+evaluating the equation(s).</p></td>
     </tr>
     <tr>
       <th>simplify</th>

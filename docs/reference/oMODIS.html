@@ -141,8 +141,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>process</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>assertQuality</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='fu'>downloadMODIS</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>getDates</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>getFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -173,10 +173,14 @@ interest. Either the integer of the layers position or the name of the
 layer.</p></td>
     </tr>
     <tr>
-      <th>process</th>
-      <td><p>[<code>logical(1)</code>]<br /> should the data be procesed further in
-R (<code>TRUE</code>, default) or should the data merely be downloaded and stored
-on the harddisc (<code>FALSE</code>)?</p></td>
+      <th>assertQuality</th>
+      <td><p>[<code>logical(1)</code>] (not supported yet)<br /> should the
+quality flags of the ESA CCI land-cover dataset be extracted (<code>TRUE</code>,
+default) or should merely the data-layer be extracted (<code>FALSE</code>)?</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>[various]<br /> other arguments.</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -263,19 +267,29 @@ where product files are stored.</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='no'>water</span> <span class='kw'>&lt;-</span> <span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
                 <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"MOD44W"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>water</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>water</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='co'># not specifying 'layer' results in a stack of all layers</span>
-<span class='no'>myMODIS</span> <span class='kw'>&lt;-</span> <span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2012</span>,
-                  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"MOD17A3"</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>myMODIS</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
+<span class='co'># specify exact dates</span>
 <span class='no'>modEvi</span> <span class='kw'>&lt;-</span> <span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>mask</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2016100</span>, <span class='fl'>2016250</span>),
                  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"MOD13A3"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='st'>"EVI"</span>)
-<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>gridded</span> <span class='kw'>=</span> <span class='no'>modEvi</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>modEvi</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+
+<span class='co'># handles also more than one tile at the same time</span>
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>(<span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>571751</span>, <span class='fl'>612443</span>),
+                                   <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5569592</span>, <span class='fl'>5536989</span>))) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='setCRS.html'>setCRS</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>sinu</span>)
+
+<span class='no'>water</span> <span class='kw'>&lt;-</span> <span class='fu'>oMODIS</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
+                <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"MOD44W"</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'><a href='visualise.html'>visualise</a></span>(<span class='kw'>raster</span> <span class='kw'>=</span> <span class='no'>water</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
 
 <span class='co'># get the (updated) bibliography</span>
 <span class='fu'><a href='reference.html'>reference</a></span>(<span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"bibtex"</span>)
+
 
 <span class='co'># the modis tiles</span>
 <span class='no'>modWindow</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>20015109.354</span>, <span class='fl'>20015109.354</span>),

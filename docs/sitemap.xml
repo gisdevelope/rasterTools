@@ -16,6 +16,9 @@
     <loc>http://EhrmannS.github.io/rasterTools/reference/doyToDate.html</loc>
   </url>
   <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/gEditVerts.html</loc>
+  </url>
+  <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/gFrom.html</loc>
   </url>
   <url>
@@ -251,6 +254,9 @@
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/rtGeoms.html</loc>
+  </url>
+  <url>
+    <loc>http://EhrmannS.github.io/rasterTools/reference/rtKernels.html</loc>
   </url>
   <url>
     <loc>http://EhrmannS.github.io/rasterTools/reference/rtMD5.html</loc>
