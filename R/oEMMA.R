@@ -59,8 +59,9 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
@@ -78,7 +79,7 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
   }
 
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
+  if(maskIsSp){
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)
@@ -96,15 +97,15 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
   # hier weiter
   tabEMMA <- getCoords(x = tiles_emma)
   tabMask <- getCoords(x = mask)
-  ids <- unique(tabEMMA$id)
+  ids <- unique(tabEMMA$fid)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
-    temp <- tabEMMA[tabEMMA$id == ids[i],]
+    temp <- tabEMMA[tabEMMA$fid == ids[i],]
     xMatch <- c(xMatch, ifelse(any(tabMask$x < max(temp$x)) & any(tabMask$x > min(temp$x)), TRUE, FALSE))
     yMatch <- c(yMatch, ifelse(any(tabMask$y < max(temp$y)) & any(tabMask$y > min(temp$y)), TRUE, FALSE))
   }
   tiles <- xMatch & yMatch
-  myTiles <- getSubset(x = tiles_emma, subset = tabEMMA$id %in% ids[tiles])
+  myTiles <- getSubset(x = tiles_emma, attr = tiles)
   tileNames <- as.character(getTable(myTiles)$square)
 
   # go through 'species' to extract data

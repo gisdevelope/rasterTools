@@ -50,15 +50,8 @@
 #'                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
 #'                         layer = 2))
 #'
-#' # load and outline masks from a file with locations
-#' myLocations <- loadData(files = "locations.csv",
-#'                         localPath = system.file("test_datasets", package="rasterTools"))
-#' myMask <- gGroup(geom = myLocations, distance = 10000) %>%
-#'   geomRectangle() %>%
-#'   gToSp(crs = projs$laea)
-#' 
 #' # grab the data
-#' myData <- obtain(data = myDatasets, mask = myMask)
+#' myData <- obtain(data = myDatasets, mask = rtGeoms$locations)
 #' }
 #' @importFrom stats cutree dist hclust runif setNames
 #' @export
@@ -68,17 +61,11 @@ obtain <- function(data = NULL, mask = NULL){
   # check arguments
   assertList(data, types = "list", min.len = 1, any.missing = FALSE)
   assertNames(names(data[[1]]), must.include = "operator")
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   
-  if(existsSpatial){
-    mask <- gFrom(input = mask)
-  }
   theMasks <- mask
   out <- list()
 
@@ -118,10 +105,10 @@ obtain <- function(data = NULL, mask = NULL){
 
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
-  tabMasks <- getCoords(x = theMasks)
-  maskElements <- unique(tabMasks$fid)
+  tabMasks <- getTable(x = theMasks)
+  maskElements <- seq_along(tabMasks$fid)
   for(i in maskElements){
-    tempMask <- getSubset(x = theMasks, subset = tabMasks$fid == i)
+    tempMask <- getSubset(x = theMasks, attr = i)
 
     message(paste0("--> I am extracting information for mask ", i, ":\n"))
     temp_out <- lapply(

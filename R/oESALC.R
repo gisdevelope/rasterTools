@@ -31,16 +31,12 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  # maskIsSf <- testClass(mask, classes = "sf")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   assertIntegerish(years, lower = 1992, upper = 2015, any.missing = FALSE, min.len = 1)
 
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
-    mask <- gFrom(input = mask)
-  }
-
   targetCRS <- getCRS(x = mask)
   maskGeom <- geomRectangle(anchor = getExtent(x = mask))
   maskGeom <- setCRS(x = maskGeom, crs = targetCRS)
@@ -66,7 +62,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
     }
     blablabla(paste0(" ... cropping ESALC to 'mask'"), ...)
     tempObject <- gdal_translate(src_dataset = paste0(rtPaths$esalc$local, "/", fileName),
-                                 dst_dataset = paste0(rtPaths$project, "/esalc_", years[i], ".tif"),
+                                 dst_dataset = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
                                  projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
                                  output_Raster = TRUE)
     
@@ -77,8 +73,8 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
     if(targetCRS != projs$longlat){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
       blablabla(paste0(" ... reprojecting target to '", crs_name))
-      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/esalc_", years[i], ".tif"),
-                             dstfile = paste0(rtPaths$project, "/esalc_", years[i], "_warped.tif"),
+      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
+                             dstfile = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), "_warped.tif"),
                              s_srs = projs$longlat,
                              t_srs = targetCRS,
                              te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
@@ -89,6 +85,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
     
     # make file available as raster
     tempObject <- raster(tempObject@file@name)
+    names(tempObject) <- paste0("esalc_", years[i])
     
     # set history
     tempObject@history <- history

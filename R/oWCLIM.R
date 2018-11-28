@@ -61,8 +61,9 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   if(resolution == 0.5){
     tempRes <- "30s"
   } else{
@@ -76,18 +77,16 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   }
   if(any(!grepl("bio", variable))){
     varClim <- variable[which(!grepl("bio", variable))]
-    varClim <- paste0(varClim, "_", formatC(month, width = 2, format = "d", flag = "0"))
-    
-    variable <- c(varClim, variable[grepl("bio", variable)])
+    tempVar <- NULL
+    for(i in seq_along(varClim)){
+      tempVar <- c(tempVar, paste0(varClim[i], "_", formatC(month, width = 2, format = "d", flag = "0")))
+    }
+    variable <- c(tempVar, variable[grepl("bio", variable)])
   }
   assertIntegerish(month, lower = 1, upper = 12, any.missing = FALSE, min.len = 1)
   assertSubset(resolution, choices = c(0.5, 2.5, 5, 10))
 
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
-    mask <- gFrom(input = mask)
-  }
-  
   targetCRS <- getCRS(x = mask)
   maskGeom <- geomRectangle(anchor = getExtent(x = mask))
   maskGeom <- setCRS(x = maskGeom, crs = targetCRS)
@@ -112,7 +111,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     }
     blablabla(paste0(" ... cropping WORLDCLIM to 'mask'"), ...)
     tempObject <- gdal_translate(src_dataset = paste0(rtPaths$worldclim$local, "/", fileName),
-                                 dst_dataset = paste0(rtPaths$project, "/wclim_", variable[i], ".tif"),
+                                 dst_dataset = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
                                  projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
                                  output_Raster = TRUE)
     
@@ -123,8 +122,8 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     if(targetCRS != projs$longlat){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
       blablabla(paste0(" ... reprojecting target to '", crs_name))
-      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/wclim_", variable[i], ".tif"),
-                             dstfile = paste0(rtPaths$project, "/wclim_", variable[i], "_warped.tif"),
+      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
+                             dstfile = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), "_warped.tif"),
                              s_srs = projs$longlat,
                              t_srs = targetCRS,
                              te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
@@ -135,6 +134,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     
     # make file available as raster
     tempObject <- raster(tempObject@file@name)
+    names(tempObject) <- paste0("wclim_", variable[i])
     
     # set history
     tempObject@history <- history

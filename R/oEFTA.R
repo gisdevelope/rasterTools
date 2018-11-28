@@ -40,8 +40,9 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   speciesIsDF <- testDataFrame(species, any.missing = FALSE, ncols = 2, min.rows = 1, col.names = "named")
   if(speciesIsDF){
     assertNames(names(species), must.include = c("original", "abbr"))
@@ -66,7 +67,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
   }
   
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
+  if(maskIsSp){
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)
