@@ -9,9 +9,10 @@ rMask(obj, mask = NULL, background = NULL)
 \arguments{
 \item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
 
-\item{mask}{[\code{RasterLayer(1)} | \code{matrix(1)}]\cr Binary object of
-the same dimension as \code{obj} where the cells that should be retained
-have the value 1 and all other cells the value 0.}
+\item{mask}{[\code{RasterLayer(1)} | \code{matrix(1)} | \code{geom(1)}]\cr
+Either binary object of the same dimension as \code{obj} where the cells
+that should be retained have the value 1 and all other cells the value 0 or\cr
+\code{geom} where values inside the geom should be retained.}
 
 \item{background}{[\code{integerish(1)}]\cr the value any cell with value NA
 should have.}

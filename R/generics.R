@@ -117,8 +117,3 @@ setGeneric(name = "getHistory",
            def = function(x, ...){
              standardGeneric("getHistory")
            })
-#
-# setGeneric(name = "setWindow",
-#            def = function(x, ...){
-#              standardGeneric("setWindow")
-#            })

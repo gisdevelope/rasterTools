@@ -800,9 +800,10 @@ rLess <- function(obj, thresh, background = NULL){
 #' Select cells of a raster based on a mask
 #'
 #' @template obj
-#' @param mask [\code{RasterLayer(1)} | \code{matrix(1)}]\cr Binary object of
-#'   the same dimension as \code{obj} where the cells that should be retained
-#'   have the value 1 and all other cells the value 0.
+#' @param mask [\code{RasterLayer(1)} | \code{matrix(1)} | \code{geom(1)}]\cr
+#'   Either binary object of the same dimension as \code{obj} where the cells
+#'   that should be retained have the value 1 and all other cells the value 0 or\cr
+#'   \code{geom} where values inside the geom should be retained.
 #' @template background
 #' @return A \code{RasterLayer} of the same dimensions as \code{obj}, in which
 #'   all cells with value 0 in the mask have been set to \code{NA} and all other

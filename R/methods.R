@@ -98,7 +98,7 @@ setMethod(f = "getTable",
             }
           })
 
-#' @describeIn getTable get the attribute table of a \code{Spatial*} object
+#' @describeIn getTable get the attribute table of any \code{Spatial*} object
 #' @importFrom tibble tibble as_tibble
 #' @importFrom dplyr bind_cols
 #' @export
@@ -239,7 +239,7 @@ setMethod(f = "getCoords",
             as_tibble(x@coords)
           })
 
-#' @describeIn getCoords get the table of coordinates of a \code{Spatial*} object
+#' @describeIn getCoords get the table of coordinates of any \code{Spatial*} object
 #' @importFrom tibble tibble as_tibble
 #' @export
 
@@ -402,7 +402,7 @@ setMethod(f = "getExtent",
                       y = c(min(x@coords$y), max(x@coords$y)))
           })
 
-#' @describeIn getExtent get the bounding box of a \code{Raster*} object
+#' @describeIn getExtent get the bounding box of any \code{Raster*} object
 #' @importFrom dplyr bind_cols
 #' @importFrom raster extent
 #' @export
@@ -415,7 +415,7 @@ setMethod(f = "getExtent",
                       y = c(ext@ymin, ext@ymax))
           })
 
-#' @describeIn getExtent get the bounding box of a \code{Spatial*} object
+#' @describeIn getExtent get the bounding box of aany \code{Spatial*} object
 #' @importFrom tibble tibble
 #' @importFrom raster extent
 #' @export
@@ -494,7 +494,7 @@ setMethod(f = "getSubset",
 #' @export
 
 setMethod(f = "getSubset",
-          signature = c("sf", "logical"),
+          signature = c("sf"),
           definition = function(x, attr, coords){
             x[attr,]
           })
@@ -508,7 +508,7 @@ setMethod(f = "getCRS",
             x@crs
           })
 
-#' @describeIn getCRS get the coordinate reference system of a \code{Raster*} object
+#' @describeIn getCRS get the coordinate reference system of any \code{Raster*} object
 #' @export
 
 setMethod(f = "getCRS",
@@ -517,7 +517,7 @@ setMethod(f = "getCRS",
             as.character(x@crs)
           })
 
-#' @describeIn getCRS get the coordinate reference system of a \code{Spatial*} object
+#' @describeIn getCRS get the coordinate reference system of any \code{Spatial*} object
 #' @export
 
 setMethod(f = "getCRS",
@@ -564,7 +564,7 @@ setMethod(f = "setCRS",
             return(x)
           })
 
-#' @describeIn setCRS set the coordinate reference system of a \code{Raster*} object
+#' @describeIn setCRS set the coordinate reference system of any \code{Raster*} object
 #' @importFrom raster crs projectRaster
 #' @export
 
@@ -579,7 +579,7 @@ setMethod(f = "setCRS",
             return(x)
           })
 
-#' @describeIn setCRS set the coordinate reference system of a \code{Spatial*} object
+#' @describeIn setCRS set the coordinate reference system of any \code{Spatial*} object
 #' @importFrom raster crs
 #' @importFrom sp spTransform
 #' @export

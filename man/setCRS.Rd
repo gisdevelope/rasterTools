@@ -37,9 +37,9 @@ computed with the standard defined in the \code{rgdal} package.
 \itemize{
 \item \code{geom}: set the coordinate reference system of a \code{geom}
 
-\item \code{Raster}: set the coordinate reference system of a \code{Raster*} object
+\item \code{Raster}: set the coordinate reference system of any \code{Raster*} object
 
-\item \code{Spatial}: set the coordinate reference system of a \code{Spatial*} object
+\item \code{Spatial}: set the coordinate reference system of any \code{Spatial*} object
 
 \item \code{sf}: set the coordinate reference system of a \code{sf} object
 }}

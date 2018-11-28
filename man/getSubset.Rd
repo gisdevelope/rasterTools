@@ -3,15 +3,15 @@
 \docType{methods}
 \name{getSubset}
 \alias{getSubset}
-\alias{getSubset,geom,ANY-method}
-\alias{getSubset,sf,logical-method}
+\alias{getSubset,geom-method}
+\alias{getSubset,sf-method}
 \title{Get subset (generic)}
 \usage{
 getSubset(x, attr, coords, ...)
 
-\S4method{getSubset}{geom,ANY}(x, attr, coords)
+\S4method{getSubset}{geom}(x, attr, coords)
 
-\S4method{getSubset}{sf,logical}(x, attr, coords)
+\S4method{getSubset}{sf}(x, attr, coords)
 }
 \arguments{
 \item{x}{object to \code{subset}.}
@@ -29,8 +29,8 @@ getSubset(x, attr, coords, ...)
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{x = geom,attr = ANY}: get a subset of the vertices of a \code{geom} based on a numeric
+\item \code{geom}: get a subset of the vertices of a \code{geom} based on a numeric
 
-\item \code{x = sf,attr = logical}: get a subset of the vertices of a \code{sf} object based on a logical
+\item \code{sf}: get a subset of the vertices of a \code{sf} object based on a logical
 }}
 

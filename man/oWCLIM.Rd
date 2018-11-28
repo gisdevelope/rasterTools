@@ -11,8 +11,8 @@ oWCLIM(mask = NULL, variable = NULL, month = c(1:12),
 downloadWCLIM(file = NULL, localPath = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
-extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object of
+which the extent is the area of interest.}
 
 \item{variable}{[\code{character(.)}]\cr the climatic variable of interest;
 see Details.}

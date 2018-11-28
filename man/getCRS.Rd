@@ -31,9 +31,9 @@ Get the coordinate reference system (generic)
 \itemize{
 \item \code{geom}: get the coordinate reference system of a \code{geom}
 
-\item \code{Raster}: get the coordinate reference system of a \code{Raster*} object
+\item \code{Raster}: get the coordinate reference system of any \code{Raster*} object
 
-\item \code{Spatial}: get the coordinate reference system of a \code{Spatial*} object
+\item \code{Spatial}: get the coordinate reference system of any \code{Spatial*} object
 
 \item \code{sf}: get the coordinate reference system of a \code{sf} object
 }}

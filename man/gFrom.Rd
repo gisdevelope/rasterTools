@@ -7,8 +7,8 @@
 gFrom(input)
 }
 \arguments{
-\item{input}{[various]\cr the spatial object; currently defined are ojects of
-class \code{sp} and \code{sf}.}
+\item{input}{[\code{Spatial*} | \code{sf}]\cr the spatial object to build a
+\code{geom} from.}
 }
 \value{
 a \code{geom} of the type that comes closest to the type of the

@@ -586,8 +586,8 @@ gToSp <- function(geom, crs = NULL){
 #'
 #' See \code{\link{geom-class}} for details on differences between objects of
 #' class \code{geom} and other spatial classes.
-#' @param input [various]\cr the spatial object; currently defined are ojects of
-#'   class \code{sp} and \code{sf}.
+#' @param input [\code{Spatial*} | \code{sf}]\cr the spatial object to build a
+#'   \code{geom} from.
 #' @return a \code{geom} of the type that comes closest to the type of the
 #'   input.
 #' @examples

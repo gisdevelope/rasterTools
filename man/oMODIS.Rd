@@ -12,8 +12,8 @@ downloadMODIS(file = NULL, localPath = NULL, getDates = NULL,
   getFiles = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
-extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object of
+which the extent is the area of interest.}
 
 \item{period}{[\code{integerish(.)}]\cr year of interest (YYYY), optionally
 concatenated to day of the year (DDD), which must be between \code{001} and
