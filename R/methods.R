@@ -100,12 +100,88 @@ setMethod(f = "getTable",
 
 #' @describeIn getTable get the attribute table of a \code{Spatial*} object
 #' @importFrom tibble tibble as_tibble
+#' @importFrom dplyr bind_cols
 #' @export
 
 setMethod(f = "getTable",
           signature = "Spatial",
           definition = function(x){
+            
+            theData <- NULL
+            sourceClass <- class(x)[1]
+            prev <- 0
+            
+            if(sourceClass %in% c("SpatialPoints", "SpatialPointsDataFrame", "SpatialPixels", "SpatialPixelsDataFrame")){
+              type <- "point"
+              
+              if(sourceClass %in% "SpatialPointsDataFrame"){
+                theData <- tibble(fid = seq_along(x@coords[,1]), n = 1)
+                theData <- bind_cols(theData, x@data)
+              } else{
+                theData <- tibble(fid = seq_along(x@coords[,1]), n = 1)
+              }
 
+            } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
+              type <- "point"
+              
+              for(i in seq_along(x@coords)){
+                
+                if(sourceClass %in% "SpatialMultiPointsDataFrame"){
+                  tempData <- tibble(i, length(x@coords[[i]][,1]), x@data[i,])
+                  theData <- bind_rows(theData, tempData)
+                  otherNames <- colnames(x@data)
+                } else{
+                  tempData <- tibble(i, length(x@coords[[i]][,1]))
+                  theData <- bind_rows(theData, tempData)
+                  otherNames <- NULL
+                }
+              }
+              colnames(theData) <- c("fid", "n", otherNames)
+
+            } else if(sourceClass %in% c("SpatialLines", "SpatialLinesDataFrame")){
+              type <- "line"
+              
+              for(i in seq_along(x@lines)){
+                theLines <- x@lines[[i]]
+                
+                for(j in seq_along(theLines@Lines)){
+                  if(sourceClass %in% "SpatialLinesDataFrame"){
+                    tempData <- tibble(prev + j, dim(theLines@Lines[[j]]@coords)[1], x@data[i,])
+                    theData <- bind_rows(theData, tempData)
+                    otherNames <- colnames(x@data)
+                  } else{
+                    theData <- bind_rows(theData, tibble(prev + j, dim(theLines@Lines[[j]]@coords)[1]))
+                    otherNames <- NULL
+                  }
+                }
+                prev <- prev + length(theLines@Lines)
+                
+              }
+              colnames(theData) <- c("fid", "n", otherNames)
+
+            } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame", "SpatialGrid", "SpatialGridDataFrame")){
+              type <- "polygon"
+              
+              for(i in seq_along(x@polygons)){
+                thePolys <- x@polygons[[i]]
+                
+                for(j in seq_along(thePolys@Polygons)){
+                  if(sourceClass %in% "SpatialPolygonsDataFrame"){
+                    tempData <- tibble(prev + j, dim(thePolys@Polygons[[j]]@coords)[1], x@data[i,])
+                    theData <- bind_rows(theData, tempData)
+                    otherNames <- colnames(x@data)
+                  } else{
+                    theData <- bind_rows(theData, tibble(prev + j, dim(thePolys@Polygons[[j]]@coords)[1]-1))
+                    otherNames <- NULL
+                  } 
+                }
+                prev <- prev + length(thePolys@Polygons)
+                
+              }
+              colnames(theData) <- c("fid", "n", otherNames)
+
+            }
+            return(theData)
           })
 
 #' @describeIn getTable get the attribute table of a \code{sf} object
@@ -115,7 +191,13 @@ setMethod(f = "getTable",
 setMethod(f = "getTable",
           signature = "sf",
           definition = function(x){
-
+            fids <- NULL
+            for(i in 1:dim(x)[1]){
+              fids <- c(fids, length(x$geometry[[i]]))
+            }
+            temp <- tibble(fid = 1:dim(x)[1],
+                           n = fids)
+            bind_cols(temp, as_tibble(x))
           })
 
 #' @describeIn setTable set the attribute table of a \code{geom}
@@ -183,7 +265,7 @@ setMethod(f = "getCoords",
               
               theCoords <- bind_cols(vid = seq_along(x@coords[,1]), 
                                      fid = seq_along(x@coords[,1]),
-                                     as.tibble(x@coords))
+                                     as_tibble(x@coords))
               colnames(theCoords) <- c("vid", "fid", "x", "y")
               
             } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
@@ -240,13 +322,45 @@ setMethod(f = "getCoords",
 
 #' @describeIn getCoords get the table of coordinates of a \code{sf} object
 #' @importFrom tibble as_tibble
-#' @importFrom sf st_coordinates
+#' @importFrom sf st_geometry_type st_coordinates
 #' @export
 
 setMethod(f = "getCoords",
           signature = "sf",
           definition = function(x){
-            # temp <- st_coordinates(x)
+            
+            sourceClass <- st_geometry_type(x)
+            temp <- st_coordinates(x)
+            if(sourceClass %in% c("POINT", "MULTIPOINT")){
+              
+              theCoords <- tibble(fid = seq_along(temp[, 1]),
+                                  vid = seq_along(temp[, 1]), 
+                                  x = temp[,1],
+                                  y = temp[,2])
+
+            } else if(sourceClass %in% c("LINESTRING", "MULTILINESTRING")){
+              
+              theCoords <- tibble(fid = temp[,3],
+                                  vid = seq_along(temp[, 1]), 
+                                  x = temp[,1],
+                                  y = temp[,2])
+              
+            } else if(sourceClass %in% c("POLYGON", "MULTIPOLYGON")){
+
+              fids <- temp[,c(3:4)]
+              prev <- 0
+              tempFids <- NULL
+              for(i in seq_along(unique(fids[,2]))){
+                tempFids <- c(tempFids, fids[fids[,2] == i,][,1] + prev)
+                prev <- max(tempFids)
+              }
+              theCoords <- tibble(fid = tempFids,
+                                  vid = seq_along(temp[, 1]), 
+                                  x = temp[,1],
+                                  y = temp[,2])
+            
+            }
+            return(theCoords)
           })
 
 #' @describeIn getWindow get the reference window of a \code{geom}
@@ -342,25 +456,49 @@ setMethod(f = "getExtent",
 #' @export
 
 setMethod(f = "getSubset",
-          signature = c("geom", "numeric"),
-          definition = function(x, subset){
-            x@coords <- x@coords[subset,]
-            ids <- unique(x@coords$fid)
-            x@attr <- x@attr[x@attr$fid %in% ids,]
+          signature = c("geom"),
+          definition = function(x, attr, coords){
+            if(!missing(attr)){
+              if(is.logical(attr)){
+                stopifnot(dim(x@attr)[1] == length(attr))
+                matches <- attr
+              } else if(is.integer(attr)){
+                matches <- attr
+              } else if(is.character(attr)){
+                matches <- eval(parse(text = attr), envir = x@attr)
+              }
+              x@attr <- x@attr[matches,]
+              x@coords <- x@coords[x@coords$fid %in% x@attr$fid,]
+            }
+            if(!missing(coords)){
+              if(is.logical(coords)){
+                stopifnot(dim(x@coords)[1] == length(coords))
+                matches <- coords
+              } else if(is.integer(coords)){
+                matches <- coords
+              } else if(is.character(coords)){
+                matches <- eval(parse(text = coords), envir = x@coords)
+              }
+              x@coords <- x@coords[matches,]
+              x@attr <- x@attr[x@attr$fid %in% x@coords$fid]
+              
+              nVids <- sapply(unique(x@coords$fid), function(i){
+                length(x@coords$vid[x@coords$fid == i])
+              })
+              x@attr$n <- nVids
+            }
             return(x)
           })
 
-#' @describeIn getSubset get a subset of the vertices of a \code{geom} based on a logical
+#' @describeIn getSubset get a subset of the vertices of a \code{sf} object based on a logical
 #' @export
 
 setMethod(f = "getSubset",
-          signature = c("geom", "logical"),
-          definition = function(x, subset){
-            x@coords <- x@coords[which(subset),]
-            ids <- unique(x@coords$fid)
-            x@attr <- x@attr[x@attr$fid %in% ids,]
-            return(x)
+          signature = c("sf", "logical"),
+          definition = function(x, attr, coords){
+            x[attr,]
           })
+
 #' @describeIn getCRS get the coordinate reference system of a \code{geom}
 #' @export
 
