@@ -25,13 +25,13 @@ test_that("output has the correct number of vertices and polygons", {
                        y = c(-20, 20))
 
   output <- geomTiles(window = window, cells = c(8, 4), crs = projs$longlat)
-  expect_true(length(output@coords$id) == 128)
+  expect_true(length(output@coords$fid) == 128)
 
   output <- geomTiles(window = window, cells = c(8, 4), crs = projs$longlat, tiling = "hexagonal")
-  expect_true(length(output@coords$id) == 270)
+  expect_true(length(output@coords$fid) == 270)
 
   output <- geomTiles(window = window, cells = c(8, 4), crs = projs$longlat, centroids = TRUE)
-  expect_true(length(output@coords$id) == 32)
+  expect_true(length(output@coords$fid) == 32)
 })
 
 test_that("Error if arguments have wrong value", {

@@ -6,7 +6,7 @@ context("gScale")
 test_that("output is valid geometry", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   rectGeom <- geomPolygon(anchor = coords, extent = extent)
@@ -26,20 +26,20 @@ test_that("output is valid geometry", {
 test_that("output has correctly scaled values (only 'relative')", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   rectGeom <- geomPolygon(anchor = coords, extent = extent)
   rectGeomRel <- gScale(geom = rectGeom, to = "relative")
   
-  expect_true(all(rectGeomRel@coords[c(1, 2)] <= 1))
+  expect_true(all(rectGeomRel@coords[c("x", "y")] <= 1))
   expect_true(rectGeomRel@scale == "relative")
 })
 
 test_that("Error if arguments have wrong value", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   rectGeom <- geomPolygon(anchor = coords, extent = extent)

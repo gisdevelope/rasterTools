@@ -5,7 +5,7 @@ context("geomSquare")
 test_that("output is valid geometry", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
 
@@ -16,7 +16,7 @@ test_that("output is valid geometry", {
 test_that("output has the correct number of vertices", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
 
@@ -28,7 +28,7 @@ test_that("output has the correct number of vertices", {
 test_that("Error if arguments have wrong value", {
   coords <- data.frame(x = c(40, 70, 70, 50),
                        y = c(40, 40, 60, 70),
-                       id = 1)
+                       fid = 1)
   extent <- data.frame(x = c(0, 80),
                        y = c(0, 80))
 

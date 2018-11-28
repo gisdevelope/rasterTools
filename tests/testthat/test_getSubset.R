@@ -11,12 +11,8 @@ test_that("getSubset of a geom", {
   window <- data.frame(x = c(0, 80),
                        y = c(0, 80))
   aGeom <- geomPolygon(anchor = coords, window = window)
-  
-  output <- getSubset(x = aGeom, subset = 1)
-  expect_class(output, "geom")
-  expect_true(dim(output@coords)[1] == 1)
-  
-  output <- getSubset(x = aGeom, subset = aGeom@coords$fid == 2)
+
+  output <- getSubset(x = aGeom, coords = "fid == 2")
   expect_class(output, "geom")
   expect_true(dim(output@coords)[1] == 2)
 })
