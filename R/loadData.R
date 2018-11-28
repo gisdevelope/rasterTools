@@ -195,17 +195,17 @@ load_csv <- function(path){
   out <- read.csv(path)
   colnames(out) <- tolower(colnames(out))
   assertNames(names(out), must.include = c("x", "y"))
-  if(!"id" %in% names(out)){
-    theCoords <- tibble(id = seq_along(out$x), x = out$x, y = out$y)
+  if(!"vid" %in% names(out)){
+    theCoords <- tibble(vid = seq_along(out$x), x = out$x, y = out$y)
   } else{
-    theCoords <- tibble(id = out$id, x = out$x, y = out$y)
+    theCoords <- tibble(vid = out$vid, x = out$x, y = out$y)
   }
   if(!"fid" %in% names(out)){
     theCoords <- bind_cols(fid = seq_along(out$id), theCoords)
   } else{
     theCoords <- bind_cols(fid = out$fid, theCoords)
   }
-  theData <- out[which(!colnames(out) %in% c("x", "y", "id", "fid"))]
+  theData <- out[which(!colnames(out) %in% c("fid", "vid", "x", "y"))]
   theAttr <- tibble(fid = unique(theCoords$fid),
                     n = as.integer(table(theCoords$fid)))
   theAttr <- bind_cols(theAttr, theData)
