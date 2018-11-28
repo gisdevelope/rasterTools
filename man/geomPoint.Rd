@@ -10,7 +10,7 @@ geomPoint(anchor = NULL, window = NULL, template = NULL,
 \arguments{
 \item{anchor}{[\code{data.frame(1)}]\cr Object to derive the \code{geom}
 from. It must include column names \code{x}, \code{y} and optinal variables
-such as \code{id}; see Examples.}
+such as \code{fid}; see Examples.}
 
 \item{window}{[\code{data.frame(1)}]\cr in case the reference window deviates
 from the bounding box of \code{anchor} (minimum and maximum values),

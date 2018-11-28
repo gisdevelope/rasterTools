@@ -65,14 +65,7 @@ myDatasets <- list(list(operator = "oGFC", years = c(2005:2007)),
                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
                         layer = 2))
 
-# load and outline masks from a file with locations
-myLocations <- loadData(files = "locations.csv",
-                        localPath = system.file("test_datasets", package="rasterTools"))
-myMask <- gGroup(geom = myLocations, distance = 10000) \%>\%
-  geomRectangle() \%>\%
-  gToSp(crs = projs$laea)
-
 # grab the data
-myData <- obtain(data = myDatasets, mask = myMask)
+myData <- obtain(data = myDatasets, mask = rtGeoms$locations)
 }
 }

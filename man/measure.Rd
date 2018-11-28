@@ -4,7 +4,8 @@
 \alias{measure}
 \title{Measure gridded objects}
 \usage{
-measure(input = NULL, with = NULL, simplify = TRUE)
+measure(input = NULL, with = NULL, background = NA,
+  simplify = TRUE)
 }
 \arguments{
 \item{input}{[\code{RasterLayer(1)} | \code{list(.)} thereof]\cr an object or
@@ -15,6 +16,10 @@ but can also be assembled "by hand".}
 \item{with}{[\code{character(.)}]\cr algorithm in which the operators
 (landscape metrics) to measure spatial patterns are specified; see
 Examples.}
+
+\item{background}{[\code{numeric(.)}]\cr a set of values that are supposed to
+be regarded as background, i.e. that should not be considered for
+evaluating the equation(s).}
 
 \item{simplify}{[\code{logical(1)}]\cr should a "nice looking" output be
 created, where the resulting values are associated to the correct ids

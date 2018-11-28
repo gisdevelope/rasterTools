@@ -28,14 +28,14 @@ a \code{geom}.
 \examples{
 coords <- data.frame(x = c(40, 70, 70, 50),
                      y = c(40, 40, 60, 70),
-                     id = 1)
+                     fid = 1)
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
 aGeom <- geomPolygon(anchor = coords, window = window)
 
 aRaster <- gToRaster(geom = aGeom)
-visualise(gridded = aRaster, geom = aGeom, col = "deeppink")
+visualise(raster = aRaster, geom = aGeom, col = "deeppink")
 
 negRaster <- gToRaster(geom = aGeom, negative = TRUE)
-visualise(gridded = negRaster, geom = aGeom, col = "deeppink")
+visualise(raster = negRaster, geom = aGeom, col = "deeppink")
 }

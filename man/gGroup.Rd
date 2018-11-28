@@ -40,10 +40,10 @@ Only one of the three arguments \code{index}, \code{distance} or
 \examples{
 coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
                      y = c(40, 40, 60, 70, 10, 20, 40),
-                     id = c(1, 1, 1, 1, 2, 2, 2))
+                     fid = c(1, 1, 1, 1, 2, 2, 2))
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
-aGeom <- geomPolygon(anchor = coords, window = window, col = "goldenrod1", show = TRUE)
+aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 
 grouped <- gGroup(geom = aGeom, distance = 40)
 visualise(geom = grouped)

@@ -4,7 +4,7 @@
 \alias{gRotate}
 \title{Rotate geometries}
 \usage{
-gRotate(geom, angle, about = c(0, 0), id = NULL)
+gRotate(geom, angle, about = c(0, 0), fid = NULL)
 }
 \arguments{
 \item{geom}{[\code{geom}]\cr Object of class \code{\link{geom}}.}
@@ -15,7 +15,8 @@ gRotate(geom, angle, about = c(0, 0), id = NULL)
 \item{about}{[\code{numeric(2)}]\cr the point about which \code{geom} shall
 be rotated.}
 
-\item{id}{[\code{integerish(.)}]\cr vector of ids that should be rotated.}
+\item{fid}{[\code{integerish(.)}]\cr vector of features that should be
+rotated.}
 }
 \value{
 Rotated \code{geom}.
@@ -26,17 +27,16 @@ Rotate \code{geom}s by a certain angle about a center
 \examples{
 coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
                      y = c(40, 40, 60, 70, 10, 20, 40),
-                     id = c(1, 1, 1, 1, 2, 2, 2))
+                     fid = c(1, 1, 1, 1, 2, 2, 2))
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
-aGeom <- geomPolygon(anchor = coords, window = window,
-                     col = "blue", show = TRUE)
+aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 
 rotatedGeom <- gRotate(geom = aGeom, angle = 90, about = c(40, 40))
 visualise(geom = rotatedGeom)
 
 # rotate single objects
-rotatedTriangle <- gRotate(geom = aGeom, angle = -180, about = c(30, 40), id = 2)
+rotatedTriangle <- gRotate(geom = aGeom, angle = -180, about = c(30, 40), fid = 2)
 visualise(geom = rotatedTriangle, col = "goldenrod1")
 
 # rotate different objects about different centers by different angles
