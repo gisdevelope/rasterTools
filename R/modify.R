@@ -157,8 +157,10 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             theMask <- out[[which(names(out) == tempAlgorithm[[k]]$mask)]]
           } else{
             theMask <- get(tempAlgorithm[[k]]$mask, envir = .GlobalEnv)
-            if(dim(theMask)[3] > 1){
-              theMask <- theMask[[1]]
+            if(!testClass(theMask, "geom")){
+              if(dim(theMask)[3] > 1){
+                theMask <- theMask[[1]]
+              }
             }
           }
           tempAlgorithm[[k]]$mask <- theMask
