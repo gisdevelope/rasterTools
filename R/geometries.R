@@ -2,7 +2,7 @@
 #'
 #' @param anchor [\code{data.frame(1)}]\cr Object to derive the \code{geom}
 #'   from. It must include column names \code{x}, \code{y} and optinal variables
-#'   such as \code{id}; see Examples.
+#'   such as \code{fid}; see Examples.
 #' @template window
 #' @template template
 #' @param vertices [\code{integer(1)}]\cr number of vertices.
@@ -36,6 +36,8 @@
 #' }
 #' @importFrom checkmate testDataFrame assertNames testNull assert testClass
 #'   assertLogical assertIntegerish
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_cols
 #' @importFrom methods new
 #' @export
 
@@ -47,7 +49,7 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   if(anchorExists){
     assertDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
     colnames(anchor) <- tolower(colnames(anchor))
-    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("x", "y", "fid"))
+    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c("fid", "vid", "x", "y"))
   }
   windowExists <- !testNull(window)
   if(windowExists){
@@ -56,8 +58,8 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
     assertNames(names(window), must.include = c("x", "y"))
   } else{
     if(anchorExists){
-      window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
-                           y = c(min(anchor$y), max(anchor$y)))
+      window <- tibble(x = c(min(anchor$x), max(anchor$x)),
+                       y = c(min(anchor$y), max(anchor$y)))
     }
   }
   templateExists <- !testNull(template)
@@ -97,36 +99,36 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
   if(!anchorExists){
     message("please click the ", vertices, " vertices.")
     coords <- locate(raster = template, samples = vertices, panel = tempName, silent = TRUE, show = FALSE, ...)
-    window <- data.frame(x = c(0, dims[2]),
-                         y = c(0, dims[1]))
-    anchor <- data.frame(x = coords$x,
-                         y = coords$y)
+    window <- tibble(x = c(0, dims[2]),
+                     y = c(0, dims[1]))
+    anchor <- tibble(x = coords$x,
+                     y = coords$y)
   } else{
     if(!windowExists){
-      window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
-                           y = c(min(anchor$y), max(anchor$y)))
+      window <- tibble(x = c(min(anchor$x), max(anchor$x)),
+                       y = c(min(anchor$y), max(anchor$y)))
     }
   }
 
+  if(!"vid" %in% names(anchor)){
+    anchor <- bind_cols(vid = seq_along(anchor$x), anchor)
+  }
   if(!"fid" %in% names(anchor)){
-    anchor <- cbind(fid = seq_along(anchor$x), anchor)
+    anchor <- bind_cols(fid = seq_along(anchor$x), anchor)
   }
-  if(!"id" %in% names(anchor)){
-    anchor <- cbind(id = seq_along(anchor$x), anchor)
-  }
-  anchor <- anchor[c("id", "fid", "x", "y")]
+  anchor <- anchor[c("fid", "vid", "x", "y")]
   theGeom <- new(Class = "geom",
                  type = "point",
                  coords = anchor,
-                 attr = data.frame(fid = unique(anchor$fid), n = as.data.frame(table(anchor$fid))$Freq),
-                 window = data.frame(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
+                 attr = tibble(fid = unique(anchor$fid), n = as.data.frame(table(anchor$fid))$Freq),
+                 window = tibble(x = rep(window$x, each = 2), y = c(window$y, rev(window$y))),
                  scale = "absolute",
                  crs = as.character(projection),
                  history = list(paste0("geometry was created as 'point'")))
 
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = theGeom, new = FALSE, ...)
+      visualise(geom = theGeom, new = TRUE, ...)
     } else{
       visualise(geom = theGeom, ...)
     }
@@ -285,23 +287,25 @@ geomPoint <- function(anchor = NULL, window = NULL, template = NULL,
 #' }
 #' @importFrom checkmate testDataFrame assertNames testList testTRUE testNull
 #'   testClass assertIntegerish assertLogical
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_cols bind_rows
 #' @export
 
 geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features = 1,
                         vertices = NULL, regular = FALSE, show = FALSE, ...){
 
-  # anchor = pointsGeom; window = NULL; template = NULL; features = 1; vertices = NULL; regular = FALSE; show = TRUE
+  # anchor = NULL; window = NULL; template = input; features = 1; vertices = NULL; regular = FALSE; show = TRUE
   
   # check arguments
   anchorIsDF <- testDataFrame(anchor, types = "numeric", any.missing = FALSE, min.cols = 2)
   if(anchorIsDF){
     colnames(anchor) <- tolower(colnames(anchor))
-    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c( "id", "fid", "x", "y"))
-    if(!"id" %in% names(anchor)){
-      anchor <- cbind(id = seq_along(anchor$x), anchor)
+    assertNames(names(anchor), must.include = c("x", "y"), subset.of = c( "fid", "vid", "x", "y"))
+    if(!"vid" %in% names(anchor)){
+      anchor <- bind_cols(vid = seq_along(anchor$x), anchor)
     }
     if(!"fid" %in% names(anchor)){
-      anchor <- cbind(fid = 1, anchor)
+      anchor <- bind_cols(fid = rep(1, times = length(anchor$x)), anchor)
     } 
     features <- length(unique(anchor$fid))
   }
@@ -368,12 +372,12 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
         clicks <- vertices[i]
       }
       theClicks <- locate(raster = template, samples = clicks, panel = tempName, silent = TRUE, show = FALSE, ...)
-      window <- data.frame(x = c(0, dims[2]),
-                           y = c(0, dims[1]))
-      tempAnchor <- data.frame(id = i, 
-                               fid = i,
-                               x = theClicks$x,
-                               y = theClicks$y)
+      window <- tibble(x = c(0, dims[2]),
+                       y = c(0, dims[1]))
+      tempAnchor <- tibble(fid = i, 
+                           vid = 1:clicks,
+                           x = theClicks$x,
+                           y = theClicks$y)
 
     } else if(anchorIsGeom){
       if(!windowExists){
@@ -382,8 +386,8 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       tempAnchor <- anchor@coords[anchor@coords$fid == i,]
     } else if(anchorIsDF){
       if(!windowExists){
-        window <- data.frame(x = c(min(anchor$x), max(anchor$x)),
-                             y = c(min(anchor$y), max(anchor$y)))
+        window <- tibble(x = c(min(anchor$x), max(anchor$x)),
+                         y = c(min(anchor$y), max(anchor$y)))
       }
       tempAnchor <- anchor[anchor$fid == i, ]
     }
@@ -397,16 +401,16 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
       radius <- dist(tempAnchor[c(1:2),])
       cx <- tempAnchor$x[1] + radius*cos(rad(angles))
       cy <- tempAnchor$y[1] + radius*sin(rad(angles))
-      theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
+      theNodes <- tibble(fid = i, vid = 1:vertices, x = cx, y = cy)
       if(any(theNodes$x < min(window$x)) | any(theNodes$x > max(window$x)) | any(theNodes$y < min(window$y)) | any(theNodes$y > max(window$y))){
-        window <- data.frame(x = c(min(theNodes$x), max(theNodes$x)), y = c(min(theNodes$y), max(theNodes$y)))
+        window <- tibble(x = c(min(theNodes$x), max(theNodes$x)), y = c(min(theNodes$y), max(theNodes$y)))
       }
 
       temp <- new(Class = "geom",
                   type = "polygon",
                   coords = theNodes,
-                  attr = data.frame(fid = unique(theNodes$fid), n = length(unique(theNodes$id))),
-                  window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
+                  attr = tibble(fid = unique(theNodes$fid), n = length(unique(theNodes$vid))),
+                  window = tibble(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
                   history = list(paste0()))
@@ -418,39 +422,39 @@ geomPolygon <- function(anchor = NULL, window = NULL, template = NULL, features 
           visualise(geom = temp, ...)
         }
       }
-      nodes <- rbind(nodes, theNodes)
+      nodes <- bind_rows(nodes, theNodes)
       fids <- c(fids, length(unique(theNodes$fid)))
       
     } else{
 
-      theNodes <- tempAnchor[c("id", "fid", "x", "y")]
+      theNodes <- tempAnchor[c("fid", "vid", "x", "y")]
 
       temp <- new(Class = "geom",
                   type = "polygon",
                   coords = theNodes,
-                  attr = data.frame(fid = unique(theNodes$fid), n = length(unique(theNodes$id))),
-                  window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
+                  attr = tibble(fid = unique(theNodes$fid), n = length(unique(theNodes$vid))),
+                  window = tibble(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
                   scale = "absolute",
                   crs = as.character(projection),
                   history = list(paste0()))
       
       if(show){
         if(!any(names(listArgs()) == "new")){
-          visualise(geom = temp, new = FALSE, ...)
+          visualise(geom = temp, new = TRUE, ...)
         } else{
           visualise(geom = temp, ...)
         }
       }
-      nodes <- rbind(nodes, theNodes)
-      fids <- c(fids, length(unique(theNodes$id)))
+      nodes <- bind_rows(nodes, theNodes)
+      fids <- c(fids, length(unique(theNodes$vid)))
     }
 
   }
   out <- new(Class = "geom",
              type = "polygon",
              coords = nodes,
-             attr = data.frame(fid = unique(nodes$fid), n = fids),
-             window = data.frame(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
+             attr = tibble(fid = unique(nodes$fid), n = fids),
+             window = tibble(x = rep(c(min(window$x), max(window$x)), each = 2), y = c(min(window$y), max(window$y), max(window$y), min(window$y))),
              scale = "absolute",
              crs = as.character(projection),
              history = list(paste0("geometry was created as 'polygon'")))
@@ -482,7 +486,7 @@ geomTriangle <- function(anchor = NULL, window = NULL, template = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = theGeom, new = FALSE, ...)
+      visualise(geom = theGeom, new = TRUE, ...)
     } else{
       visualise(geom = theGeom, ...)
     }
@@ -521,7 +525,7 @@ geomSquare <- function(anchor = NULL, window = NULL, template = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = rotGeom, new = FALSE, ...)
+      visualise(geom = rotGeom, new = TRUE, ...)
     } else{
       visualise(geom = rotGeom, ...)
     }
@@ -560,13 +564,13 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
   for(i in unique(anchors$fid)){
     tempAnchor <- anchors[anchors$fid == i,]
     # get minimum and maximum value of x and y
-    tempAnchor <- data.frame(x = c(min(tempAnchor$x), max(tempAnchor$x)),
-                             y = c(min(tempAnchor$y), max(tempAnchor$y)),
-                             fid = i)
+    tempAnchor <- tibble(fid = i,
+                         x = c(min(tempAnchor$x), max(tempAnchor$x)),
+                         y = c(min(tempAnchor$y), max(tempAnchor$y)))
     # change positions of vertices, so that they follow a square
-    tempAnchor <- data.frame(x = rep(tempAnchor$x, each = 2),
-                             y = c(tempAnchor$y, rev(tempAnchor$y)),
-                             fid = i)
+    tempAnchor <- tibble(fid = i,
+                         x = rep(tempAnchor$x, each = 2),
+                         y = c(tempAnchor$y, rev(tempAnchor$y)))
     newCoords <- rbind(newCoords, tempAnchor)
   }
 
@@ -580,7 +584,7 @@ geomRectangle <- function(anchor = NULL, window = NULL, template = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = theGeom, new = FALSE, ...)
+      visualise(geom = theGeom, new = TRUE, ...)
     } else{
       visualise(geom = theGeom, ...)
     }
@@ -612,7 +616,7 @@ geomHexagon <- function(anchor = NULL, window = NULL, template = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = theGeom, new = FALSE, ...)
+      visualise(geom = theGeom, new = TRUE, ...)
     } else{
       visualise(geom = theGeom, ...)
     }
@@ -670,9 +674,9 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
       vertices <- 1
     }
     outType  <- type
-    anchor <- data.frame(id = 1:vertices,
-                         fid = 1:vertices,
-                         x = runif(vertices),
+    anchor <- tibble(fid = 1:vertices,
+                     vid = 1:vertices,
+                     x = runif(vertices),
                          y = runif(vertices))
   # } else if(type %in% c("line", "spline")){
   #   if(is.null(vertices)){
@@ -685,23 +689,23 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
       vertices <- 3
     }
     outType <- "polygon"
-    anchor <- data.frame(id = 1,
-                         fid = 1,
-                         x = runif(vertices),
-                         y = runif(vertices))
+    anchor <- tibble(fid = 1,
+                     vid = 1,
+                     x = runif(vertices),
+                     y = runif(vertices))
   }
 
   if(templateExists){
     window <- getExtent(template)
   } else{
-    window <- data.frame(x = c(0, 1),
-                         y = c(0, 1))
+    window <- tibble(x = c(0, 1),
+                     y = c(0, 1))
   }
   
   theGeom <- new(Class = "geom",
                  type = outType,
                  coords = anchor,
-                 attr = data.frame(fid = unique(anchor$id), n = 1),
+                 attr = tibble(fid = unique(anchor$fid), n = 1),
                  window = window,
                  scale = "relative",
                  crs = as.character(NA),
@@ -713,7 +717,7 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
   
   if(show){
     if(!any(names(listArgs()) == "new")){
-      visualise(geom = theGeom, new = FALSE, ...)
+      visualise(geom = theGeom, new = TRUE, ...)
     } else{
       visualise(geom = theGeom, ...)
     }
@@ -753,6 +757,8 @@ geomRand <- function(type = "point", template = NULL, vertices = NULL,
 #' #tiles_sentinel <- geomTiles(window = sntWindow, cells = c(), crs = projs$utm)
 #' @importFrom checkmate testDataFrame assertNames testClass testIntegerish
 #'   assertDataFrame assertNames assertCharacter assertSubset assertLogical
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_rows
 #' @export
 
 geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
@@ -785,9 +791,9 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     # determine centroids
     xCentroids <- seq(min(window$x) + xDist/2, max(window$x), xDist)
     yCentroids <- seq(min(window$y) + yDist/2, max(window$y), yDist)
-    cntrds <- data.frame(id = seq(1:(cells[1]*cells[2])),
-                         x = rep(xCentroids, times = length(yCentroids)),
-                         y = rep(yCentroids, each = length(xCentroids)))
+    cntrds <- tibble(fid = seq(1:(cells[1]*cells[2])),
+                     x = rep(xCentroids, times = length(yCentroids)),
+                     y = rep(yCentroids, each = length(xCentroids)))
 
     angle <- 360/4
     angles <- seq(from = 45, to = 360-angle+45, by = angle)
@@ -808,9 +814,9 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     yC1 <- seq(min(window$y), max(window$y), by = height)
     yC2 <- seq(min(window$y) + height/2, max(window$y), by = height)
 
-    cntrds <- data.frame(id = seq(1:(length(yC1)*length(xC1) + length(yC2)*length(xC2))),
-                         x = c(rep(xC1, times = length(yC1)), rep(xC2, times = length(yC2))),
-                         y = c(rep(yC1, each = length(xC1)), rep(yC2, each = length(xC2))))
+    cntrds <- tibble(fid = seq(1:(length(yC1)*length(xC1) + length(yC2)*length(xC2))),
+                     x = c(rep(xC1, times = length(yC1)), rep(xC2, times = length(yC2))),
+                     y = c(rep(yC1, each = length(xC1)), rep(yC2, each = length(xC2))))
 
     angle <- 360/6
     angles <- seq(from = 0, to = 360-angle, by = angle)
@@ -821,11 +827,11 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
 
   if(!centroids){
     nodes <- NULL
-    for(i in seq_along(cntrds$id)){
+    for(i in seq_along(cntrds$fid)){
       cx <- round(cntrds$x[i] + radius*cos(rad(angles)))
       cy <- round(cntrds$y[i] + radius*sin(rad(angles)))
-      theNodes <- data.frame(cbind(id = i, fid = i, x = cx, y = cy))
-      nodes <- rbind(nodes, theNodes)
+      theNodes <- tibble(fid = i, vid = 1:length(angles), x = cx, y = cy)
+      nodes <- bind_rows(nodes, theNodes)
     }
     theType <- "polygon"
   } else{
@@ -833,13 +839,13 @@ geomTiles <- function(window = NULL, cells = NULL, crs = NULL,
     theType <- "point"
   }
 
-  window <- data.frame(x = rep(window$x, each = 2),
-                       y = c(window$y, rev(window$y)))
+  window <- tibble(x = rep(window$x, each = 2),
+                   y = c(window$y, rev(window$y)))
 
   theTiles <- new(Class = "geom",
                   type = theType,
                   coords = nodes,
-                  attr = data.frame(fid = unique(nodes$id), n = 1),
+                  attr = tibble(fid = unique(nodes$fid), n = 1),
                   window = window,
                   scale = "absolute",
                   crs = as.character(projection),
