@@ -156,9 +156,9 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object. The extent of
-vertices that are part of the same group is used to subset the spatial
-information.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code> | <code>sf</code>]<br /> spatial object.
+The extent of vertices that are part of the same feature is used to subset
+the spatial information.</p></td>
     </tr>
     </table>
     
@@ -184,18 +184,23 @@ information.</p></td>
   specific <code>download*</code> functions manually, they are documented
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in <code>rtPaths</code> (see
-  <code><a href='setPaths.html'>setPaths</a></code>).</p>  
+  <code><a href='setPaths.html'>setPaths</a></code>).</p>
 <p>Recently supported datasets are</p><ul>
 <li><p>Global:</p><ul>
 <li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change</p></li>
-<li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS products</p></li>
+<li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS
+  products</p></li>
 <li><p><code><a href='oWCLIM.html'>oWCLIM</a></code>: Worldclim</p></li>
-<li><p><code><a href='oESALC.html'>oESALC</a></code>: ESA CCI land-cover</p></li>
+<li><p><code><a href='oESALC.html'>oESALC</a></code>:
+  ESA CCI land-cover</p></li>
 </ul></li>
 <li><p>European:</p><ul>
-<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover</p></li>
-<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Mammal occurence in the <em>Atlas of European Mammals</em></p></li>
-<li><p><code><a href='oEFTA.html'>oEFTA</a></code>: Tree presence and habitat suitability in the <em>European Atlas of Forest Tree Species</em></p></li>
+<li><p><code><a href='oCLC.html'>oCLC</a></code>:
+  Corine Land Cover</p></li>
+<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Mammal occurence in the
+  <em>Atlas of European Mammals</em></p></li>
+<li><p><code><a href='oEFTA.html'>oEFTA</a></code>: Tree presence
+  and habitat suitability in the <em>European Atlas of Forest Tree Species</em></p></li>
 </ul></li>
 </ul>
     

@@ -137,6 +137,7 @@
 <span class="co">#&gt; Loading required package: sp</span>
 <span class="kw">library</span>(rasterTools)
 <span class="co">#&gt; Hi, I am rasterTools 0.6 and I help you organise and compute spatial data!</span>
+<span class="co">#&gt; I don't know where your files are stored, please see '?setPaths' to create a suitable index.</span>
 
 coords &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">70</span>, <span class="dv">70</span>, <span class="dv">50</span>),
                      <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">70</span>),
@@ -153,8 +154,8 @@ window &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 #&gt; scale      : absolute
 #&gt; crs        : NA
 #&gt; attributes : 2  (fid, n)</code></pre>
-<p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> funciton. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
-<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to and from other spatial classes have been programmed (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
+<p>The main feature of this sort of “spatial” class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, <code>window</code>, which defines the frame within which it would be plotted. A wide range of “getters” and “setters” (for example <code><a href="../reference/getExtent.html">getExtent()</a></code> or <code><a href="../reference/setCRS.html">setCRS()</a></code>) have been defined as methods for <code>geom</code> and other spatial classes, in the latter case they are mostly a simple wrapper of the original <code>raster</code>, <code>sp</code> or <code>sf</code> function. The foreign methods have been defined for the sake of internal consistency and simplification.</p>
+<p>Additionally, several “tools” to modify the <code>geom</code> vertices and to transform the <code>geom</code> to and from other spatial classes are available (for example <code><a href="../reference/gRotate.html">gRotate()</a></code> or <code><a href="../reference/gToSp.html">gToSp()</a></code>) and this will be extended in the future.</p>
 </div>
 </div>
 <div id="example-workflow" class="section level1">
