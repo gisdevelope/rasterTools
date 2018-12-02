@@ -232,10 +232,14 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             # in case a mask has to be set and the mask contains several layers
             # (i.e. after segregating of the mask), assign the respective mask.
             if(!is.null(theMask)){
-              if(dim(theMask)[3] == dim(thisObj)[3]){
-                tempAlgorithm[[k]]$mask <- theMask[[l]]
+              if(testClass(theMask, "geom")){
+                tempAlgorithm[[k]]$mask <- theMask
               } else{
-                tempAlgorithm[[k]]$mask <- theMask[[1]]
+                if(dim(theMask)[3] == dim(thisObj)[3]){
+                  tempAlgorithm[[k]]$mask <- theMask[[l]]
+                } else{
+                  tempAlgorithm[[k]]$mask <- theMask[[1]]
+                }
               }
             }
             
@@ -244,8 +248,8 @@ modify <- function(input = NULL, by = NULL, sequential = FALSE, merge = FALSE,
             thisObj[[l]] <- modifiedObj
             
           }
-          newHistory <- paste0("in layers: ", modifiedObj@history[[length(modifiedObj@history)]])
-          thisObj@history <- c(thisObj@history, list(newHistory))
+          # newHistory <- paste0("in layers: ", modifiedObj@history[[length(modifiedObj@history)]])
+          # thisObj@history <- c(thisObj@history, list(newHistory))
           tempObjs[[i]] <- thisObj
           
         } else{
