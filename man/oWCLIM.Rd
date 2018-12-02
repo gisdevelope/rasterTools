@@ -6,7 +6,7 @@
 \title{Obtain global climate data}
 \usage{
 oWCLIM(mask = NULL, variable = NULL, month = c(1:12),
-  resolution = 0.5, ...)
+  resolution = 0.5)
 
 downloadWCLIM(file = NULL, localPath = NULL)
 }
@@ -23,12 +23,12 @@ be extracted.}
 \item{resolution}{[\code{numeric(1)}]\cr the spatial resolution in
 arc-minutes.}
 
-\item{...}{[various]\cr other arguments.}
-
 \item{file}{[\code{character(1)}]\cr the name of the file to download.}
 
 \item{localPath}{[\code{character(1)}]\cr the local path where files are
 supposed to be stored (i.e. on your harddisc).}
+
+\item{...}{[various]\cr other arguments.}
 }
 \description{
 Obtain data from the 'worldclim 2' \href{http://worldclim.org/}{dataset}

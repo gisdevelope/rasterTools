@@ -57,7 +57,7 @@
 #' @importFrom gdalUtils gdal_translate gdalwarp
 #' @export
 
-oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5, ...){
+oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0.5){
   
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
@@ -88,20 +88,21 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
 
   # transform crs of the mask to the dataset crs
   targetCRS <- getCRS(x = mask)
-  maskGeom <- geomRectangle(anchor = getExtent(x = mask))
-  maskGeom <- setCRS(x = maskGeom, crs = targetCRS)
-  maskExtent <- getExtent(maskGeom)
-  if(targetCRS != projs$longlat){
-    targetExtent <- getExtent(setCRS(x = maskGeom, crs = projs$longlat))
+  maskExtent <- getExtent(x = mask)
+  if(targetCRS != projs$sinu){
+    targetMask <- setCRS(x = mask, crs = projs$sinu)
   } else{
-    targetExtent <- getExtent(maskGeom)
+    targetMask <- mask
   } 
+  maskGeom <- geomRectangle(anchor = getExtent(x = targetMask))
+  maskGeom <- setCRS(x = maskGeom, crs = projs$sinu)
+  targetExtent <- getExtent(maskGeom)
   
   out <- stack()
   for(i in seq_along(variable)){
     
     history <- list()
-    blablabla(msg = paste0("I am handling the worldclim variable '", variable[i], "':"))
+    message(msg = paste0("I am handling the worldclim variable '", variable[i], "' ..."))
     fileName <- paste0("wc2.0_", tempRes, "_", variable[i], ".tif")
     fileExists <- testFileExists(paste0(paste0(rtPaths$worldclim$local, "/", fileName)))
     
@@ -109,26 +110,18 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
       downloadWCLIM(file = fileName,
                     localPath = rtPaths$worldclim$local)
     }
-    blablabla(paste0(" ... cropping WORLDCLIM to 'mask'"), ...)
-    tempObject <- gdal_translate(src_dataset = paste0(rtPaths$worldclim$local, "/", fileName),
-                                 dst_dataset = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
-                                 projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
-                                 output_Raster = TRUE)
+    tempObject <- gdalwarp(srcfile = paste0(rtPaths$worldclim$local, "/", fileName),
+                           dstfile = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
+                           s_srs = projs$longlat,
+                           t_srs = targetCRS,
+                           te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
+                           overwrite = TRUE,
+                           output_Raster = TRUE)
     
     history <- c(history, paste0("object loaded"))
     history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
-    
-    # reproject
-    if(targetCRS != projs$longlat){
+    if(targetCRS != projs$sinu){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      blablabla(paste0(" ... reprojecting target to '", crs_name))
-      tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
-                             dstfile = paste0(rtPaths$project, "/wclim_", variable[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), "_warped.tif"),
-                             s_srs = projs$longlat,
-                             t_srs = targetCRS,
-                             te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
-                             overwrite = TRUE,
-                             output_Raster = TRUE)
       history <- c(history, list(paste0("object reprojected to ", crs_name)))
     }
     
@@ -151,7 +144,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
                   year = "2017",
                   doi = "10.1002/joc.5086"
   )
-  blablabla()
+  message()
   
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
@@ -194,10 +187,10 @@ downloadWCLIM <- function(file = NULL, localPath = NULL){
   if(rtMD5$md5[which(rtMD5$file %in% downFile)] != tempMD5[[1]]){
     stop(paste0("the file '", downFile, "' in the directory '", localPath, "' may be damaged. See '?setMD5' for details."))
   } else{
-    blablabla(" ... MD5 checksum ok")
+    message(" ... MD5 checksum ok")
   }
   
-  blablabla(paste0(" ... unzipping the contents of '", downFile, "'"))
+  message(paste0(" ... unzipping the contents of '", downFile, "'"))
   unzip(paste0(localPath, "/", downFile), exdir = localPath)
   file.remove(c(paste0(localPath, "/", downFile), paste0(localPath, "/readme.txt")))
   
