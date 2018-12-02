@@ -534,7 +534,8 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
     })
     # values <- setNames(values, vals)
   } else{
-    values <- list(values(obj))
+    values <- values(obj)
+    values <- list(values[!is.na(values)])
     vals <- 1
   }
 
