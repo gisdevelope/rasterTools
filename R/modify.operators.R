@@ -828,7 +828,7 @@ rLess <- function(obj, thresh, background = NULL){
 #' visualise(raster = rMask(obj = input, mask = mask))
 #' }
 #' @importFrom checkmate assertClass
-#' @importFrom raster as.matrix raster extent crs crs<- xres yres colortable<-
+#' @importFrom raster as.matrix raster extent crs crs<- xres yres colortable<- mask
 #' @export
 
 rMask <- function(obj, mask = NULL, background = NULL){
@@ -838,7 +838,9 @@ rMask <- function(obj, mask = NULL, background = NULL){
   isRaster <- testClass(mask, "RasterLayer")
   isMatrix <- testClass(mask, "matrix")
   isGeom <- testClass(mask, "geom")
-  if(!isRaster & !isMatrix & !isGeom){
+  isSp <- testClass(mask, "Spatial")
+  isSf <- testClass(mask, "sf")
+  if(!isRaster & !isMatrix & !isGeom & !isSp & !isSf){
     stop("please provide a mask of the supported type.")
   }
   assertIntegerish(background, null.ok = TRUE)
@@ -853,13 +855,11 @@ rMask <- function(obj, mask = NULL, background = NULL){
   cltbl <- colortable(obj)
   
   if(isGeom){
-    coords <- mask@coords[c("x", "y")]
-    coords$x <- round((coords$x - ext@xmin)/xres(obj))
-    coords$y <- round((coords$y - ext@ymin)/yres(obj))
-    if(any(coords[dim(coords)[1],] != coords[1,])){
-      coords <- rbind(coords, coords[1,])
-    }
-    mask <- matInGeomC(mat = temp, geom = as.matrix(coords), negative = FALSE)
+    mask <- gToSp(geom = mask)
+    isSp <- TRUE
+  }
+  if(isSp | isSf){
+    out <- mask(x = obj, mask = mask)
   } else{
     if(isRaster){
       mask <- as.matrix(mask)
@@ -867,38 +867,38 @@ rMask <- function(obj, mask = NULL, background = NULL){
     if(!isBinaryC(mask)){
       stop("please provide a binary mask.")
     }
+    if(!all(dim(temp)==dim(mask))){
+      stop("please provide a mask of the same dimension as 'obj'.")
+    }
+    
+    # modify obj
+    temp[mask==0] <- background
+    out <- raster(temp,
+                  xmn = ext[1], xmx = ext[2], ymn = ext[3], ymx = ext[4],
+                  crs = target_crs)
+    
+    # assign attribute table
+    if(!is.null(rat)){
+      tempRat <- rat[rat$id %in% unique(values(out)),]
+      
+      out@data@isfactor <- TRUE
+      out@data@attributes <- list(tempRat)
+    }
+    
+    # assign colourtable
+    if(!length(cltbl) == 0){
+      colortable(out) <- cltbl
+    }
+    
+    # assign history
+    if(length(obj@history)==0){
+      history <- list(paste0("the object was loaded from memory"))
+    } else{
+      history <- obj@history
+    }
+    out@history <- c(history, list(paste0("the raster has been masked")))
     
   }
-  if(!all(dim(temp)==dim(mask))){
-    stop("please provide a mask of the same dimension as 'obj'.")
-  }
-
-  # modify obj
-  temp[mask==0] <- background
-  out <- raster(temp,
-                xmn = ext[1], xmx = ext[2], ymn = ext[3], ymx = ext[4],
-                crs = target_crs)
-  
-  # assign attribute table
-  if(!is.null(rat)){
-    tempRat <- rat[rat$id %in% unique(values(out)),]
-    
-    out@data@isfactor <- TRUE
-    out@data@attributes <- list(tempRat)
-  }
-  
-  # assign colourtable
-  if(!length(cltbl) == 0){
-    colortable(out) <- cltbl
-  }
-
-  # assign history
-  if(length(obj@history)==0){
-    history <- list(paste0("the object was loaded from memory"))
-  } else{
-    history <- obj@history
-  }
-  out@history <- c(history, list(paste0("the raster has been masked")))
 
   names(out) <- "masked"
 
