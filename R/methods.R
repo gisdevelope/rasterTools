@@ -462,7 +462,7 @@ setMethod(f = "getSubset",
               if(is.logical(attr)){
                 stopifnot(dim(x@attr)[1] == length(attr))
                 matches <- attr
-              } else if(is.integer(attr)){
+              } else if(is.numeric(attr)){
                 matches <- attr
               } else if(is.character(attr)){
                 matches <- eval(parse(text = attr), envir = x@attr)
@@ -474,7 +474,7 @@ setMethod(f = "getSubset",
               if(is.logical(coords)){
                 stopifnot(dim(x@coords)[1] == length(coords))
                 matches <- coords
-              } else if(is.integer(coords)){
+              } else if(is.numeric(coords)){
                 matches <- coords
               } else if(is.character(coords)){
                 matches <- eval(parse(text = coords), envir = x@coords)
