@@ -117,11 +117,7 @@ obtain <- function(data = NULL, mask = NULL){
     out <- c(out, list(temp_out))
 
   }
-  if(length(out) == 1){
-    out <- out[[1]]
-  } else{
-    out <- setNames(out, paste0("mask_", maskElements))
-  }
+  out <- setNames(out, paste0("mask_", maskElements))
   
   return(out)
 }

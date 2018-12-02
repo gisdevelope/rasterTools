@@ -10,7 +10,7 @@ test_that("obtain works", {
   
   output <- obtain(data = myDatasets, mask = rtGeoms$mask)
   expect_list(output, len = 1)
-  expect_names(names(output), must.include = c("clc"))
+  expect_names(names(output[[1]]), must.include = c("clc"))
 })
 
 test_that("obtain works also on a list of 'mask'", {
@@ -32,7 +32,7 @@ test_that("obtain works also on a Spatial* 'mask'", {
   
   output <- obtain(data = myDatasets, mask = rtGeoms$mask)
   expect_list(output, len = 1)
-  expect_names(names(output), must.include = c("clc"))
+  expect_names(names(output[[1]]), must.include = c("clc"))
 })
 
 test_that("Warning if operator does not exist", {
@@ -41,8 +41,8 @@ test_that("Warning if operator does not exist", {
                      list(operator = "oGFC", years = 2005))
   
   output <- obtain(data = myDatasets, mask = rtGeoms$mask)
-  expect_list(output, len = 2)
-  expect_names(names(output), must.include = c("clc", "gfc"))
+  expect_list(output[[1]], len = 2)
+  expect_names(names(output[[1]]), must.include = c("clc", "gfc"))
 })
 
 test_that("Error if arguments have wrong value", {
