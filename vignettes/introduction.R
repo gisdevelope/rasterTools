@@ -21,7 +21,6 @@ myDatasets <- list(list(operator = "oGFC", period = c(2006)),
                         layer = 2))
 
 ## ------------------------------------------------------------------------
-library(magrittr)
 myMask <- rtGeoms$mask
 
 ## ----eval=FALSE----------------------------------------------------------

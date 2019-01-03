@@ -89,7 +89,6 @@ Most of the different spatial datasets are available in a specific file format a
 Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask (of the class `geom`) to outline this area of interest:
 
 ```{r}
-library(magrittr)
 myMask <- rtGeoms$mask
 ```
 

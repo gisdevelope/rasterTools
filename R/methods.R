@@ -183,7 +183,7 @@ setMethod(f = "getCoords",
               
               theCoords <- bind_cols(vid = seq_along(x@coords[,1]), 
                                      fid = seq_along(x@coords[,1]),
-                                     as.tibble(x@coords))
+                                     as_tibble(x@coords))
               colnames(theCoords) <- c("vid", "fid", "x", "y")
               
             } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){

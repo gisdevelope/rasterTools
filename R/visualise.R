@@ -672,7 +672,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
 #' @param geom [\code{named list(.)}]\cr \code{line}, \code{fill},
 #'   \code{linetype}, \code{linewidth}, \code{pointsize} and \code{pointsymbol}
 #'   of a geom, \cr\cr scale [\code{named list(.)}]\cr \code{x =
-#'   'someParameter'} and \code{to = 'someAttribute'} to which to scale,
+#'   'someParameter'} and \code{to = 'someAttribute'} to which to scale
 #'   'someParameter' to.
 #' @param raster [ \code{named list(.)}]\cr \code{scale = 'someAttribute'} and
 #'   at least two \code{colours} to which to scale 'someAttribute' to.
