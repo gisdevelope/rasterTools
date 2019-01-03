@@ -87,8 +87,6 @@ Planned for future versions
 
 - in-R georeferencing.
 
-- more `Rcpp`, `gdal` and parallelisation.
-
 - new functions to simulate neutral and process oriented landscape models.
 
 - ...

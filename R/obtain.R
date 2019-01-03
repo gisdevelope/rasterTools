@@ -5,9 +5,9 @@
 #' @param data [\code{list(.)}]\cr algorithm in which the operators to load
 #'   spatial datasets are specified. Each \code{operator} is a list iteself and
 #'   includes the operator name and its arguments as sub-elements; see Examples.
-#' @param mask [\code{geom} | \code{Spatial*}]\cr spatial object. The extent of
-#'   vertices that are part of the same group is used to subset the spatial
-#'   information.
+#' @param mask [\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object.
+#'   The extent of vertices that are part of the same feature is used to subset
+#'   the spatial information.
 #' @details \code{obtain} expects a root directory in which an individual
 #'   directory for each dataset dwells, where in turn all the files of this
 #'   particular dataset are located. \code{rasterTools} provides a list of paths
@@ -19,20 +19,15 @@
 #'   nevertheless for those who are interested. In case an error occurs, it
 #'   might be necessary to specify new paths in \code{rtPaths} (see
 #'   \code{\link{setPaths}}).
-#'   
-#'   Recently supported datasets are \itemize{
-#'   \item Global: \itemize{
-#'      \item \code{\link{oGFC}}: Global Forest Change
-#'      \item \code{\link{oMODIS}}: MODIS products
-#'      \item \code{\link{oWCLIM}}: Worldclim
-#'      \item \code{\link{oESALC}}: ESA CCI land-cover
-#'   }
-#'   \item European: \itemize{
-#'      \item \code{\link{oCLC}}: Corine Land Cover
-#'      \item \code{\link{oEMMA}}: Mammal occurence in the \emph{Atlas of European Mammals}
-#'      \item \code{\link{oEFTA}}: Tree presence and habitat suitability in the \emph{European Atlas of Forest Tree Species}
-#'   }
-#'   }
+#'
+#'   Recently supported datasets are \itemize{ \item Global: \itemize{ \item
+#'   \code{\link{oGFC}}: Global Forest Change \item \code{\link{oMODIS}}: MODIS
+#'   products \item \code{\link{oWCLIM}}: Worldclim \item \code{\link{oESALC}}:
+#'   ESA CCI land-cover } \item European: \itemize{ \item \code{\link{oCLC}}:
+#'   Corine Land Cover \item \code{\link{oEMMA}}: Mammal occurence in the
+#'   \emph{Atlas of European Mammals} \item \code{\link{oEFTA}}: Tree presence
+#'   and habitat suitability in the \emph{European Atlas of Forest Tree Species}
+#'   } }
 #' @return A list of objects that is organised according to the stratification
 #'   in \code{data}. The first hierarchical level of the list contains all the
 #'   spatial units/masks. The second level contains an entry for each dataset
@@ -50,15 +45,8 @@
 #'                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
 #'                         layer = 2))
 #'
-#' # load and outline masks from a file with locations
-#' myLocations <- loadData(files = "locations.csv",
-#'                         localPath = system.file("test_datasets", package="rasterTools"))
-#' myMask <- gGroup(geom = myLocations, distance = 10000) %>%
-#'   geomRectangle() %>%
-#'   gToSp(crs = projs$laea)
-#' 
 #' # grab the data
-#' myData <- obtain(data = myDatasets, mask = myMask)
+#' myData <- obtain(data = myDatasets, mask = rtGeoms$locations)
 #' }
 #' @importFrom stats cutree dist hclust runif setNames
 #' @export
@@ -68,17 +56,11 @@ obtain <- function(data = NULL, mask = NULL){
   # check arguments
   assertList(data, types = "list", min.len = 1, any.missing = FALSE)
   assertNames(names(data[[1]]), must.include = "operator")
-  existsGeom <- testClass(mask, classes = "geom")
-  existsSp <- testClass(mask, classes = "SpatialPolygon")
-  existsSpDF <- testClass(mask, classes = "SpatialPolygonsDataFrame")
-  existsSpatial <- ifelse(c(existsSp | existsSpDF), TRUE, FALSE)
-  if(!existsGeom & !existsSpatial){
-    stop("please provide either a SpatialPolygon* or a geom to mask with.")
-  }
+  maskIsGeom <- testClass(mask, classes = "geom")
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   
-  if(existsSpatial){
-    mask <- gFrom(input = mask)
-  }
   theMasks <- mask
   out <- list()
 
@@ -118,10 +100,10 @@ obtain <- function(data = NULL, mask = NULL){
 
   # go through the defined operators and carry out a do.call for each of them
   # with the respective arguments
-  tabMasks <- getCoords(x = theMasks)
-  maskElements <- unique(tabMasks$fid)
+  tabMasks <- getTable(x = theMasks)
+  maskElements <- seq_along(tabMasks$fid)
   for(i in maskElements){
-    tempMask <- getSubset(x = theMasks, subset = tabMasks$fid == i)
+    tempMask <- getSubset(x = theMasks, attr = i)
 
     message(paste0("--> I am extracting information for mask ", i, ":\n"))
     temp_out <- lapply(
@@ -135,11 +117,7 @@ obtain <- function(data = NULL, mask = NULL){
     out <- c(out, list(temp_out))
 
   }
-  if(length(out) == 1){
-    out <- out[[1]]
-  } else{
-    out <- setNames(out, paste0("mask_", maskElements))
-  }
+  out <- setNames(out, paste0("mask_", maskElements))
   
   return(out)
 }

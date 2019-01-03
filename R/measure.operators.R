@@ -142,12 +142,12 @@ mArea <- function(obj, scale = "patch", unit = "cells", layer = NULL){
   if(scale == "landscape"){
 
     groups <- data.frame(landscape = 1)
-    values <- data.frame(cells = dim(mat)[1] * dim(mat)[2])
+    values <- data.frame(cells = length(mat[!is.na(mat)]))
 
   } else if(scale == "class"){
 
     temp <- mat
-    temp[is.na(temp)] <- 0
+    # temp[is.na(temp)] <- 0
 
     # count...
     values <- countCellsC(mat = temp)
@@ -382,7 +382,7 @@ mPerimeter <- function(obj, scale = "patch", unit = "cells", layer = NULL){
   if(scale == "class"){
 
     temp <- mat
-    temp[is.na(temp)] <- 0
+    # temp[is.na(temp)] <- 0
 
     # count...
     values <- countEdgesC(mat = temp)
@@ -534,8 +534,9 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
     })
     # values <- setNames(values, vals)
   } else{
-    values <- list(values(obj))
-    vals <- NA
+    values <- values(obj)
+    values <- list(values[!is.na(values)])
+    vals <- 1
   }
 
   out <- NULL

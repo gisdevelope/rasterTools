@@ -66,12 +66,15 @@ setGeneric(name = "getExtent",
 #'
 #' \code{getSubset} returns the subsetted object.
 #' @param x object to \code{subset}.
-#' @param subset [\code{integerish(.)} | \code{logical(.)}]\cr rows to keep.
+#' @param attr [\code{integerish(.)} | \code{logical(.)} |
+#'   \code{character(1)}]\cr rows of the attribute table to keep.
+#' @param coords [\code{integerish(.)} | \code{logical(.)} |
+#'   \code{character(1)}]\cr coordinates to keep.
 #' @param ... other arguments.
 #' @export
 
 setGeneric(name = "getSubset",
-           def = function(x, subset, ...){
+           def = function(x, attr, coords, ...){
              standardGeneric("getSubset")
            })
 
@@ -114,8 +117,3 @@ setGeneric(name = "getHistory",
            def = function(x, ...){
              standardGeneric("getHistory")
            })
-#
-# setGeneric(name = "setWindow",
-#            def = function(x, ...){
-#              standardGeneric("setWindow")
-#            })

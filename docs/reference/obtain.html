@@ -156,9 +156,9 @@ includes the operator name and its arguments as sub-elements; see Examples.</p><
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object. The extent of
-vertices that are part of the same group is used to subset the spatial
-information.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code> | <code>sf</code>]<br /> spatial object.
+The extent of vertices that are part of the same feature is used to subset
+the spatial information.</p></td>
     </tr>
     </table>
     
@@ -184,18 +184,23 @@ information.</p></td>
   specific <code>download*</code> functions manually, they are documented
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in <code>rtPaths</code> (see
-  <code><a href='setPaths.html'>setPaths</a></code>).</p>  
+  <code><a href='setPaths.html'>setPaths</a></code>).</p>
 <p>Recently supported datasets are</p><ul>
 <li><p>Global:</p><ul>
 <li><p><code><a href='oGFC.html'>oGFC</a></code>: Global Forest Change</p></li>
-<li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS products</p></li>
+<li><p><code><a href='oMODIS.html'>oMODIS</a></code>: MODIS
+  products</p></li>
 <li><p><code><a href='oWCLIM.html'>oWCLIM</a></code>: Worldclim</p></li>
-<li><p><code><a href='oESALC.html'>oESALC</a></code>: ESA CCI land-cover</p></li>
+<li><p><code><a href='oESALC.html'>oESALC</a></code>:
+  ESA CCI land-cover</p></li>
 </ul></li>
 <li><p>European:</p><ul>
-<li><p><code><a href='oCLC.html'>oCLC</a></code>: Corine Land Cover</p></li>
-<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Mammal occurence in the <em>Atlas of European Mammals</em></p></li>
-<li><p><code><a href='oEFTA.html'>oEFTA</a></code>: Tree presence and habitat suitability in the <em>European Atlas of Forest Tree Species</em></p></li>
+<li><p><code><a href='oCLC.html'>oCLC</a></code>:
+  Corine Land Cover</p></li>
+<li><p><code><a href='oEMMA.html'>oEMMA</a></code>: Mammal occurence in the
+  <em>Atlas of European Mammals</em></p></li>
+<li><p><code><a href='oEFTA.html'>oEFTA</a></code>: Tree presence
+  and habitat suitability in the <em>European Atlas of Forest Tree Species</em></p></li>
 </ul></li>
 </ul>
     
@@ -210,15 +215,8 @@ information.</p></td>
                    <span class='fu'>list</span>(<span class='kw'>operator</span> <span class='kw'>=</span> <span class='st'>"oMODIS"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"mod17a3"</span>, <span class='kw'>period</span> <span class='kw'>=</span> <span class='fl'>2006</span>,
                         <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>2</span>))
 
-<span class='co'># load and outline masks from a file with locations</span>
-<span class='no'>myLocations</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(<span class='kw'>files</span> <span class='kw'>=</span> <span class='st'>"locations.csv"</span>,
-                        <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"test_datasets"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rasterTools"</span>))
-<span class='no'>myMask</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gGroup.html'>gGroup</a></span>(<span class='kw'>geom</span> <span class='kw'>=</span> <span class='no'>myLocations</span>, <span class='kw'>distance</span> <span class='kw'>=</span> <span class='fl'>10000</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='geomPolygon.html'>geomRectangle</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='gToSp.html'>gToSp</a></span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>projs</span>$<span class='no'>laea</span>)
-
 <span class='co'># grab the data</span>
-<span class='no'>myData</span> <span class='kw'>&lt;-</span> <span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>myDatasets</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>myMask</span>)
+<span class='no'>myData</span> <span class='kw'>&lt;-</span> <span class='fu'>obtain</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>myDatasets</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='no'>rtGeoms</span>$<span class='no'>locations</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

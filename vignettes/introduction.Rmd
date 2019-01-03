@@ -62,9 +62,9 @@ window <- data.frame(x = c(0, 80),
 (aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE))
 ```
 
-The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` funciton. The foreign methods have been defined for the sake of internal consistency and simplification.
+The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` function. The foreign methods have been defined for the sake of internal consistency and simplification.
 
-Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to and from other spatial classes have been programmed (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
+Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to and from other spatial classes are available (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
 
 
 # Example workflow

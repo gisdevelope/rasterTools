@@ -33,7 +33,7 @@ Get the attribute table (generic)
 
 \item \code{RasterLayer}: get the attribute table of a \code{RasterLayer}
 
-\item \code{Spatial}: get the attribute table of a \code{Spatial*} object
+\item \code{Spatial}: get the attribute table of any \code{Spatial*} object
 
 \item \code{sf}: get the attribute table of a \code{sf} object
 }}

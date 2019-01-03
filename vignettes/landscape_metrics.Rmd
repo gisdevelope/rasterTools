@@ -366,7 +366,7 @@ with $G_{ii}$ = [like Adjacencies](#mAdjacency) based on double count, $G_{ik}$ 
 
     list(g_ii = list(operator = "mAdjacency"),
          g_ik = list(operator = "mAdjacency", type = "pairedSum"),
-         mPLA = "(g_ii / g_ik * 100")
+         mPLA = "g_ii / g_ik * 100")
 
 Unit: $\%$
 

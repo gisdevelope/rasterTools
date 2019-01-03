@@ -65,8 +65,9 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(2000:2014)))
   assertLogical(keepRaw)
@@ -87,10 +88,10 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
             "#61883F", "#5F863D", "#5D853B", "#5C8439", "#5A8237", "#588135",
             "#577F33", "#557E30", "#537D2E", "#517B2C", "#507A2A", "#4E7928",
             "#4C7726", "#4A7624", "#497422", "#47731F", "#45721D", "#43701B",
-            "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 154))
+            "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 155))
 
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
+  if(maskIsSp){
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)
@@ -112,24 +113,24 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
   # determine tiles of interest
   tabGFC <- getCoords(x = tiles_gfc)
   tabMask <- getCoords(x = mask)
-  ids <- unique(tabGFC$id)
+  ids <- unique(tabGFC$fid)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
-    temp <- tabGFC[tabGFC$id == ids[i],]
+    temp <- tabGFC[tabGFC$fid == ids[i],]
     xMatch <- c(xMatch, ifelse(any(tabMask$x < max(temp$x)) & any(tabMask$x > min(temp$x)), TRUE, FALSE))
     yMatch <- c(yMatch, ifelse(any(tabMask$y < max(temp$y)) & any(tabMask$y > min(temp$y)), TRUE, FALSE))
   }
   tiles <- xMatch & yMatch
-  myTiles <- getSubset(x = tiles_gfc, subset = tabGFC$id == ids[tiles])
+  myTiles <- getSubset(x = tiles_gfc, attr = tiles)
 
   layerNames <- c("treecover2000", "loss", "gain", "lossyear", "datamask")
   allObjects <- NULL
 
   tabTiles <- getCoords(x = myTiles)
   # go through all selected tiles and subset them with the mask
-  for (i in unique(tabTiles$id)){
-    min_x <- min(tabTiles$x[tabTiles$id == i])
-    max_y <- max(tabTiles$y[tabTiles$id == i])
+  for (i in unique(tabTiles$fid)){
+    min_x <- min(tabTiles$x[tabTiles$fid == i])
+    max_y <- max(tabTiles$y[tabTiles$fid == i])
 
     if(min_x < 0){
       easting <- paste0(sprintf('%03i', abs(min_x)), 'W')

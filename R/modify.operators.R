@@ -608,7 +608,7 @@ rErode <- function(obj, kernel = NULL){
 
   # check arguments
   assertClass(obj, "RasterLayer")
-  assertMatrix(kernel, nrows = 3, ncols = 3, null.ok = TRUE)
+  assertMatrix(kernel, mode = "integerish", all.missing = FALSE, null.ok = TRUE)
   if(is.null(kernel)) kernel <- matrix(c(0, 1, 0, 1, 1, 1, 0, 1, 0), 3, 3)
 
   mat <- as.matrix(obj)
@@ -800,9 +800,10 @@ rLess <- function(obj, thresh, background = NULL){
 #' Select cells of a raster based on a mask
 #'
 #' @template obj
-#' @param mask [\code{RasterLayer(1)} | \code{matrix(1)}]\cr Binary object of
-#'   the same dimension as \code{obj} where the cells that should be retained
-#'   have the value 1 and all other cells the value 0.
+#' @param mask [\code{RasterLayer(1)} | \code{matrix(1)} | \code{geom(1)}]\cr
+#'   Either binary object of the same dimension as \code{obj} where the cells
+#'   that should be retained have the value 1 and all other cells the value 0 or\cr
+#'   \code{geom} where values inside the geom should be retained.
 #' @template background
 #' @return A \code{RasterLayer} of the same dimensions as \code{obj}, in which
 #'   all cells with value 0 in the mask have been set to \code{NA} and all other
@@ -827,7 +828,7 @@ rLess <- function(obj, thresh, background = NULL){
 #' visualise(raster = rMask(obj = input, mask = mask))
 #' }
 #' @importFrom checkmate assertClass
-#' @importFrom raster as.matrix raster extent crs crs<-
+#' @importFrom raster as.matrix raster extent crs crs<- xres yres colortable<- mask
 #' @export
 
 rMask <- function(obj, mask = NULL, background = NULL){
@@ -836,40 +837,68 @@ rMask <- function(obj, mask = NULL, background = NULL){
   assertClass(obj, "RasterLayer")
   isRaster <- testClass(mask, "RasterLayer")
   isMatrix <- testClass(mask, "matrix")
-  if(!isRaster & !isMatrix){
+  isGeom <- testClass(mask, "geom")
+  isSp <- testClass(mask, "Spatial")
+  isSf <- testClass(mask, "sf")
+  if(!isRaster & !isMatrix & !isGeom & !isSp & !isSf){
     stop("please provide a mask of the supported type.")
   }
   assertIntegerish(background, null.ok = TRUE)
   if(is.null(background)){
     background <- NA
   }
-
-  if(isRaster){
-    mask <- as.matrix(mask)
-  }
-  if(!isBinaryC(mask)){
-    stop("please provide a binary mask.")
-  }
-
+  
   temp <- as.matrix(obj)
   ext <- extent(obj)
   target_crs <- crs(obj)
-
-  if(!all(dim(temp)==dim(mask))){
-    stop("please provide a mask of the same dimension as 'obj'.")
+  rat <- levels(obj)[[1]]
+  cltbl <- colortable(obj)
+  
+  if(isGeom){
+    mask <- gToSp(geom = mask)
+    isSp <- TRUE
   }
-
-  temp[mask==0] <- background
-  out <- raster(temp,
-                xmn = ext[1], xmx = ext[2], ymn = ext[3], ymx = ext[4],
-                crs = target_crs)
-
-  if(length(obj@history)==0){
-    history <- list(paste0("the object was loaded from memory"))
+  if(isSp | isSf){
+    out <- mask(x = obj, mask = mask)
   } else{
-    history <- obj@history
+    if(isRaster){
+      mask <- as.matrix(mask)
+    }
+    if(!isBinaryC(mask)){
+      stop("please provide a binary mask.")
+    }
+    if(!all(dim(temp)==dim(mask))){
+      stop("please provide a mask of the same dimension as 'obj'.")
+    }
+    
+    # modify obj
+    temp[mask==0] <- background
+    out <- raster(temp,
+                  xmn = ext[1], xmx = ext[2], ymn = ext[3], ymx = ext[4],
+                  crs = target_crs)
+    
+    # assign attribute table
+    if(!is.null(rat)){
+      tempRat <- rat[rat$id %in% unique(values(out)),]
+      
+      out@data@isfactor <- TRUE
+      out@data@attributes <- list(tempRat)
+    }
+    
+    # assign colourtable
+    if(!length(cltbl) == 0){
+      colortable(out) <- cltbl
+    }
+    
+    # assign history
+    if(length(obj@history)==0){
+      history <- list(paste0("the object was loaded from memory"))
+    } else{
+      history <- obj@history
+    }
+    out@history <- c(history, list(paste0("the raster has been masked")))
+    
   }
-  out@history <- c(history, list(paste0("the raster has been masked")))
 
   names(out) <- "masked"
 
@@ -1735,7 +1764,7 @@ rSubstitute <- function(obj, old = NULL, new = NULL){
   assertClass(obj, "RasterLayer")
   isFactor <- obj@data@isfactor
   assertIntegerish(old, any.missing = FALSE, min.len = 1)
-  assertIntegerish(new, any.missing = FALSE, min.len = 1)
+  assertIntegerish(new, min.len = 1)
 
   if(length(old)!=length(new)){
     newValues <- rep(new, length.out = length(old))

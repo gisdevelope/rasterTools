@@ -34,9 +34,9 @@ Get the extent (generic)
 \itemize{
 \item \code{geom}: get the bounding box of a \code{geom}
 
-\item \code{Raster}: get the bounding box of a \code{Raster*} object
+\item \code{Raster}: get the bounding box of any \code{Raster*} object
 
-\item \code{Spatial}: get the bounding box of a \code{Spatial*} object
+\item \code{Spatial}: get the bounding box of aany \code{Spatial*} object
 
 \item \code{sf}: get the bounding box of a \code{sf} object
 

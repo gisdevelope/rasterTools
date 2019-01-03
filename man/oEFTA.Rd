@@ -10,8 +10,8 @@ oEFTA(mask = NULL, species = NULL, type = "rpp")
 downloadEFTA(file = NULL, localPath = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
-extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object of
+which the extent is the area of interest.}
 
 \item{species}{[\code{character(.)}]\cr name(s) of species to get data for.
 Can be abbreviated if a \code{\link{catalog}} is provided.}

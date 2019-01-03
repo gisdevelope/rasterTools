@@ -5,7 +5,7 @@ context("gGroup")
 test_that("output is valid geometry", {
   input <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
                       y = c(40, 40, 60, 70, 10, 20, 40),
-                      id = 1)
+                      fid = 1)
   extent = data.frame(x = c(0, 80),
                       y = c(0, 80))
   aGeom <- geomPolygon(anchor = input, extent = extent)
@@ -41,7 +41,7 @@ test_that("output has different values (fid) than input", {
 test_that("Error if arguments have wrong value", {
   input <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
                       y = c(40, 40, 60, 70, 10, 20, 40),
-                      id = 1)
+                      fid = 1)
   extent = data.frame(x = c(0, 80),
                       y = c(0, 80))
   aGeom <- geomPolygon(anchor = input, extent = extent)

@@ -28,7 +28,7 @@ Get the table of coordinates (generic)
 \itemize{
 \item \code{geom}: get the table of coordinates of a \code{geom}
 
-\item \code{Spatial}: get the table of coordinates of a \code{Spatial*} object
+\item \code{Spatial}: get the table of coordinates of any \code{Spatial*} object
 
 \item \code{sf}: get the table of coordinates of a \code{sf} object
 }}

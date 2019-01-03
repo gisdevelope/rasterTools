@@ -1,6 +1,7 @@
 library(checkmate)
 library(testthat)
 library(sp)
+library(sf)
 context("gFrom")
 
 
@@ -34,7 +35,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "point")
-  expect_true(length(unique(output@coords$id)) == 3)
+  expect_true(length(unique(output@coords$fid)) == 3)
   
   # test 'SpatialMultiPointsDataFrame'
   input <- SpatialMultiPointsDataFrame(list(cl1, cl2, cl3), data = data.frame(a = 1:3))
@@ -51,7 +52,7 @@ test_that("transform from 'Spatial*", {
   output <- gFrom(input)
   expect_class(output, "geom")
   expect_true(output@type == "line")
-  expect_true(length(unique(output@coords$id)) == 2)
+  expect_true(length(unique(output@coords$fid)) == 2)
   
   # test 'SpatialLinesDataFrame'
   input <- SpatialLinesDataFrame(input, data = data.frame(a = 1:2), match.ID = FALSE)
@@ -77,11 +78,13 @@ test_that("transform from 'Spatial*", {
   expect_true(output@type == "polygon")
 
   # test 'SpatialPolygonsDataFrame'
+  input <- SpatialPolygonsDataFrame(input, data = data.frame(a = 1:3), match.ID = FALSE)
   
-  # output <- gFrom(input)
-  # expect_class(output, "geom")
-  # expect_true(output@type == "")
-  
+  output <- gFrom(input)
+  expect_class(output, "geom")
+  expect_true(output@type == "polygon")
+  expect_data_frame(getTable(output), nrows = 4, ncols = 3)
+
   # test 'SpatialGrid'
   
   # output <- gFrom(input)
@@ -105,6 +108,66 @@ test_that("transform from 'Spatial*", {
   # output <- gFrom(input)
   # expect_class(output, "geom")
   # expect_true(output@type == "")
+})
+
+test_that("transform from sf", {
+  # test POINT
+  pt <- st_sfc(st_point(x = c(1, 2)))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- pt
+  
+  output <- gFrom(input)
+  
+  # test MULTIPOINT
+  pts = matrix(data = 1:10, ncol = 2)
+  mp <- st_sfc(st_multipoint(pts))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- mp
+  
+  output <- gFrom(input)
+  
+  # test LINESTRING
+  pts = matrix(1:10, ncol = 2)
+  ls = st_sfc(st_linestring(pts))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- ls
+  
+  output <- gFrom(input)
+  
+  # test MULTILINESTRING
+  outer <- matrix(c(0,0,10,0,10,10,0,10,0,0), ncol = 2, byrow = TRUE)
+  hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = TRUE)
+  hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5), ncol = 2, byrow = TRUE)
+  pts <- list(outer, hole1, hole2)
+  ml <- st_sfc(st_multilinestring(pts))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- ml
+  
+  
+  output <- gFrom(input)
+  
+  # test POLYGON
+  outer <- matrix(c(0,0,10,0,10,10,0,10,0,0), ncol = 2, byrow = TRUE)
+  hole1 <- matrix(c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = TRUE)
+  hole2 <- matrix(c(5,5,5,6,6,6,6,5,5,5), ncol = 2, byrow = TRUE)
+  pts <- list(outer, hole1, hole2)
+  pg <- st_sfc(st_polygon(pts))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- pg
+  
+  output <- gFrom(input)
+  
+  # test MULTIPOLYGON
+  pol1 <- list(outer, hole1, hole2)
+  pol2 <- list(outer + 12, hole1 + 12)
+  pol3 <- list(outer + 24)
+  mp <- list(pol1,pol2,pol3)
+  mp <- st_sfc(st_multipolygon(mp))
+  input <- data.frame(bla = 1)
+  st_geometry(input) <- pg
+  
+  output <- gFrom(input)
+  
 })
 
 test_that("output has coordinate reference system, if set", {

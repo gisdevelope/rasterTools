@@ -7,8 +7,8 @@
 oCLC(mask = NULL, years = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
-extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object of
+which the extent is the area of interest.}
 
 \item{years}{[\code{integerish(.)}]\cr year(s) for which CLC data should be
 extracted; see Details.}

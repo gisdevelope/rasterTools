@@ -7,12 +7,8 @@
 gFrom(input)
 }
 \arguments{
-\item{input}{[various]\cr the spatial object; currently defined are ojects of
-class \code{sp} and \code{sf}.}
-
-\item{window}{[\code{data.frame(1)}]\cr reference window, i.e. minimum and
-maximum values of the \code{x}- and \code{y}-dimension within which the
-\code{geom} should dwell.}
+\item{input}{[\code{Spatial*} | \code{sf}]\cr the spatial object to build a
+\code{geom} from.}
 }
 \value{
 a \code{geom} of the type that comes closest to the type of the

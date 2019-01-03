@@ -10,8 +10,8 @@ oESALC(mask = NULL, years = NULL, assertQuality = TRUE, ...)
 downloadESALC(file = NULL, localPath = NULL)
 }
 \arguments{
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object of which the
-extent is the area of interest.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object of
+which the extent is the area of interest.}
 
 \item{years}{[\code{integerish(.)}]\cr year(s) for which ESA CCI land-cover
 data should be extracted; see Details.}

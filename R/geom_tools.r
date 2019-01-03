@@ -22,14 +22,16 @@
 #' @examples
 #' coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
 #'                      y = c(40, 40, 60, 70, 10, 20, 40),
-#'                      id = c(1, 1, 1, 1, 2, 2, 2))
+#'                      fid = c(1, 1, 1, 1, 2, 2, 2))
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
-#' aGeom <- geomPolygon(anchor = coords, window = window, col = "goldenrod1", show = TRUE)
+#' aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 #'
 #' grouped <- gGroup(geom = aGeom, distance = 40)
 #' visualise(geom = grouped)
 #' @importFrom checkmate testList assertNames assertDataFrame
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_cols
 #' @importFrom methods new
 #' @importFrom stats kmeans
 #' @export
@@ -60,7 +62,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
     newId <- temp$cluster
   }
   
-  temp <- cbind(toGroup, id = coords$id, fid = newId)
+  temp <- bind_cols(fid = newId, vid = coords$vid, toGroup)
   temp <- temp[order(temp$fid),]
   if(geom@type == "point"){
     vertices <- as.integer(table(newId))
@@ -71,7 +73,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
   out <- new(Class = "geom",
              type = geom@type,
              coords = temp,
-             attr = data.frame(fid = unique(newId), n = vertices),
+             attr = tibble(fid = unique(newId), n = vertices),
              window = geom@window,
              scale = geom@scale,
              crs = geom@crs,
@@ -88,22 +90,22 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
 #'   \code{geom} shall be rotated.
 #' @param about [\code{numeric(2)}]\cr the point about which \code{geom} shall
 #'   be rotated.
-#' @param id [\code{integerish(.)}]\cr vector of ids that should be rotated.
+#' @param fid [\code{integerish(.)}]\cr vector of features that should be
+#'   rotated.
 #' @return Rotated \code{geom}.
 #' @examples
 #' coords <- data.frame(x = c(30, 60, 60, 40, 10, 40, 20),
 #'                      y = c(40, 40, 60, 70, 10, 20, 40),
-#'                      id = c(1, 1, 1, 1, 2, 2, 2))
+#'                      fid = c(1, 1, 1, 1, 2, 2, 2))
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
-#' aGeom <- geomPolygon(anchor = coords, window = window,
-#'                      col = "blue", show = TRUE)
+#' aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE)
 #'
 #' rotatedGeom <- gRotate(geom = aGeom, angle = 90, about = c(40, 40))
 #' visualise(geom = rotatedGeom)
 #'
 #' # rotate single objects
-#' rotatedTriangle <- gRotate(geom = aGeom, angle = -180, about = c(30, 40), id = 2)
+#' rotatedTriangle <- gRotate(geom = aGeom, angle = -180, about = c(30, 40), fid = 2)
 #' visualise(geom = rotatedTriangle, col = "goldenrod1")
 #'
 #' # rotate different objects about different centers by different angles
@@ -115,7 +117,7 @@ gGroup <- function(geom, index = NULL, distance = NULL, clusters = NULL, ...){
 #' @importFrom methods new
 #' @export
 
-gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
+gRotate <- function(geom, angle, about = c(0, 0), fid = NULL){
   
   assertClass(geom, classes = "geom")
   angleIsList <- testList(angle, types = "numeric", any.missing = FALSE)
@@ -130,12 +132,12 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   if(angleIsNumeric){
     angle <- list(angle)
   }
-  existsID <- !is.null(id)
+  existsID <- !is.null(fid)
   
   coords <- geom@coords
-  ids <- unique(coords$id)
+  ids <- unique(coords$fid)
   if(existsID){
-    doRotate <- ids %in% id
+    doRotate <- ids %in% fid
   } else{
     doRotate <- rep(TRUE, length(ids))
   }
@@ -152,7 +154,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
   # out <- geom
   temp <- NULL
   for(i in seq_along(ids)){
-    tempCoords <- coords[coords$id == ids[i],]
+    tempCoords <- coords[coords$fid == ids[i],]
     
     if(doRotate[i]){
       tempAngle <- angle[[i]]
@@ -203,7 +205,7 @@ gRotate <- function(geom, angle, about = c(0, 0), id = NULL){
 #' @examples
 #' coords <- data.frame(x = c(40, 70, 70, 50),
 #'                      y = c(40, 40, 60, 70),
-#'                      id = 1)
+#'                      fid = 1)
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
 #' aGeom <- geomPolygon(anchor = coords, window = window, col = "blue")
@@ -294,8 +296,6 @@ gScale <- function(geom, range = NULL, to = "relative"){
 #'                            40, 10, 20, 30, 30, 20, 50, 40, 10, 20),
 #'                      y = c(40, 40, 60, 70, 40, 20, 40, 10, 20, 
 #'                            40, 20, 20, 50, 40, 40, 70, 40, 20, 60),
-#'                      id = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
-#'                             3, 3, 3, 4, 4, 4, 4, 4, 4, 4),
 #'                      fid = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 
 #'                              3, 3, 3, 4, 4, 4, 5, 5, 5, 5))
 #' window <- data.frame(x = c(0, 80),
@@ -414,16 +414,16 @@ gToGrob <- function(geom, theme = NULL, ...){
 #' @examples
 #' coords <- data.frame(x = c(40, 70, 70, 50),
 #'                      y = c(40, 40, 60, 70),
-#'                      id = 1)
+#'                      fid = 1)
 #' window <- data.frame(x = c(0, 80),
 #'                      y = c(0, 80))
 #' aGeom <- geomPolygon(anchor = coords, window = window)
 #'
 #' aRaster <- gToRaster(geom = aGeom)
-#' visualise(gridded = aRaster, geom = aGeom, col = "deeppink")
+#' visualise(raster = aRaster, geom = aGeom, col = "deeppink")
 #'
 #' negRaster <- gToRaster(geom = aGeom, negative = TRUE)
-#' visualise(gridded = negRaster, geom = aGeom, col = "deeppink")
+#' visualise(raster = negRaster, geom = aGeom, col = "deeppink")
 #' @importFrom methods new
 #' @importFrom raster raster extent<-
 #' @export
@@ -533,7 +533,10 @@ gToSp <- function(geom, crs = NULL){
 
     temp <- coords[c("x", "y")]
     geomSp <- SpatialPoints(temp, proj4string = crs(sourceCrs))
-    geomSp <- SpatialPointsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
+    if(!all(names(geom@attr) %in% c("fid", "n"))){
+      attr <- geom@attr[,!names(geom@attr) %in% c("fid", "n")]
+      geomSp <- SpatialPointsDataFrame(geomSp, data = attr, match.ID = FALSE)
+    }
 
   # } else if(featureType %in% c("line")){
   #
@@ -568,7 +571,10 @@ gToSp <- function(geom, crs = NULL){
 
     # make a SpatialPolygon out of that
     geomSp <- SpatialPolygons(temp, proj4string = crs(sourceCrs))
-    geomSp <- SpatialPolygonsDataFrame(geomSp, data = data.frame(id = seq_along(geomSp)), match.ID = FALSE)
+    if(!all(names(geom@attr) %in% c("fid", "n"))){
+      attr <- geom@attr[,!names(geom@attr) %in% c("fid", "n")]
+      geomSp <- SpatialPolygonsDataFrame(geomSp, data = attr, match.ID = FALSE)
+    }
 
   }
   geomSp <- setCRS(x = geomSp, crs = targetCRS)
@@ -580,11 +586,8 @@ gToSp <- function(geom, crs = NULL){
 #'
 #' See \code{\link{geom-class}} for details on differences between objects of
 #' class \code{geom} and other spatial classes.
-#' @param input [various]\cr the spatial object; currently defined are ojects of
-#'   class \code{sp} and \code{sf}.
-#' @param window [\code{data.frame(1)}]\cr reference window, i.e. minimum and
-#'   maximum values of the \code{x}- and \code{y}-dimension within which the
-#'   \code{geom} should dwell.
+#' @param input [\code{Spatial*} | \code{sf}]\cr the spatial object to build a
+#'   \code{geom} from.
 #' @return a \code{geom} of the type that comes closest to the type of the
 #'   input.
 #' @examples
@@ -612,150 +615,37 @@ gFrom <- function(input){
   isSp <- testClass(input, classes = "Spatial")
   isSf <- testClass(input, classes = "sf")
 
-  sourceCRS <- getCRS(x = input)
-  bbox <- getExtent(input)
+  bbox <- getExtent(x = input)
+  theCoords <- getCoords(x = input)
+  theData <- getTable(x = input)
   theWindow <- tibble(x = rep(c(bbox$x), each = 2),
                       y = c(bbox$y, rev(bbox$y)))
-  theCoords <- getCoords(input)
+  theCRS <- getCRS(x = input)
   
   if(isSp){
 
-    theCoords <- NULL
-    theData <- NULL
     sourceClass <- class(input)[1]
-    prev <- 0
-    
-    # in case we deal with an "exotic" class, transform to the nearest "normal" class
-    if(sourceClass %in% c("SpatialGrid")){
-      input <- as(input, "SpatialPolygons")
-    } else if(sourceClass %in% "SpatialGridDataFrame"){
-      input <- as(input, "SpatialPolygonsDataFrame")
-    } else if(sourceClass %in% "SpatialPixels"){
-      input <- as(input, "SpatialPoints")
-    } else if(sourceClass %in% "SpatialPixelsDataFrame"){
-      input <- as(input, "SpatialPointsDataFrame")
-    }
-    sourceClass <- class(input)[1]
-
-    if(sourceClass %in% c("SpatialPoints", "SpatialPointsDataFrame")){
+    if(sourceClass %in% c("SpatialPoints", "SpatialPointsDataFrame", "SpatialPixels", "SpatialPixelsDataFrame")){
       type <- "point"
-
-      if(sourceClass %in% "SpatialPointsDataFrame"){
-        theData <- data.frame(id = seq_along(input@coords[,1]))
-        theData <- cbind(theData, input@data)
-      } else{
-        theData <- data.frame(id = seq_along(input@coords[,1]))
-      }
-      theCoords <- data.frame(id = seq_along(input@coords[,1]), input@coords)
-      colnames(theCoords) <- c("id", "x", "y")
-      rownames(theData) <- NULL
-      
     } else if(sourceClass %in% c("SpatialMultiPoints", "SpatialMultiPointsDataFrame")){
       type <- "point"
-      
-      for(i in seq_along(input@coords)){
-        tempCoords <- data.frame(id = i,
-                                 fid = prev + seq_along(input@coords[[i]][,1]),
-                                 x = input@coords[[i]][,1],
-                                 y = input@coords[[i]][,2])
-        theCoords <- rbind(theCoords, tempCoords)
-        
-        if(sourceClass %in% "SpatialMultiPointsDataFrame"){
-          tempData <- data.frame(i, length(input@coords[[i]][,1]), input@data[i,])
-          theData <- rbind(theData, tempData)
-          otherNames <- colnames(input@data)
-        } else{
-          tempData <- data.frame(i, length(input@coords[[i]][,1]))
-          theData <- rbind(theData, tempData)
-          otherNames <- NULL
-        }
-        prev <- prev + length(input@coords[[i]][,1])
-      }
-      colnames(theData) <- c("fid", "n", otherNames)
-      rownames(theData) <- NULL
-      
     } else if(sourceClass %in% c("SpatialLines", "SpatialLinesDataFrame")){
       type <- "line"
-      
-      for(i in seq_along(input@lines)){
-        theLines <- input@lines[[i]]
-        for(j in seq_along(theLines@Lines)){
-          theLine <- theLines@Lines[[j]]
-          
-          tempCoords <- data.frame(id = i,
-                                   fid = prev + j,
-                                   x = theLine@coords[,1],
-                                   y = theLine@coords[,2])
-          theCoords <- rbind(theCoords, tempCoords)
-        }
-        
-        if(sourceClass %in% "SpatialLinesDataFrame"){
-          tempData <- data.frame(i, length(theLines@Lines), input@data[i,])
-          theData <- rbind(theData, tempData)
-          otherNames <- colnames(input@data)
-        } else{
-          theData <- rbind(theData, data.frame(i, length(theLines@Lines)))
-          otherNames <- NULL
-        }
-        prev <- prev + length(theLines@Lines)
-      }
-      colnames(theData) <- c("fid", "n", otherNames)
-      rownames(theData) <- NULL
-      
-    } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")){
+    } else if(sourceClass %in% c("SpatialPolygons", "SpatialPolygonsDataFrame", "SpatialGrid", "SpatialGridDataFrame")){
       type <- "polygon"
-      
-      for(i in seq_along(input@polygons)){
-        thePolys <- input@polygons[[i]]
-        for(j in seq_along(thePolys@Polygons)){
-          thePoly <- thePolys@Polygons[[j]]
-          
-          if(thePoly@hole){
-            fidID <- j-1
-          } else{
-            fidID <- j
-          }
-          tempCoords <- data.frame(id = i,
-                                   fid = prev + j,
-                                   x = thePoly@coords[,1],
-                                   y = thePoly@coords[,2])
-          theCoords <- rbind(theCoords, tempCoords)
-        }
-        
-        if(sourceClass %in% "SpatialPolygonsDataFrame"){
-          tempData <- data.frame(i, length(thePolys@Polygons), input@data[i,])
-          theData <- rbind(theData, tempData)
-          otherNames <- colnames(input@data)
-        } else{
-          theData <- rbind(theData, data.frame(i, length(thePolys@Polygons)))
-          otherNames <- NULL
-        }
-        prev <- prev + length(thePolys@Polygons)
-      }
-      colnames(theData) <- c("fid", "n", otherNames)
-      rownames(theData) <- NULL
-      
     }
-
     history <- paste0("geometry was created from an object of class '", sourceClass, "'")
     
   } else if(isSf){
     
-    theCoords <- NULL
-    theData <- NULL
     sourceClass <- st_geometry_type(input)
-    
     if(sourceClass %in% c("POINT", "MULTIPOINT")){
       type <- "point"
-      
     } else if(sourceClass %in% c("LINESTRING", "MULTILINESTRING")){
       type <- "line"
-      
     } else if(sourceClass %in% c("POLYGON", "MULTIPOLYGON")){
       type <- "polygon"
-      
     }
-    
     history <- paste0("geometry was created from an sf-object of geometry type '", sourceClass, "'")
   }
   
@@ -765,9 +655,18 @@ gFrom <- function(input){
                  attr = theData,
                  window = theWindow,
                  scale = "absolute",
-                 crs = sourceCRS,
+                 crs = theCRS,
                  history = list(history))
 
   return(theGeom)
 
+}
+
+#' Edit the vertices of a geom
+#' 
+#' 
+
+gEditVerts <- function(){
+  
+  
 }

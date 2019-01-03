@@ -60,7 +60,7 @@ test_that("Error if arguments have wrong value", {
                             5234735, 5281527, 5189955, 5041066),
                       Y = c(3977612, 3971119, 4028167, 3997230,
                             4060164, 4117856, 4118207, 4062838),
-                      id = c(1, 1, 2, 2, 2, 2, 1, 1))
+                      fid = c(1, 1, 2, 2, 2, 2, 1, 1))
   aGeom <- geomPolygon(anchor = input, show = FALSE)
 
   expect_error(gToSp(geom = "bla"))

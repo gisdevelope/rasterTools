@@ -190,7 +190,7 @@ layer).</p></td>
 
 <span class='co'># the average and standard deviation of all values</span>
 <span class='fu'>mValues</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='no'>con</span>, <span class='kw'>param</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mean"</span>, <span class='st'>"sd"</span>))</div><div class='output co'>#&gt;   value     mean       sd
-#&gt; 1    NA 35.74583 32.98776</div><div class='input'>
+#&gt; 1     1 35.74583 32.98776</div><div class='input'>
 <span class='co'># destribution parameters per patch ...</span>
 <span class='fu'>mValues</span>(<span class='kw'>obj</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='no'>con</span>, <span class='no'>patches</span>),
         <span class='kw'>param</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"weighted.mean"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>), <span class='kw'>groupBy</span> <span class='kw'>=</span> <span class='st'>"patches"</span>)</div><div class='output co'>#&gt;    value min max wgh.mean

@@ -29,15 +29,16 @@ oCLC <- function(mask = NULL, years = NULL){
 
   # check arguments
   maskIsGeom <- testClass(mask, classes = "geom")
-  maskIsSpatial <- testClass(mask, classes = "Spatial")
-  assert(maskIsGeom, maskIsSpatial)
+  maskIsSp <- testClass(mask, classes = "Spatial")
+  maskIsSf <- testClass(mask, classes = "sf")
+  assert(maskIsGeom, maskIsSp, maskIsSf)
   assertIntegerish(years, any.missing = FALSE, min.len = 1)
   assertTRUE(all(years %in% c(1990, 2000, 2006, 2012)))
 
   labels <- meta_clc
   
   # transform crs of the mask to the dataset crs
-  if(maskIsSpatial){
+  if(maskIsSp){
     mask <- gFrom(input = mask)
   }
   targetCRS <- getCRS(x = mask)

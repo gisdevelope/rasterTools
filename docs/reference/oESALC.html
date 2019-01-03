@@ -147,8 +147,7 @@ Guide</a>).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>oESALC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>assertQuality</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>keepFile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>oESALC</span>(<span class='kw'>mask</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>years</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>assertQuality</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
 <span class='fu'>downloadESALC</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>localPath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
@@ -157,8 +156,8 @@ Guide</a>).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mask</th>
-      <td><p>[<code>geom</code> | <code>Spatial*</code>]<br /> spatial object of which the
-extent is the area of interest.</p></td>
+      <td><p>[<code>geom</code> | <code>Spatial*</code> | <code>sf</code>]<br /> spatial object of
+which the extent is the area of interest.</p></td>
     </tr>
     <tr>
       <th>years</th>
@@ -170,12 +169,6 @@ data should be extracted; see Details.</p></td>
       <td><p>[<code>logical(1)</code>] (not supported yet)<br /> should the
 quality flags of the ESA CCI land-cover dataset be extracted (<code>TRUE</code>,
 default) or should merely the data-layer be extracted (<code>FALSE</code>)?</p></td>
-    </tr>
-    <tr>
-      <th>keepFile</th>
-      <td><p>[<code>logical(1)</code>]<br /> should the file gdal creates in the
-workingdirectory be kept (<code>TRUE</code>) or should it be deleted
-(<code>FALSE</code>, default)?</p></td>
     </tr>
     <tr>
       <th>...</th>

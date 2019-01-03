@@ -141,13 +141,13 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>attr</span>, <span class='no'>coords</span>, <span class='no'>...</span>)
 
-<span class='co'># S4 method for geom,numeric</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)
+<span class='co'># S4 method for geom</span>
+<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>attr</span>, <span class='no'>coords</span>)
 
-<span class='co'># S4 method for geom,logical</span>
-<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>subset</span>)</pre>
+<span class='co'># S4 method for sf</span>
+<span class='fu'>getSubset</span>(<span class='no'>x</span>, <span class='no'>attr</span>, <span class='no'>coords</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,8 +157,14 @@
       <td><p>object to <code>subset</code>.</p></td>
     </tr>
     <tr>
-      <th>subset</th>
-      <td><p>[<code>integerish(.)</code> | <code>logical(.)</code>]<br /> rows to keep.</p></td>
+      <th>attr</th>
+      <td><p>[<code>integerish(.)</code> | <code>logical(.)</code> |
+<code>character(1)</code>]<br /> rows of the attribute table to keep.</p></td>
+    </tr>
+    <tr>
+      <th>coords</th>
+      <td><p>[<code>integerish(.)</code> | <code>logical(.)</code> |
+<code>character(1)</code>]<br /> coordinates to keep.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -169,8 +175,8 @@
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
     <ul>
-<li><p><code>x = geom,subset = numeric</code>: get a subset of the vertices of a <code>geom</code> based on a numeric</p></li>
-<li><p><code>x = geom,subset = logical</code>: get a subset of the vertices of a <code>geom</code> based on a logical</p></li>
+<li><p><code>geom</code>: get a subset of the vertices of a <code>geom</code> based on a numeric</p></li>
+<li><p><code>sf</code>: get a subset of the vertices of a <code>sf</code> object based on a logical</p></li>
 </ul>
     
 

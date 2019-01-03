@@ -33,6 +33,15 @@
 #'   correct download of this file, and the expected size in bytes.
 "rtMD5"
 
+#' A set of 2D kernels
+#'
+#' This objects stores several kernels that can be used with various
+#' morphological operators.
+#' @format The list has the 4 elements 'disc', 'diamond', 'square' and
+#'   'rectangle', where each element contains a set of differently sized
+#'   matrixes that contain values 0, 1 or NA.
+"rtKernels"
+
 #' Metadata of the MODIS datasets
 #'
 #' @format The dataframe with 13 variables and 97 entries contains meta-data for

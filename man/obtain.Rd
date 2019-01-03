@@ -11,9 +11,9 @@ obtain(data = NULL, mask = NULL)
 spatial datasets are specified. Each \code{operator} is a list iteself and
 includes the operator name and its arguments as sub-elements; see Examples.}
 
-\item{mask}{[\code{geom} | \code{Spatial*}]\cr spatial object. The extent of
-vertices that are part of the same group is used to subset the spatial
-information.}
+\item{mask}{[\code{geom} | \code{Spatial*} | \code{sf}]\cr spatial object.
+The extent of vertices that are part of the same feature is used to subset
+the spatial information.}
 }
 \value{
 A list of objects that is organised according to the stratification
@@ -40,20 +40,15 @@ and online resources.
   nevertheless for those who are interested. In case an error occurs, it
   might be necessary to specify new paths in \code{rtPaths} (see
   \code{\link{setPaths}}).
-  
-  Recently supported datasets are \itemize{
-  \item Global: \itemize{
-     \item \code{\link{oGFC}}: Global Forest Change
-     \item \code{\link{oMODIS}}: MODIS products
-     \item \code{\link{oWCLIM}}: Worldclim
-     \item \code{\link{oESALC}}: ESA CCI land-cover
-  }
-  \item European: \itemize{
-     \item \code{\link{oCLC}}: Corine Land Cover
-     \item \code{\link{oEMMA}}: Mammal occurence in the \emph{Atlas of European Mammals}
-     \item \code{\link{oEFTA}}: Tree presence and habitat suitability in the \emph{European Atlas of Forest Tree Species}
-  }
-  }
+
+  Recently supported datasets are \itemize{ \item Global: \itemize{ \item
+  \code{\link{oGFC}}: Global Forest Change \item \code{\link{oMODIS}}: MODIS
+  products \item \code{\link{oWCLIM}}: Worldclim \item \code{\link{oESALC}}:
+  ESA CCI land-cover } \item European: \itemize{ \item \code{\link{oCLC}}:
+  Corine Land Cover \item \code{\link{oEMMA}}: Mammal occurence in the
+  \emph{Atlas of European Mammals} \item \code{\link{oEFTA}}: Tree presence
+  and habitat suitability in the \emph{European Atlas of Forest Tree Species}
+  } }
 }
 \examples{
 
@@ -65,14 +60,7 @@ myDatasets <- list(list(operator = "oGFC", years = c(2005:2007)),
                    list(operator = "oMODIS", product = "mod17a3", period = 2006,
                         layer = 2))
 
-# load and outline masks from a file with locations
-myLocations <- loadData(files = "locations.csv",
-                        localPath = system.file("test_datasets", package="rasterTools"))
-myMask <- gGroup(geom = myLocations, distance = 10000) \%>\%
-  geomRectangle() \%>\%
-  gToSp(crs = projs$laea)
-
 # grab the data
-myData <- obtain(data = myDatasets, mask = myMask)
+myData <- obtain(data = myDatasets, mask = rtGeoms$locations)
 }
 }

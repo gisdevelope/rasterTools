@@ -61,8 +61,6 @@ The rasterTools package provides a toolchain for a transparent and reproducible 
 
 - in-R georeferencing.
 
-- more `Rcpp`, `gdal` and parallelisation.
-
 - new functions to simulate neutral and process oriented landscape models.
 
 - ...

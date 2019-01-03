@@ -61,7 +61,7 @@ visualise(distances)
 # define a geometry
 coords <- data.frame(x = c(30, 60, 60, 40),
                      y = c(40, 40, 60, 70),
-                     id = 1)
+                     fid = 1)
 window <- data.frame(x = c(0, 80),
                      y = c(0, 80))
 (aGeom <- geomPolygon(anchor = coords, window = window, col = "blue"))
