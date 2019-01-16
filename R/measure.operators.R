@@ -11,8 +11,8 @@
 #'   bottom of the focal cell and \code{"double"} to count additionally cells to
 #'   the left and top of the focal cell.
 #' @param layer [\code{character(1)}]\cr in case \code{obj} has several layers,
-#'   specify here the layer for which the area of objects shall be calculated
-#'   (by default, the first layer).
+#'   specify here the layer for which the adjacency shall be calculated (by
+#'   default, the first layer).
 #' @details In case \code{type = "like"}, only the diagonal of the adjacency
 #'   matrix is returned, in case \code{type = "paired"}, the complete adjacency
 #'   matrix is returned.
@@ -25,7 +25,7 @@
 #'
 #' # double count like adjacencies
 #' mAdjacency(obj = cat)
-#' 
+#'
 #' # paired adjacencies
 #' mAdjacency(obj = cat, type = "paired")
 #'

@@ -1,7 +1,7 @@
 #' Geometry class (S4) and methods
 #'
-#' A \code{geom} stores the vertices that outline the shape and all additional
-#' information that characterise a feature. A \code{geom} can be spatial, but
+#' A \code{geom} stores the vertices that outline shape, and all additional
+#' information that characterise a geometry. A \code{geom} can be spatial, but
 #' does not have to be. A \code{geom} can either have absolute or relative
 #' values, where relative values specify the vertex position relative to the
 #' \code{window} slot.
@@ -18,14 +18,14 @@
 #' than \code{extent} and which determines the relative position of the vertices
 #' when plotting.
 #' @section Methods: So far the following methods have been defined: \itemize{
-#'   \item Getters: \cr \code{length}, \code{show},
-#'   \code{\link{getCoords}}, \code{\link{getCRS}},
-#'   \code{\link{getExtent}}, \code{\link{getHistory}}, \code{\link{getWindow}},
-#'   \code{\link{getSubset}}, \code{\link{getTable}}, \item Setters: \cr
-#'   \code{\link{setCRS}}, \code{\link{setTable}}, \code{\link{setWindow}} }
+#'   \item Getters: \cr \code{length}, \code{show}, \code{\link{getCoords}},
+#'   \code{\link{getCRS}}, \code{\link{getExtent}}, \code{\link{getHistory}},
+#'   \code{\link{getWindow}}, \code{\link{getSubset}}, \code{\link{getTable}},
+#'   \item Setters: \cr \code{\link{setCRS}}, \code{\link{setTable}},
+#'   \code{\link{setWindow}} }
 #' @slot type [\code{character(1)}]\cr the type of feature, recently either
 #'   \code{"point"}, \code{"line"} or \code{"polygon"}.
-#' @slot coords [\code{data.frame(1)}]\cr the \code{id}, \code{x} and \code{y}
+#' @slot coords [\code{data.frame(1)}]\cr the \code{fid}, \code{x} and \code{y}
 #'   coordinates per vertex.
 #' @slot attr [\code{data.frame(1)}]\cr arbitrary number of attributes per
 #'   unique id in \code{coords}
