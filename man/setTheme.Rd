@@ -48,7 +48,7 @@ labels, \cr\cr box [\code{named list(.)}]\cr \code{plot = TRUE/FALSE},
 \item{geom}{[\code{named list(.)}]\cr \code{line}, \code{fill},
 \code{linetype}, \code{linewidth}, \code{pointsize} and \code{pointsymbol}
 of a geom, \cr\cr scale [\code{named list(.)}]\cr \code{x =
-'someParameter'} and \code{to = 'someAttribute'} to which to scale,
+'someParameter'} and \code{to = 'someAttribute'} to which to scale
 'someParameter' to.}
 
 \item{raster}{[ \code{named list(.)}]\cr \code{scale = 'someAttribute'} and

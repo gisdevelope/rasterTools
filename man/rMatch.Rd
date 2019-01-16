@@ -9,7 +9,7 @@ rMatch(obj, kernel = NULL, rotate = TRUE, background = NULL)
 \arguments{
 \item{obj}{[\code{RasterLayer(1)}]\cr The object to modify.}
 
-\item{kernel}{[\code{matrix(., .)} | \code{list(.)} thereof]\cr scan the
+\item{kernel}{[\code{matrix(.)} | \code{list(.)} thereof]\cr scan the
 raster with this kernel (default is a 3 by 3 cells diamond kernel).}
 
 \item{rotate}{[\code{logical(1)}]\cr should the kernel be applied for all

@@ -6,8 +6,8 @@
 \alias{geom}
 \title{Geometry class (S4) and methods}
 \description{
-A \code{geom} stores the vertices that outline the shape and all additional
-information that characterise a feature. A \code{geom} can be spatial, but
+A \code{geom} stores the vertices that outline shape, and all additional
+information that characterise a geometry. A \code{geom} can be spatial, but
 does not have to be. A \code{geom} can either have absolute or relative
 values, where relative values specify the vertex position relative to the
 \code{window} slot.
@@ -31,7 +31,7 @@ when plotting.
 \item{\code{type}}{[\code{character(1)}]\cr the type of feature, recently either
 \code{"point"}, \code{"line"} or \code{"polygon"}.}
 
-\item{\code{coords}}{[\code{data.frame(1)}]\cr the \code{id}, \code{x} and \code{y}
+\item{\code{coords}}{[\code{data.frame(1)}]\cr the \code{fid}, \code{x} and \code{y}
 coordinates per vertex.}
 
 \item{\code{attr}}{[\code{data.frame(1)}]\cr arbitrary number of attributes per
@@ -52,10 +52,10 @@ notation.}
 
 \section{Methods}{
  So far the following methods have been defined: \itemize{
-  \item Getters: \cr \code{length}, \code{show},
-  \code{\link{getCoords}}, \code{\link{getCRS}},
-  \code{\link{getExtent}}, \code{\link{getHistory}}, \code{\link{getWindow}},
-  \code{\link{getSubset}}, \code{\link{getTable}}, \item Setters: \cr
-  \code{\link{setCRS}}, \code{\link{setTable}}, \code{\link{setWindow}} }
+  \item Getters: \cr \code{length}, \code{show}, \code{\link{getCoords}},
+  \code{\link{getCRS}}, \code{\link{getExtent}}, \code{\link{getHistory}},
+  \code{\link{getWindow}}, \code{\link{getSubset}}, \code{\link{getTable}},
+  \item Setters: \cr \code{\link{setCRS}}, \code{\link{setTable}},
+  \code{\link{setWindow}} }
 }
 

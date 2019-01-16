@@ -20,8 +20,8 @@ bottom of the focal cell and \code{"double"} to count additionally cells to
 the left and top of the focal cell.}
 
 \item{layer}{[\code{character(1)}]\cr in case \code{obj} has several layers,
-specify here the layer for which the area of objects shall be calculated
-(by default, the first layer).}
+specify here the layer for which the adjacency shall be calculated (by
+default, the first layer).}
 }
 \value{
 a \code{data.frame} of the frequency of adjacencies of the values in
