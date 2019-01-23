@@ -16,7 +16,7 @@
 #' \dontrun{
 #'
 #' myCLC <- oCLC(mask = rtGeoms$mask, years = c(2006, 2012))
-#' visualise(gridded = myCLC, trace = TRUE)
+#' visualise(raster = myCLC, trace = TRUE)
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
@@ -38,59 +38,72 @@ oCLC <- function(mask = NULL, years = NULL){
   labels <- meta_clc
   
   # transform crs of the mask to the dataset crs
-  if(maskIsSp){
-    mask <- gFrom(input = mask)
-  }
   targetCRS <- getCRS(x = mask)
-  theExtent <- geomRectangle(anchor = getExtent(x = mask))
-  theExtent <- setCRS(x = theExtent, crs = targetCRS)
-  
-  if(targetCRS != projs$laea){
-    mask <- setCRS(x = mask, crs = projs$laea)
-    targetExtent <- setCRS(theExtent, crs = projs$laea)
+  maskExtent <- getExtent(x = mask)
+  if(targetCRS != projs$sinu){
+    targetMask <- setCRS(x = mask, crs = projs$sinu)
   } else{
-    targetExtent <- theExtent
-  }
+    targetMask <- mask
+  } 
+  maskGeom <- geomRectangle(anchor = getExtent(x = targetMask))
+  maskGeom <- setCRS(x = maskGeom, crs = projs$sinu)
+  targetExtent <- getExtent(maskGeom)
+  
 
-  clc_out <- stack()
+  out <- stack()
   history <- list()
   # go through years to extract the respective data and subset it with theExtent
   for(i in seq_along(years)){
 
-    blablabla(paste0("I am handling the clc datasets of the year '", years[i], "':"))
+    blablabla(paste0("I am handling the clc datasets of the year '", years[i], "' ..."))
     fileName <- paste0( "g100_", substr(years[i], start = nchar(years[i])-1, stop = nchar(years[i])), ".tif")
-    tempObject <- loadData(files = fileName, dataset = "clc")
+    fileExists <- testFileExists(paste0(rtPaths$clc$local, "/", fileName))
+    
+    if(!fileExists){
+      stop(paste0("please download the CLC_", years[i], " datasets and store the raster in '", rtPaths$clc$local, "' with the name '", fileName, "'."))
+    }
+    shortName <- strsplit(fileName, "[.]")[[1]]
+    tempObject <- gdalwarp(srcfile = paste0(rtPaths$clc$local, "/", fileName),
+                           dstfile = paste0(rtPaths$project, "/clc_", shortName[1], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
+                           s_srs = projs$laea,
+                           t_srs = targetCRS,
+                           te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
+                           overwrite = TRUE,
+                           output_Raster = TRUE)[[1]]
+    
     outCols <- colortable(tempObject)[-1]
-
-    history <- c(history, paste0(tempObject@history, " for the year ", years[i], ""))
-
-    blablabla(paste0(" ... cropping CLC to target area"))
-    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    names(tempObject) <- paste0("landcover_", years[i])
+    
+    history <- c(history, paste0("object loaded for the year ", years[i], ""))
     history <-  c(history, list(paste0("object has been cropped")))
-
-    if(getCRS(mask) != targetCRS){
+    if(targetCRS != projs$laea){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      blablabla(paste0(" ... reprojecting target CLC to '", crs_name))
-      tempObject <- setCRS(x = tempObject, crs = targetCRS, method = "ngb")
       history <- c(history, list(paste0("object has been reprojected to ", crs_name)))
     }
     
-    # create and set RAT table
+    # make file available as raster
+    tempObject <- raster(tempObject@file@name)
+    names(tempObject) <- paste0("clc_", years[i])
+
+    # set history
+    tempObject@history <- history
+    
+    # create and set RAT
     tempObject@data@isfactor <- TRUE
     ids <- unique(tempObject)
-    tempObject@data@attributes <- list(data.frame(id = ids, labels[ids,]))
-    
+    ids <- ids[!is.na(ids)]
+    tempObject@data@attributes <- list(data.frame(id = ids, labels[ids,c(1:4)]))
+
     # set colortable
+    outCols <- rep("#000000", 256)
+    outCols[meta_clc$value] <- meta_clc$colour
     tempObject@legend@colortable <- outCols
-
+    
     # add up all upcoming years
-    clc_out <- stack(clc_out, tempObject)
-
+    out <- stack(out, tempObject)
   }
 
-  names(clc_out) <- paste0("clc_", years)
-  clc_out@history <- history
+  names(out) <- paste0("clc_", years)
+  out@history <- history
 
   # manage the bibliography entry
   bib <- bibentry(bibtype = "Manual",
@@ -99,8 +112,7 @@ oCLC <- function(mask = NULL, years = NULL){
                   year = 1994,
                   ogranization = "OPOCE",
                   address = "Luxembourg")
-  blablabla()
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
@@ -110,6 +122,6 @@ oCLC <- function(mask = NULL, years = NULL){
     }
   }
 
-  return(clc_out)
+  return(out)
 
 }

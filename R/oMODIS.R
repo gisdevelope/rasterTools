@@ -198,8 +198,8 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = 1,
   tiles_modis <- geomTiles(window = modWindow, cells = c(36, 18), crs = projs$sinu)
   
   # determine tiles of interest
-  tabMODIS <- getCoords(tiles_modis)
-  tabMask <- getCoords(targetMask)
+  tabMODIS <- getCoords(x = tiles_modis)
+  tabMask <- getCoords(x = targetMask)
   ids <- unique(tabMODIS$fid)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -264,6 +264,9 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = 1,
                              overwrite = TRUE,
                              output_Raster = TRUE)
       
+      # apply scaling-factor
+      # tempObject <- tempObject*meta$scaling_factor
+      
       history <- c(history, paste0("object loaded from tile '", gridID, "' for ", validDates[j], ""))
       history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
       if(targetCRS != projs$sinu){
@@ -283,12 +286,12 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = 1,
                                   output_Raster = TRUE)
         history <- c(history, paste0("tiles merged as mosaic"))
         file.remove(paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_", gridIDs, "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"))
+        tempOut <- raster(tempOut@file@name)
       } else{
         tempOut <- raster(paste0(rtPaths$project, "/", product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]), "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"))
       }
       
       # make file available as raster
-      tempOut <- raster(tempOut@file@name)
       names(tempOut) <- paste0(product, "_", tolower(meta$sds_layer_name), "_", gsub(pattern = "[.]", replacement = "", x = validDates[j]))
       
       # set history

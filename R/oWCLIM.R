@@ -89,13 +89,13 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
   # transform crs of the mask to the dataset crs
   targetCRS <- getCRS(x = mask)
   maskExtent <- getExtent(x = mask)
-  if(targetCRS != projs$sinu){
-    targetMask <- setCRS(x = mask, crs = projs$sinu)
+  if(targetCRS != projs$longlat){
+    targetMask <- setCRS(x = mask, crs = projs$longlat)
   } else{
     targetMask <- mask
   } 
   maskGeom <- geomRectangle(anchor = getExtent(x = targetMask))
-  maskGeom <- setCRS(x = maskGeom, crs = projs$sinu)
+  maskGeom <- setCRS(x = maskGeom, crs = projs$longlat)
   targetExtent <- getExtent(maskGeom)
   
   out <- stack()
@@ -120,7 +120,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
     
     history <- c(history, paste0("object loaded"))
     history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
-    if(targetCRS != projs$sinu){
+    if(targetCRS != projs$longlat){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
       history <- c(history, list(paste0("object reprojected to ", crs_name)))
     }
@@ -144,8 +144,7 @@ oWCLIM <- function(mask = NULL, variable = NULL, month = c(1:12), resolution = 0
                   year = "2017",
                   doi = "10.1002/joc.5086"
   )
-  message()
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{

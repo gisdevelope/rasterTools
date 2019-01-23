@@ -44,7 +44,7 @@
 #'
 #' myGFC <- oGFC(mask = rtGeoms$mask,
 #'               years = c(2002, 2006, 2010, 2014))
-#' visualise(gridded = myGFC$treecover_2002, trace = TRUE)
+#' visualise(raster = myGFC$treecover_2002, trace = TRUE)
 #'
 #' # get the (updated) bibliography
 #' reference(style = "bibtex")
@@ -90,20 +90,16 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
             "#4C7726", "#4A7624", "#497422", "#47731F", "#45721D", "#43701B",
             "#416F19", "#406E17", "#3E6C15", "#3C6B13", "#3B6A11", rep("#000000", 155))
 
-  # transform crs of the mask to the dataset crs
-  if(maskIsSp){
-    mask <- gFrom(input = mask)
-  }
   targetCRS <- getCRS(x = mask)
-  theExtent <- geomRectangle(anchor = getExtent(x = mask))
-  theExtent <- setCRS(x = theExtent, crs = targetCRS)
-  
+  maskExtent <- getExtent(x = mask)
   if(targetCRS != projs$longlat){
-    mask <- setCRS(x = mask, crs = projs$longlat)
-    targetExtent <- setCRS(theExtent, crs = projs$longlat)
+    targetMask <- setCRS(x = mask, crs = projs$longlat)
   } else{
-    targetExtent <- theExtent
-  }
+    targetMask <- mask
+  } 
+  maskGeom <- geomRectangle(anchor = getExtent(x = targetMask))
+  maskGeom <- setCRS(x = maskGeom, crs = projs$longlat)
+  targetExtent <- getExtent(maskGeom)
   
   # create the tiles geometry to determine the data-subset to load
   gfcWindow <- data.frame(x = c(-180, 180),
@@ -112,7 +108,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   # determine tiles of interest
   tabGFC <- getCoords(x = tiles_gfc)
-  tabMask <- getCoords(x = mask)
+  tabMask <- getCoords(x = targetMask)
   ids <- unique(tabGFC$fid)
   xMatch <- yMatch <- NULL
   for(i in seq_along(ids)){
@@ -128,10 +124,12 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
 
   tabTiles <- getCoords(x = myTiles)
   # go through all selected tiles and subset them with the mask
+  history <- list()
+  tempOut <- list()
   for (i in unique(tabTiles$fid)){
     min_x <- min(tabTiles$x[tabTiles$fid == i])
     max_y <- max(tabTiles$y[tabTiles$fid == i])
-
+    
     if(min_x < 0){
       easting <- paste0(sprintf('%03i', abs(min_x)), 'W')
     } else{
@@ -144,69 +142,91 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     }
     gridId <- paste0(northing, '_', easting)
     fileNames <-  paste0("Hansen_GFC2015_", layerNames, "_", gridId, '.tif')
-
-    history <- list()
-    blablabla(paste0("I am handling the gfc datasets with the grid ID '", gridId, "':"))
-    tempObject <- stack(loadData(files = fileNames, dataset = "gfc"))
-    tempObject <- setNames(tempObject, layerNames)
-    history <- c(history, paste0(tempObject[[1]]@history, " with the grid ID '", gridId, "'"))
-
-    blablabla(" ... cropping to targeted study area")
-    tempObject <- crop(tempObject, getExtent(x = targetExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    history <-  c(history, list(paste0("object has been cropped")))
-
-    allObjects <- c(allObjects, list(tempObject))
-  }
-
-  # merge, if there are several tiles involved
-  if(length(allObjects) > 1){
-    allObjects$fun <- "mean"
-    gfc_out <- do.call(mosaic, allObjects)
-    history <- do.call(rbind, history)
-    # this probably needs updating, the histories need to be merged in a sensible way.
-  } else{
-    gfc_out <- allObjects[[1]]
-  }
-
-  # reproject
-  if(getCRS(mask) != targetCRS){
-    crs_name <- str_split(targetCRS, " ", simplify = TRUE)[1]
-    blablabla(paste0(" ... reprojecting to '", crs_name))
-    gfc_out <- setCRS(x = gfc_out, crs = targetCRS, method = "ngb", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    gfc_out <- crop(gfc_out, getExtent(x = theExtent), snap = "out", datatype='INT1U', format='GTiff', options="COMPRESS=LZW")
-    history <-  c(history, list(paste0("object has been reprojected to ", crs_name)))
-  }
-
-  fc00 <- gfc_out[[1]]
-  fc00[gfc_out[[5]]==2] <- NA
-  gain <- gfc_out[[3]]
-  loss <- gfc_out[[4]]
-
-  for(j in seq_along(years)){
-    theName <- paste0("treecover_", years[j])
-    loss_temp <- loss<years[j]-2000 & loss>0
-    temp <- fc00
-    temp[loss_temp > 0] <- 0
-    names(temp) <- theName
-    history <- c(history, list(paste0(theName, " has been calculated as 'treecover2000 - loss_by_", years[j], "'")))
-    gfc_out <- stack(gfc_out, temp)
-  }
-
-  if(!keepRaw){
-    gfc_out <- gfc_out[[-c(1:5),]]
-    if(dim(gfc_out)[3] == 1){
-      gfc_out@legend@colortable <- cols
+    fileExists <- sapply(seq_along(fileNames), function(x){
+      testFileExists(paste0(rtPaths$gfc$local, "/", fileNames[x]))
+    })
+    message(paste0("I am handling the gfc datasets with the grid ID '", gridId, "' ..."))
+    
+    if(any(!fileExists)){
+      downloadGFC(file = fileNames[!fileExists],
+                  localPath = rtPaths$gfc$local)
+    }
+    
+    tempObject <- stack(
+      lapply(seq_along(fileNames), function(x){
+        temp <- strsplit(fileNames[x], "_")[[1]]
+        shortName <- paste0(temp[2], "_", temp[3], "_", gridId)
+        gdalwarp(srcfile = paste0(rtPaths$gfc$local, "/", fileNames[x]),
+                 dstfile = paste0(rtPaths$project, "/", shortName, "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
+                 s_srs = projs$longlat,
+                 t_srs = targetCRS,
+                 te = c(maskExtent$x[1], maskExtent$y[1], maskExtent$x[2], maskExtent$y[2]),
+                 overwrite = TRUE,
+                 output_Raster = TRUE)
+      })
+    )
+    
+    history <- c(history, paste0("object loaded with the grid ID '", gridId, "'"))
+    history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
+    if(targetCRS != projs$longlat){
+      crs_name <- strsplit(targetCRS, " ")[[1]][1]
+      history <- c(history, list(paste0("object reprojected to ", crs_name)))
+    }
+    
+    fc00 <- tempObject[[1]]
+    fc00[tempObject[[5]]==2] <- NA
+    gain <- tempObject[[3]]
+    loss <- tempObject[[4]]
+    
+    for(j in seq_along(years)){
+      theName <- paste0("treecover_", years[j])
+      loss_temp <- loss<years[j]-2000 & loss>0
+      temp <- fc00
+      temp[loss_temp > 0] <- 0
+      names(temp) <- theName
+      history <- c(history, list(paste0(theName, " has been calculated as 'treecover2000 - loss_by_", years[j], "'")))
+      tempObject <- stack(tempObject, temp)
+    }
+    
+    if(!keepRaw){
+      tempObject <- tempObject[[-c(1:5),]]
+      if(dim(tempObject)[3] == 1){
+        tempObject@legend@colortable <- cols
+      } else{
+        for(i in 1:dim(tempObject)[3]){
+          tempObject[[i]]@legend@colortable <- cols
+        }
+      }
     } else{
-      for(i in 1:dim(gfc_out)[3]){
-        gfc_out[[i]]@legend@colortable <- cols
+      for(i in 6:dim(tempObject)[3]){
+        tempObject[[i]]@legend@colortable <- cols
       }
     }
-  } else{
-    for(i in 6:dim(gfc_out)[3]){
-      gfc_out[[i]]@legend@colortable <- cols
-    }
+    tempOut <- c(tempOut, tempObject)
   }
-  gfc_out@history <- history
+  
+  # merge, if there are several tiles involved
+  if(length(tempOut) > 1){
+    message(" ... merging two tiles")
+    tempOut <- mosaic_rasters(gdalfile = unlist(lapply(tempOut, function(x) x[[1]]@file@name)),
+                              dst_dataset = ,
+                              overwrite = TRUE,
+                              output_Raster = TRUE)
+    history <- c(history, paste0("tiles merged as mosaic"))
+    file.remove()
+  } else{
+    tempOut <- tempOut[[1]]
+  }
+  # if(length(allObjects) > 1){
+  #   allObjects$fun <- "mean"
+  #   gfc_out <- do.call(mosaic, allObjects)
+  #   history <- do.call(rbind, history)
+  #   # this probably needs updating, the histories need to be merged in a sensible way.
+  # } else{
+  #   gfc_out <- allObjects[[1]]
+  # }
+
+  tempOut@history <- history
 
   # manage the bibliography entry
   bib <- bibentry(bibtype = "Article",
@@ -233,8 +253,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
                   pages = "846-850",
                   doi = "10.1126/science.1244693"
   )
-  blablabla()
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
@@ -244,7 +263,7 @@ oGFC <- function(mask = NULL, years = NULL, keepRaw = FALSE){
     }
   }
 
-  return(gfc_out)
+  return(tempOut)
 
 }
 
@@ -261,10 +280,10 @@ downloadGFC <- function(file = NULL, localPath = NULL){
     assertDirectory(localPath, access = "rw")
   }
 
-  onlinePath <- rtPaths$gfc$online
+  onlinePath <- rtPaths$gfc$remote
   blablabla(paste0("  ... downloading the file from '", onlinePath, "'"))
   
   GET(url = paste0(onlinePath, file),
-      write_disk(paste0(localPath, "/", file)),
+      write_disk(paste0(localPath, "/", file), overwrite = TRUE),
       progress())
 }
