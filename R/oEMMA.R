@@ -145,7 +145,6 @@ oEMMA <- function(mask = NULL, species = NULL, version = 1, ...){
                   publisher = "Academic Press",
                   address = "London"
                   )
-  blablabla()
 
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)

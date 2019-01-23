@@ -154,8 +154,7 @@ oEFTA <- function(mask = NULL, species = NULL, type = "rpp"){
                   publisher = "Publ. Off. EU",
                   address = "Luxembourg"
   )
-  blablabla()
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{

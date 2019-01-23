@@ -52,7 +52,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
   for(i in seq_along(years)){
     
     history <- list()
-    blablabla(msg = paste0("I am handling the ESALC datasets of the year '", years[i], "':"))
+    message(msg = paste0("I am handling the ESALC datasets of the year '", years[i], "':"))
     fileName <- paste0( "ESACCI-LC-L4-LCCS-Map-300m-P1Y-", years[i], "-v2.0.7.tif")
     fileExists <- testFileExists(paste0(paste0(rtPaths$esalc$local, "/", fileName)))
     
@@ -60,7 +60,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
       downloadESALC(file = fileName,
                     localPath = rtPaths$esalc$local)
     }
-    blablabla(paste0(" ... cropping ESALC to 'mask'"), ...)
+    message(paste0(" ... cropping ESALC to 'mask'"))
     tempObject <- gdal_translate(src_dataset = paste0(rtPaths$esalc$local, "/", fileName),
                                  dst_dataset = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
                                  projwin = c(targetExtent$x[1], targetExtent$y[2], targetExtent$x[2], targetExtent$y[1]),
@@ -72,7 +72,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
     # reproject
     if(targetCRS != projs$longlat){
       crs_name <- strsplit(targetCRS, " ")[[1]][1]
-      blablabla(paste0(" ... reprojecting target to '", crs_name))
+      message(paste0(" ... reprojecting target to '", crs_name))
       tempObject <- gdalwarp(srcfile = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), ".tif"),
                              dstfile = paste0(rtPaths$project, "/esalc_", years[i], "_", paste0(round(maskExtent$x), collapse = "."), "_", paste0(round(maskExtent$y), collapse = "."), "_warped.tif"),
                              s_srs = projs$longlat,
@@ -114,8 +114,7 @@ oESALC <- function(mask = NULL, years = NULL, assertQuality = TRUE, ...){
                   year = "2017",
                   pages = "105"
   )
-  blablabla()
-  
+
   if(is.null(getOption("bibliography"))){
     options(bibliography = bib)
   } else{
