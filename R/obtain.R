@@ -108,8 +108,10 @@ obtain <- function(data = NULL, mask = NULL){
     message(paste0("--> I am extracting information for mask ", i, ":\n"))
     temp_out <- lapply(
       seq_along(funs), function(j){
-        do.call(what = funs[j],
-                args = c(args[[j]], mask = list(tempMask)))
+        tempOut <- do.call(what = funs[j],
+                           args = c(args[[j]], mask = list(tempMask)))
+        message()
+        return(tempOut)
       }
     )
 
