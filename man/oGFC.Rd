@@ -74,7 +74,7 @@ require(magrittr)
 
 myGFC <- oGFC(mask = rtGeoms$mask,
               years = c(2002, 2006, 2010, 2014))
-visualise(gridded = myGFC$treecover_2002, trace = TRUE)
+visualise(raster = myGFC$treecover_2002, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")

@@ -37,7 +37,7 @@ The CLC data dataset is available for the years 1990, 2000, 2006 and
 \dontrun{
 
 myCLC <- oCLC(mask = rtGeoms$mask, years = c(2006, 2012))
-visualise(gridded = myCLC, trace = TRUE)
+visualise(raster = myCLC, trace = TRUE)
 
 # get the (updated) bibliography
 reference(style = "bibtex")
