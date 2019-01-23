@@ -8,6 +8,9 @@ bool isBinaryC(NumericMatrix mat) {
   double nonZero = 0.0;
 
   for(int i = 0; i < data; i++){
+    if(mat[i] != mat[i]){
+      continue;
+    }
     if(mat[i] != 0.0){
       if((nonZero != 0.0) & (mat[i] != nonZero)){
         isBinary = false;
