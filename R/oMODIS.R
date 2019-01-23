@@ -264,9 +264,6 @@ oMODIS <- function(mask = NULL, period = NULL, product = NULL, layer = 1,
                              overwrite = TRUE,
                              output_Raster = TRUE)
       
-      # apply scaling-factor
-      # tempObject <- tempObject*meta$scaling_factor
-      
       history <- c(history, paste0("object loaded from tile '", gridID, "' for ", validDates[j], ""))
       history <-  c(history, paste0("object cropped between points (x, y) '", targetExtent$x[1], ", ", targetExtent$y[1], "' and '", targetExtent$x[2], ", ", targetExtent$y[2], "'"))
       if(targetCRS != projs$sinu){
