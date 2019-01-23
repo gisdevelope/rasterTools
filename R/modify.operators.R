@@ -1404,7 +1404,10 @@ rReduce <- function(obj, by = NULL, fun = function(x) sum(x, na.rm = TRUE),
     out <- brick()
     for(i in seq_along(by)){
 
-      tempObj <- obj[[by[[i]]]]
+      tempBy <- by[i]
+      tempName <- names(tempBy)
+      tempObj <- obj[[tempBy[[1]]]]
+      tempColTab <- tempObj[[1]]@legend@colortable
       tempWeights <- weights[by[[i]]]
       theRasters <- lapply(X = 1:dim(tempObj)[3], function(x){
         tempObj[[x]] * tempWeights[x]
@@ -1412,10 +1415,11 @@ rReduce <- function(obj, by = NULL, fun = function(x) sum(x, na.rm = TRUE),
       tempOut <- Reduce(f = function(x, y) overlay(x, y, fun = fun),
                         x = theRasters,
                         right = right)
+      colortable(tempOut) <- tempColTab
+      names(tempOut) <- tempName
       out <- addLayer(out, tempOut)
     }
     action <- paste0(length(by), " new layers")
-    names(out) <- paste0("reduced_", seq_along(by))
 
   } else{
 
