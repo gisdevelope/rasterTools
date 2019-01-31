@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 You might find `rasterTools` useful when your work depends in one way or the other on earth observation data [@bush_connecting_2017]. This may be for simulating spatial patterns, building species distribution models or analysing and measuring spatial patterns/landscape features.
 
-`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). New operators to all the core functions and to `loadData()` can hence be devised easily.
+`rasterTools` does NOT intend to replace `raster` [@hijmans_raster_2017] but tries to present an additional workflow that is aimed at being more transparent and reproducible and easily accessible. Many of the typical steps in working with raster data are summarised into *operators* (functions that carry out a specific spatial operation) and are grouped according to the group of tasks. In `rasterTools` the four functions `obtain()`, `generate()`, `modify()` and `measure()` represent the major tasks of spatial operations. `rasterTools` has been conceptualised so that these core functions are modular. Each of these functions manages all the code-logic that is common for the task at hand, e.g. to obtain datasets. More specific code that manages, for instance, "loading the MODIS dataset" is oursourced to a seperate function (the `oMODIS()` operator). Hence, new operators to all the core functions can be devised easily.
 
 Several operators are combined to *algorithms* to carry out (a sequence of) more complex spatial operations. Operators are scope specific, i.e. they are typically only called in their respective core function. An algorithm in `rasterTools` is given as list of lists.
 
@@ -46,12 +46,16 @@ Its first element `what = operator_name` would outline the name of the function 
 This modularity is one of the strong sides of `rasterTools`. It allows the user to write their own operator to be used in the respective core-function. An example would be a dataset that is not yet supported by `rasterTools`, to utilize a modification which is not yet included in this package or to develop new landscape metrics. All of this can easily and seamlessly be combined with the previously defined operators in the same, simple workflow.
 
 ## A new (spatial) class: `geom`
-`rasterTools` comes with its own (spatial) S4 class. This class is radically simplified (even in comparison to `sf`) and thus consists only of the feature classes `point`, `line` and `polygon`. It does, however, come with many functions that create specific types of lines or polygons, for instance `geomHexagon()`, which creates exclusively hexagonal polygon geometries.
+`rasterTools` comes with its own (spatial) S4 class. This class provides only the feature types `point`, `line` and `polygon` (yes, there are no *multi*-x features in `rasterTools`), where each of them consist of a set of tables describing the relevant aspects.
 
-These geometries are deliberately per default not *spatial* in nature and do also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a *coordinate reference system*. We learn a lot about them by simply creating and plotting one:
+The slot `@coords` is a table that contains all information related to the vertex coordinates, so one row for each coordinate. By default there are at least the columns `fid` (feature ID), `vid` (vertex ID), `x` and `y`, the two-dimentional coordinate values. All vertices with the same `fid` are part of the same feature and there may be several features per geometry. The slot `@attr` is a table that contains all information at the level of features, so one row for each feature. By default there are at least the columns `fid` (feature ID) and `n` (number of vertices of that feature).
+Both of those tables are accessible and can be joined with additional columns to characterise in more detail the vertex or feature attributes. This is the basis for a couple of planned functions in `rasterTools`, such as manipulation of single vertices and in-R georeferencing.
+
+An object of class `geom` can be created with various functions, such as the default `geomPoint()`, `geomCurve()` and `geomPolygon()` but also with functions that create specific geometric shapes such as `geomHexagon()`, which creates exclusively hexagonal polygons, or `geomTiles()`, which creates a regular tiling geometry.
+
+These geometries are deliberately per default not *"geographic"* in nature and do thus also work within an ordinary cartesian coordinate system. They can be transformed into a spatial object by assigning a *coordinate reference system*. We learn a lot about them by simply creating and plotting one:
 
 ```{r}
-library(raster)
 library(rasterTools)
 
 coords <- data.frame(x = c(40, 70, 70, 50),
@@ -62,9 +66,7 @@ window <- data.frame(x = c(0, 80),
 (aGeom <- geomPolygon(anchor = coords, window = window, show = TRUE))
 ```
 
-The main feature of this sort of "spatial" class is that it can be created relatively simply by providing a set of coordinates as socalled anchor values. It has a new slot, `window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and other spatial classes, in the latter case they are mostly a simple wrapper of the original `raster`, `sp` or `sf` function. The foreign methods have been defined for the sake of internal consistency and simplification.
-
-Additionally, several "tools" to modify the `geom` vertices and to transform the `geom` to and from other spatial classes are available (for example `gRotate()` or `gToSp()`) and this will be extended in the future.
+The main aspect of this sort of "spatial" class is that it can be created/sketched relatively simply by providing a set of coordinates as socalled anchor values, or by clicking into an open plot. It has moreover a new slot, `@window`, which defines the frame within which it would be plotted. A wide range of "getters" and "setters" (for example `getExtent()` or `setCRS()`) have been defined as methods for `geom` and also the other spatial classes. This is an attempt to standardise the handling of various different spatial formats that was originally developed to accommodate the modular nature of `rasterTools`. One can for instance use `setCRS()` on any of the classes `Raster*`, `sp`, `sf` and also `geom` to reproject the object to a new *CRS*. This should come in handy when prototyping new `obtain()` operators or writing reproducible code in general.
 
 
 # Example workflow
@@ -86,7 +88,7 @@ myDatasets <- list(list(operator = "oGFC", period = c(2006)),
 
 Most of the different spatial datasets are available in a specific file format and may have other specific properties, which require consideration. For instance, MODIS data are stored as products with several layers within each file. Consequently the `product` and `layer` need to be specified. Each of the required arguments can be found in the respective documentation, for instance with `?oMODIS`.
 
-Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask (of the class `geom`) to outline this area of interest:
+Typically we only need a (vastly) smaller subset of an earth observation dataset and we would want to use a rectangular mask to outline this area of interest:
 
 ```{r}
 myMask <- rtGeoms$mask
@@ -118,7 +120,7 @@ cc_cats <- list(get_patches = list(operator = "rBinarise", thresh = 30),
                 get_categories = list(operator = "rCategorise", n = 5))
 ```
 
-In this case `sequential = TRUE` would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to `FALSE` in the call).
+In this case `sequential = TRUE` would be ignored globally, but applied locally for those functions that share the same name (also if it would be set to `FALSE` in the call). You can find many more examples in the [Usecases](articles/usecases.html) vignette.
 
 The modifications would be carried out by:
 
@@ -142,8 +144,8 @@ measure(input = myInput, with = myMetrics)
 The so defined *terms* are the basis for derived metrics. Such a metric is defined simply by its mathematical equation, for example the *Class proportional area* is the class areas divided by the landscape area:
 
 ```{r}
-myMetric <- list(a_l = list(operator = "mArea", scale = "landscape"),
-                 a_c = list(operator = "mArea", scale = "class"),
+myMetric <- list(a_c = list(operator = "mArea", scale = "class"),
+                 a_l = list(operator = "mArea", scale = "landscape"),
                  mCPA = "a_c / a_l * 100")
 ```
 
@@ -157,7 +159,7 @@ myMetrics <- list(a_p = list(operator = "mArea", scale = "patch"),
                   mLPI = "max(a_p) / a_l * 100")
 ```
 
-The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA` and with increasing version number more of them). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
+The generic metrics `mNumber()`, `mPerimeter()`, `mArea()`, `mAdjacency()` and `mValues()` are available. Equations for the derived metrics can be found in the [landscape metrics](articles/landscape_metrics.html) vignette (for example the *largest patch index* `mLPI` or the *percentage of like adjacencies* `mPLA`; and with increasing version number more of them). It becomes apparent that also new, possibly improved landscapes metrics can be easily prototyped and tested in this framework.
 
 Finally, the measurement of the *class proportional area* and the *largest patch index*, in a raster where patches have been determined, would be carried out by:
 

@@ -28,11 +28,11 @@ modular system that allows you to use nearly all landscape metrics or even
 develop your own.
 
 Various helper functions that create geometries and tools to work with these
-are included. Geometries (such as \code{\link{geomPoint}}, \code{geomCurve}
-or \code{\link{geomPolygon}}) can be created programmatically or
-interactively. They can be modified (e.g. \code{\link{gRotate}}) and
-transformed into sp, sf or raster objects. The transformed objects can be fed
-into the downstream pipeline.
+are included. Geometries (see \code{\link{geomPoint}}, \code{geomCurve} or
+\code{\link{geomPolygon}}) can be derived from other spatial objects (see
+\code{\link{gFrom}} or be created programmatically or interactively. They can
+be modified (e.g. \code{\link{gRotate}}) and transformed into sp, sf or
+raster objects.
 
 \code{rasterTools} comes with a function to \code{\link{visualise}} gridded
 objects and geometries. Gridded objects can be either a \code{Raster*} or a

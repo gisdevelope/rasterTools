@@ -5,7 +5,6 @@ knitr::opts_chunk$set(
 )
 
 ## ------------------------------------------------------------------------
-library(raster)
 library(rasterTools)
 
 coords <- data.frame(x = c(40, 70, 70, 50),
