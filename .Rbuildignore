@@ -11,3 +11,4 @@ index\.Rmd$
 ^misc$
 ToDo.txt$
 ToDo_functions.R
+rasterTools/inst/test_datasets/rT_output

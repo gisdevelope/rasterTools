@@ -74,7 +74,6 @@ reference:
     desc: other useful functions
     contents:
       - '`catalog`'
-      - '`loadData`'
       - '`rtPalette`'
   - title: example data
     desc: data that are used throughout the documentation
