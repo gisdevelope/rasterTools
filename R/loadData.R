@@ -67,7 +67,7 @@ loadData <- function(files = NULL, layer = NULL, dataset = NULL, localPath = NUL
       assertNames(names(files), must.include = c("original", "abbr"))
       files <- files$original
     } else{
-      assertCharacter(files)
+      assertCharacter(files, min.len = 1)
     }
   } else{
     if(!is.null(localPath)){
