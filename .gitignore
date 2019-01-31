@@ -40,3 +40,4 @@ tests/testthat/Rplots.pdf
 tests/testthat/myBib.bib
 src/*.gcda
 /inst/test_datasets/emma/Ursus_arctos.csv
+/inst/test_datasets/rT_output
