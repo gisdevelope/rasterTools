@@ -93,6 +93,3 @@ catalog(path = rtPaths$emma$local, type = 'svg', inclType = TRUE,
   subset(abbr \%in\% c("apo_agr", "apo_fla", "vul_vul"))
 }
 }
-\seealso{
-\code{\link{loadData}}
-}
