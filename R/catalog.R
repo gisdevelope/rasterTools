@@ -46,7 +46,6 @@
 #'   other.
 #' @return A \code{data.frame} with a column of original names and of the
 #'   associated abreviations.
-#' @seealso \code{\link{loadData}}
 #' @examples
 #' \dontrun{
 #'
