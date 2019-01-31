@@ -549,6 +549,8 @@ mValues <- function(obj, param = NULL, layer = NULL, groupBy = NULL){
       tempWeights <- rep(tempVals, tempVals)
       stats::weighted.mean(x = sort(values[[x]]),
                            w = tempWeights)
+      stats::weighted.mean(x = as.integer(dimnames(tempVals)[[1]]),
+                           w = tempVals)
     })
     param <- param[-which(param == "weighted.mean")]
   } else{

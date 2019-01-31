@@ -242,6 +242,9 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       uniqueColours <- lapply(seq_along(uniqueVals), function(x){
         tempVals <- uniqueVals[[x]]
         nrVals <- length(tempVals)
+        if(tempVals[1] == 0){
+          tempVals <- tempVals+1
+        }
         if(nrVals < 256){
           nrColours <- nrVals
         } else{
@@ -264,6 +267,11 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
       theColours <- lapply(seq_along(uniqueVals), function(x){
         tempVals <- uniqueVals[[x]]
         nrVals <- length(tempVals)
+        if(nrVals == 1){
+          if(tempVals == 0){
+            tempVals <- 1
+          }
+        }
         if(nrVals < 256){
           nrColours <- nrVals
         } else{
@@ -271,11 +279,7 @@ visualise <- function(raster = NULL, geom = NULL, theme = NULL, trace = FALSE,
         }
         
         if(hasColourTable[[x]]){
-          if(tempVals[1] == 0){
-            breaksTemp <- tempVals+1
-          } else{
-            breaksTemp <- c(tempVals[1]-1, tempVals)
-          }
+          breaksTemp <- c(tempVals[1]-1, tempVals)
         } else if(isFactor[[x]]){
           breaksTemp <- c(tempVals[1]-1, raster[[x]]@data@attributes[[1]]$id)
         } else{
